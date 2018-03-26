@@ -1,5 +1,7 @@
 module JsonGrinder
-
-# package code goes here
+using Mill
+using JSON
+include("schema.jl")
+include("reflector.jl")
 
 end # module
