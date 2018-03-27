@@ -56,7 +56,7 @@ data = mapdata(i -> Float32.(i),data)
 #let's do the learning
 	opt = Flux.Optimise.ADAM(params(m))
 	loss = (x,y) -> FluxExtensions.logitcrossentropy(m(getobs(x)),getobs(y)) 
-	learn(loss,opt,RandomBatches((data,target),100,10000))
+	FluxExtensions.learn(loss,opt,RandomBatches((data,target),100,10000))
 
 #evaluate
-	accuracy = mean(Flux.argmax(softmax(m(data))) .== argmax(target))
+	accuracy = mean(Flux.argmax(m(data)) .== Flux.argmax(target))

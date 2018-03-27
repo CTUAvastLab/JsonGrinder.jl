@@ -4,6 +4,15 @@ abstract type JSONEntry end;
 StringOrNumber = Union{String,Number};
 const max_keys = 1000
 
+"""
+	mutable struct Entry <: JSONEntry
+		counts::Dict{Any,Int}
+		called::Int
+	end
+
+
+"""
+
 mutable struct Entry <: JSONEntry
 	counts::Dict{Any,Int}
 	called::Int
@@ -96,10 +105,10 @@ recommendscheme(T,e::VectorEntry,mincount) = ExtractArray(recommendscheme(T,e.it
 function recommendscheme(T,e::DictEntry, mincount::Int = typemax(Int))
 	ks = Iterators.filter(k -> called(e.childs[k]) > mincount, keys(e.childs))
 	if isempty(ks)
-		return(ExtractBranch(T,Dict{String,Any}(),Dict{String,Any}()))
+		return(ExtractBranch(Dict{String,Any}(),Dict{String,Any}()))
 	end
 	c = map(k -> (k,recommendscheme(T, e.childs[k], mincount)),ks)
 	mask = map(i -> typeof(i[2])<:ExtractScalar,c)
 	mask = mask .| map(i -> typeof(i[2])<:ExtractCategorical,c)
-	ExtractBranch(T,Dict(c[mask]),Dict(c[.!mask]))
+	ExtractBranch(Dict(c[mask]),Dict(c[.!mask]))
 end

@@ -2,12 +2,13 @@ import Mill: DataNode, lastcat
 abstract type AbstractReflector end;
 """
 	struct ExtractScalar{T}
+		datatype::Type{T}
 		c::T
 		s::T
-		T::Type{T}
 	end
 
-	extract a scalar value and center it with c and s
+	extract a scalar value and center. If `T` is of type number, it is centered by first subtracting c and then
+	multiplying that with s. 
 """
 struct ExtractScalar{T,V} <: AbstractReflector
 	datatype::Type{T}
@@ -27,10 +28,11 @@ dimension(s::ExtractScalar) = 1
 
 """
 	struct ExtractCategorical{T}
+		datatype::Type{T}
 		items::T
 	end
 
-	convert value to one-hot encoded array
+	Convert scalar to one-hot encoded array.
 """
 
 struct ExtractCategorical{T,I<:Vector} <: AbstractReflector
@@ -58,7 +60,8 @@ end
 		item::T
 	end
 
-	convert array of values to one Bag of values converted with item 
+	convert array of values to one bag of values converted with `item`. Note that in order the function to work properly,
+	calling `item` on a single item has to return Matrix.
 
 ```juliadoctest
 julia> sc = ExtractArray(ExtractCategorical(Float32,2:4))
@@ -87,44 +90,38 @@ dimension(s::ExtractArray)  = dimension(s.item)
 
 """
 	struct ExtractBranch
-		T::Type{T}
 		vec::Dict{String,Any}
 		other::Dict{String,Any}
-		fnum::Int
 	end
 
-	Extracts DataNode, where data part is an array of vector (extractors stored in vec) and set of datanodes
-	stored in other
-
+	extracts all items in `vec` and in `other` and return them as a DataNode.
 """
-struct ExtractBranch{T,S,V} <: AbstractReflector
-	datatype::Type{T}
+struct ExtractBranch{S,V} <: AbstractReflector
 	vec::S
 	other::V
-	fnum::Int
+	function ExtractBranch(v::S,o::V) where {S<:Union{Dict,Void},V<:Union{Dict,Void}} 
+		v = (v == nothing || isempty(v)) ? nothing : v
+		o = (o == nothing || isempty(o)) ? nothing : o
+		new{typeof(v),typeof(o)}(v,o)
+	end
 end
 
-function ExtractBranch(T,vec,other)
-	v = (vec ==  nothing || isempty(vec)) ? nothing : vec
-	fnum = v ==  nothing ? 0 : mapreduce(dimension,+,values(v));
-	o = (other ==  nothing || isempty(other)) ? nothing : other
-	ExtractBranch(T,v,o,fnum)
-end
 
 (s::ExtractBranch)(v::V) where {V<:Void} = s(Dict{String,Any}())
-function (s::ExtractBranch{T,S,V})(v::Dict) where {T,S<:Dict,V<:Dict}
+
+function (s::ExtractBranch{S,V})(v::Dict) where {S<:Dict,V<:Dict}
 	x = vcat(map(k -> s.vec[k](get(v,k,nothing)),keys(s.vec))...)
 	o = map(k -> s.other[k](get(v,k,nothing)), keys(s.other))
 	data = tuple([x,o...]...)
 	DataNode(data,nothing,nothing)
 end
 
-function (s::ExtractBranch{T,S,V})(v::Dict) where {T,S<:Dict,V<:Void}
+function (s::ExtractBranch{S,V})(v::Dict) where {S<:Dict,V<:Void}
 	x = vcat(map(k -> s.vec[k](get(v,k,nothing)),keys(s.vec))...)
 	DataNode(x,nothing,nothing)
 end
 
-function (s::ExtractBranch{T,S,V})(v::Dict) where {T,S<:Void,V<:Dict}
+function (s::ExtractBranch{S,V})(v::Dict) where {S<:Void,V<:Dict}
 	x = map(k -> s.other[k](get(v,k,nothing)), keys(s.other))
 	x = (length(x) == 1) ? x[1] : tuple(x...)
 	DataNode(x,nothing,nothing)
