@@ -4,7 +4,7 @@ using JSON
 using Lazy
 using FluxExtensions
 
-import JsonGrinder: DictEntry, recommendscheme, schema
+import JsonGrinder: DictEntry, suggestextractor, schema
 import Mill: addlayer, reflectinmodel
 
 @testset "testing pipeline with simple arrays and missing values" begin
@@ -16,7 +16,7 @@ import Mill: addlayer, reflectinmodel
 	j6 = JSON.parse("""{}""")
 
 	schema = JsonGrinder.schema([j1,j2,j3])
-	reflector = recommendscheme(Float32,schema,0)
+	reflector = suggestextractor(Float32,schema,0)
 	dss = @>> [j1,j2,j3,j4,j5,j6] map(s-> reflector(s))
 	ds = cat(dss...);
 	m,k = reflectinmodel(ds, k -> (ResDense(k,10),10));
@@ -37,7 +37,7 @@ end
 	j5 = JSON.parse("""{}""")
 
 	schema = JsonGrinder.schema([j1,j2,j3])
-	reflector = recommendscheme(Float32,schema,0)
+	reflector = suggestextractor(Float32,schema,0)
 	dss = @>> [j1,j2,j3,j4,j5] map(s-> reflector(s))
 	ds = cat(dss...);
 	m,k = reflectinmodel(ds, k -> (ResDense(k,10),10));

@@ -7,55 +7,83 @@ const max_keys = 1000
 """
 	mutable struct Entry <: JSONEntry
 		counts::Dict{Any,Int}
-		called::Int
+		updated::Int
 	end
 
-
+	Keeps statistics about scalar values of a one key
+	`count` counts how many times given value appeared (at most max_keys is held)
+	`updated` counts how many times the entry was updated
 """
-
 mutable struct Entry <: JSONEntry
 	counts::Dict{Any,Int}
-	called::Int
+	updated::Int
 end
 
 Entry() = Entry(Dict{Any,Int}(),0);
 types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
-Base.show(io::IO, e::Entry,offset::Int=0) = paddedprint(io, @sprintf("[Scalar - %s], %d unique values, called = %d",join(types(e)),length(keys(e.counts)),e.called),0)
+Base.show(io::IO, e::Entry,offset::Int=0) = paddedprint(io, @sprintf("[Scalar - %s], %d unique values, updated = %d",join(types(e)),length(keys(e.counts)),e.updated),0)
 
+"""
+		function update!(a::Entry,v)
 
-function accomodate!(a::Entry,v)
+		updates the entry when seeing value v
+"""	
+function update!(a::Entry,v)
 	if length(keys(a.counts)) < max_keys
 		a.counts[v] = get(a.counts,v,0) + 1
 	end
-	a.called +=1
+	a.updated +=1
 end
 
 
-mutable struct VectorEntry{A<:JSONEntry} <: JSONEntry
+"""
+		mutable struct ArrayEntry{A<:JSONEntry} <: JSONEntry
+			items::A
+			l::Dict{Int,Int}
+			updated::Int
+		end
+
+		keeps statistics about an array entry in JSON. 
+		`items` is typeof `Entry` and keeps statistics about the elements of the array
+		`l` keeps histogram of message length 
+		`updated` counts how many times the struct was updated.
+"""
+mutable struct ArrayEntry{A<:JSONEntry} <: JSONEntry
 	items::A
 	l::Dict{Int,Int}
-	called::Int
+	updated::Int
 end
 
-VectorEntry(items) = VectorEntry(items,Dict{Int,Int}(),0)
+ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
 
-function Base.show(io::IO, e::VectorEntry,offset::Int=0) 
+function Base.show(io::IO, e::ArrayEntry,offset::Int=0) 
 	paddedprint(io, "[Vector of\n",0);
 	show(io,e.items,offset+2)
-	paddedprint(io, @sprintf(" ], called = %d ",e.called),offset)
+	paddedprint(io, @sprintf(" ], updated = %d ",e.updated),offset)
 end
 
-function accomodate!(a::VectorEntry,b::Vector)
+function update!(a::ArrayEntry,b::Vector)
 	n = length(b)
 	a.l[n] = get(a.l,n,0) + 1
-	foreach(v -> accomodate!(a.items,v),b)
-	a.called +=1
+	foreach(v -> update!(a.items,v),b)
+	a.updated +=1
 end
 
+
+"""
+		mutable struct DictEntry <: JSONEntry
+			childs::Dict{String,Any}
+			updated::Int
+		end
+
+		keeps statistics about an object in json 
+		`childs` maintains key-value statistics of childrens. All values should be JSONEntries
+		`updated` counts how many times the struct was updated.
+"""
 
 mutable struct DictEntry <: JSONEntry
 	childs::Dict{String,Any}
-	called::Int
+	updated::Int
 end
 
 DictEntry() = DictEntry(Dict{String,Any}(),0)
@@ -70,45 +98,62 @@ function Base.show(io::IO, e::DictEntry,offset::Int=0)
   end
 end
 
-function accomodate!(s::DictEntry,d::Dict)
-	s.called +=1
+function update!(s::DictEntry,d::Dict)
+	s.updated +=1
 	for (k,v) in d
-		i = get(s.childs,k,newitem(v))
-		accomodate!(i,v)
+		i = get(s.childs,k,newentry(v))
+		update!(i,v)
 		s.childs[k] = i
 	end
 end
 
+"""
+		newentry(v)
 
+		creates new entry describing json according to the type of v
+"""
+newentry(v::Dict) = DictEntry()
+newentry(v::A) where {A<:StringOrNumber} = Entry()
+newentry(v::Vector) = ArrayEntry(newentry(v[1]))
 
-
-newitem(v::Dict) = DictEntry()
-newitem(v::A) where {A<:StringOrNumber} = Entry()
-newitem(v::Vector) = VectorEntry(newitem(v[1]))
-
+"""
+		function schema(a::Vector{T}) where {T<:Dict}
+		function schema(a::Vector{T}) where {T<:AbstractString}
+	
+		create schema from an array of parsed or unparsed JSONs
+"""
 function schema(a::Vector{T}) where {T<:Dict}
 		schema = DictEntry()
-		foreach(f -> accomodate!(schema,f),a)
+		foreach(f -> update!(schema,f),a)
 		schema
 end
 
 function schema(a::Vector{T}) where {T<:AbstractString}
 		schema = DictEntry()
-		foreach(f -> accomodate!(schema,JSON.parse(f)),a)
+		foreach(f -> update!(schema,JSON.parse(f)),a)
 		schema
 end
 
-# conversion to data extractor
-called(s::T) where {T<:JSONEntry} = s.called
-recommendscheme(T,e::Entry,mincount) = ExtractScalar(eltype(map(identity,keys(e.counts))))
-recommendscheme(T,e::VectorEntry,mincount) = ExtractArray(recommendscheme(T,e.items,mincount))
-function recommendscheme(T,e::DictEntry, mincount::Int = typemax(Int))
-	ks = Iterators.filter(k -> called(e.childs[k]) > mincount, keys(e.childs))
+
+"""
+		suggestextractor(T,e::DictEntry, mincount::Int = 0)
+
+		create convertor of json to tree-structure of `DataNode`
+
+		`T` type for numeric types
+		`e` top-level of json hierarchy, typically returned by invoking schema
+		`mincount` minimum occurrence of keys to be included into the extractor (default is zero)
+"""
+function suggestextractor(T,e::DictEntry, mincount::Int = 0)
+	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
 	if isempty(ks)
 		return(ExtractBranch(Dict{String,Any}(),Dict{String,Any}()))
 	end
-	c = map(k -> (k,recommendscheme(T, e.childs[k], mincount)),ks)
+	c = map(k -> (k,suggestextractor(T, e.childs[k], mincount)),ks)
 	mask = map(i -> typeof(i[2])<:ExtractScalar,c)
 	mask = mask .| map(i -> typeof(i[2])<:ExtractCategorical,c)
 	ExtractBranch(Dict(c[mask]),Dict(c[.!mask]))
 end
+updated(s::T) where {T<:JSONEntry} = s.updated
+suggestextractor(T,e::Entry,mincount) = ExtractScalar(eltype(map(identity,keys(e.counts))))
+suggestextractor(T,e::ArrayEntry,mincount) = ExtractArray(suggestextractor(T,e.items,mincount))

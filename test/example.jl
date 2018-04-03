@@ -7,7 +7,7 @@ using Mill
 using JsonGrinder
 using FluxExtensions
 
-import JsonGrinder: recommendscheme, ExtractCategorical, ExtractBranch
+import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 import Mill: mapdata, sparsify, reflectinmodel
 
 #load all samples
@@ -23,7 +23,7 @@ end
 
 # Create the extractor and modify the extractor, We discard NPI, since it is rubbish, change variables to
 # one hot encoding and remove gender, as this would be the variable to predict
-	reflector = recommendscheme(Float32,schema,2000);
+	reflector = suggestextractor(Float32,schema,2000);
 	extract_data = ExtractBranch(Float32,nothing,reflector.other);
 	extract_target = ExtractBranch(Float32,nothing,deepcopy(reflector.other));
 
