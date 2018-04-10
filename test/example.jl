@@ -24,16 +24,16 @@ end
 # Create the extractor and modify the extractor, We discard NPI, since it is rubbish, change variables to
 # one hot encoding and remove gender, as this would be the variable to predict
 	reflector = suggestextractor(Float32,schema,2000);
-	extract_data = ExtractBranch(Float32,nothing,reflector.other);
-	extract_target = ExtractBranch(Float32,nothing,deepcopy(reflector.other));
+	extract_data = ExtractBranch(nothing,reflector.other);
+	extract_target = ExtractBranch(nothing,deepcopy(reflector.other));
 
 	fnames = ["specialty","years_practicing","settlement_type","region"]
-	vec = Dict(map(k -> (k,ExtractCategorical(Float32,schema["provider_variables"][k])),fnames))
-	extract_data.other["provider_variables"] = ExtractBranch(Float32,vec,nothing)
+	vec = Dict(map(k -> (k,ExtractCategorical(schema["provider_variables"][k])),fnames))
+	extract_data.other["provider_variables"] = ExtractBranch(vec,nothing)
 
 	fnames = ["gender"]
-	vec = Dict(map(k -> (k,ExtractCategorical(Float32,schema["provider_variables"][k])),fnames))
-	extract_target.other["provider_variables"] = ExtractBranch(Float32,vec,nothing)
+	vec = Dict(map(k -> (k,ExtractCategorical(schema["provider_variables"][k])),fnames))
+	extract_target.other["provider_variables"] = ExtractBranch(vec,nothing)
 	delete!(extract_target.other,"cms_prescription_counts")
 
 #once extractors are done, extract some training and testing data

@@ -21,10 +21,10 @@ ExtractScalar(::Type{T}) where {T} = ExtractScalar(T,nothing,nothing)
 dimension(s::ExtractScalar) = 1
 (s::ExtractScalar{T,V})(v) where {T<:Number,V}						= s.s .* (reshape([s.datatype(v)],(1,1)) .- s.c)
 (s::ExtractScalar{T,V} where {V,T<:Number})(v::String)   = s(parse(s.datatype,v))
-(s::ExtractScalar{T,V} where {V,T<:AbstractString})(v)   = reshape([v],(1,1))
+(s::ExtractScalar{T,V} where {V,T<:AbstractString})(v)   = DataNode(reshape([v],(1,1)))
 #handle defaults
 (s::ExtractScalar{T,V})(v::S) where {T<:Number,V,S<:Void}= reshape([0],(1,1))
-(s::ExtractScalar{T,V})(v::S) where {T<:AbstractString,V,S<:Void} = reshape([""],(1,1))
+(s::ExtractScalar{T,V})(v::S) where {T<:AbstractString,V,S<:Void} = DataNode(reshape([""],(1,1)))
 
 """
 	struct ExtractCategorical{T}

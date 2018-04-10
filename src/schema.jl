@@ -150,9 +150,9 @@ function suggestextractor(T,e::DictEntry, mincount::Int = 0)
 		return(ExtractBranch(Dict{String,Any}(),Dict{String,Any}()))
 	end
 	c = map(k -> (k,suggestextractor(T, e.childs[k], mincount)),ks)
-	mask = map(i -> typeof(i[2])<:ExtractScalar,c)
+	mask = map(i -> typeof(i[2])<:ExtractScalar{T,S} where {T<:Number,S},c)
 	mask = mask .| map(i -> typeof(i[2])<:ExtractCategorical,c)
-	ExtractBranch(Dict(c[mask]),Dict(c[.!mask]))
+	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
 updated(s::T) where {T<:JSONEntry} = s.updated
 suggestextractor(T,e::Entry,mincount) = ExtractScalar(eltype(map(identity,keys(e.counts))))
