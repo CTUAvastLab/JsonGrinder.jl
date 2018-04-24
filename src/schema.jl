@@ -22,6 +22,7 @@ end
 Entry() = Entry(Dict{Any,Int}(),0);
 types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
 Base.show(io::IO, e::Entry,offset::Int=0) = paddedprint(io, @sprintf("[Scalar - %s], %d unique values, updated = %d",join(types(e)),length(keys(e.counts)),e.updated),0)
+Base.keys(e::Entry) = sort(collect(keys(e.counts)))
 
 """
 		function update!(a::Entry,v)

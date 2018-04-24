@@ -69,4 +69,5 @@ end
 
 
 string2ngrams(x::T,n,m) where {T <: AbstractArray{I} where I<: AbstractString} = countngrams(Vector(x[:]),n,257,m)
+string2ngrams(x::T,n,m) where {T<: AbstractString} = countngrams(x,n,257,m)
 string2ngrams(x,n,m) = x

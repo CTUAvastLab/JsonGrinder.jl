@@ -24,6 +24,7 @@ end
 # Create the extractor and modify the extractor, We discard NPI, since it is rubbish, change variables to
 # one hot encoding and remove gender, as this would be the variable to predict
 	reflector = suggestextractor(Float32,schema,2000);
+	delete!(reflector.other,"npi")
 	extract_data = ExtractBranch(nothing,reflector.other);
 	extract_target = ExtractBranch(nothing,deepcopy(reflector.other));
 
@@ -44,12 +45,11 @@ end
 	target = target.data.data
 
 #make data sparse
-# data = mapdata(i -> sparsify(Float32.(i),0.05),data)
-data = mapdata(i -> Float32.(i),data)
+data = mapdata(i -> sparsify(Float32.(i),0.05),data)
+# data = mapdata(i -> Float32.(i),data)
 
 # reflect the data structure in the model
-	layerbuilder =  k -> ( FluxExtensions.ResDense(k,10,relu),10)
-	m,k = reflectinmodel(data, layerbuilder)
+	m,k = reflectinmodel(data, k -> FluxExtensions.ResDense(k,10,relu))
 	m = Mill.addlayer(m,Dense(k,2))
 	m(data)
 
