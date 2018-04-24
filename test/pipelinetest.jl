@@ -4,8 +4,28 @@ using JSON
 using Lazy
 using FluxExtensions
 
-import JsonGrinder: DictEntry, suggestextractor, schema
+import JsonGrinder: DictEntry, suggestextractor, schema, string2ngrams
 import Mill: addlayer, reflectinmodel
+
+@testset "testing pipeline mixing different types of arrays" begin
+	j1 = JSON.parse("""{"a": 1, "b": "hello works", "c":{ "a":1 ,"b": "hello world"}}""")
+	j2 = JSON.parse("""{"a": 2, "b": "hello world", "c":{ "a":2 ,"b": "hello"}}""")
+
+	schema = JsonGrinder.schema([j1,j2])
+	reflector = suggestextractor(Float32,schema,0)
+	dss = @>> [j1,j2] map(s-> reflector(s))
+	ds = cat(dss...);
+	ds = Mill.mapdata(x -> string2ngrams(x,3,101),ds)
+	dss = map(s -> Mill.mapdata(x -> string2ngrams(x,3,101),s),dss)
+
+	m,k = reflectinmodel(ds, k -> ResDense(k,10));
+	m = addlayer(m,Flux.Dense(k,2));
+	o = Flux.data(m(ds))
+	for i in 1:length(dss)
+		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]))).< 1e-10)
+	end
+end
+
 
 @testset "testing pipeline with simple arrays and missing values" begin
 	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
@@ -19,7 +39,7 @@ import Mill: addlayer, reflectinmodel
 	reflector = suggestextractor(Float32,schema,0)
 	dss = @>> [j1,j2,j3,j4,j5,j6] map(s-> reflector(s))
 	ds = cat(dss...);
-	m,k = reflectinmodel(ds, k -> (ResDense(k,10),10));
+	m,k = reflectinmodel(ds, k -> ResDense(k,10));
 	m = addlayer(m,Flux.Dense(k,2));
 	o = Flux.data(m(ds))
 
@@ -40,7 +60,7 @@ end
 	reflector = suggestextractor(Float32,schema,0)
 	dss = @>> [j1,j2,j3,j4,j5] map(s-> reflector(s))
 	ds = cat(dss...);
-	m,k = reflectinmodel(ds, k -> (ResDense(k,10),10));
+	m,k = reflectinmodel(ds, k -> ResDense(k,10));
 	m = addlayer(m,Flux.Dense(k,2));
 	o = Flux.data(m(ds))
 	for i in 1:length(dss)
