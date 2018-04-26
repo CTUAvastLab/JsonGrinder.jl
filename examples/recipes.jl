@@ -19,9 +19,9 @@ delete!(schema.childs,"id")
 
 # Create the extractor and modify the extractor, We discard NPI, since it is rubbish, change variables to
 # one hot encoding and remove gender, as this would be the variable to predict
-reflector = suggestextractor(Float32,schema,2000);
-extract_data = ExtractBranch(nothing,reflector.other);
-extract_target = ExtractBranch(nothing,deepcopy(reflector.other));
+extractor = suggestextractor(Float32,schema,2000);
+extract_data = ExtractBranch(nothing,extractor.other);
+extract_target = ExtractBranch(nothing,deepcopy(extractor.other));
 delete!(extract_target.other,"ingredients")
 delete!(extract_data.other,"cuisine")
 extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(schema.childs["cuisine"]))
