@@ -14,6 +14,7 @@ import Mill: mapdata, sparsify, reflectinmodel
 samples = open("prescription.jsonl") do fid
 	readlines(fid)
 end
+JSON.print(samples[1],2)
 
 #print example of the JSON
 	JSON.print(JSON.parse(samples[1]),2)

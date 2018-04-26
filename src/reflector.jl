@@ -26,6 +26,8 @@ dimension(s::ExtractScalar) = 1
 (s::ExtractScalar{T,V})(v::S) where {T<:Number,V,S<:Void}= reshape([0],(1,1))
 (s::ExtractScalar{T,V})(v::S) where {T<:AbstractString,V,S<:Void} = DataNode(reshape([""],(1,1)))
 
+Base.show(io::IO, m::ExtractScalar,offset::Int=0,prefix::String="") = paddedprint(io,prefix*"$(m.datatype)\n",offset)
+
 """
 	struct ExtractCategorical{T}
 		datatype::Type{T}
@@ -54,6 +56,7 @@ function (s::ExtractCategorical)(v)
 end
 
 (s::ExtractCategorical)(v::V) where {V<:Void} =  zeros(s.datatype,length(s.items))
+Base.show(io::IO, m::ExtractCategorical,offset::Int=0,prefix::String="") = paddedprint(io,prefix*"Categorical\n",offset)
 
 """
 	struct ExtractArray{T}
@@ -87,6 +90,10 @@ end
 dimension(s::ExtractArray)  = dimension(s.item)
 (s::ExtractArray)(v::V) where {V<:Void} = DataNode(lastcat(s.item.([nothing])...),[1:1])
 (s::ExtractArray)(v) = isempty(v) ? s(nothing) : DataNode(lastcat(s.item.(v)...),[1:length(v)])
+function Base.show(io::IO,m::ExtractArray,offset::Int=0,prefix::String="")
+	paddedprint(io,prefix*"Array of ",offset)
+	show(io,m.item)
+end
 
 """
 	struct ExtractBranch
@@ -106,6 +113,15 @@ struct ExtractBranch{S,V} <: AbstractReflector
 	end
 end
 
+function Base.show(io::IO,m::ExtractBranch,offset::Int=0,prefix::String="")
+	paddedprint(io,prefix*"Branch:\n",offset)
+	if m.vec != nothing
+		foreach(k -> show(io,m.vec[k],offset+2,"$(k): "),keys(m.vec))
+	end
+	if m.other != nothing
+		foreach(k -> show(io,m.other[k],offset+2,"$(k): "),keys(m.other))
+	end
+end
 
 (s::ExtractBranch)(v::V) where {V<:Void} = s(Dict{String,Any}())
 

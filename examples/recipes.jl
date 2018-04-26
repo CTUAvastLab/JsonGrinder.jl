@@ -14,13 +14,16 @@ import Mill: mapdata, sparsify, reflectinmodel
 samples = open("recipes.json","r") do fid 
 	Array{Dict}(JSON.parse(readstring(fid)))
 end
+JSON.print(samples[1],2)
+
+#create the schema
 schema = JsonGrinder.schema(samples);
 delete!(schema.childs,"id")
 
 # Create the extractor and modify the extractor, We discard NPI, since it is rubbish, change variables to
 # one hot encoding and remove gender, as this would be the variable to predict
 extractor = suggestextractor(Float32,schema,2000);
-extract_data = ExtractBranch(nothing,extractor.other);
+extract_data = ExtractBranch(nothing,deepcopy(extractor.other));
 extract_target = ExtractBranch(nothing,deepcopy(extractor.other));
 delete!(extract_target.other,"ingredients")
 delete!(extract_data.other,"cuisine")
