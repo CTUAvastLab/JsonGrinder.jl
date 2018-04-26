@@ -14,7 +14,7 @@ import Mill: mapdata, sparsify, reflectinmodel
 samples = open("recipes.json","r") do fid 
 	Array{Dict}(JSON.parse(readstring(fid)))
 end
-schema = JsonGrinder.schema(Array{Dict}(samples));
+schema = JsonGrinder.schema(samples);
 delete!(schema.childs,"id")
 
 # Create the extractor and modify the extractor, We discard NPI, since it is rubbish, change variables to
