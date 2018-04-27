@@ -50,7 +50,7 @@ data = mapdata(i -> sparsify(Float32.(i),0.05),data)
 
 # reflect the data structure in the model
 layerbuilder =  k -> FluxExtensions.ResDense(k,20,relu)
-m,k = reflectinmodel(data, layerbuilder)
+m,k = reflectinmodel(data[1:10], layerbuilder)
 m = Mill.addlayer(m,Dense(k,size(target,1)))
 m = Adapt.adapt(Float32,m)
 m(data)
