@@ -3,6 +3,7 @@ using Mill
 using JSON
 using Lazy
 using FluxExtensions
+using Base.Test
 
 import JsonGrinder: DictEntry, suggestextractor, schema, string2ngrams
 import Mill: addlayer, reflectinmodel
