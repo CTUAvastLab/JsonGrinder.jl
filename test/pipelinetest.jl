@@ -1,12 +1,8 @@
 using Revise
-using Mill
-using JSON
-using Lazy
-using FluxExtensions
-using Base.Test
+using Mill, JSON, Lazy, FluxExtensions, Flux
 
-import JsonGrinder: DictEntry, suggestextractor, schema, string2ngrams
-import Mill: addlayer, reflectinmodel
+using JsonGrinder: DictEntry, suggestextractor, schema, string2ngrams
+using Mill: reflectinmodel
 
 @testset "testing pipeline mixing different types of arrays" begin
 	j1 = JSON.parse("""{"a": 1, "b": "hello works", "c":{ "a":1 ,"b": "hello world"}}""")
@@ -19,11 +15,11 @@ import Mill: addlayer, reflectinmodel
 	ds = Mill.mapdata(x -> string2ngrams(x,3,101),ds)
 	dss = map(s -> Mill.mapdata(x -> string2ngrams(x,3,101),s),dss)
 
-	m,k = reflectinmodel(ds, k -> ResDense(k,10));
-	m = addlayer(m,Flux.Dense(k,2));
-	o = Flux.data(m(ds))
+	m,k = reflectinmodel(ds, k -> Chain(ResDense(k,10)));
+	push!(m, Flux.Dense(k,2));
+	o = Flux.data(m(ds).data)
 	for i in 1:length(dss)
-		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]))).< 1e-10)
+		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]).data)) .< 1e-10 )
 	end
 end
 
@@ -40,12 +36,12 @@ end
 	reflector = suggestextractor(Float32,schema,0)
 	dss = @>> [j1,j2,j3,j4,j5,j6] map(s-> reflector(s))
 	ds = cat(dss...);
-	m,k = reflectinmodel(ds, k -> ResDense(k,10));
-	m = addlayer(m,Flux.Dense(k,2));
-	o = Flux.data(m(ds))
+	m,k = reflectinmodel(ds, k -> Chain(ResDense(k,10)));
+	push!(m, Flux.Dense(k,2));
+	o = Flux.data(m(ds).data)
 
 	for i in 1:length(dss)
-		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]))).< 1e-10)
+		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]).data)).< 1e-10)
 	end
 end
 
@@ -61,10 +57,10 @@ end
 	reflector = suggestextractor(Float32,schema,0)
 	dss = @>> [j1,j2,j3,j4,j5] map(s-> reflector(s))
 	ds = cat(dss...);
-	m,k = reflectinmodel(ds, k -> ResDense(k,10));
-	m = addlayer(m,Flux.Dense(k,2));
-	o = Flux.data(m(ds))
+	m,k = reflectinmodel(ds, k -> Chain(ResDense(k,10)));
+	push!(m, Flux.Dense(k,2));
+	o = Flux.data(m(ds).data)
 	for i in 1:length(dss)
-		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]))).< 1e-10)
+		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]).data)).< 1e-10)
 	end
 end

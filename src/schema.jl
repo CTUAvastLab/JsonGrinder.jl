@@ -81,7 +81,6 @@ end
 		`childs` maintains key-value statistics of childrens. All values should be JSONEntries
 		`updated` counts how many times the struct was updated.
 """
-
 mutable struct DictEntry <: JSONEntry
 	childs::Dict{String,Any}
 	updated::Int

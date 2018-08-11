@@ -1,4 +1,4 @@
-import Mill: DataNode, lastcat
+using Mill: ArrayNode, BagNode, TreeNode, lastcat
 abstract type AbstractReflector end;
 """
 	struct ExtractScalar{T}
@@ -19,12 +19,12 @@ end
 ExtractScalar(::Type{T}) where {T<:Number} = ExtractScalar(T,T(0),T(1))
 ExtractScalar(::Type{T}) where {T} = ExtractScalar(T,nothing,nothing)
 dimension(s::ExtractScalar) = 1
-(s::ExtractScalar{T,V})(v) where {T<:Number,V}						= s.s .* (reshape([s.datatype(v)],(1,1)) .- s.c)
-(s::ExtractScalar{T,V} where {V,T<:Number})(v::String)   = s(parse(s.datatype,v))
-(s::ExtractScalar{T,V} where {V,T<:AbstractString})(v)   = DataNode(reshape([v],(1,1)))
+(s::ExtractScalar{T,V})(v) where {T<:Number,V}						= ArrayNode(s.s .* (fill(s.datatype(v),1,1) .- s.c))
+(s::ExtractScalar{T,V} where {V,T<:Number})(v::String)   = s((parse(s.datatype,v)))
+(s::ExtractScalar{T,V} where {V,T<:AbstractString})(v)   = ArrayNode(reshape([v],(1,1)))
 #handle defaults
-(s::ExtractScalar{T,V})(v::S) where {T<:Number,V,S<:Void}= reshape([0],(1,1))
-(s::ExtractScalar{T,V})(v::S) where {T<:AbstractString,V,S<:Void} = DataNode(reshape([""],(1,1)))
+(s::ExtractScalar{T,V})(v::S) where {T<:Number,V,S<:Void}= ArrayNode(reshape([0],(1,1)))
+(s::ExtractScalar{T,V})(v::S) where {T<:AbstractString,V,S<:Void} = ArrayNode(reshape([""],(1,1)))
 
 Base.show(io::IO, m::ExtractScalar,offset::Int=0,prefix::String="") = paddedprint(io,prefix*"$(m.datatype)\n",offset)
 
@@ -52,10 +52,10 @@ function (s::ExtractCategorical)(v)
 	if i > 0
 		x[i] = 1
 	end
-	x
+	ArrayNode(x)
 end
 
-(s::ExtractCategorical)(v::V) where {V<:Void} =  zeros(s.datatype,length(s.items))
+(s::ExtractCategorical)(v::V) where {V<:Void} =  ArrayNode(zeros(s.datatype,length(s.items)))
 Base.show(io::IO, m::ExtractCategorical,offset::Int=0,prefix::String="") = paddedprint(io,prefix*"Categorical\n",offset)
 
 """
@@ -88,8 +88,8 @@ struct ExtractArray{T} <: AbstractReflector
 end
 
 dimension(s::ExtractArray)  = dimension(s.item)
-(s::ExtractArray)(v::V) where {V<:Void} = DataNode(lastcat(s.item.([nothing])...),[1:1])
-(s::ExtractArray)(v) = isempty(v) ? s(nothing) : DataNode(lastcat(s.item.(v)...),[1:length(v)])
+(s::ExtractArray)(v::V) where {V<:Void} = BagNode(lastcat(s.item.([nothing])...),[1:1])
+(s::ExtractArray)(v) = isempty(v) ? s(nothing) : BagNode(lastcat(s.item.(v)...),[1:length(v)])
 function Base.show(io::IO,m::ExtractArray,offset::Int=0,prefix::String="")
 	paddedprint(io,prefix*"Array of ",offset)
 	show(io,m.item)
@@ -101,7 +101,7 @@ end
 		other::Dict{String,Any}
 	end
 
-	extracts all items in `vec` and in `other` and return them as a DataNode.
+	extracts all items in `vec` and in `other` and return them as a TreeNode.
 """
 struct ExtractBranch{S,V} <: AbstractReflector
 	vec::S
@@ -126,19 +126,19 @@ end
 (s::ExtractBranch)(v::V) where {V<:Void} = s(Dict{String,Any}())
 
 function (s::ExtractBranch{S,V})(v::Dict) where {S<:Dict,V<:Dict}
-	x = vcat(map(k -> s.vec[k](get(v,k,nothing)),keys(s.vec))...)
+	x = ArrayNode(vcat(map(k -> s.vec[k](get(v,k,nothing)).data,keys(s.vec))...))
 	o = map(k -> s.other[k](get(v,k,nothing)), keys(s.other))
 	data = tuple([x,o...]...)
-	DataNode(data,nothing,nothing)
+	TreeNode(data)
 end
 
-function (s::ExtractBranch{S,V})(v::Dict) where {S<:Dict,V<:Void}
-	x = vcat(map(k -> s.vec[k](get(v,k,nothing)),keys(s.vec))...)
-	DataNode(x,nothing,nothing)
-end
+(s::ExtractBranch{S,V})(v::Dict) where {S<:Dict,V<:Void} = ArrayNode(vcat(map(k -> s.vec[k](get(v,k,nothing)).data,keys(s.vec))...))
 
 function (s::ExtractBranch{S,V})(v::Dict) where {S<:Void,V<:Dict}
 	x = map(k -> s.other[k](get(v,k,nothing)), keys(s.other))
-	x = (length(x) == 1) ? x[1] : tuple(x...)
-	DataNode(x,nothing,nothing)
+	if length(x) == 1
+		return(x[1])
+	else 
+		return(TreeNode(tuple(x...)))
+	end
 end

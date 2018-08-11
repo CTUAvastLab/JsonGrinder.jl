@@ -1,7 +1,6 @@
 using Base.Test
-using Revise
 using JsonGrinder
-import JsonGrinder: ngrams, countngrams
+using JsonGrinder: ngrams, countngrams
 x = [1,3,5,2,6,8,3]
 b = 8 + 1
 

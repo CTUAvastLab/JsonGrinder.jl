@@ -63,7 +63,6 @@ FluxExtensions.learn(loss,opt,RandomBatches((data,target),100,10000))
 #calculate the accuracy
 accuracy = mean(Flux.argmax(m(data)) .== Flux.argmax(target))
 
-
 # samples = open("recipes_test.json","r") do fid 
 # 	Array{Dict}(JSON.parse(readstring(fid)))
 # end

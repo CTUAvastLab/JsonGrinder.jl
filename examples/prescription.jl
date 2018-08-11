@@ -51,7 +51,7 @@ data = mapdata(i -> sparsify(Float32.(i),0.05),data)
 
 # reflect the data structure in the model
 	m,k = reflectinmodel(data, k -> FluxExtensions.ResDense(k,10,relu))
-	m = Mill.addlayer(m,Dense(k,2))
+	push!(m,Dense(k,2))
 	m(data)
 
 #let's do the learning
