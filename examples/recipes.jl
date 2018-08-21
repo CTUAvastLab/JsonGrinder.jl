@@ -39,7 +39,7 @@ target = target.data
 function sentence2ngrams(ss::Array{T,N}) where {T<:AbstractString,N}
 	function f(s)
 		x = JsonGrinder.string2ngrams(split(s),3,2057)
-		Mill.DataNode(x,[1:size(x,2)],nothing)
+		Mill.BagNode(Mill.ArrayNode(x),[1:size(x,2)])
 	end
 	cat(map(f,ss)...)
 end
