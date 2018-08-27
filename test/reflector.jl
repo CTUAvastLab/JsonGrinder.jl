@@ -1,6 +1,5 @@
-using Base.Test
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch
-
+using LinearAlgebra
 
 @testset "Testing scalar conversion" begin
 	sc = ExtractScalar(Float64,2,3)
@@ -21,7 +20,7 @@ end
 
 @testset "Testing array conversion" begin
 	sc = ExtractArray(ExtractCategorical(Float64,2:4))
-	@test all(sc([2,3,4]).data.data .== eye(3))
+	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 3, 3))
 	@test all(sc(nothing).data.data .== [0 0 0])
 	@test all(sc(nothing).bags .== [1:1])
 	sc = ExtractArray(ExtractScalar(Float64))
@@ -32,9 +31,9 @@ end
 
 
 @testset "Testing ExtractBranch" begin
-	vec = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
+	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
 	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)));
-	br = ExtractBranch(vec,other)
+	br = ExtractBranch(vector,other)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
 	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
@@ -55,7 +54,7 @@ end
 	@test all(cat(a1,a3).data[2].bags .== [1:4,5:8])
 
 
-	br = ExtractBranch(vec,nothing)
+	br = ExtractBranch(vector,nothing)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
 	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))

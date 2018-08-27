@@ -21,7 +21,7 @@ end
 
 Entry() = Entry(Dict{Any,Int}(),0);
 types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
-Base.show(io::IO, e::Entry,offset::Int=0) = paddedprint(io, @sprintf("[Scalar - %s], %d unique values, updated = %d",join(types(e)),length(keys(e.counts)),e.updated),0)
+Base.show(io::IO, e::Entry,offset::Int=0) = paddedprint(io, @sprintf("[Scalar - %s], %d unique values, updated = %d",join(types(e)),length(keys(e.counts)),e.updated),offset = offset)
 Base.keys(e::Entry) = sort(collect(keys(e.counts)))
 
 """
@@ -60,7 +60,7 @@ ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
 function Base.show(io::IO, e::ArrayEntry,offset::Int=0) 
 	paddedprint(io, "[Vector of\n",0);
 	show(io,e.items,offset+2)
-	paddedprint(io, @sprintf(" ], updated = %d ",e.updated),offset)
+	paddedprint(io, @sprintf(" ], updated = %d ",e.updated),offset = offset)
 end
 
 function update!(a::ArrayEntry,b::Vector)
@@ -90,7 +90,7 @@ DictEntry() = DictEntry(Dict{String,Any}(),0)
 Base.getindex(s::DictEntry,k) = s.childs[k]
 
 function Base.show(io::IO, e::DictEntry,offset::Int=0)
-	paddedprint(io,"Dict\n",offset)
+	paddedprint(io,"Dict\n",offset = offset)
 	for k in keys(e.childs)
 			paddedprint(io,@sprintf("%s: ",k),offset+2);
 	  	Base.show(io,e.childs[k],offset+4)
@@ -149,11 +149,10 @@ function suggestextractor(T,e::DictEntry, mincount::Int = 0)
 	if isempty(ks)
 		return(ExtractBranch(Dict{String,Any}(),Dict{String,Any}()))
 	end
-	c = map(k -> (k,suggestextractor(T, e.childs[k], mincount)),ks)
-	mask = map(i -> typeof(i[2])<:ExtractScalar{T,S} where {T<:Number,S},c)
-	mask = mask .| map(i -> typeof(i[2])<:ExtractCategorical,c)
+	c = [(k,suggestextractor(T, e.childs[k], mincount)) for k in ks]
+	mask = map(i -> extractsmatrix(i[2]),c)
 	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
 updated(s::T) where {T<:JSONEntry} = s.updated
-suggestextractor(T,e::Entry,mincount) = ExtractScalar(eltype(map(identity,keys(e.counts))))
+suggestextractor(T,e::Entry,mincount) = ExtractScalar(eltype([k for k in keys(e.counts)]))
 suggestextractor(T,e::ArrayEntry,mincount) = ExtractArray(suggestextractor(T,e.items,mincount))

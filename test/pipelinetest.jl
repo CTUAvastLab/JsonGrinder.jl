@@ -1,5 +1,4 @@
-using Revise
-using Mill, JSON, Lazy, FluxExtensions, Flux
+using Mill, JSON, FluxExtensions, Flux, JsonGrinder
 
 using JsonGrinder: DictEntry, suggestextractor, schema, string2ngrams
 using Mill: reflectinmodel
@@ -8,9 +7,9 @@ using Mill: reflectinmodel
 	j1 = JSON.parse("""{"a": 1, "b": "hello works", "c":{ "a":1 ,"b": "hello world"}}""")
 	j2 = JSON.parse("""{"a": 2, "b": "hello world", "c":{ "a":2 ,"b": "hello"}}""")
 
-	schema = JsonGrinder.schema([j1,j2])
-	reflector = suggestextractor(Float32,schema,0)
-	dss = @>> [j1,j2] map(s-> reflector(s))
+	sch = schema([j1,j2])
+	extractor = suggestextractor(Float32, sch, 0)
+	dss = map(s-> extractor(s), [j1,j2])
 	ds = cat(dss...);
 	ds = Mill.mapdata(x -> string2ngrams(x,3,101),ds)
 	dss = map(s -> Mill.mapdata(x -> string2ngrams(x,3,101),s),dss)
@@ -32,9 +31,9 @@ end
 	j5 = JSON.parse("""{"b": {}}""")
 	j6 = JSON.parse("""{}""")
 
-	schema = JsonGrinder.schema([j1,j2,j3])
-	reflector = suggestextractor(Float32,schema,0)
-	dss = @>> [j1,j2,j3,j4,j5,j6] map(s-> reflector(s))
+	sch = JsonGrinder.schema([j1,j2,j3])
+	extractor = suggestextractor(Float32,sch,0)
+	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5,j6])
 	ds = cat(dss...);
 	m,k = reflectinmodel(ds, k -> Chain(ResDense(k,10)));
 	push!(m, Flux.Dense(k,2));
@@ -53,9 +52,9 @@ end
 	j4 = JSON.parse("""{"a": []}""")
 	j5 = JSON.parse("""{}""")
 
-	schema = JsonGrinder.schema([j1,j2,j3])
-	reflector = suggestextractor(Float32,schema,0)
-	dss = @>> [j1,j2,j3,j4,j5] map(s-> reflector(s))
+	sch = JsonGrinder.schema([j1,j2,j3])
+	extractor = suggestextractor(Float32,sch,0)
+	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5])
 	ds = cat(dss...);
 	m,k = reflectinmodel(ds, k -> Chain(ResDense(k,10)));
 	push!(m, Flux.Dense(k,2));

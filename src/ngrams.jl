@@ -4,9 +4,9 @@
 	store indexes of `n` grams of `x` with base `b` to `o`
 
 """
-function ngrams!(o,x::Vector{T},n::Int,b::Int) where {T<:Integer}
-	assert(b > maximum(x))
-	assert(length(o) >= length(x) + n - 1)
+function ngrams!(o,x::T,n::Int,b::Int) where {T<:Union{Base.CodeUnits{UInt8,S} where S,Vector{I} where I<:Integer}}
+	@assert b > maximum(x)
+	@assert length(o) >= length(x) + n - 1
 	idx = 0
 	for (i,v) in enumerate(x) 
 		idx = idx*b + v
@@ -26,8 +26,8 @@ end
 	indexes of `n` grams of `x` with base `b`
 
 """
-ngrams(x::Vector{T},n::Int,b::Int) where {T<:Integer} = 	ngrams!(zeros(Int,length(x) + n - 1),x,n,b)
-ngrams(x::T,n::Int,b::Int) where {T<:AbstractString} = ngrams(Array{UInt8}(x),n,b)
+ngrams(x::T,n::Int,b::Int) where {T<:Union{Base.CodeUnits{UInt8,S} where S,Vector{I} where I<:Integer}} = 	ngrams!(zeros(Int,length(x) + n - 1),x,n,b)
+ngrams(x::T,n::Int,b::Int) where {T<:AbstractString} = ngrams(codeunits(x),n,b)
 
 """
 	function countngrams!(o,x,n::Int,b::Int)
@@ -35,7 +35,7 @@ ngrams(x::T,n::Int,b::Int) where {T<:AbstractString} = ngrams(Array{UInt8}(x),n,
 	counts number of of `n` grams of `x` with base `b` to `o` and store it to o
 
 """
-function countngrams!(o,x::Vector{T},n::Int,b::Int) where {T<:Integer}
+function countngrams!(o,x::T,n::Int,b::Int) where {T<:Union{Base.CodeUnits{UInt8,S} where S,Vector{I} where I<:Integer}}
 	@assert b > maximum(x)
 	idx = 0
 	for (i,v) in enumerate(x) 
@@ -50,7 +50,7 @@ function countngrams!(o,x::Vector{T},n::Int,b::Int) where {T<:Integer}
 	o
 end
 
-countngrams!(o,x::T,n::Int,b::Int) where {T<:AbstractString} = countngrams!(o,Array{UInt8}(x),n,b)
+countngrams!(o,x::T,n::Int,b::Int) where {T<:AbstractString} = countngrams!(o,codeunits(x),n,b)
 
 """
 	function countngrams(x,n::Int,b::Int)

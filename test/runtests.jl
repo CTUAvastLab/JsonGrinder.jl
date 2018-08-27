@@ -1,5 +1,5 @@
 using JsonGrinder
-using Base.Test
+using Test
 
 include("reflector.jl")
 include("ngrams.jl")

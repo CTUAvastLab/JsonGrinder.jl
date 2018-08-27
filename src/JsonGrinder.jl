@@ -1,7 +1,6 @@
 __precompile__(false)
 module JsonGrinder
-using Mill
-using JSON
+using Mill, JSON, Printf
 import Mill.paddedprint
 include("schema.jl")
 
