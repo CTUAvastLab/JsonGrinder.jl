@@ -36,7 +36,7 @@ ngrams(x::T,n::Int,b::Int) where {T<:AbstractString} = ngrams(Array{UInt8}(x),n,
 
 """
 function countngrams!(o,x::Vector{T},n::Int,b::Int) where {T<:Integer}
-	assert(b > maximum(x))
+	@assert b > maximum(x)
 	idx = 0
 	for (i,v) in enumerate(x) 
 		idx = idx*b + v

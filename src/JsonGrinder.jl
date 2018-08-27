@@ -1,3 +1,4 @@
+__precompile__(false)
 module JsonGrinder
 using Mill
 using JSON
