@@ -1,41 +1,46 @@
-using Base.Test
-using Flux
-using MLDataPattern
-using Lazy
-using Revise
-using Mill
-using JsonGrinder
-using FluxExtensions
+using Flux, MLDataPattern, Mill, JsonGrinder, FluxExtensions, JSON, Statistics, Adapt
 
 import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 import Mill: mapdata, sparsify, reflectinmodel
 
-#load all samples
+###############################################################
+# start by loading all samples
+###############################################################
 samples = open("recipes.json","r") do fid 
 	Array{Dict}(JSON.parse(readstring(fid)))
 end
 JSON.print(samples[1],2)
 
-#create the schema
-schema = JsonGrinder.schema(samples);
-delete!(schema.childs,"id")
 
-# Create the extractor and modify the extractor, We discard NPI, since it is rubbish, change variables to
-# one hot encoding and remove gender, as this would be the variable to predict
+###############################################################
+# create schema of the JSON
+###############################################################
+schema = JsonGrinder.schema(samples);
+
+###############################################################
+# create extractor and split it into one for loading targets and
+# one for loading data
+###############################################################
+delete!(schema.childs,"id");
 extractor = suggestextractor(Float32,schema,2000);
 extract_data = ExtractBranch(nothing,deepcopy(extractor.other));
 extract_target = ExtractBranch(nothing,deepcopy(extractor.other));
-delete!(extract_target.other,"ingredients")
-delete!(extract_data.other,"cuisine")
-extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(schema.childs["cuisine"]))
+delete!(extract_target.other,"ingredients");
+delete!(extract_data.other,"cuisine");
+extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(schema.childs["cuisine"]));
 
-#once extractors are done, extract some training and testing data
-data = @>> samples map(extract_data);
+
+###############################################################
+# we convert JSONs to Datasets
+###############################################################
+data = map(extract_data, samples);
 data = cat(data...);
-target = @>> samples map(extract_target);
-target = cat(target...);
-target = target.data
+target = map(extract_target, samples);
+target = cat(target...).data;
 
+###############################################################
+# convert Strings to n-grams
+###############################################################
 function sentence2ngrams(ss::Array{T,N}) where {T<:AbstractString,N}
 	function f(s)
 		x = JsonGrinder.string2ngrams(split(s),3,2057)
@@ -48,20 +53,26 @@ sentence2ngrams(x) = x
 data = mapdata(sentence2ngrams,data)
 data = mapdata(i -> sparsify(Float32.(i),0.05),data)
 
-# reflect the data structure in the model
-layerbuilder =  k -> FluxExtensions.ResDense(k,20,relu)
-m,k = reflectinmodel(data[1:10], layerbuilder)
-m = Mill.addlayer(m,Dense(k,size(target,1)))
+###############################################################
+# 	create the model according to the data
+###############################################################
+m,k = reflectinmodel(data[1:10], k -> Chain(FluxExtensions.ResDense(k,20,relu)))
+push!(m,Dense(k,size(target,1)))
 m = Adapt.adapt(Float32,m)
 m(data)
 
-#let's do the learning
+###############################################################
+#  train
+###############################################################
 opt = Flux.Optimise.ADAM(params(m))
-loss = (x,y) -> FluxExtensions.logitcrossentropy(m(getobs(x)),getobs(y)) 
-FluxExtensions.learn(loss,opt,RandomBatches((data,target),100,10000))
+loss = (x,y) -> Flux.logitcrossentropy(m(getobs(x)).data,getobs(y)) 
+valdata = data[1:1000],target[:,1:1000]
+data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
+cb = () -> println("accuracy = ",mean(Flux.onecold(Flux.data(m(valdata[1]).data)) .== Flux.onecold(valdata[2])))
+Flux.Optimise.train!(loss, RandomBatches((data,target),100,10000), opt, cb = Flux.throttle(cb, 10))
 
 #calculate the accuracy
-accuracy = mean(Flux.argmax(m(data)) .== Flux.argmax(target))
+mean(Flux.onecold(Flux.data(m(data).data)) .== Flux.onecold(target))
 
 # samples = open("recipes_test.json","r") do fid 
 # 	Array{Dict}(JSON.parse(readstring(fid)))
