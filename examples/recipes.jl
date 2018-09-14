@@ -56,7 +56,7 @@ data = mapdata(i -> sparsify(Float32.(i),0.05),data)
 ###############################################################
 # 	create the model according to the data
 ###############################################################
-m,k = reflectinmodel(data[1:10], k -> Chain(FluxExtensions.ResDense(k,20,relu)))
+m,k = reflectinmodel(data[1:10], k -> Chain(Dense(k,20,relu)))
 push!(m,Dense(k,size(target,1)))
 m = Adapt.adapt(Float32,m)
 m(data)

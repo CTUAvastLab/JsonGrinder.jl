@@ -1,0 +1,9 @@
+name = "JsonGrinder"
+uuid = "d201646e-a9c0-11e8-1063-23b139159713"
+authors = ["pevnak <pevnak@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+Mill = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
