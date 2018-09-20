@@ -59,7 +59,6 @@ data = mapdata(i -> sparsify(Float32.(i),0.05),data)
 m,k = reflectinmodel(data[1:10], k -> Chain(Dense(k,20,relu)))
 push!(m,Dense(k,size(target,1)))
 m = Adapt.adapt(Float32,m)
-m(data)
 
 ###############################################################
 #  train

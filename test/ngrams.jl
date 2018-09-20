@@ -1,4 +1,4 @@
-using JsonGrinder: ngrams, countngrams
+using JsonGrinder: ngrams, countngrams, string2ngrams
 x = [1,3,5,2,6,8,3]
 b = 8 + 1
 
@@ -27,4 +27,9 @@ end
 
 		s = split("Lorem ipsum dolor sit amet, consectetur adipiscing elit")
 		@test all(countngrams(s,3,256,10) .== hcat(map(t->idx2vec(ngrams(t,3,256), 10),s)...))
+end
+
+
+@testset "string2ngrams" begin
+	@test size(string2ngrams(["","a"],3,2053)) == (2053,2)
 end
