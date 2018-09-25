@@ -1,4 +1,4 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, FluxExtensions, JSON, Statistics, Adapt
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, Adapt
 
 import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 import Mill: mapdata, sparsify, reflectinmodel
@@ -43,7 +43,7 @@ target = cat(target...).data;
 ###############################################################
 function sentence2ngrams(ss::Array{T,N}) where {T<:AbstractString,N}
 	function f(s)
-		x = JsonGrinder.string2ngrams(split(s),3,2057)
+		x = Float32.(JsonGrinder.string2ngrams(split(s),3,2057))
 		Mill.BagNode(Mill.ArrayNode(x),[1:size(x,2)])
 	end
 	cat(map(f,ss)...)
@@ -51,7 +51,7 @@ end
 sentence2ngrams(x) = x
 
 data = mapdata(sentence2ngrams,data)
-data = mapdata(i -> sparsify(Float32.(i),0.05),data)
+data = mapdata(i -> sparsify(i,0.05),data)
 
 ###############################################################
 # 	create the model according to the data

@@ -21,8 +21,11 @@ end
 
 Entry() = Entry(Dict{Any,Int}(),0);
 types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
-Base.show(io::IO, e::Entry,offset::Int=0) = paddedprint(io, @sprintf("[Scalar - %s], %d unique values, updated = %d",join(types(e)),length(keys(e.counts)),e.updated),offset = offset)
 Base.keys(e::Entry) = sort(collect(keys(e.counts)))
+function Base.show(io::IO, e::Entry;pad =[], key = "") 
+	key *= isempty(key) ? ""  : ": "
+	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,join(types(e)),length(keys(e.counts)),e.updated))
+end
 
 """
 		function update!(a::Entry,v)
@@ -57,10 +60,12 @@ end
 
 ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
 
-function Base.show(io::IO, e::ArrayEntry,offset::Int=0) 
-	paddedprint(io, "[Vector of\n",0);
-	show(io,e.items,offset+2)
-	paddedprint(io, @sprintf(" ], updated = %d ",e.updated),offset = offset)
+function Base.show(io::IO, e::ArrayEntry; pad = [], key = "") 
+  c = COLORS[(length(pad)%length(COLORS))+1]
+  # paddedprint(io,"Vector with $(length(e.items)) items(s). (updated = $(e.updated))\n", color=c)
+  paddedprint(io,"$(key): [List] (updated = $(e.updated))\n", color=c)
+  paddedprint(io, "  └── ", color=c, pad=pad)
+  show(io, e.items, pad = [pad; (c, "      ")])
 end
 
 function update!(a::ArrayEntry,b::Vector)
@@ -89,13 +94,19 @@ end
 DictEntry() = DictEntry(Dict{String,Any}(),0)
 Base.getindex(s::DictEntry,k) = s.childs[k]
 
-function Base.show(io::IO, e::DictEntry,offset::Int=0)
-	paddedprint(io,"Dict\n",offset = offset)
-	for k in keys(e.childs)
-			paddedprint(io,@sprintf("%s: ",k),offset+2);
-	  	Base.show(io,e.childs[k],offset+4)
-	  	print(io,"\n")
-  end
+function Base.show(io::IO, e::DictEntry; pad=[], key = "")
+    c = COLORS[(length(pad)%length(COLORS))+1]
+    k = sort(collect(keys(e.childs)))
+    ml = maximum(length.(k))
+    key *= isempty(key) ? "" : ": " 
+	  paddedprint(io, "$(key)[Dict]\n", color=c)
+
+    for i in 1:length(k)-1
+			paddedprint(io, "  ├── ", color=c, pad=pad)
+			show(io, e.childs[k[i]], pad=[pad; (c, "  │   ")], key = " "^(ml-length(k[i]))*k[i])
+    end
+    paddedprint(io, "  └── ", color=c, pad=pad)
+    show(io, e.childs[k[end]], pad=[pad; (c, "      ")], key = " "^(ml-length(k[end]))*k[end])
 end
 
 function update!(s::DictEntry,d::Dict)

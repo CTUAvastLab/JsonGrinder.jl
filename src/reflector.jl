@@ -27,8 +27,7 @@ dimension(s::ExtractScalar) = 1
 #handle defaults
 (s::ExtractScalar{T,V})(v::S) where {T<:Number,V,S<:Nothing}= ArrayNode(fill(zero(T),(1,1)))
 (s::ExtractScalar{T,V})(v::S) where {T<:AbstractString,V,S<:Nothing} = ArrayNode(fill("",(1,1)))
-
-Base.show(io::IO, m::ExtractScalar,offset::Int=0,prefix::String="") = paddedprint(io,prefix*"$(m.datatype)\n",offset = offset)
+Base.show(io::IO, m::ExtractScalar;pad = [], key::String="") = (key *= isempty(key) ? "" : ": "; paddedprint(io,"$(key)$(m.datatype)\n"))
 
 """
 	struct ExtractCategorical{T}
@@ -58,7 +57,7 @@ function (s::ExtractCategorical)(v)
 end
 
 (s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(zeros(s.datatype,length(s.items)))
-Base.show(io::IO, m::ExtractCategorical,offset::Int=0,prefix::String="") = paddedprint(io,prefix*"Categorical\n",offset = offset)
+Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="") = (key *= isempty(key) ? "" : ": "; paddedprint(io,"$(key)Categorical\n"))
 
 """
 	struct ExtractArray{T}
@@ -92,8 +91,9 @@ extractsmatrix(s::ExtractArray) = false
 dimension(s::ExtractArray)  = dimension(s.item)
 (s::ExtractArray)(v::V) where {V<:Nothing} = BagNode(lastcat(s.item.([nothing])...),[1:1])
 (s::ExtractArray)(v) = isempty(v) ? s(nothing) : BagNode(lastcat(s.item.(v)...),[1:length(v)])
-function Base.show(io::IO,m::ExtractArray,offset::Int=0,prefix::String="")
-	paddedprint(io,prefix*"Array of ",offset = offset)
+function Base.show(io::IO,m::ExtractArray;pad = [], key::String="")
+	key *= isempty(key) ? "" : ": "
+	paddedprint(io,"$(key)Array of ")
 	show(io,m.item)
 end
 
@@ -122,13 +122,26 @@ function Base.getindex(m::ExtractBranch, s::String)
 	nothing
 end
 
-function Base.show(io::IO,m::ExtractBranch,offset::Int=0,prefix::String="")
-	paddedprint(io,prefix*"Branch:\n",offset = offset)
+function printdict(io, d::Dict, ml, c, pad)
+	k = sort(collect(keys(d)))
+  for i in 1:length(k)-1
+		paddedprint(io, "  ├── ", color=c, pad=pad)
+		show(io, d[k[i]], pad=[pad; (c, "  │   ")], key = " "^(ml-length(k[i]))*k[i])
+  end
+  paddedprint(io, "  └── ", color=c, pad=pad)
+  show(io, d[k[end]], pad=[pad; (c, "      ")], key = " "^(ml-length(k[end]))*k[end])
+end
+
+function Base.show(io::IO,m::ExtractBranch;pad = [], key::String="")
+  c = COLORS[(length(pad)%length(COLORS))+1]
+  ml = m.vec   != nothing ? maximum(length(k) for k in keys(m.vec)) : 0
+  ml = m.other != nothing ? max(ml, maximum(length(k) for k in keys(m.other))) : ml
+
 	if m.vec != nothing
-		foreach(k -> show(io,m.vec[k],offset+2,"$(k): "),keys(m.vec))
+		printdict(io, m.vec, ml, c, pad)
 	end
 	if m.other != nothing
-		foreach(k -> show(io,m.other[k],offset+2,"$(k): "),keys(m.other))
+		printdict(io, m.other, ml, c, pad)
 	end
 end
 
