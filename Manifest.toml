@@ -4,12 +4,6 @@ git-tree-sha1 = "feb8b2c99359901e295443c9d0c7e711604acf39"
 uuid = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 version = "0.2.0"
 
-[[Adapt]]
-deps = ["LinearAlgebra", "Test"]
-git-tree-sha1 = "036ce44a518b912c43df728bfae274f8d8de9059"
-uuid = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
-version = "0.3.1"
-
 [[Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 

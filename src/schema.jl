@@ -97,22 +97,30 @@ Base.getindex(s::DictEntry,k) = s.childs[k]
 function Base.show(io::IO, e::DictEntry; pad=[], key = "")
     c = COLORS[(length(pad)%length(COLORS))+1]
     k = sort(collect(keys(e.childs)))
+    if isempty(k) 
+    	paddedprint(io, "$(key)[Empty Dict]\n", color=c)	
+    	return
+    end
     ml = maximum(length.(k))
-    key *= isempty(key) ? "" : ": " 
+    key *= ": "
 	  paddedprint(io, "$(key)[Dict]\n", color=c)
 
     for i in 1:length(k)-1
-			paddedprint(io, "  ├── ", color=c, pad=pad)
-			show(io, e.childs[k[i]], pad=[pad; (c, "  │   ")], key = " "^(ml-length(k[i]))*k[i])
+    	s = "  ├──"*"─"^(ml-length(k[i]))*" "
+			paddedprint(io, s, color=c, pad=pad)
+			show(io, e.childs[k[i]], pad=[pad; (c, "  │"*" "^(ml-length(k[i])+2))], key = k[i])
     end
-    paddedprint(io, "  └── ", color=c, pad=pad)
-    show(io, e.childs[k[end]], pad=[pad; (c, "      ")], key = " "^(ml-length(k[end]))*k[end])
+    s = "  └──"*"─"^(ml-length(k[end]))*" "
+    paddedprint(io, s, color=c, pad=pad)
+    show(io, e.childs[k[end]], pad=[pad; (c, " "^(ml-length(k[end])+4))], key = k[end])
 end
 
 function update!(s::DictEntry,d::Dict)
 	s.updated +=1
 	for (k,v) in d
+		v == nothing && continue
 		i = get(s.childs,k,newentry(v))
+		i == nothing && continue
 		update!(i,v)
 		s.childs[k] = i
 	end
@@ -125,7 +133,7 @@ end
 """
 newentry(v::Dict) = DictEntry()
 newentry(v::A) where {A<:StringOrNumber} = Entry()
-newentry(v::Vector) = ArrayEntry(newentry(v[1]))
+newentry(v::Vector) = isempty(v) ? nothing : ArrayEntry(newentry(v[1]))
 
 """
 		function schema(a::Vector{T}) where {T<:Dict}

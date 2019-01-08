@@ -1,4 +1,4 @@
-using Mill: ArrayNode, BagNode, TreeNode, lastcat
+using Mill: ArrayNode, BagNode, TreeNode, catobs
 abstract type AbstractReflector end;
 """
 	struct ExtractScalar{T}
@@ -89,8 +89,8 @@ end
 
 extractsmatrix(s::ExtractArray) = false
 dimension(s::ExtractArray)  = dimension(s.item)
-(s::ExtractArray)(v::V) where {V<:Nothing} = BagNode(lastcat(s.item.([nothing])...),[1:1])
-(s::ExtractArray)(v) = isempty(v) ? s(nothing) : BagNode(lastcat(s.item.(v)...),[1:length(v)])
+(s::ExtractArray)(v::V) where {V<:Nothing} = BagNode(reduce(catobs, s.item.([nothing])),[1:1])
+(s::ExtractArray)(v) = isempty(v) ? s(nothing) : BagNode(reduce(catobs, s.item.(v)),[1:length(v)])
 function Base.show(io::IO,m::ExtractArray;pad = [], key::String="")
 	key *= isempty(key) ? "" : ": "
 	paddedprint(io,"$(key)Array of ")
@@ -126,10 +126,10 @@ function printdict(io, d::Dict, ml, c, pad)
 	k = sort(collect(keys(d)))
   for i in 1:length(k)-1
 		paddedprint(io, "  ├── ", color=c, pad=pad)
-		show(io, d[k[i]], pad=[pad; (c, "  │   ")], key = " "^(ml-length(k[i]))*k[i])
+		show(io, d[k[i]], pad=[pad; (c, "  │   ")], key = "-"^(ml-length(k[i]))*k[i])
   end
   paddedprint(io, "  └── ", color=c, pad=pad)
-  show(io, d[k[end]], pad=[pad; (c, "      ")], key = " "^(ml-length(k[end]))*k[end])
+  show(io, d[k[end]], pad=[pad; (c, "      ")], key = "-"^(ml-length(k[end]))*k[end])
 end
 
 function Base.show(io::IO,m::ExtractBranch;pad = [], key::String="")

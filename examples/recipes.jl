@@ -44,7 +44,7 @@ target = cat(target...).data;
 function sentence2ngrams(ss::Array{T,N}) where {T<:AbstractString,N}
 	function f(s)
 		x = Float32.(JsonGrinder.string2ngrams(split(s),3,2057))
-		Mill.BagNode(Mill.ArrayNode(x),[1:size(x,2)])
+		Mill.BagNode(Mill.ArrayNode(sparsify(x, 0.05)),[1:size(x,2)])
 	end
 	cat(map(f,ss)...)
 end
@@ -58,7 +58,7 @@ data = mapdata(i -> sparsify(i,0.05),data)
 ###############################################################
 m,k = reflectinmodel(data[1:10], k -> Chain(Dense(k,20,relu)))
 push!(m,Dense(k,size(target,1)))
-m = Adapt.adapt(Float32,m)
+m = to32(m)
 
 ###############################################################
 #  train
