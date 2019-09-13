@@ -21,9 +21,19 @@ end
 
 Entry() = Entry(Dict{Any,Int}(),0);
 types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
-Base.show(io::IO, e::Entry,offset::Int=0) = paddedprint(io, @sprintf("[Scalar - %s], %d unique values, updated = %d",join(types(e)),length(keys(e.counts)),e.updated),offset = offset)
 Base.keys(e::Entry) = sort(collect(keys(e.counts)))
+function Base.show(io::IO, e::Entry;pad =[], key = "") 
+	key *= isempty(key) ? ""  : ": "
+	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,join(types(e)),length(keys(e.counts)),e.updated))
+end
 
+function suggestextractor(T,e::Entry, mincount, category_rate::Float64 = 0.1, category_level::Int = 100) 
+	if length(keys(e.counts)) / e.updated < category_rate  && length(keys(e.counts)) <= category_level
+		return(ExtractCategorical(collect(keys(e.counts))))
+	else 
+		return(extractscalar(eltype([k for k in keys(e.counts)])))
+	end
+end
 """
 		function update!(a::Entry,v)
 
@@ -57,10 +67,12 @@ end
 
 ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
 
-function Base.show(io::IO, e::ArrayEntry,offset::Int=0) 
-	paddedprint(io, "[Vector of\n",0);
-	show(io,e.items,offset+2)
-	paddedprint(io, @sprintf(" ], updated = %d ",e.updated),offset = offset)
+function Base.show(io::IO, e::ArrayEntry; pad = [], key = "") 
+  c = COLORS[(length(pad)%length(COLORS))+1]
+  # paddedprint(io,"Vector with $(length(e.items)) items(s). (updated = $(e.updated))\n", color=c)
+  paddedprint(io,"$(key): [List] (updated = $(e.updated))\n", color=c)
+  paddedprint(io, "  └── ", color=c, pad=pad)
+  show(io, e.items, pad = [pad; (c, "      ")])
 end
 
 function update!(a::ArrayEntry,b::Vector)
@@ -89,19 +101,33 @@ end
 DictEntry() = DictEntry(Dict{String,Any}(),0)
 Base.getindex(s::DictEntry,k) = s.childs[k]
 
-function Base.show(io::IO, e::DictEntry,offset::Int=0)
-	paddedprint(io,"Dict\n",offset = offset)
-	for k in keys(e.childs)
-			paddedprint(io,@sprintf("%s: ",k),offset+2);
-	  	Base.show(io,e.childs[k],offset+4)
-	  	print(io,"\n")
-  end
+function Base.show(io::IO, e::DictEntry; pad=[], key = "")
+    c = COLORS[(length(pad)%length(COLORS))+1]
+    k = sort(collect(keys(e.childs)))
+    if isempty(k) 
+    	paddedprint(io, "$(key)[Empty Dict]\n", color=c)	
+    	return
+    end
+    ml = maximum(length.(k))
+    key *= ": "
+	  paddedprint(io, "$(key)[Dict]\n", color=c)
+
+    for i in 1:length(k)-1
+    	s = "  ├──"*"─"^(ml-length(k[i]))*" "
+			paddedprint(io, s, color=c, pad=pad)
+			show(io, e.childs[k[i]], pad=[pad; (c, "  │"*" "^(ml-length(k[i])+2))], key = k[i])
+    end
+    s = "  └──"*"─"^(ml-length(k[end]))*" "
+    paddedprint(io, s, color=c, pad=pad)
+    show(io, e.childs[k[end]], pad=[pad; (c, " "^(ml-length(k[end])+4))], key = k[end])
 end
 
 function update!(s::DictEntry,d::Dict)
 	s.updated +=1
 	for (k,v) in d
+		v == nothing && continue
 		i = get(s.childs,k,newentry(v))
+		i == nothing && continue
 		update!(i,v)
 		s.childs[k] = i
 	end
@@ -114,7 +140,7 @@ end
 """
 newentry(v::Dict) = DictEntry()
 newentry(v::A) where {A<:StringOrNumber} = Entry()
-newentry(v::Vector) = ArrayEntry(newentry(v[1]))
+newentry(v::Vector) = isempty(v) ? nothing : ArrayEntry(newentry(v[1]))
 
 """
 		function schema(a::Vector{T}) where {T<:Dict}
@@ -123,15 +149,15 @@ newentry(v::Vector) = ArrayEntry(newentry(v[1]))
 		create schema from an array of parsed or unparsed JSONs
 """
 function schema(a::Vector{T}) where {T<:Dict}
-		schema = DictEntry()
-		foreach(f -> update!(schema,f),a)
-		schema
+	schema = DictEntry()
+	foreach(f -> update!(schema,f),a)
+	schema
 end
 
 function schema(a::Vector{T}) where {T<:AbstractString}
-		schema = DictEntry()
-		foreach(f -> update!(schema,JSON.parse(f)),a)
-		schema
+	schema = DictEntry()
+	foreach(f -> update!(schema,JSON.parse(f)), a)
+	schema
 end
 
 
@@ -144,15 +170,14 @@ end
 		`e` top-level of json hierarchy, typically returned by invoking schema
 		`mincount` minimum occurrence of keys to be included into the extractor (default is zero)
 """
-function suggestextractor(T,e::DictEntry, mincount::Int = 0)
+function suggestextractor(T, e::DictEntry, mincount::Int = 0, category_rate::Float64 = 0.1, category_level::Int = 100)
 	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
 	if isempty(ks)
 		return(ExtractBranch(Dict{String,Any}(),Dict{String,Any}()))
 	end
 	c = [(k,suggestextractor(T, e.childs[k], mincount)) for k in ks]
-	mask = map(i -> extractsmatrix(i[2]),c)
+	mask = map(i -> extractsmatrix(i[2]), c)
 	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
 updated(s::T) where {T<:JSONEntry} = s.updated
-suggestextractor(T,e::Entry,mincount) = ExtractScalar(eltype([k for k in keys(e.counts)]))
-suggestextractor(T,e::ArrayEntry,mincount) = ExtractArray(suggestextractor(T,e.items,mincount))
+suggestextractor(T, e::ArrayEntry, mincount::Int = 0, category_rate::Float64 = 0.1, category_level::Int = 100) = ExtractArray(suggestextractor(T,e.items,mincount))

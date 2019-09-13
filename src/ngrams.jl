@@ -36,7 +36,7 @@ ngrams(x::T,n::Int,b::Int) where {T<:AbstractString} = ngrams(codeunits(x),n,b)
 
 """
 function countngrams!(o,x::T,n::Int,b::Int) where {T<:Union{Base.CodeUnits{UInt8,S} where S,Vector{I} where I<:Integer}}
-	@assert b > maximum(x)
+	length(x) > 0 && @assert b > maximum(x)
 	idx = 0
 	for (i,v) in enumerate(x) 
 		idx = idx*b + v

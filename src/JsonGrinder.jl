@@ -1,7 +1,7 @@
 __precompile__(false)
 module JsonGrinder
 using Mill, JSON, Printf
-import Mill.paddedprint
+using Mill: paddedprint, COLORS
 include("schema.jl")
 
 include("reflector.jl")
@@ -9,4 +9,5 @@ include("ngrams.jl")
 
 
 export ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch
+export suggestextractor, schema, extractbatch
 end # module
