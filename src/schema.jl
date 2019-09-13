@@ -27,6 +27,13 @@ function Base.show(io::IO, e::Entry;pad =[], key = "")
 	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,join(types(e)),length(keys(e.counts)),e.updated))
 end
 
+function suggestextractor(T,e::Entry, mincount, category_rate::Float64 = 0.1, category_level::Int = 100) 
+	if length(keys(e.counts)) / e.updated < category_rate  && length(keys(e.counts)) <= category_level
+		return(ExtractCategorical(collect(keys(e.counts))))
+	else 
+		return(extractscalar(eltype([k for k in keys(e.counts)])))
+	end
+end
 """
 		function update!(a::Entry,v)
 
@@ -142,15 +149,15 @@ newentry(v::Vector) = isempty(v) ? nothing : ArrayEntry(newentry(v[1]))
 		create schema from an array of parsed or unparsed JSONs
 """
 function schema(a::Vector{T}) where {T<:Dict}
-		schema = DictEntry()
-		foreach(f -> update!(schema,f),a)
-		schema
+	schema = DictEntry()
+	foreach(f -> update!(schema,f),a)
+	schema
 end
 
 function schema(a::Vector{T}) where {T<:AbstractString}
-		schema = DictEntry()
-		foreach(f -> update!(schema,JSON.parse(f)),a)
-		schema
+	schema = DictEntry()
+	foreach(f -> update!(schema,JSON.parse(f)), a)
+	schema
 end
 
 
@@ -163,15 +170,14 @@ end
 		`e` top-level of json hierarchy, typically returned by invoking schema
 		`mincount` minimum occurrence of keys to be included into the extractor (default is zero)
 """
-function suggestextractor(T,e::DictEntry, mincount::Int = 0)
+function suggestextractor(T, e::DictEntry, mincount::Int = 0, category_rate::Float64 = 0.1, category_level::Int = 100)
 	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
 	if isempty(ks)
 		return(ExtractBranch(Dict{String,Any}(),Dict{String,Any}()))
 	end
 	c = [(k,suggestextractor(T, e.childs[k], mincount)) for k in ks]
-	mask = map(i -> extractsmatrix(i[2]),c)
+	mask = map(i -> extractsmatrix(i[2]), c)
 	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
 updated(s::T) where {T<:JSONEntry} = s.updated
-suggestextractor(T,e::Entry,mincount) = ExtractScalar(eltype([k for k in keys(e.counts)]))
-suggestextractor(T,e::ArrayEntry,mincount) = ExtractArray(suggestextractor(T,e.items,mincount))
+suggestextractor(T, e::ArrayEntry, mincount::Int = 0, category_rate::Float64 = 0.1, category_level::Int = 100) = ExtractArray(suggestextractor(T,e.items,mincount))

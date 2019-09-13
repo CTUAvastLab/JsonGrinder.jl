@@ -9,4 +9,5 @@ include("ngrams.jl")
 
 
 export ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch
+export suggestextractor, schema, extractbatch
 end # module
