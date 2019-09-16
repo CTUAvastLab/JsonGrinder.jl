@@ -1,4 +1,4 @@
-using Mill, JSON, Flux, JsonGrinder
+using Mill, JSON, Flux, JsonGrinder, Test
 
 using JsonGrinder: DictEntry, suggestextractor, schema, string2ngrams
 using Mill: reflectinmodel
@@ -30,7 +30,8 @@ end
 
 	sch = JsonGrinder.schema([j1,j2,j3])
 	extractor = suggestextractor(Float32,sch,0)
-	dss = reduce(catobs, map(s-> extractor(s), [j1,j2,j3,j4,j5,j6]))
+	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5,j6])
+	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k,10, relu));
 	o = m(ds).data
 
@@ -49,7 +50,8 @@ end
 
 	sch = JsonGrinder.schema([j1,j2,j3])
 	extractor = suggestextractor(Float32,sch,0)
-	dss = reduce(catobs, map(s-> extractor(s), [j1,j2,j3,j4,j5]))
+	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5])
+	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k,10, relu));
 	o = m(ds).data
 	for i in 1:length(dss)

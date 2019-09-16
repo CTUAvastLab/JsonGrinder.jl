@@ -38,3 +38,5 @@ function Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="")
 	key *= isempty(key) ? "" : ": "; 
 	paddedprint(io,"$(key)Categorical\n", color = c, pad = pad)
 end
+
+
