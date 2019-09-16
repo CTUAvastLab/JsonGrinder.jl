@@ -1,4 +1,4 @@
-using Mill, JSON, FluxExtensions, Flux, JsonGrinder
+using Mill, JSON, Flux, JsonGrinder
 
 using JsonGrinder: DictEntry, suggestextractor, schema, string2ngrams
 using Mill: reflectinmodel
@@ -9,16 +9,13 @@ using Mill: reflectinmodel
 
 	sch = schema([j1,j2])
 	extractor = suggestextractor(Float32, sch, 0)
-	dss = map(s-> extractor(s), [j1,j2])
-	ds = cat(dss...);
-	ds = Mill.mapdata(x -> string2ngrams(x,3,101),ds)
-	dss = map(s -> Mill.mapdata(x -> string2ngrams(x,3,101),s),dss)
+	ds = map(s-> extractor(s), [j1,j2])
+	dss = reduce(catobs, ds)
 
-	m,k = reflectinmodel(ds, k -> Chain(ResDense(k,10)));
-	push!(m, Flux.Dense(k,2));
-	o = Flux.data(m(ds).data)
-	for i in 1:length(dss)
-		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]).data)) .< 1e-10 )
+	m = reflectinmodel(dss, k -> Dense(k,10, relu));
+	o = m(dss).data
+	for i in 1:length(ds)
+		@test o[:,i] ≈ m(ds[i]).data
 	end
 end
 
@@ -33,14 +30,12 @@ end
 
 	sch = JsonGrinder.schema([j1,j2,j3])
 	extractor = suggestextractor(Float32,sch,0)
-	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5,j6])
-	ds = cat(dss...);
-	m,k = reflectinmodel(ds, k -> Chain(ResDense(k,10)));
-	push!(m, Flux.Dense(k,2));
-	o = Flux.data(m(ds).data)
+	dss = reduce(catobs, map(s-> extractor(s), [j1,j2,j3,j4,j5,j6]))
+	m = reflectinmodel(ds, k -> Dense(k,10, relu));
+	o = m(ds).data
 
 	for i in 1:length(dss)
-		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]).data)).< 1e-10)
+		@test o[:,i] ≈ m(dss[i]).data
 	end
 end
 
@@ -54,12 +49,10 @@ end
 
 	sch = JsonGrinder.schema([j1,j2,j3])
 	extractor = suggestextractor(Float32,sch,0)
-	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5])
-	ds = cat(dss...);
-	m,k = reflectinmodel(ds, k -> Chain(ResDense(k,10)));
-	push!(m, Flux.Dense(k,2));
-	o = Flux.data(m(ds).data)
+	dss = reduce(catobs, map(s-> extractor(s), [j1,j2,j3,j4,j5]))
+	m = reflectinmodel(ds, k -> Dense(k,10, relu));
+	o = m(ds).data
 	for i in 1:length(dss)
-		@test all(abs.(o[:,i] .- Flux.data(m(dss[i]).data)).< 1e-10)
+		@test o[:,i] ≈ m(dss[i]).data
 	end
 end
