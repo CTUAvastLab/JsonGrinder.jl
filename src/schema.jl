@@ -5,7 +5,7 @@ StringOrNumber = Union{String,Number};
 max_keys = 10000
 
 function updatemaxkeys!(n::Int)
-	max_keys = n 
+	global max_keys = n 
 end
 
 """
