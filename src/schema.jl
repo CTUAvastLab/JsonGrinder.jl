@@ -82,6 +82,11 @@ function update!(a::ArrayEntry,b::Vector)
 	a.updated +=1
 end
 
+function suggestextractor(T, node::ArrayEntry, mincount::Int = 0, category_rate::Float64 = 0.1, category_level::Int = 100) 
+	e = suggestextractor(T,node.items,mincount)
+	isnothing(e) ? e : ExtractArray(e)
+end
+
 
 """
 		mutable struct DictEntry <: JSONEntry
@@ -172,12 +177,11 @@ end
 """
 function suggestextractor(T, e::DictEntry, mincount::Int = 0, category_rate::Float64 = 0.1, category_level::Int = 100)
 	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
-	if isempty(ks)
-		return(ExtractBranch(Dict{String,Any}(),Dict{String,Any}()))
-	end
+	isempty(ks) && return(nothing)
 	c = [(k,suggestextractor(T, e.childs[k], mincount)) for k in ks]
+	c = filter(s -> s[2] != nothing, c)
+	isempty(c) && return(nothing)
 	mask = map(i -> extractsmatrix(i[2]), c)
 	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
 updated(s::T) where {T<:JSONEntry} = s.updated
-suggestextractor(T, e::ArrayEntry, mincount::Int = 0, category_rate::Float64 = 0.1, category_level::Int = 100) = ExtractArray(suggestextractor(T,e.items,mincount))

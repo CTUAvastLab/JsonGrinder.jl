@@ -1,4 +1,3 @@
-__precompile__(false)
 module JsonGrinder
 using Mill, JSON, Printf
 using Mill: paddedprint, COLORS
@@ -12,9 +11,10 @@ include("extractors/extractbranch.jl")
 include("extractors/extractcategorical.jl")
 include("extractors/extractscalar.jl")
 include("extractors/extractstring.jl")
+include("extractors/extractvector.jl")
 include("extractors/extractonehot.jl")
 
 include("ngrams.jl")
-export ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch,ExtractOneHot
+export ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch, ExtractOneHot, ExtractVector
 export suggestextractor, schema, extractbatch
 end # module
