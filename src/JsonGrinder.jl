@@ -13,8 +13,9 @@ include("extractors/extractscalar.jl")
 include("extractors/extractstring.jl")
 include("extractors/extractvector.jl")
 include("extractors/extractonehot.jl")
+include("extractors/multirepresentation.jl")
 
 include("ngrams.jl")
-export ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch, ExtractOneHot, ExtractVector
+export ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch, ExtractOneHot, ExtractVector, MultipleRepresentation, MultipleRepresentation
 export suggestextractor, schema, extractbatch
 end # module

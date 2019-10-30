@@ -63,11 +63,11 @@ function (e::ExtractOneHot{K,I,V})(vs::Vector) where {K, I, V<:Nothing}
 end
 
 function (e::ExtractOneHot{K,I,V})(vs::Vector) where {K, I, V}
-	isempty(vs) && return(spzeros(Float32, e.n, 1))
+	isempty(vs) && return(ArrayNode(spzeros(Float32, e.n, 1)))
 	ids = [get(e.key2id, v[e.k], e.n) for v in vs]
 	x = [v[e.v] for v in vs]
 	ArrayNode(sparse(ids, Ones(length(ids)), x, e.n, 1))
 end
 
 
-(e::ExtractOneHot)(::Nothing) = spzeros(Float32, e.n, 1)
+(e::ExtractOneHot)(::Nothing) = ArrayNode(spzeros(Float32, e.n, 1))
