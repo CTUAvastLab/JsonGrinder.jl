@@ -28,16 +28,11 @@ end
 extractsmatrix(s::ExtractCategorical) = false
 dimension(s::ExtractCategorical)  = s.n
 function (s::ExtractCategorical)(v)
-	# x = zeros(s.datatype, s.n , 1)
-	# x[get(s.keyvalemap, v, s.n)] = 1
-	# ArrayNode(x)
 	x = sparse([get(s.keyvalemap, v, s.n)], [1], [1f0], s.n, 1)
 	ArrayNode(x)
 end
 
 function (s::ExtractCategorical)(vs::Vector)
-	# x = zeros(s.datatype, s.n , 1)
-	# foreach(v -> x[get(s.keyvalemap, v, s.n)] = 1, vs)
 	is = [get(s.keyvalemap, v, s.n) for v in  vs]
 	js = fill(1, length(is))
 	vs = fill(1f0, length(is))
@@ -45,7 +40,7 @@ function (s::ExtractCategorical)(vs::Vector)
 	ArrayNode(x)
 end
 
-(s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(zeros(s.n, 1))
+(s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(spzeros(s.n, 1))
 function Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="") 
 	c = COLORS[(length(pad)%length(COLORS))+1]
 	key *= isempty(key) ? "" : ": "; 
