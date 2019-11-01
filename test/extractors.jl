@@ -1,3 +1,5 @@
+using JsonGrinder, JSON, Test, SparseArrays
+
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch
 using Mill: catobs
 using LinearAlgebra
@@ -109,4 +111,36 @@ end
 	@test all(catobs(a1,a4).data[1].bags .== [1:4, 5:5])
 	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0 0])
 	@test all(catobs(a1,a4).data[2].bags .== [1:3, 4:4])
+end
+
+@testset "ExtractOneHot" begin 
+	samples = ["{\"name\": \"a\", \"count\" : 1}",
+		"{\"name\": \"b\", \"count\" : 2}",]
+	vs = JSON.parse.(samples)
+
+	e = ExtractOneHot(["a","b"], "name", "count")
+	@test e(vs).data[:] ≈ [1, 2, 0]
+	@test e(nothing).data[:] ≈ [0, 0, 0] 
+	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
+	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
+
+
+	e = ExtractOneHot(["a","b"], "name", nothing)
+	@test e(vs).data[:] ≈ [1, 1, 0]
+	@test e(nothing).data[:] ≈ [0, 0, 0] 
+	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
+	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
+	vs = JSON.parse.(["{\"name\": \"c\", \"count\" : 1}"])
+	@test e(vs).data[:] ≈ [0, 0, 1]
+	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
+end
+
+@testset "ExtractCategorical" begin 
+	e = ExtractCategorical(["a","b"])
+	@test e("a").data[:] ≈ [1, 0, 0]
+	@test e("b").data[:] ≈ [0, 1, 0]
+	@test e("z").data[:] ≈ [0, 0, 1]
+	@test e(nothing).data[:] ≈ [0, 0, 0]
+	@test typeof(e("a").data) == SparseMatrixCSC{Float32,Int64}
+	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
 end

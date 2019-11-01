@@ -40,7 +40,7 @@ function (s::ExtractCategorical)(vs::Vector)
 	ArrayNode(x)
 end
 
-(s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(spzeros(s.n, 1))
+(s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(spzeros(Float32, s.n, 1))
 function Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="") 
 	c = COLORS[(length(pad)%length(COLORS))+1]
 	key *= isempty(key) ? "" : ": "; 
