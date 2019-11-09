@@ -10,16 +10,6 @@ using LinearAlgebra
 	@test all(sc(nothing).data .== [0])
 end
 
-@testset "Testing categorical conversion to one hot" begin
-	sc = ExtractCategorical(Float64,2:4)
-	@test all(sc(2).data .== [1,0,0])
-	@test all(sc(3).data .== [0,1,0])
-	@test all(sc(4).data .== [0,0,1])
-	@test all(sc(5).data .== [0,0,0])
-	@test all(sc(nothing).data .== [0,0,0])
-end
-
-
 @testset "Testing array conversion" begin
 	sc = ExtractArray(ExtractCategorical(Float64,2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 3, 3))
@@ -127,11 +117,11 @@ end
 	e = ExtractOneHot(["a","b"], "name", nothing)
 	@test e(vs).data[:] ≈ [1, 1, 0]
 	@test e(nothing).data[:] ≈ [0, 0, 0] 
-	@test typeof(e(vs).data) == SparseMatrixCSC{Bool,Int64}
-	@test typeof(e(nothing).data) == SparseMatrixCSC{Bool,Int64}
+	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
+	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
 	vs = JSON.parse.(["{\"name\": \"c\", \"count\" : 1}"])
 	@test e(vs).data[:] ≈ [0, 0, 1]
-	@test typeof(e(vs).data) == SparseMatrixCSC{Bool,Int64}
+	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
 end
 
 @testset "ExtractCategorical" begin 
@@ -140,6 +130,6 @@ end
 	@test e("b").data[:] ≈ [0, 1, 0]
 	@test e("z").data[:] ≈ [0, 0, 1]
 	@test e(nothing).data[:] ≈ [0, 0, 0]
-	@test typeof(e("a").data) == SparseMatrixCSC{Bool,Int64}
-	@test typeof(e(nothing).data) == SparseMatrixCSC{Bool,Int64}
+	@test typeof(e("a").data) == SparseMatrixCSC{Float32,Int64}
+	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
 end
