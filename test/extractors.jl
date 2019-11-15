@@ -11,8 +11,8 @@ using LinearAlgebra
 end
 
 @testset "Testing array conversion" begin
-	sc = ExtractArray(ExtractCategorical(Float64,2:4))
-	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 3, 3))
+	sc = ExtractArray(ExtractCategorical(2:4))
+	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
 	@test all(sc(nothing).data.data .== [0 0 0])
 	@test all(sc(nothing).bags .== [1:1])
 	sc = ExtractArray(ExtractScalar(Float64))

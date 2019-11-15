@@ -1,19 +1,18 @@
 """
-	struct ExtractCategorical{T}
-		datatype::Type{T}
-		items::T
-	end
+	ExtractCategorical(s::Entry)
+	ExtractCategorical(s::UnitRange)
+	ExtractCategorical(s::Vector)
 
-	Convert scalar to one-hot encoded array.
+	Converts a single item to a one-hot encoded vector. There is always alocated an extra 
+	element for a unknown value
 """
-struct ExtractCategorical{T,I<:Dict} <: AbstractExtractor
-	datatype::Type{T}
+struct ExtractCategorical{I<:Dict} <: AbstractExtractor
 	keyvalemap::I
 	n::Int
 end
 
-ExtractCategorical(T,s::Entry) = ExtractCategorical(T, keys(s.counts))
-ExtractCategorical(T,s::UnitRange) = ExtractCategorical(T,collect(s))
+ExtractCategorical(s::Entry) = ExtractCategorical(keys(s.counts))
+ExtractCategorical(s::UnitRange) = ExtractCategorical(collect(s))
 function ExtractCategorical(ks::Vector)
 	if isempty(ks)
 		@warn "Skipping initializing empty categorical variable does not make much sense to me"
@@ -21,7 +20,7 @@ function ExtractCategorical(ks::Vector)
 	end
 	ks = sort(unique(ks));
 	T = typeof(ks[1])
-	ExtractCategorical(Float32, Dict{T, Int}(zip(ks, 1:length(ks))), length(ks) +1)
+	ExtractCategorical(Dict{T,Int}(zip(ks, 1:length(ks))), length(ks) +1)
 end
 
 

@@ -14,7 +14,7 @@ end
 		updated::Int
 	end
 
-	Keeps statistics about scalar values of a one key
+	Keeps statistics about scalar values of a one key and also about items inside a key
 	`count` counts how many times given value appeared (at most max_keys is held)
 	`updated` counts how many times the entry was updated
 """
@@ -31,12 +31,20 @@ function Base.show(io::IO, e::Entry;pad =[], key = "")
 	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,join(types(e)),length(keys(e.counts)),e.updated))
 end
 
-function suggestextractor(T,e::Entry, mincount, category_rate::Float64 = 0.1, category_level::Int = 100) 
-	if length(keys(e.counts)) / e.updated < category_rate  && length(keys(e.counts)) <= category_level
-		return(ExtractCategorical(collect(keys(e.counts))))
-	else 
-		return(extractscalar(eltype([k for k in keys(e.counts)])))
+function suggestextractor(e::Entry, settings)
+	t = promote_type(unique(typeof.(keys(e.counts)))...)
+	t == Any  && @error "JSON does not have a fixed type scheme, quitting"
+
+	for (c, ex) in get(settings, :scalar_extractors, default_scalar_extractor())
+		c(e) && return(ex(e))
 	end
+end
+
+function default_scalar_extractor()
+	[(e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
+		e -> ExtractCategorical(collect(keys(e.counts)))),
+	(e -> true,
+		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
 end
 """
 		function update!(a::Entry,v)
@@ -86,8 +94,8 @@ function update!(a::ArrayEntry,b::Vector)
 	a.updated +=1
 end
 
-function suggestextractor(T, node::ArrayEntry, mincount::Int = 0, category_rate::Float64 = 0.1, category_level::Int = 100) 
-	e = suggestextractor(T,node.items,mincount)
+function suggestextractor(node::ArrayEntry, settings) 
+	e = suggestextractor(node.items, settings)
 	isnothing(e) ? e : ExtractArray(e)
 end
 
@@ -166,23 +174,25 @@ end
 function schema(a::Vector{T}) where {T<:AbstractString}
 	schema = DictEntry()
 	foreach(f -> update!(schema,JSON.parse(f)), a)
-	schema
+	return(schema)
 end
 
 
 """
-		suggestextractor(T,e::DictEntry, mincount::Int = 0)
+		suggestextractor(e::DictEntry, settings)
 
 		create convertor of json to tree-structure of `DataNode`
 
-		`T` type for numeric types
 		`e` top-level of json hierarchy, typically returned by invoking schema
-		`mincount` minimum occurrence of keys to be included into the extractor (default is zero)
+		`settings.mincount` contains minimum repetition of the key to be included into
+		the extractor (if missing it is equal to zero)
+		`settings` can be any container supporting `get` function 
 """
-function suggestextractor(T, e::DictEntry, mincount::Int = 0, category_rate::Float64 = 0.1, category_level::Int = 100)
+function suggestextractor(e::DictEntry, settings = NamedTuple())
+	mincount = get(settings, :mincount, 0)
 	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
 	isempty(ks) && return(nothing)
-	c = [(k,suggestextractor(T, e.childs[k], mincount)) for k in ks]
+	c = [(k,suggestextractor(e.childs[k], settings)) for k in ks]
 	c = filter(s -> s[2] != nothing, c)
 	isempty(c) && return(nothing)
 	mask = map(i -> extractsmatrix(i[2]), c)

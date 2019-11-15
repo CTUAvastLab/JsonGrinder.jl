@@ -1,6 +1,6 @@
 using Mill, JSON, Flux, JsonGrinder, Test
 
-using JsonGrinder: DictEntry, suggestextractor, schema, string2ngrams
+using JsonGrinder: DictEntry, suggestextractor, schema
 using Mill: reflectinmodel
 
 @testset "testing pipeline mixing different types of arrays" begin
@@ -8,7 +8,7 @@ using Mill: reflectinmodel
 	j2 = JSON.parse("""{"a": 2, "b": "hello world", "c":{ "a":2 ,"b": "hello"}}""")
 
 	sch = schema([j1,j2])
-	extractor = suggestextractor(Float32, sch, 0)
+	extractor = suggestextractor(sch)
 	ds = map(s-> extractor(s), [j1,j2])
 	dss = reduce(catobs, ds)
 
@@ -29,7 +29,7 @@ end
 	j6 = JSON.parse("""{}""")
 
 	sch = JsonGrinder.schema([j1,j2,j3])
-	extractor = suggestextractor(Float32,sch,0)
+	extractor = suggestextractor(sch)
 	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5,j6])
 	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k,10, relu));
@@ -49,7 +49,7 @@ end
 	j5 = JSON.parse("""{}""")
 
 	sch = JsonGrinder.schema([j1,j2,j3])
-	extractor = suggestextractor(Float32,sch,0)
+	extractor = suggestextractor(sch)
 	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5])
 	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k,10, relu));

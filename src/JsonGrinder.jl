@@ -15,8 +15,6 @@ include("extractors/extractvector.jl")
 include("extractors/extractonehot.jl")
 include("extractors/multirepresentation.jl")
 
-include("ngrams.jl")
-
 using Zygote, SparseArrays
 Zygote.@adjoint function(A::Matrix * B::SparseMatrixCSC)
   	return A * B, Δ::AbstractMatrix->(Δ * B', nothing)
