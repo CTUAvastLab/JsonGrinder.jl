@@ -2,6 +2,7 @@ module JsonGrinder
 using Mill, JSON, Printf
 using Mill: paddedprint, COLORS
 include("schema.jl")
+include("html_show_tools.jl")
 
 
 using Mill: ArrayNode, BagNode, TreeNode, catobs
@@ -22,5 +23,5 @@ end
 
 
 export ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString
-export suggestextractor, schema, extractbatch
+export suggestextractor, schema, extractbatch, generate_html
 end # module

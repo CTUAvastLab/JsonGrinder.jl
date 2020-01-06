@@ -1,26 +1,26 @@
-using Base.Test
+using Test
 using Flux
 using MLDataPattern
-using Lazy
-using Revise
 using Mill
 using JsonGrinder
+using JSON
 using FluxExtensions
 
 import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 import Mill: mapdata, sparsify, reflectinmodel
 
 #load all samples
-samples = open("prescription.jsonl") do fid
-	readlines(fid)
+samples_str = open("examples/recipes.json") do fid
+	read(fid, String)
 end
-JSON.print(samples[1],2)
+
+samples = convert(Vector{Dict}, JSON.parse(samples_str))
 
 #print example of the JSON
-	JSON.print(JSON.parse(samples[1]),2)
+JSON.print(samples[1],2)
 
 #create schema of the json
-	schema = JsonGrinder.schema(samples);
+schema = JsonGrinder.schema(samples)
 
 # Create the extractor and modify the extractor, We discard NPI, since it is rubbish, change variables to
 # one hot encoding and remove gender, as this would be the variable to predict
@@ -56,7 +56,7 @@ data = mapdata(i -> sparsify(Float32.(i),0.05),data)
 
 #let's do the learning
 	opt = Flux.Optimise.ADAM(params(m))
-	loss = (x,y) -> FluxExtensions.logitcrossentropy(m(getobs(x)),getobs(y)) 
+	loss = (x,y) -> FluxExtensions.logitcrossentropy(m(getobs(x)),getobs(y))
 	FluxExtensions.learn(loss,opt,RandomBatches((data,target),100,10000))
 
 #evaluate
