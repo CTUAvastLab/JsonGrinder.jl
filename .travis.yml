@@ -19,6 +19,7 @@ jobs:
 
 # run tests
 script:
+  - julia --color=yes -e 'using Pkg; Pkg.activate("."); Pkg.clone("https://github.com/pevnak/FluxExtensions.jl.git")'
   - julia --color=yes -e 'using Pkg; Pkg.activate("."); Pkg.instantiate(); Pkg.test()'
 
 after_success:
