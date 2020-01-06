@@ -37,7 +37,7 @@ function suggestextractor(e::Entry, settings)
 	t == Any  && @error "JSON does not have a fixed type scheme, quitting"
 
 	for (c, ex) in get(settings, :scalar_extractors, default_scalar_extractor())
-		c(e) && return(ex(e))
+		c(e) && return ex(e)
 	end
 end
 
