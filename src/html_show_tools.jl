@@ -121,24 +121,60 @@ function generate_html(sch::DictEntry, file_name="output.html"; max_vals=100)
         	.caret-down::before {/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
             	transform: rotate(90deg);
         	}
-        	.nested {/* Hide the nested list */
-            	display: none;
-        	}
-        	.active {/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
-            	display: block;
-        	}
+            .nested { /* Hide the nested list */
+                display: none;
+            }
+            .active { /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+                display: block;
+            }
+            label { /* Style the label */
+                cursor: pointer;
+            }
+            .invisible {
+                display: none;
+            }
+            #show_block {
+                position: absolute;
+                right: 5%;
+            }
     	</style>
 		</head>
 		<body>
+		<button type="button" id="generate_button">Generate selected items list</button>
+        # todo: dodělat, přidat tlačítko na copypastu
+        <div id="show_block" class="invisible"><div id="selectors"></div></div>
 		{{{list_dump}}}
-		<script>
-		Array.prototype.forEach.call(document.getElementsByClassName("caret"), function(toggler, index) {
-		toggler.addEventListener("click", function () {
-			this.parentElement.querySelector(".nested").classList.toggle("active");
-			this.classList.toggle("caret-down");
-			});
-			});
-		</script>
+<script>
+    Array.prototype.forEach.call(document.getElementsByClassName("caret"), function (toggler, index) {
+        toggler.addEventListener("click", function () {
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("caret-down");
+        });
+    });
+    document.getElementById("generate_button").addEventListener("click", function () {
+        let show_block = document.getElementById("show_block");
+        show_block.classList.toggle("invisible");
+        show_block.innerHTML = Array
+            .from(document.querySelectorAll("label > input[type=checkbox]:checked"))
+            .map(x => x.parentElement.textContent).join("<br/>");
+    });
+    // onclick="CopyToClipboard('div1')
+    function CopyToClipboard(containerid) {
+        if (document.selection) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(document.getElementById(containerid));
+            range.select().createTextRange();
+            document.execCommand("copy");
+
+        } else if (window.getSelection) {
+            var range = document.createRange();
+            range.selectNode(document.getElementById(containerid));
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+            alert("text copied")
+        }
+    }
+</script>
 		</body>
 		</html>
 """
