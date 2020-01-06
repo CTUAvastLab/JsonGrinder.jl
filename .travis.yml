@@ -17,6 +17,10 @@ jobs:
   allow_failures:
     - julia: nightly
 
+# run tests
+script:
+  - julia --color=yes -e 'using Pkg; Pkg.activate(); Pkg.instantiate(); Pkg.test()'
+
 after_success:
   # push coverage results to Coveralls
   - julia --color=yes -e 'cd(Pkg.dir("JsonGrinder")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
