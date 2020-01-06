@@ -1,11 +1,12 @@
-using JSON
+using JSON, Printf
+import Base: merge
 
 abstract type JSONEntry end;
 StringOrNumber = Union{String,Number};
 max_keys = 10000
 
 function updatemaxkeys!(n::Int)
-	global max_keys = n 
+	global max_keys = n
 end
 
 """
@@ -26,7 +27,7 @@ end
 Entry() = Entry(Dict{Any,Int}(),0);
 types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
 Base.keys(e::Entry) = sort(collect(keys(e.counts)))
-function Base.show(io::IO, e::Entry;pad =[], key = "") 
+function Base.show(io::IO, e::Entry;pad =[], key = "")
 	key *= isempty(key) ? ""  : ": "
 	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,join(types(e)),length(keys(e.counts)),e.updated))
 end
@@ -50,7 +51,7 @@ end
 		function update!(a::Entry,v)
 
 		updates the entry when seeing value v
-"""	
+"""
 function update!(a::Entry,v)
 	if length(keys(a.counts)) < max_keys
 		a.counts[v] = get(a.counts,v,0) + 1
@@ -66,9 +67,9 @@ end
 			updated::Int
 		end
 
-		keeps statistics about an array entry in JSON. 
+		keeps statistics about an array entry in JSON.
 		`items` is typeof `Entry` and keeps statistics about the elements of the array
-		`l` keeps histogram of message length 
+		`l` keeps histogram of message length
 		`updated` counts how many times the struct was updated.
 """
 mutable struct ArrayEntry{A<:JSONEntry} <: JSONEntry
@@ -79,7 +80,7 @@ end
 
 ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
 
-function Base.show(io::IO, e::ArrayEntry; pad = [], key = "") 
+function Base.show(io::IO, e::ArrayEntry; pad = [], key = "")
   c = COLORS[(length(pad)%length(COLORS))+1]
   # paddedprint(io,"Vector with $(length(e.items)) items(s). (updated = $(e.updated))\n", color=c)
   paddedprint(io,"$(key): [List] (updated = $(e.updated))\n", color=c)
@@ -94,7 +95,7 @@ function update!(a::ArrayEntry,b::Vector)
 	a.updated +=1
 end
 
-function suggestextractor(node::ArrayEntry, settings) 
+function suggestextractor(node::ArrayEntry, settings)
 	e = suggestextractor(node.items, settings)
 	isnothing(e) ? e : ExtractArray(e)
 end
@@ -106,7 +107,7 @@ end
 			updated::Int
 		end
 
-		keeps statistics about an object in json 
+		keeps statistics about an object in json
 		`childs` maintains key-value statistics of childrens. All values should be JSONEntries
 		`updated` counts how many times the struct was updated.
 """
@@ -121,8 +122,8 @@ Base.getindex(s::DictEntry,k) = s.childs[k]
 function Base.show(io::IO, e::DictEntry; pad=[], key = "")
     c = COLORS[(length(pad)%length(COLORS))+1]
     k = sort(collect(keys(e.childs)))
-    if isempty(k) 
-    	paddedprint(io, "$(key)[Empty Dict]\n", color=c)	
+    if isempty(k)
+    	paddedprint(io, "$(key)[Empty Dict]\n", color=c)
     	return
     end
     ml = maximum(length.(k))
@@ -162,7 +163,7 @@ newentry(v::Vector) = isempty(v) ? nothing : ArrayEntry(newentry(v[1]))
 """
 		function schema(a::Vector{T}) where {T<:Dict}
 		function schema(a::Vector{T}) where {T<:AbstractString}
-	
+
 		create schema from an array of parsed or unparsed JSONs
 """
 function schema(a::Vector{T}) where {T<:Dict}
@@ -174,7 +175,7 @@ end
 function schema(a::Vector{T}) where {T<:AbstractString}
 	schema = DictEntry()
 	foreach(f -> update!(schema,JSON.parse(f)), a)
-	return(schema)
+	schema
 end
 
 
@@ -186,7 +187,7 @@ end
 		`e` top-level of json hierarchy, typically returned by invoking schema
 		`settings.mincount` contains minimum repetition of the key to be included into
 		the extractor (if missing it is equal to zero)
-		`settings` can be any container supporting `get` function 
+		`settings` can be any container supporting `get` function
 """
 function suggestextractor(e::DictEntry, settings = NamedTuple())
 	mincount = get(settings, :mincount, 0)
@@ -199,3 +200,22 @@ function suggestextractor(e::DictEntry, settings = NamedTuple())
 	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
 updated(s::T) where {T<:JSONEntry} = s.updated
+
+function merge(es::Entry...)
+	updates_merged = sum(map(x->x.updated, es))
+	counts_merged = merge(+, map(x->x.counts, es)...)
+	Entry(counts_merged, updates_merged)
+end
+
+function merge(es::ArrayEntry...)
+	updates_merged = sum(map(x->x.updated, es))
+	l_merged = merge(+, map(x->x.l, es)...)
+	items_merged = merge(map(x->x.items, es)...)
+	ArrayEntry(items_merged, l_merged, updates_merged)
+end
+
+function merge(es::DictEntry...)
+	updates_merged = sum(map(x->x.updated, es))
+	childs_merged = merge(map(x->x.childs_merged, es)...)
+	DictEntry(childs_merged, updates_merged)
+end

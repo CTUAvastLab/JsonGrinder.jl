@@ -4,7 +4,6 @@ using Mill: paddedprint, COLORS
 include("schema.jl")
 include("html_show_tools.jl")
 
-
 using Mill: ArrayNode, BagNode, TreeNode, catobs
 abstract type AbstractExtractor end;
 include("extractors/extractarray.jl")

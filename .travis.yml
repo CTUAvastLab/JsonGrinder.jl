@@ -19,7 +19,7 @@ jobs:
 
 # run tests
 script:
-  - julia --color=yes -e 'using Pkg; Pkg.activate(); Pkg.instantiate(); Pkg.test()'
+  - julia --color=yes -e 'using Pkg; Pkg.activate("."); Pkg.instantiate(); Pkg.test()'
 
 after_success:
   # push coverage results to Coveralls

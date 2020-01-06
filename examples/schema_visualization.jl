@@ -14,10 +14,10 @@ samples = convert(Vector{Dict}, JSON.parse(samples_str))
 JSON.print(samples[1],2)
 
 #create schema of the json
-schema = JsonGrinder.schema(samples)
+sch = JsonGrinder.schema(samples)
 
 # generate html, keeping only 100 unique values per item
-generate_html(schema, "recipes_max_vals=100.html", max_vals=100)
+generate_html(sch, "recipes_max_vals=100.html", max_vals=100)
 
 #generate html, keep all values from schema
-generate_html(schema, "recipes.html", max_vals=nothing)
+generate_html(sch, "recipes.html", max_vals=nothing)
