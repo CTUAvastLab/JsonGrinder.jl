@@ -1,4 +1,3 @@
-
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools
 
 using JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
@@ -7,11 +6,11 @@ using Mill: mapdata, sparsify, reflectinmodel
 ###############################################################
 # start by loading all samples
 ###############################################################
-samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/train.json")) do s 
+samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/train.json")) do s
 	JSON.parse(s)
 end
 JSON.print(samples[1],2)
-test_samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/test.json")) do s 
+test_samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/test.json")) do s
 	JSON.parse(s)
 end
 ns = extract_target.vec["device_class"].items
@@ -39,7 +38,7 @@ function makebatch()
 end
 opt = ADAM()
 ps = params(model)
-loss = (x,y) -> Flux.logitcrossentropy(model(x).data,y) 
+loss = (x,y) -> Flux.logitcrossentropy(model(x).data,y)
 
 #a little test before training
 # x, y = makebatch()

@@ -35,7 +35,6 @@ function schema2html(e::ArrayEntry; pad = "", max_vals=100, parent_updated=nothi
  	c = HTML_COLORS[((length(pad)÷2)%length(COLORS))+1]
 	# todo: fix it all so it is different method for array of entries and the rest so only nested things are truly nested
 	filled_percent = isnothing(parent_updated) ? "" : ", filled=$(10000 * e.updated ÷ parent_updated / 100)%"
-	# el_vals = keys(e.l)
 	quantiles = quantile(e.l, [0.1, 0.5, 0.9])
 	min_val = minimum(keys(e.l))
 	max_val = maximum(keys(e.l))
@@ -81,7 +80,7 @@ function schema2html(e::DictEntry; pad = "", max_vals=100, parent_updated=nothin
 	i = 0
     for (key, val) in sort(e.childs)
 		child_key = """$parent_key["$key"]"""
-		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - $child_key\n"""
+		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$child_key" value="$child_key"></label>\n"""
 		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, parent_updated=e.updated, parent_key=child_key)
 		ret_str *= pad*" "^2 * "</li>\n"
 		i += 1
@@ -130,9 +129,6 @@ function generate_html(sch::DictEntry, file_name="output.html"; max_vals=100)
             label { /* Style the label */
                 cursor: pointer;
             }
-            .invisible {
-                display: none;
-            }
             #show_block {
                 position: absolute;
                 right: 5%;
@@ -140,40 +136,34 @@ function generate_html(sch::DictEntry, file_name="output.html"; max_vals=100)
     	</style>
 		</head>
 		<body>
-		<button type="button" id="generate_button">Generate selected items list</button>
-        # todo: dodělat, přidat tlačítko na copypastu
-        <div id="show_block" class="invisible"><div id="selectors"></div></div>
+		<div id="show_block">
+		    <div id="selectors_output"></div>
+		    <button type="button" id="copy_clipboard">Copy selectors to clipboard</button>
+		</div>
 		{{{list_dump}}}
 <script>
-    Array.prototype.forEach.call(document.getElementsByClassName("caret"), function (toggler, index) {
-        toggler.addEventListener("click", function () {
-            this.parentElement.querySelector(".nested").classList.toggle("active");
-            this.classList.toggle("caret-down");
-        });
-    });
-    document.getElementById("generate_button").addEventListener("click", function () {
-        let show_block = document.getElementById("show_block");
-        show_block.classList.toggle("invisible");
-        show_block.innerHTML = Array
-            .from(document.querySelectorAll("label > input[type=checkbox]:checked"))
-            .map(x => x.parentElement.textContent).join("<br/>");
-    });
-    // onclick="CopyToClipboard('div1')
-    function CopyToClipboard(containerid) {
-        if (document.selection) {
-            var range = document.body.createTextRange();
-            range.moveToElementText(document.getElementById(containerid));
-            range.select().createTextRange();
-            document.execCommand("copy");
-
-        } else if (window.getSelection) {
-            var range = document.createRange();
-            range.selectNode(document.getElementById(containerid));
-            window.getSelection().addRange(range);
-            document.execCommand("copy");
-            alert("text copied")
-        }
-    }
+Array.prototype.forEach.call(document.getElementsByClassName("caret"), function (toggler, index) {
+	toggler.addEventListener("click", function () {
+		this.parentElement.querySelector(".nested").classList.toggle("active");
+		this.classList.toggle("caret-down");
+	});
+});
+Array.prototype.forEach.call(document.querySelectorAll("label > input[type=checkbox]"), function (toggler, index) {
+	toggler.addEventListener("change", function () {
+		document.getElementById("selectors_output").innerHTML = Array
+			.from(document.querySelectorAll("label > input[type=checkbox]:checked"))
+			.map(x => x.parentElement.textContent).join("<br/>");
+	});
+});
+document.getElementById("copy_clipboard").addEventListener("click", function () {
+	console.log(document.getElementById("selectors_output").innerText);
+	let range = document.createRange();
+	range.selectNode(document.getElementById("selectors_output"));
+	window.getSelection().removeAllRanges(); // clear current selection
+	window.getSelection().addRange(range); // to select text
+	document.execCommand("copy");
+	window.getSelection().removeAllRanges();// to deselect
+});
 </script>
 		</body>
 		</html>
