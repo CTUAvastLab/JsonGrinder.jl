@@ -58,3 +58,23 @@ end
 		@test o[:,i] ≈ m(dss[i]).data
 	end
 end
+
+
+@testset "testing schema merging" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
+	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
+	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+	j4 = JSON.parse("""{"a": []}""")
+	j5 = JSON.parse("""{}""")
+	j6 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}], "b": 1}""")
+
+	sch1 = JsonGrinder.schema([j1,j2,j3])
+	sch2 = JsonGrinder.schema([j4,j5,j6])
+	sch3 = JsonGrinder.schema([j4,j5])
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
+	sch1.i
+	sch_merged = merge(sch1, sch2)
+
+	@test sch ≈ sch_merged
+end

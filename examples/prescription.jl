@@ -61,3 +61,10 @@ data = mapdata(i -> sparsify(Float32.(i),0.05),data)
 
 #evaluate
 	accuracy = mean(Flux.argmax(m(data)) .== Flux.argmax(target))
+
+# schema can also be created in parallel for better performance, compare:
+using BenchmarkTools, ThreadTools
+# single threaded
+@btime JsonGrinder.schema(samples)
+# multi threaded
+@btime merge(tmap(x->JsonGrinder.schema(collect(x)), Iterators.partition(samples, 10_000))...)

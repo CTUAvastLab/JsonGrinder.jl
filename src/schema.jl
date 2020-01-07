@@ -210,12 +210,23 @@ end
 function merge(es::ArrayEntry...)
 	updates_merged = sum(map(x->x.updated, es))
 	l_merged = merge(+, map(x->x.l, es)...)
-	items_merged = merge(map(x->x.items, es)...)
+	items_merged = merge(merge, map(x->x.items, es)...)
 	ArrayEntry(items_merged, l_merged, updates_merged)
 end
 
 function merge(es::DictEntry...)
 	updates_merged = sum(map(x->x.updated, es))
-	childs_merged = merge(map(x->x.childs_merged, es)...)
+	childs_merged = merge(merge, map(x->x.childs, es)...)
 	DictEntry(childs_merged, updates_merged)
 end
+
+merge(combine::typeof(merge), es::JSONEntry...) = merge(es...)
+#
+# function merge!(combine::Function, d::AbstractDict, others::AbstractDict...)
+#     for other in others
+#         for (k,v) in other
+#             d[k] = haskey(d, k) ? combine(d[k], v) : v
+#         end
+#     end
+#     return d
+# end
