@@ -1,8 +1,8 @@
 using JSON, Printf
 import Base: merge
 
-abstract type JSONEntry end;
-StringOrNumber = Union{String,Number};
+abstract type JSONEntry end
+StringOrNumber = Union{String,Number}
 max_keys = 10000
 
 function updatemaxkeys!(n::Int)
@@ -61,19 +61,19 @@ end
 
 
 """
-		mutable struct ArrayEntry{A<:JSONEntry} <: JSONEntry
-			items::A
+		mutable struct ArrayEntry <: JSONEntry
+			items
 			l::Dict{Int,Int}
 			updated::Int
 		end
 
 		keeps statistics about an array entry in JSON.
-		`items` is typeof `Entry` and keeps statistics about the elements of the array
+		`items` is typeof `Entry` or nothing and keeps statistics about the elements of the array
 		`l` keeps histogram of message length
 		`updated` counts how many times the struct was updated.
 """
-mutable struct ArrayEntry{A<:JSONEntry} <: JSONEntry
-	items::A
+mutable struct ArrayEntry <: JSONEntry
+	items	# Tried to make type stable optional type, didn't work
 	l::Dict{Int,Int}
 	updated::Int
 end
@@ -83,19 +83,30 @@ ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
 function Base.show(io::IO, e::ArrayEntry; pad = [], key = "")
   c = COLORS[(length(pad)%length(COLORS))+1]
   # paddedprint(io,"Vector with $(length(e.items)) items(s). (updated = $(e.updated))\n", color=c)
+  if isnothing(e.items)
+	paddedprint(io, "$(key): [Empty List] (updated = $(e.updated))\n", color=c)
+	return
+  end
   paddedprint(io,"$(key): [List] (updated = $(e.updated))\n", color=c)
   paddedprint(io, "  └── ", color=c, pad=pad)
   show(io, e.items, pad = [pad; (c, "      ")])
 end
 
-function update!(a::ArrayEntry,b::Vector)
+function update!(a::ArrayEntry, b::Vector)
 	n = length(b)
-	a.l[n] = get(a.l,n,0) + 1
-	foreach(v -> update!(a.items,v),b)
 	a.updated +=1
+	a.l[n] = get(a.l,n,0) + 1
+	n == 0 && return
+	if isnothing(a.items)
+		 a.items = newentry(b).items
+	end
+	foreach(v -> update!(a.items,v), b)
 end
 
 function suggestextractor(node::ArrayEntry, settings)
+	if isnothing(node.items)
+		throw(ArgumentError("empty array, can not suggest extractor"))
+	end
 	e = suggestextractor(node.items, settings)
 	isnothing(e) ? e : ExtractArray(e)
 end
@@ -123,12 +134,12 @@ function Base.show(io::IO, e::DictEntry; pad=[], key = "")
     c = COLORS[(length(pad)%length(COLORS))+1]
     k = sort(collect(keys(e.childs)))
     if isempty(k)
-    	paddedprint(io, "$(key)[Empty Dict]\n", color=c)
+    	paddedprint(io, "$(key)[Empty Dict] (updated = $(e.updated))\n", color=c)
     	return
     end
     ml = maximum(length.(k))
     key *= ": "
-	  paddedprint(io, "$(key)[Dict]\n", color=c)
+	  paddedprint(io, "$(key)[Dict] (updated = $(e.updated))\n", color=c)
 
     for i in 1:length(k)-1
     	s = "  ├──"*"─"^(ml-length(k[i]))*" "
@@ -158,7 +169,7 @@ end
 """
 newentry(v::Dict) = DictEntry()
 newentry(v::A) where {A<:StringOrNumber} = Entry()
-newentry(v::Vector) = isempty(v) ? nothing : ArrayEntry(newentry(v[1]))
+newentry(v::Vector) = isempty(v) ? ArrayEntry(nothing) : ArrayEntry(newentry(v[1]))
 
 """
 		function schema(a::Vector{T}) where {T<:Dict}
@@ -210,6 +221,7 @@ end
 function merge(es::ArrayEntry...)
 	updates_merged = sum(map(x->x.updated, es))
 	l_merged = merge(+, map(x->x.l, es)...)
+	# todo: try with empty array
 	items_merged = merge(merge, map(x->x.items, es)...)
 	ArrayEntry(items_merged, l_merged, updates_merged)
 end
@@ -221,12 +233,3 @@ function merge(es::DictEntry...)
 end
 
 merge(combine::typeof(merge), es::JSONEntry...) = merge(es...)
-#
-# function merge!(combine::Function, d::AbstractDict, others::AbstractDict...)
-#     for other in others
-#         for (k,v) in other
-#             d[k] = haskey(d, k) ? combine(d[k], v) : v
-#         end
-#     end
-#     return d
-# end

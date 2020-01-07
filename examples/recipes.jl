@@ -1,4 +1,5 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, Adapt
+# using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, Adapt
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics
 
 import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 import Mill: mapdata, sparsify, reflectinmodel
@@ -6,8 +7,8 @@ import Mill: mapdata, sparsify, reflectinmodel
 ###############################################################
 # start by loading all samples
 ###############################################################
-samples = open("recipes.json","r") do fid 
-	Array{Dict}(JSON.parse(readstring(fid)))
+samples = open("examples/recipes.json","r") do fid
+	Array{Dict}(JSON.parse(read(fid, String)))
 end
 JSON.print(samples[1],2)
 
@@ -15,19 +16,19 @@ JSON.print(samples[1],2)
 ###############################################################
 # create schema of the JSON
 ###############################################################
-schema = JsonGrinder.schema(samples);
+sch = JsonGrinder.schema(samples)
 
 ###############################################################
 # create extractor and split it into one for loading targets and
 # one for loading data
 ###############################################################
-delete!(schema.childs,"id");
-extractor = suggestextractor(Float32,schema,2000);
-extract_data = ExtractBranch(nothing,deepcopy(extractor.other));
-extract_target = ExtractBranch(nothing,deepcopy(extractor.other));
-delete!(extract_target.other,"ingredients");
-delete!(extract_data.other,"cuisine");
-extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(schema.childs["cuisine"]));
+delete!(sch.childs,"id")
+extractor = suggestextractor(sch, (mincount=2000,))
+extract_data = ExtractBranch(nothing,deepcopy(extractor.other))
+extract_target = ExtractBranch(nothing,deepcopy(extractor.other))
+delete!(extract_target.other,"ingredients")
+delete!(extract_data.other,"cuisine")
+extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(sch.childs["cuisine"]))
 
 
 ###############################################################
@@ -64,7 +65,7 @@ m = to32(m)
 #  train
 ###############################################################
 opt = Flux.Optimise.ADAM(params(m))
-loss = (x,y) -> Flux.logitcrossentropy(m(getobs(x)).data,getobs(y)) 
+loss = (x,y) -> Flux.logitcrossentropy(m(getobs(x)).data,getobs(y))
 valdata = data[1:1000],target[:,1:1000]
 data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
 cb = () -> println("accuracy = ",mean(Flux.onecold(Flux.data(m(valdata[1]).data)) .== Flux.onecold(valdata[2])))
@@ -73,7 +74,7 @@ Flux.Optimise.train!(loss, RandomBatches((data,target),100,10000), opt, cb = Flu
 #calculate the accuracy
 mean(Flux.onecold(Flux.data(m(data).data)) .== Flux.onecold(target))
 
-# samples = open("recipes_test.json","r") do fid 
+# samples = open("recipes_test.json","r") do fid
 # 	Array{Dict}(JSON.parse(readstring(fid)))
 # end
 # ids = map(s -> s["id"],samples)
