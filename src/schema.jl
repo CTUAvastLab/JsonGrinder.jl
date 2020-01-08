@@ -181,6 +181,28 @@ function update!(s::DictEntry,d::Dict)
 end
 
 
+"""
+		suggestextractor(e::DictEntry, settings)
+
+		create convertor of json to tree-structure of `DataNode`
+
+		`e` top-level of json hierarchy, typically returned by invoking schema
+		`settings.mincount` contains minimum repetition of the key to be included into
+		the extractor (if missing it is equal to zero)
+		`settings` can be any container supporting `get` function
+"""
+function suggestextractor(e::DictEntry, settings)
+	mincount = get(settings, :mincount, 0)
+	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
+	isempty(ks) && return(nothing)
+	c = [(k,suggestextractor(e.childs[k], settings)) for k in ks]
+	c = filter(s -> s[2] != nothing, c)
+	isempty(c) && return(nothing)
+	mask = map(i -> extractsmatrix(i[2]), c)
+	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
+end
+
+
 function merge(es::DictEntry...)
 	updates_merged = sum(map(x->x.updated, es))
 	childs_merged = merge(merge, map(x->x.childs, es)...)
@@ -213,28 +235,6 @@ function schema(a::Vector{T}) where {T<:AbstractString}
 	schema = DictEntry()
 	foreach(f -> update!(schema,JSON.parse(f)), a)
 	schema
-end
-
-
-"""
-		suggestextractor(e::DictEntry, settings)
-
-		create convertor of json to tree-structure of `DataNode`
-
-		`e` top-level of json hierarchy, typically returned by invoking schema
-		`settings.mincount` contains minimum repetition of the key to be included into
-		the extractor (if missing it is equal to zero)
-		`settings` can be any container supporting `get` function
-"""
-function suggestextractor(e::DictEntry, settings = NamedTuple())
-	mincount = get(settings, :mincount, 0)
-	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
-	isempty(ks) && return(nothing)
-	c = [(k,suggestextractor(e.childs[k], settings)) for k in ks]
-	c = filter(s -> s[2] != nothing, c)
-	isempty(c) && return(nothing)
-	mask = map(i -> extractsmatrix(i[2]), c)
-	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
 
 updated(s::T) where {T<:JSONEntry} = s.updated

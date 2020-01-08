@@ -33,7 +33,8 @@ function custom_scalar_extractor()
 	 (e -> true,
 		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
 end
-
+sch isa JsonGrinder.DictEntry
+(scalar_extractors=custom_scalar_extractor(), mincount=100,) isa NamedTuple
 extractor = suggestextractor(sch, (scalar_extractors=custom_scalar_extractor(), mincount=100,))
 
 extract_data = ExtractBranch(nothing,deepcopy(extractor.other))
@@ -68,7 +69,7 @@ m2 = reflectinmodel(extract_data(JsonGrinder.sample_synthetic(sch)),
 	b = Dict("" => k -> Dense(k, size(target, 1)))
 )
 
-m2 = reflectinmodel(sch,
+m3 = reflectinmodel(sch, extract_data,
 	k -> Dense(k,20,relu),
 	d -> SegmentedMeanMax(d),
 	b = Dict("" => k -> Dense(k, size(target, 1)))
