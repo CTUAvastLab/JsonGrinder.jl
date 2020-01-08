@@ -21,7 +21,6 @@ script:
   - julia --color=yes --project=@. -e 'using Pkg; Pkg.instantiate();'
   - julia --color=yes --project=@. -e 'using Pkg; Pkg.test()'
   - julia --color=yes --project=@. examples/identification.jl
-  - julia --color=yes --project=@. examples/prescription.jl
   - julia --color=yes --project=@. examples/recipes.jl
   - julia --color=yes --project=@. examples/schema_visualization.jl
 

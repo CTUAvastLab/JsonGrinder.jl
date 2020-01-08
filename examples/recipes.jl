@@ -1,5 +1,5 @@
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, BenchmarkTools, ThreadTools
-import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
+import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch, ExtractString, MultipleRepresentation
 import Mill: mapdata, sparsify, reflectinmodel
 
 ###############################################################
@@ -27,7 +27,7 @@ limituse(d::Dict{T,Int}, limit) where {T} = collect(filter(k -> d[k] >= limit, k
 
 function custom_scalar_extractor()
 	[(e -> promote_type(unique(typeof.(keys(e.counts)))...) <: String,
-		e -> MultipleRepresentation((ExtractCategorical(limituse(e.counts, 10)), JsonGrinder.ExtractString(String)))),
+		e -> MultipleRepresentation((ExtractCategorical(limituse(e.counts, 10)), .ExtractString(String)))),
 	 (e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
 		e -> ExtractCategorical(collect(keys(e.counts)))),
 	 (e -> true,
