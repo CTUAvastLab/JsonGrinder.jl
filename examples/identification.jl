@@ -1,4 +1,4 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics
 
 using JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 using Mill: mapdata, sparsify, reflectinmodel

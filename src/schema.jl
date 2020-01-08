@@ -1,6 +1,8 @@
 using JSON, Printf
 import Base: merge
+import Mill: reflectinmodel
 
+abstract type AbstractExtractor end;
 abstract type JSONEntry end
 StringOrNumber = Union{String,Number}
 max_keys = 10000
@@ -241,3 +243,6 @@ merge(combine::typeof(merge), es::JSONEntry...) = merge(es...)
 sample_synthetic(e::Entry) = first(keys(e.counts))
 sample_synthetic(e::ArrayEntry) = repeat([sample_synthetic(e.items)], 2)
 sample_synthetic(e::DictEntry) = Dict(k => sample_synthetic(v) for (k, v) in e.childs)
+
+reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, db, da=d->SegmentedMean(d); b = Dict(), a = Dict()) =
+	reflectinmodel(ex(sample_synthetic(sch)), db, da, b, a)

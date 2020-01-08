@@ -5,7 +5,6 @@ include("schema.jl")
 include("html_show_tools.jl")
 
 using Mill: ArrayNode, BagNode, TreeNode, catobs
-abstract type AbstractExtractor end;
 include("extractors/extractarray.jl")
 include("extractors/extractbranch.jl")
 include("extractors/extractcategorical.jl")

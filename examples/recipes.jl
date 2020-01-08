@@ -1,5 +1,4 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics
-
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, BenchmarkTools, ThreadTools
 import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 import Mill: mapdata, sparsify, reflectinmodel
 
@@ -63,6 +62,17 @@ m = reflectinmodel(data[1:10],
 	b = Dict("" => k -> Dense(k, size(target, 1)))
 )
 
+m2 = reflectinmodel(extract_data(JsonGrinder.sample_synthetic(sch)),
+	k -> Dense(k,20,relu),
+	d -> SegmentedMeanMax(d),
+	b = Dict("" => k -> Dense(k, size(target, 1)))
+)
+
+m2 = reflectinmodel(sch,
+	k -> Dense(k,20,relu),
+	d -> SegmentedMeanMax(d),
+	b = Dict("" => k -> Dense(k, size(target, 1)))
+)
 
 ###############################################################
 #  train
@@ -94,7 +104,7 @@ mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 # CSV.write("cuisine.csv",DataFrame(id = ids,cuisine = y ),delim=',')
 
 # schema can also be created in parallel for better performance, compare:
-using BenchmarkTools, ThreadTools
+
 # single threaded
 @btime JsonGrinder.schema(samples)
 # multi threaded
