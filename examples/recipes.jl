@@ -1,5 +1,4 @@
-# using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, Adapt
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, ThreadTools
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics
 
 import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 import Mill: mapdata, sparsify, reflectinmodel
@@ -36,7 +35,6 @@ function custom_scalar_extractor()
 		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
 end
 
-#todo: extractsmatrix dows not work with multiple representation
 extractor = suggestextractor(sch, (scalar_extractors=custom_scalar_extractor(), mincount=100,))
 
 extract_data = ExtractBranch(nothing,deepcopy(extractor.other))
@@ -56,41 +54,29 @@ target = reduce(catobs, target).data
 
 e = sch["cuisine"]
 
-
-###############################################################
-# convert Strings to n-grams
-###############################################################
-function sentence2ngrams(ss::Array{T,N}) where {T<:AbstractString,N}
-	function f(s)
-		x = Float32.(JsonGrinder.string2ngrams(split(s),3,2057))
-		Mill.BagNode(Mill.ArrayNode(sparsify(x, 0.05)),[1:size(x,2)])
-	end
-	cat(map(f,ss)...)
-end
-sentence2ngrams(x) = x
-
-data = map(sentence2ngrams, data)
-data = map(i -> sparsify(i,0.05), data)
-
 ###############################################################
 # 	create the model according to the data
 ###############################################################
-m,k = reflectinmodel(data[1:10], k -> Dense(k,20,relu), d -> SegmentedMeanMax(d))
-push!(m,Dense(k,size(target,1)))
-m = to32(m)
+m = reflectinmodel(data[1:10],
+	k -> Dense(k,20,relu),
+	d -> SegmentedMeanMax(d),
+	b = Dict("" => k -> Dense(k, size(target, 1)))
+)
+
 
 ###############################################################
 #  train
 ###############################################################
-opt = Flux.Optimise.ADAM(params(m))
+opt = Flux.Optimise.ADAM()
 loss = (x,y) -> Flux.logitcrossentropy(m(getobs(x)).data,getobs(y))
 valdata = data[1:1000],target[:,1:1000]
 data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
 cb = () -> println("accuracy = ",mean(Flux.onecold(Flux.data(m(valdata[1]).data)) .== Flux.onecold(valdata[2])))
+#todo: fix this
 Flux.Optimise.train!(loss, RandomBatches((data,target),100,10000), opt, cb = Flux.throttle(cb, 10))
 
 #calculate the accuracy
-mean(Flux.onecold(Flux.data(m(data).data)) .== Flux.onecold(target))
+mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 
 # samples = open("recipes_test.json","r") do fid
 # 	Array{Dict}(JSON.parse(readstring(fid)))
@@ -106,3 +92,10 @@ mean(Flux.onecold(Flux.data(m(data).data)) .== Flux.onecold(target))
 
 # using DataFrames
 # CSV.write("cuisine.csv",DataFrame(id = ids,cuisine = y ),delim=',')
+
+# schema can also be created in parallel for better performance, compare:
+using BenchmarkTools, ThreadTools
+# single threaded
+@btime JsonGrinder.schema(samples)
+# multi threaded
+@btime merge(tmap(x->JsonGrinder.schema(collect(x)), Iterators.partition(samples, 10_000))...)

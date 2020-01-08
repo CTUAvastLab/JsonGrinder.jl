@@ -3,9 +3,9 @@ using SparseArrays, FillArrays, Mill
 """
 	ExtractOneHot(ks, k, v)
 
-	Converts a Vector of `Dict` items to one-hot encoding by using key 
-	`k` to identify a name of item out of `ks` and values 
-	of key `v` as values. 
+	Converts a Vector of `Dict` items to one-hot encoding by using key
+	`k` to identify a name of item out of `ks` and values
+	of key `v` as values.
 
 ```juliadoctest
 julia> samples = ["{\"name\": \"a\", \"count\" : 1}",
@@ -15,7 +15,7 @@ julia> e = ExtractOneHot(["a","b"], "name", "count");
 julia> e(vs).data
 3×1 SparseArrays.SparseMatrixCSC{Int64,Int64} with 2 stored entries:
   [1, 1]  =  1
-  [2, 1]  =  2	
+  [2, 1]  =  2
 ```
 
 	If `v` is equal to `nothing`, then it boils down to one-hot encoding
@@ -24,7 +24,7 @@ julia> e = ExtractOneHot(["a","b"], "name", nothing);
 julia> e(vs).data
 3×1 SparseArrays.SparseMatrixCSC{Int64,Int64} with 2 stored entries:
   [1, 1]  =  1
-  [2, 1]  =  1	
+  [2, 1]  =  1
 ```
 
 	If there is key in the data which is not known (it was not part of `vs`),
@@ -45,7 +45,6 @@ struct ExtractOneHot{K,I,V} <: AbstractExtractor
 	n::Int
 end
 
-dimension(e::ExtractOneHot) = e.n
 extractsmatrix(s::ExtractOneHot) = false
 
 function ExtractOneHot(ks::V, k, v = nothing) where {V<:Union{Vector, Set}}

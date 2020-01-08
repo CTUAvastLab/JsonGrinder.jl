@@ -27,7 +27,7 @@ struct ExtractArray{T} <: AbstractExtractor
 end
 
 extractsmatrix(s::ExtractArray) = false
-dimension(s::ExtractArray)  = dimension(s.item)
+
 (s::ExtractArray)(v::V) where {V<:Nothing} = BagNode(reduce(catobs, s.item.([nothing])),[1:1])
 (s::ExtractArray)(v) = isempty(v) ? s(nothing) : BagNode(reduce(catobs, s.item.(v)),[1:length(v)])
 function Base.show(io::IO, m::ExtractArray; pad = [], key::String="")
