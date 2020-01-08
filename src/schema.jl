@@ -47,6 +47,8 @@ function default_scalar_extractor()
 	(e -> true,
 		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
 end
+
+
 """
 		function update!(a::Entry,v)
 
@@ -57,6 +59,13 @@ function update!(a::Entry,v)
 		a.counts[v] = get(a.counts,v,0) + 1
 	end
 	a.updated +=1
+end
+
+
+function merge(es::Entry...)
+	updates_merged = sum(map(x->x.updated, es))
+	counts_merged = merge(+, map(x->x.counts, es)...)
+	Entry(counts_merged, updates_merged)
 end
 
 
@@ -112,6 +121,13 @@ function suggestextractor(node::ArrayEntry, settings)
 end
 
 
+function merge(es::ArrayEntry...)
+	updates_merged = sum(map(x->x.updated, es))
+	l_merged = merge(+, map(x->x.l, es)...)
+	items_merged = merge(merge, map(x->x.items, es)...)
+	ArrayEntry(items_merged, l_merged, updates_merged)
+end
+
 """
 		mutable struct DictEntry <: JSONEntry
 			childs::Dict{String,Any}
@@ -162,6 +178,14 @@ function update!(s::DictEntry,d::Dict)
 	end
 end
 
+
+function merge(es::DictEntry...)
+	updates_merged = sum(map(x->x.updated, es))
+	childs_merged = merge(merge, map(x->x.childs, es)...)
+	DictEntry(childs_merged, updates_merged)
+end
+
+
 """
 		newentry(v)
 
@@ -210,26 +234,10 @@ function suggestextractor(e::DictEntry, settings = NamedTuple())
 	mask = map(i -> extractsmatrix(i[2]), c)
 	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
+
 updated(s::T) where {T<:JSONEntry} = s.updated
-
-function merge(es::Entry...)
-	updates_merged = sum(map(x->x.updated, es))
-	counts_merged = merge(+, map(x->x.counts, es)...)
-	Entry(counts_merged, updates_merged)
-end
-
-function merge(es::ArrayEntry...)
-	updates_merged = sum(map(x->x.updated, es))
-	l_merged = merge(+, map(x->x.l, es)...)
-	# todo: try with empty array
-	items_merged = merge(merge, map(x->x.items, es)...)
-	ArrayEntry(items_merged, l_merged, updates_merged)
-end
-
-function merge(es::DictEntry...)
-	updates_merged = sum(map(x->x.updated, es))
-	childs_merged = merge(merge, map(x->x.childs, es)...)
-	DictEntry(childs_merged, updates_merged)
-end
-
 merge(combine::typeof(merge), es::JSONEntry...) = merge(es...)
+
+sample_synthetic(e::Entry) = first(keys(e.counts))
+sample_synthetic(e::ArrayEntry) = repeat([sample_synthetic(e.items)], 2)
+sample_synthetic(e::DictEntry) = Dict(k => sample_synthetic(v) for (k, v) in e.childs)

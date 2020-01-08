@@ -1,5 +1,5 @@
 # using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, Adapt
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, ThreadTools
 
 import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 import Mill: mapdata, sparsify, reflectinmodel
@@ -8,7 +8,7 @@ import Mill: mapdata, sparsify, reflectinmodel
 # start by loading all samples
 ###############################################################
 samples = open("examples/recipes.json","r") do fid
-	Array{Dict}(JSON.parse(read(fid, String)))
+	Vector{Dict}(JSON.parse(read(fid, String)))
 end
 JSON.print(samples[1],2)
 
@@ -20,24 +20,42 @@ sch = JsonGrinder.schema(samples)
 
 ###############################################################
 # create extractor and split it into one for loading targets and
-# one for loading data
+# one for loading data, using custom function to set conditions for using n-gram representation
 ###############################################################
 delete!(sch.childs,"id")
-extractor = suggestextractor(sch, (mincount=2000,))
+
+limituse(d::Dict{T,Int}, limit) where {T<:AbstractString} = String.(limituse(d, limit))
+limituse(d::Dict{T,Int}, limit) where {T} = collect(filter(k -> d[k] >= limit, keys(d)))
+
+function custom_scalar_extractor()
+	[(e -> promote_type(unique(typeof.(keys(e.counts)))...) <: String,
+		e -> MultipleRepresentation((ExtractCategorical(limituse(e.counts, 10)), JsonGrinder.ExtractString(String)))),
+	 (e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
+		e -> ExtractCategorical(collect(keys(e.counts)))),
+	 (e -> true,
+		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
+end
+
+#todo: extractsmatrix dows not work with multiple representation
+extractor = suggestextractor(sch, (scalar_extractors=custom_scalar_extractor(), mincount=100,))
+
 extract_data = ExtractBranch(nothing,deepcopy(extractor.other))
 extract_target = ExtractBranch(nothing,deepcopy(extractor.other))
 delete!(extract_target.other,"ingredients")
 delete!(extract_data.other,"cuisine")
 extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(sch.childs["cuisine"]))
 
-
+extract_data(JsonGrinder.sample_synthetic(sch))
 ###############################################################
 # we convert JSONs to Datasets
 ###############################################################
-data = map(extract_data, samples);
-data = cat(data...);
-target = map(extract_target, samples);
-target = cat(target...).data;
+data = tmap(extract_data, samples)
+data = reduce(catobs, data)
+target = tmap(extract_target, samples)
+target = reduce(catobs, target).data
+
+e = sch["cuisine"]
+
 
 ###############################################################
 # convert Strings to n-grams
@@ -51,13 +69,13 @@ function sentence2ngrams(ss::Array{T,N}) where {T<:AbstractString,N}
 end
 sentence2ngrams(x) = x
 
-data = mapdata(sentence2ngrams,data)
-data = mapdata(i -> sparsify(i,0.05),data)
+data = map(sentence2ngrams, data)
+data = map(i -> sparsify(i,0.05), data)
 
 ###############################################################
 # 	create the model according to the data
 ###############################################################
-m,k = reflectinmodel(data[1:10], k -> Chain(Dense(k,20,relu)))
+m,k = reflectinmodel(data[1:10], k -> Dense(k,20,relu), d -> SegmentedMeanMax(d))
 push!(m,Dense(k,size(target,1)))
 m = to32(m)
 
