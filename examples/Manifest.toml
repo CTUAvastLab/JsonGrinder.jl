@@ -225,6 +225,12 @@ git-tree-sha1 = "e756da6cee76a5f1436a05827fa8fdf3badc577f"
 uuid = "0c68f7d7-f131-5f86-a1c3-88cf8149b2d7"
 version = "2.0.1"
 
+[[HttpCommon]]
+deps = ["Dates", "Nullables", "Test", "URIParser"]
+git-tree-sha1 = "46313284237aa6ca67a6bce6d6fbd323d19cff59"
+uuid = "77172c1b-203f-54ac-aa54-3f1198fe9f90"
+version = "0.5.0"
+
 [[HypothesisTests]]
 deps = ["Combinatorics", "Distributions", "LinearAlgebra", "Random", "Rmath", "Roots", "Statistics", "StatsBase", "Test"]
 git-tree-sha1 = "0fe2b78bd7cadcaed2071aab7ed12b40d220c392"
@@ -355,6 +361,12 @@ version = "0.4.3"
 [[Mmap]]
 uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
+[[Mustache]]
+deps = ["Printf", "Tables"]
+git-tree-sha1 = "e06eef2abee113c49695f5347668e15d4c02978a"
+uuid = "ffc61752-8dc7-55ee-8c37-f3e9cdd09e70"
+version = "1.0.0"
+
 [[NNlib]]
 deps = ["BinaryProvider", "Libdl", "LinearAlgebra", "Requires", "Statistics"]
 git-tree-sha1 = "135c0de4794d5e214b06f1fb4787af4a72896e61"
@@ -365,6 +377,11 @@ version = "0.6.2"
 git-tree-sha1 = "928b8ca9b2791081dc71a51c55347c27c618760f"
 uuid = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
 version = "0.3.3"
+
+[[Nullables]]
+git-tree-sha1 = "8f87854cc8f3685a60689d8edecaa29d2251979b"
+uuid = "4d1e1d77-625e-5b40-9113-a560ec7a8ecd"
+version = "1.0.0"
 
 [[OpenBLAS_jll]]
 deps = ["Libdl", "Pkg"]
@@ -550,6 +567,12 @@ deps = ["Random", "Test"]
 git-tree-sha1 = "7c53c35547de1c5b9d46a4797cf6d8253807108c"
 uuid = "3bb67fe8-82b1-5028-8e26-92a6c54297fa"
 version = "0.9.5"
+
+[[URIParser]]
+deps = ["Test", "Unicode"]
+git-tree-sha1 = "6ddf8244220dfda2f17539fa8c9de20d6c575b69"
+uuid = "30578b45-9adc-5946-b283-645ec420af67"
+version = "0.4.0"
 
 [[UUIDs]]
 deps = ["Random", "SHA"]

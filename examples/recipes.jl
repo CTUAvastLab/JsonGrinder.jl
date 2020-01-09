@@ -1,5 +1,6 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, BenchmarkTools, ThreadTools
-import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch, ExtractString, MultipleRepresentation
+include("../src/JsonGrinder.jl")
+using Flux, MLDataPattern, Mill, Main.JsonGrinder, JSON, Statistics, BenchmarkTools, ThreadTools
+import Main.JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch, ExtractString, MultipleRepresentation
 import Mill: mapdata, sparsify, reflectinmodel
 
 ###############################################################
@@ -62,7 +63,8 @@ m = reflectinmodel(data[1:10],
 	b = Dict("" => k -> Dense(k, size(target, 1)))
 )
 
-m2 = reflectinmodel(extract_data(JsonGrinder.sample_synthetic(sch)),
+# Main.JsonGrinder.sample_synthetic(sch)
+m2 = reflectinmodel(extract_data(Main.JsonGrinder.sample_synthetic(sch)),
 	k -> Dense(k,20,relu),
 	d -> SegmentedMeanMax(d),
 	b = Dict("" => k -> Dense(k, size(target, 1)))
@@ -71,7 +73,7 @@ m2 = reflectinmodel(extract_data(JsonGrinder.sample_synthetic(sch)),
 m3 = reflectinmodel(sch, extract_data,
 	k -> Dense(k,20,relu),
 	d -> SegmentedMeanMax(d),
-	b = Dict("" => k -> Dense(k, size(target, 1)))
+	b = Dict("" => k -> Dense(k, size(target, 1))),
 )
 
 ###############################################################

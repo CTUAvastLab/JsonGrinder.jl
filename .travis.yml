@@ -21,11 +21,11 @@ script:
   - julia --color=yes --project=@. -e 'using Pkg; Pkg.instantiate();'
   - julia --color=yes --project=@. -e 'using Pkg; Pkg.test()'
   #- julia --color=yes --project=@. examples/identification.jl  so far missing training data
-  - julia --color=yes --project=@. examples/recipes.jl
-  - julia --color=yes --project=@. examples/schema_visualization.jl
+#  - julia --color=yes --project=@. examples/recipes.jl
+#  - julia --color=yes --project=@. examples/schema_visualization.jl
 
 after_success:
   # push coverage results to Coveralls
-  - julia --color=yes -e 'cd(Pkg.dir("JsonGrinder")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
+  - julia --color=yes --project=@. -e 'cd(Pkg.dir(".")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
   # push coverage results to Codecov
-  - julia --color=yes -e 'cd(Pkg.dir("JsonGrinder")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia --color=yes --project=@. -e 'cd(Pkg.dir(".")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'

@@ -245,4 +245,4 @@ sample_synthetic(e::ArrayEntry) = repeat([sample_synthetic(e.items)], 2)
 sample_synthetic(e::DictEntry) = Dict(k => sample_synthetic(v) for (k, v) in e.childs)
 
 reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, db, da=d->SegmentedMean(d); b = Dict(), a = Dict()) =
-	reflectinmodel(ex(sample_synthetic(sch)), db, da, b, a)
+	reflectinmodel(ex(sample_synthetic(sch)), db, da, b=b, a=a)

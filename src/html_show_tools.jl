@@ -1,5 +1,4 @@
-using JsonGrinder, Mustache, HttpCommon
-using JsonGrinder: DictEntry, ArrayEntry, Entry, types
+using Mustache, HttpCommon
 using StatsBase: RealVector, fweights
 import Statistics: quantile, mean
 
