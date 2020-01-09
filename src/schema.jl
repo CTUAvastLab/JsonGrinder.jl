@@ -34,7 +34,7 @@ function Base.show(io::IO, e::Entry;pad =[], key = "")
 	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,join(types(e)),length(keys(e.counts)),e.updated))
 end
 
-function suggestextractor(e::Entry, settings)
+function suggestextractor(e::Entry, settings = NamedTuple())
 	t = promote_type(unique(typeof.(keys(e.counts)))...)
 	t == Any  && @error "JSON does not have a fixed type scheme, quitting"
 
@@ -114,7 +114,7 @@ function update!(a::ArrayEntry, b::Vector)
 	foreach(v -> update!(a.items,v), b)
 end
 
-function suggestextractor(node::ArrayEntry, settings)
+function suggestextractor(node::ArrayEntry, settings = NamedTuple())
 	if isnothing(node.items)
 		throw(ArgumentError("empty array, can not suggest extractor"))
 	end
@@ -182,7 +182,7 @@ end
 
 
 """
-		suggestextractor(e::DictEntry, settings)
+		suggestextractor(e::DictEntry, settings = NamedTuple())
 
 		create convertor of json to tree-structure of `DataNode`
 
@@ -191,7 +191,7 @@ end
 		the extractor (if missing it is equal to zero)
 		`settings` can be any container supporting `get` function
 """
-function suggestextractor(e::DictEntry, settings)
+function suggestextractor(e::DictEntry, settings = NamedTuple())
 	mincount = get(settings, :mincount, 0)
 	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
 	isempty(ks) && return(nothing)

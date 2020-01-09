@@ -20,13 +20,13 @@ ns = extract_target.vec["device_class"].items
 # create schema of the JSON
 ###############################################################
 sch = JsonGrinder.schema(samples);
-extractor = suggestextractor(Float32, sch, 0)
+extractor = suggestextractor(sch)
 extract_target = ExtractBranch(extractor.vec,nothing)
 target = extractbatch(extract_target, samples).data
 extract_data = ExtractBranch(nothing, extractor.other)
 data = extractbatch(extract_data, samples)
 
-model = reflectinmodel(data[1:10], d -> Dense(d,20, relu), d -> SegmentedMeanMax(d), b = Dict("" => d -> Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
+model = reflectinmodel(sch, extractor, d -> Dense(d,20, relu), d -> SegmentedMeanMax(d), b = Dict("" => d -> Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
 model(data[1:10])
 
 ###############################################################
