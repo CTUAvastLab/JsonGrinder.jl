@@ -7,8 +7,11 @@ julia:
   - 1.2
   - 1.3
   - nightly
+
 notifications:
   email: false
+  webhooks: https://coveralls.io/webhook
+
 git:
   depth: false
 
@@ -16,16 +19,21 @@ jobs:
   allow_failures:
     - julia: nightly
 
+coveralls: true
+
 # run tests
 script:
   - julia --color=yes --project=@. -e 'using Pkg; Pkg.instantiate();'
-  - julia --color=yes --project=@. -e 'using Pkg; Pkg.test()'
+  - julia --color=yes --project=@. -e 'using Pkg; Pkg.test("JsonGrinder", coverage=true)'
   #- julia --color=yes --project=@. examples/identification.jl  so far missing training data
 #  - julia --color=yes --project=@. examples/recipes.jl
 #  - julia --color=yes --project=@. examples/schema_visualization.jl
 
+env:
+  global:
+    - COVERALLS_PARALLEL=true
+
 after_success:
   # push coverage results to Coveralls
-  - julia --color=yes --project=@. -e 'cd(Pkg.dir(".")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
-  # push coverage results to Codecov
-  - julia --color=yes --project=@. -e 'cd(Pkg.dir(".")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia --color=yes -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  - julia --color=yes  -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
