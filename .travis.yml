@@ -25,7 +25,7 @@ coveralls: true
 script:
   - julia --color=yes --project=@. -e 'using Pkg; Pkg.instantiate();'
   - julia --color=yes --project=@. -e 'using Pkg; Pkg.test("JsonGrinder", coverage=true)'
-  - julia --color=yes --project=@./examples examples/recipes.jl
+  - julia --color=yes --project=./examples examples/recipes.jl
 #  - julia --color=yes --project=@. examples/schema_visualization.jl
 
 env:
