@@ -1,4 +1,4 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, BenchmarkTools, ThreadTools
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools
 import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch, ExtractString, MultipleRepresentation
 import Mill: mapdata, sparsify, reflectinmodel
 
@@ -69,19 +69,17 @@ opt = Flux.Optimise.ADAM()
 loss = (x,y) -> Flux.logitcrossentropy(m(x).data, y)
 valdata = data[1:1000],target[:,1:1000]
 data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
-cb = () -> println("accuracy = ",mean(Flux.onecold(Flux.data(m(valdata[1]).data)) .== Flux.onecold(valdata[2])))
+cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata[1]).data) .== Flux.onecold(valdata[2])))
 batch_size = 100
 iterations = 1000
 ps = Flux.params(m)
-dataset = repeatedly(() -> Flux.chunk((data, target), batch_size), iterations)
-first(dataset)
 mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 
 @info "testing the gradient"
 gs = gradient(() -> loss(data, target), ps)
 Flux.Optimise.update!(opt, ps, gs)
 
-Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 100), opt)
+Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 100), opt, cb = Flux.throttle(cb, 10))
 
 #calculate the accuracy
 mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
