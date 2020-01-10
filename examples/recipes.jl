@@ -1,6 +1,5 @@
-include("../src/JsonGrinder.jl")
-using Flux, MLDataPattern, Mill, Main.JsonGrinder, JSON, Statistics, BenchmarkTools, ThreadTools
-import Main.JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch, ExtractString, MultipleRepresentation
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, BenchmarkTools, ThreadTools
+import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch, ExtractString, MultipleRepresentation
 import Mill: mapdata, sparsify, reflectinmodel
 
 ###############################################################
@@ -57,20 +56,7 @@ e = sch["cuisine"]
 ###############################################################
 # 	create the model according to the data
 ###############################################################
-m = reflectinmodel(data[1:10],
-	k -> Dense(k,20,relu),
-	d -> SegmentedMeanMax(d),
-	b = Dict("" => k -> Dense(k, size(target, 1)))
-)
-
-# Main.JsonGrinder.sample_synthetic(sch)
-m2 = reflectinmodel(extract_data(Main.JsonGrinder.sample_synthetic(sch)),
-	k -> Dense(k,20,relu),
-	d -> SegmentedMeanMax(d),
-	b = Dict("" => k -> Dense(k, size(target, 1)))
-)
-
-m3 = reflectinmodel(sch, extract_data,
+m = reflectinmodel(sch, extract_data,
 	k -> Dense(k,20,relu),
 	d -> SegmentedMeanMax(d),
 	b = Dict("" => k -> Dense(k, size(target, 1))),
@@ -80,12 +66,22 @@ m3 = reflectinmodel(sch, extract_data,
 #  train
 ###############################################################
 opt = Flux.Optimise.ADAM()
-loss = (x,y) -> Flux.logitcrossentropy(m(getobs(x)).data,getobs(y))
+loss = (x,y) -> Flux.logitcrossentropy(m(x).data, y)
 valdata = data[1:1000],target[:,1:1000]
 data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
 cb = () -> println("accuracy = ",mean(Flux.onecold(Flux.data(m(valdata[1]).data)) .== Flux.onecold(valdata[2])))
-#todo: fix this
-Flux.Optimise.train!(loss, RandomBatches((data,target),100,10000), opt, cb = Flux.throttle(cb, 10))
+batch_size = 100
+iterations = 1000
+ps = Flux.params(m)
+dataset = repeatedly(() -> Flux.chunk((data, target), batch_size), iterations)
+first(dataset)
+mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
+
+@info "testing the gradient"
+gs = gradient(() -> loss(data, target), ps)
+Flux.Optimise.update!(opt, ps, gs)
+
+Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 100), opt)
 
 #calculate the accuracy
 mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
