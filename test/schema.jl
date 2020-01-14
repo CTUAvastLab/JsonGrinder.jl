@@ -1,4 +1,4 @@
-using Mill, JSON, Flux, JsonGrinder, Test
+using Mill, JSON, BSON, Flux, JsonGrinder, Test
 
 using JsonGrinder: DictEntry, suggestextractor, schema
 using Mill: reflectinmodel
@@ -79,4 +79,41 @@ end
 	@test sch["a"].items["b"].counts == sch_merged["a"].items["b"].counts
 	@test sch["b"].updated == sch_merged["b"].updated
 	@test sch["b"].counts == sch_merged["b"].counts
+end
+
+@testset "bson and symbol keys testing" begin
+	b1 = IOBuffer()
+	j1 = BSON.bson(b1, Dict(:a=>4, :b=>Dict(:a=>[1,2,3], :b=>1), :c=>Dict(:a=>Dict(:a=>[1,2,3],:b=>[4,5,6]))))
+	b2 = IOBuffer()
+	j2 = BSON.bson(b2, Dict(:a=>4,:c=>Dict(:a=>Dict(:a=>[2,3],:b=>[5,6]))))
+	b3 = IOBuffer()
+	j3 = BSON.bson(b3, Dict(:a=>4,:b=>Dict(:a=>[1,2,3],:b=>1)))
+	b4 = IOBuffer()
+	j4 = BSON.bson(b4, Dict(:a=>4,:b=>Dict()))
+	b5 = IOBuffer()
+	j5 = BSON.bson(b5, Dict(:b=>Dict()))
+	b6 = IOBuffer()
+	j6 = BSON.bson(b6, Dict())
+	bs = [(seek(b, 0); BSON.load(b)) for b in [b1,b2,b3,b4,b5,b6]]
+	sch = JsonGrinder.schema(bs)
+
+	@test sch["a"].counts == Dict(4 => 4)
+	@test sch["a"].updated == 4
+	@test sch["b"].updated == 4
+	@test sch["b"]["a"].updated == 2
+	@test sch["b"]["a"].l == Dict(3 => 2)
+	@test sch["b"]["a"].items.counts == Dict(1 => 2, 2 => 2, 3 => 2)
+	@test sch["b"]["a"].items.updated == 6
+	@test sch["b"]["b"].counts == Dict(1 => 2)
+	@test sch["b"]["b"].updated == 2
+	@test sch["c"].updated == 2
+	@test sch["c"]["a"].updated == 2
+	@test sch["c"]["a"]["a"].updated == 2
+	@test sch["c"]["a"]["a"].l == Dict(2 => 1, 3 => 1)
+	@test sch["c"]["a"]["a"].items.counts == Dict(1 => 1, 2 => 2, 3 => 2)
+	@test sch["c"]["a"]["a"].items.updated == 5
+	@test sch["c"]["a"]["b"].updated == 2
+	@test sch["c"]["a"]["b"].l == Dict(2 => 1, 3 => 1)
+	@test sch["c"]["a"]["b"].items.counts == Dict(4 => 1, 5 => 2, 6 => 2)
+	@test sch["c"]["a"]["b"].items.updated == 5
 end

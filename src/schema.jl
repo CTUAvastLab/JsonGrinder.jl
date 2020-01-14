@@ -1,11 +1,14 @@
 using JSON, Printf
-import Base: merge
+import Base: merge, length
 import Mill: reflectinmodel
 
-abstract type AbstractExtractor end;
+abstract type AbstractExtractor end
 abstract type JSONEntry end
 StringOrNumber = Union{String,Number}
 max_keys = 10000
+
+# so I can pretty print symbols
+length(s::Symbol) = length(string(s))
 
 function updatemaxkeys!(n::Int)
 	global max_keys = n
@@ -111,7 +114,10 @@ function update!(a::ArrayEntry, b::Vector)
 	if isnothing(a.items)
 		 a.items = newentry(b).items
 	end
-	foreach(v -> update!(a.items,v), b)
+	# foreach(v -> update!(a.items,v), b)
+	for v in b
+		update!(a.items,v)
+	end
 end
 
 function suggestextractor(node::ArrayEntry, settings = NamedTuple())
@@ -140,13 +146,18 @@ end
 		`childs` maintains key-value statistics of childrens. All values should be JSONEntries
 		`updated` counts how many times the struct was updated.
 """
+
 mutable struct DictEntry <: JSONEntry
-	childs::Dict{String,Any}
+	childs::Dict{Symbol, Any}
 	updated::Int
 end
 
-DictEntry() = DictEntry(Dict{String,Any}(),0)
-Base.getindex(s::DictEntry,k) = s.childs[k]
+DictEntry() = DictEntry(Dict{Symbol,Any}(),0)
+Base.getindex(s::DictEntry, k::Symbol) = s.childs[k]
+Base.getindex(s::DictEntry, k::String) = s.childs[Symbol(k)]
+Base.setindex!(s::DictEntry, i, k::Symbol) = s.childs[k] = i
+Base.setindex!(s::DictEntry, i, k::String) = s.childs[Symbol(k)] = i
+Base.get(s::Dict{Symbol, <:Any}, key::String, default) = get(s, Symbol(key), default)
 
 function Base.show(io::IO, e::DictEntry; pad=[], key = "")
     c = COLORS[(length(pad)%length(COLORS))+1]
@@ -162,21 +173,20 @@ function Base.show(io::IO, e::DictEntry; pad=[], key = "")
     for i in 1:length(k)-1
     	s = "  ├──"*"─"^(ml-length(k[i]))*" "
 			paddedprint(io, s, color=c, pad=pad)
-			show(io, e.childs[k[i]], pad=[pad; (c, "  │"*" "^(ml-length(k[i])+2))], key = k[i])
+			show(io, e.childs[k[i]], pad=[pad; (c, "  │"*" "^(ml-length(k[i])+2))], key = string(k[i]))
     end
     s = "  └──"*"─"^(ml-length(k[end]))*" "
     paddedprint(io, s, color=c, pad=pad)
-    show(io, e.childs[k[end]], pad=[pad; (c, " "^(ml-length(k[end])+4))], key = k[end])
+    show(io, e.childs[k[end]], pad=[pad; (c, " "^(ml-length(k[end])+4))], key = string(k[end]))
 end
 
 function update!(s::DictEntry,d::Dict)
 	s.updated +=1
 	for (k,v) in d
 		v == nothing && continue
-		i = get(s.childs,k,newentry(v))
-		i == nothing && continue
+		i = get(s.childs, k, newentry(v))
 		update!(i,v)
-		s.childs[k] = i
+		s[k] = i
 	end
 end
 
