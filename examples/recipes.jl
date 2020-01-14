@@ -1,5 +1,5 @@
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools
-import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch, ExtractString, MultipleRepresentation
+import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch, ExtractString, MultipleRepresentation, extractscalar
 import Mill: mapdata, sparsify, reflectinmodel
 
 ###############################################################
@@ -40,7 +40,7 @@ extract_data = ExtractBranch(nothing,deepcopy(extractor.other))
 extract_target = ExtractBranch(nothing,deepcopy(extractor.other))
 delete!(extract_target.other,"ingredients")
 delete!(extract_data.other,"cuisine")
-extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(sch.childs["cuisine"]))
+extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(sch["cuisine"]))
 
 extract_data(JsonGrinder.sample_synthetic(sch))
 ###############################################################

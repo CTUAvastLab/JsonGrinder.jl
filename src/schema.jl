@@ -205,7 +205,7 @@ function suggestextractor(e::DictEntry, settings = NamedTuple())
 	mincount = get(settings, :mincount, 0)
 	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
 	isempty(ks) && return(nothing)
-	c = [(k,suggestextractor(e.childs[k], settings)) for k in ks]
+	c = [(string(k),suggestextractor(e.childs[k], settings)) for k in ks]
 	c = filter(s -> s[2] != nothing, c)
 	isempty(c) && return(nothing)
 	mask = map(i -> extractsmatrix(i[2]), c)
