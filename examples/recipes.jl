@@ -79,7 +79,9 @@ mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 gs = gradient(() -> loss(data, target), ps)
 Flux.Optimise.update!(opt, ps, gs)
 
-Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 100), opt, cb = Flux.throttle(cb, 10))
+Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 20), opt, cb = Flux.throttle(cb, 2))
+# feel free to train for longer period of time, this example is learns only 20 iterations, so it runs fast
+# Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 500), opt, cb = Flux.throttle(cb, 10))
 
 #calculate the accuracy
 mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
