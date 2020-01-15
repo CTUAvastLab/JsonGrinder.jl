@@ -31,6 +31,10 @@ function Base.show(io::IO, e::Entry;pad =[], key = "")
 	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,join(types(e)),length(keys(e.counts)),e.updated))
 end
 
+function json(io::IO, e::Entry)
+	print(io,"{"*join(map(k -> "\"$(k)\": $(e.counts[k])", sort(collect(keys(e.counts)))),",")*"}")
+end
+
 function suggestextractor(e::Entry, settings)
 	t = promote_type(unique(typeof.(keys(e.counts)))...)
 	t == Any  && @error "JSON does not have a fixed type scheme, quitting"
@@ -79,6 +83,15 @@ end
 
 ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
 
+function json(io::IO, e::ArrayEntry)
+	print(io,"{")
+	println(io,"\"updated\": $(e.updated),")
+	print(io,"\"items\": ")
+	json(io,e.items)
+	println(io)
+	println(io,"}")
+end
+
 function Base.show(io::IO, e::ArrayEntry; pad = [], key = "") 
   c = COLORS[(length(pad)%length(COLORS))+1]
   # paddedprint(io,"Vector with $(length(e.items)) items(s). (updated = $(e.updated))\n", color=c)
@@ -117,6 +130,19 @@ end
 
 DictEntry() = DictEntry(Dict{String,Any}(),0)
 Base.getindex(s::DictEntry,k) = s.childs[k]
+
+
+function json(io::IO, e::DictEntry)
+	println(io,"{")
+	println(io,"\"updated\": $(e.updated)")
+	for k in keys(e.childs)
+		print(io, "\"$(k)\": ")
+		json(io, e.childs[k])
+		println(io)
+	end
+	println(io,"}")
+end
+
 
 function Base.show(io::IO, e::DictEntry; pad=[], key = "")
     c = COLORS[(length(pad)%length(COLORS))+1]

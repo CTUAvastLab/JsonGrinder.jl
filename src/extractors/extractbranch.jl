@@ -35,6 +35,7 @@ function printdict(io, d::Dict, ml, c, pad, last::Bool = true)
   end
 end
 
+
 function Base.show(io::IO, m::ExtractBranch; pad = [], key::String="")
   c = COLORS[(length(pad)%length(COLORS))+1]
   ml = m.vec   != nothing ? maximum(length(k) for k in keys(m.vec)) : 0
@@ -51,7 +52,6 @@ end
 
 extractsmatrix(s::ExtractBranch) = false
 (s::ExtractBranch)(v::V) where {V<:Nothing} = s(Dict{String,Any}())
-
 
 # function (s::ExtractBranch{S,V})(v::Dict) where {S<:Dict,V<:Dict}
 # 	x = vcat([f(get(v,k,nothing)) for (k,f) in s.vec]...)
