@@ -254,5 +254,13 @@ sample_synthetic(e::Entry) = first(keys(e.counts))
 sample_synthetic(e::ArrayEntry) = repeat([sample_synthetic(e.items)], 2)
 sample_synthetic(e::DictEntry) = Dict(k => sample_synthetic(v) for (k, v) in e.childs)
 
+Base.hash(e::Entry, h::UInt) = hash((e.counts, e.updated), h)
+Base.hash(e::ArrayEntry, h::UInt) = hash((e.items, e.l, e.updated), h)
+Base.hash(e::DictEntry, h::UInt) = hash((e.childs, e.updated), h)
+
+Base.:(==)(e1::Entry, e2::Entry) = e1.updated === e2.updated && e1.counts == e2.counts
+Base.:(==)(e1::ArrayEntry, e2::ArrayEntry) = e1.updated === e2.updated && e1.l == e2.l && e1.items == e2.items
+Base.:(==)(e1::DictEntry, e2::DictEntry) = e1.updated === e2.updated && e1.childs == e2.childs
+
 reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, db, da=d->SegmentedMean(d); b = Dict(), a = Dict()) =
 	reflectinmodel(ex(sample_synthetic(sch)), db, da, b=b, a=a)

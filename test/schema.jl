@@ -117,3 +117,25 @@ end
 	@test sch["c"]["a"]["b"].items.counts == Dict(4 => 1, 5 => 2, 6 => 2)
 	@test sch["c"]["a"]["b"].items.updated == 5
 end
+
+@testset "equals and hash test" begin
+	j1 = JSON.parse("""{"a": []}""")
+	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
+	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
+	j4 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+
+	sch0 = JsonGrinder.DictEntry()
+	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
+	sch2 = JsonGrinder.schema([j1, j2, j3, j4])
+	sch3 = JsonGrinder.schema([j1, j2, j3])
+
+	@test hash(sch1) === hash(sch2)
+	@test hash(sch1) !== hash(sch3)
+	@test hash(sch1) !== hash(sch0)
+	@test hash(sch3) !== hash(sch0)
+
+	@test sch1 == sch2
+	@test sch1 != sch3
+	@test sch1 != sch0
+	@test sch3 != sch0
+end
