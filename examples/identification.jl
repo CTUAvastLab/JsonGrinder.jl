@@ -1,4 +1,4 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics
 
 using JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
 using Mill: mapdata, sparsify, reflectinmodel
@@ -6,11 +6,11 @@ using Mill: mapdata, sparsify, reflectinmodel
 ###############################################################
 # start by loading all samples
 ###############################################################
-samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/train.json")) do s 
+samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/train.json")) do s
 	JSON.parse(s)
 end
 JSON.print(samples[1],2)
-test_samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/test.json")) do s 
+test_samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/test.json")) do s
 	JSON.parse(s)
 end
 ns = extract_target.vec["device_class"].items
@@ -20,13 +20,13 @@ ns = extract_target.vec["device_class"].items
 # create schema of the JSON
 ###############################################################
 sch = JsonGrinder.schema(samples);
-extractor = suggestextractor(Float32, sch, 0)
+extractor = suggestextractor(sch)
 extract_target = ExtractBranch(extractor.vec,nothing)
 target = extractbatch(extract_target, samples).data
 extract_data = ExtractBranch(nothing, extractor.other)
 data = extractbatch(extract_data, samples)
 
-model = reflectinmodel(data[1:10], d -> Dense(d,20, relu), d -> SegmentedMeanMax(d), b = Dict("" => d -> Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
+model = reflectinmodel(sch, extractor, d -> Dense(d,20, relu), d -> SegmentedMeanMax(d), b = Dict("" => d -> Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
 model(data[1:10])
 
 ###############################################################
@@ -38,7 +38,7 @@ function makebatch()
 end
 opt = ADAM()
 ps = params(model)
-loss = (x,y) -> Flux.logitcrossentropy(model(x).data,y) 
+loss = (x,y) -> Flux.logitcrossentropy(model(x).data,y)
 
 #a little test before training
 # x, y = makebatch()

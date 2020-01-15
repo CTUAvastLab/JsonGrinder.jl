@@ -58,3 +58,4 @@ end
 		@test o[:,i] ≈ m(dss[i]).data
 	end
 end
+# todo: add test of suggest extractor for empty array so it is skipped in the upper structure

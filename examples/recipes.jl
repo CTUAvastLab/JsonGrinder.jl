@@ -1,13 +1,12 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, Adapt
-
-import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools
+import JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch, ExtractString, MultipleRepresentation, extractscalar
 import Mill: mapdata, sparsify, reflectinmodel
 
 ###############################################################
 # start by loading all samples
 ###############################################################
-samples = open("recipes.json","r") do fid 
-	Array{Dict}(JSON.parse(readstring(fid)))
+samples = open("examples/recipes.json","r") do fid
+	Vector{Dict}(JSON.parse(read(fid, String)))
 end
 JSON.print(samples[1],2)
 
@@ -15,65 +14,79 @@ JSON.print(samples[1],2)
 ###############################################################
 # create schema of the JSON
 ###############################################################
-schema = JsonGrinder.schema(samples);
+sch = JsonGrinder.schema(samples)
 
 ###############################################################
 # create extractor and split it into one for loading targets and
-# one for loading data
+# one for loading data, using custom function to set conditions for using n-gram representation
 ###############################################################
-delete!(schema.childs,"id");
-extractor = suggestextractor(Float32,schema,2000);
-extract_data = ExtractBranch(nothing,deepcopy(extractor.other));
-extract_target = ExtractBranch(nothing,deepcopy(extractor.other));
-delete!(extract_target.other,"ingredients");
-delete!(extract_data.other,"cuisine");
-extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(schema.childs["cuisine"]));
+delete!(sch.childs,"id")
 
+limituse(d::Dict{T,Int}, limit) where {T<:AbstractString} = String.(limituse(d, limit))
+limituse(d::Dict{T,Int}, limit) where {T} = collect(filter(k -> d[k] >= limit, keys(d)))
 
+function custom_scalar_extractor()
+	[(e -> promote_type(unique(typeof.(keys(e.counts)))...) <: String,
+		e -> MultipleRepresentation((ExtractCategorical(limituse(e.counts, 10)), ExtractString(String)))),
+	 (e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
+		e -> ExtractCategorical(collect(keys(e.counts)))),
+	 (e -> true,
+		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
+end
+
+extractor = suggestextractor(sch, (scalar_extractors=custom_scalar_extractor(), mincount=100,))
+
+extract_data = ExtractBranch(nothing,deepcopy(extractor.other))
+extract_target = ExtractBranch(nothing,deepcopy(extractor.other))
+delete!(extract_target.other,"ingredients")
+delete!(extract_data.other,"cuisine")
+extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(sch["cuisine"]))
+
+extract_data(JsonGrinder.sample_synthetic(sch))
 ###############################################################
 # we convert JSONs to Datasets
 ###############################################################
-data = map(extract_data, samples);
-data = cat(data...);
-target = map(extract_target, samples);
-target = cat(target...).data;
+data = tmap(extract_data, samples)
+data = reduce(catobs, data)
+target = tmap(extract_target, samples)
+target = reduce(catobs, target).data
 
-###############################################################
-# convert Strings to n-grams
-###############################################################
-function sentence2ngrams(ss::Array{T,N}) where {T<:AbstractString,N}
-	function f(s)
-		x = Float32.(JsonGrinder.string2ngrams(split(s),3,2057))
-		Mill.BagNode(Mill.ArrayNode(sparsify(x, 0.05)),[1:size(x,2)])
-	end
-	cat(map(f,ss)...)
-end
-sentence2ngrams(x) = x
-
-data = mapdata(sentence2ngrams,data)
-data = mapdata(i -> sparsify(i,0.05),data)
+e = sch["cuisine"]
 
 ###############################################################
 # 	create the model according to the data
 ###############################################################
-m,k = reflectinmodel(data[1:10], k -> Chain(Dense(k,20,relu)))
-push!(m,Dense(k,size(target,1)))
-m = to32(m)
+m = reflectinmodel(sch, extract_data,
+	k -> Dense(k,20,relu),
+	d -> SegmentedMeanMax(d),
+	b = Dict("" => k -> Dense(k, size(target, 1))),
+)
 
 ###############################################################
 #  train
 ###############################################################
-opt = Flux.Optimise.ADAM(params(m))
-loss = (x,y) -> Flux.logitcrossentropy(m(getobs(x)).data,getobs(y)) 
+opt = Flux.Optimise.ADAM()
+loss = (x,y) -> Flux.logitcrossentropy(m(x).data, y)
 valdata = data[1:1000],target[:,1:1000]
 data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
-cb = () -> println("accuracy = ",mean(Flux.onecold(Flux.data(m(valdata[1]).data)) .== Flux.onecold(valdata[2])))
-Flux.Optimise.train!(loss, RandomBatches((data,target),100,10000), opt, cb = Flux.throttle(cb, 10))
+cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata[1]).data) .== Flux.onecold(valdata[2])))
+batch_size = 100
+iterations = 1000
+ps = Flux.params(m)
+mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
+
+@info "testing the gradient"
+gs = gradient(() -> loss(data, target), ps)
+Flux.Optimise.update!(opt, ps, gs)
+
+Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 20), opt, cb = Flux.throttle(cb, 2))
+# feel free to train for longer period of time, this example is learns only 20 iterations, so it runs fast
+# Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 500), opt, cb = Flux.throttle(cb, 10))
 
 #calculate the accuracy
-mean(Flux.onecold(Flux.data(m(data).data)) .== Flux.onecold(target))
+mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 
-# samples = open("recipes_test.json","r") do fid 
+# samples = open("recipes_test.json","r") do fid
 # 	Array{Dict}(JSON.parse(readstring(fid)))
 # end
 # ids = map(s -> s["id"],samples)
@@ -87,3 +100,10 @@ mean(Flux.onecold(Flux.data(m(data).data)) .== Flux.onecold(target))
 
 # using DataFrames
 # CSV.write("cuisine.csv",DataFrame(id = ids,cuisine = y ),delim=',')
+
+# schema can also be created in parallel for better performance, compare:
+
+# single threaded
+@btime JsonGrinder.schema(samples)
+# multi threaded
+@btime merge(tmap(x->JsonGrinder.schema(collect(x)), Iterators.partition(samples, 10_000))...)

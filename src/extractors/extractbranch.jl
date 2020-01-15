@@ -10,7 +10,7 @@
 struct ExtractBranch{S,V} <: AbstractExtractor
 	vec::S
 	other::V
-	function ExtractBranch(v::S,o::V) where {S<:Union{Dict,Nothing},V<:Union{Dict,Nothing}} 
+	function ExtractBranch(v::S,o::V) where {S<:Union{Dict,Nothing},V<:Union{Dict,Nothing}}
 		v = (v == nothing || isempty(v)) ? nothing : v
 		o = (o == nothing || isempty(o)) ? nothing : o
 		new{typeof(v),typeof(o)}(v,o)
@@ -77,7 +77,7 @@ function (s::ExtractBranch{S,V})(v::Dict) where {S<:Nothing,V<:Dict}
 	if length(o) == 1
 		# return(o[1])
 		return(o[1].second)
-	else 
+	else
 		return(TreeNode((;o...)))
 	end
 end

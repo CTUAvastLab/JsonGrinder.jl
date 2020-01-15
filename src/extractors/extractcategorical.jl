@@ -3,7 +3,7 @@
 	ExtractCategorical(s::UnitRange)
 	ExtractCategorical(s::Vector)
 
-	Converts a single item to a one-hot encoded vector. There is always alocated an extra 
+	Converts a single item to a one-hot encoded vector. There is always alocated an extra
 	element for a unknown value
 """
 struct ExtractCategorical{I<:Dict} <: AbstractExtractor
@@ -25,7 +25,7 @@ end
 
 
 extractsmatrix(s::ExtractCategorical) = false
-dimension(s::ExtractCategorical)  = s.n
+
 function (s::ExtractCategorical)(v)
 	x = sparse([get(s.keyvalemap, v, s.n)], [1], [1f0], s.n, 1)
 	ArrayNode(x)
@@ -40,10 +40,8 @@ function (s::ExtractCategorical)(vs::Vector)
 end
 
 (s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(spzeros(Float32, s.n, 1))
-function Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="") 
+function Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="")
 	c = COLORS[(length(pad)%length(COLORS))+1]
-	key *= isempty(key) ? "" : ": "; 
+	key *= isempty(key) ? "" : ": ";
 	paddedprint(io,"$(key)Categorical d = $(m.n)\n", color = c, pad = pad)
 end
-
-
