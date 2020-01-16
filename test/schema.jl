@@ -173,3 +173,13 @@ end
 
 	@test sch == sch_merged
 end
+
+@testset "Sample synthetic" begin
+	j1 = JSON.parse("""{"a": []}""")
+	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
+	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
+	j4 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+
+	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
+	@test JsonGrinder.sample_synthetic(sch1) == Dict(:a=>[Dict(:a=>2,:b=>2), Dict(:a=>2,:b=>2)])
+end
