@@ -132,6 +132,9 @@ end
 	@test e(nothing).data[:] ≈ [0, 0, 0]
 	@test typeof(e("a").data) == SparseMatrixCSC{Float32,Int64}
 	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
+
+	@test e(["a", "b"]).data[:] ≈ [1, 1, 0]
+	@test typeof(e(["a", "b"]).data) == SparseMatrixCSC{Float32,Int64}
 end
 
 @testset "show" begin
