@@ -149,3 +149,27 @@ end
 	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
 	@test_nowarn Base.show(IOBuffer(), sch1)
 end
+
+@testset "testing schema merging with max keys" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
+	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
+	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+	j4 = JSON.parse("""{"a": []}""")
+	j5 = JSON.parse("""{}""")
+	j6 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}], "b":1}""")
+	j7 = JSON.parse("""{"a": [{"a":4,"b":5},{"b":6,"a":7}], "b":2}""")
+	j8 = JSON.parse("""{"a": [{"a":9,"b":10},{"b":11,"a":12}], "b":2}""")
+	j9 = JSON.parse("""{"a": [{"a":4,"b":3},{"b":2,"a":2}], "b":2}""")
+	j10 = JSON.parse("""{"a": [{"a":11,"b":12},{"b":13,"a":14}], "b":2}""")
+	j11 = JSON.parse("""{"a": [{"a":7,"b":5},{"b":6,"a":6}], "b":2}""")
+
+	JsonGrinder.updatemaxkeys!(6)
+	# todo: otestovat jak funguje newentry s víceprvkovám polem
+	sch1 = JsonGrinder.schema([j1,j2,j3,j4,j5,j11])
+	sch2 = JsonGrinder.schema([j6,j7,j8,j9,j10])
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11])
+	sch_merged = merge(sch1, sch2)
+
+	@test sch == sch_merged
+end

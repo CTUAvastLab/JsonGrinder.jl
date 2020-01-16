@@ -62,6 +62,9 @@ end
 function update!(a::Entry,v)
 	if length(keys(a.counts)) < max_keys
 		a.counts[v] = get(a.counts,v,0) + 1
+		# it's there because otherwise, after filling the count keys not even the existing ones are updates
+	elseif haskey(a.counts, v)
+		a.counts[v] += 1
 	end
 	a.updated +=1
 end
@@ -70,6 +73,10 @@ end
 function merge(es::Entry...)
 	updates_merged = sum(map(x->x.updated, es))
 	counts_merged = merge(+, map(x->x.counts, es)...)
+	if length(counts_merged) > max_keys
+		counts_merged_list = sort(collect(counts_merged), by=x->x[2], rev=true)
+		counts_merged = Dict(counts_merged_list[1:max_keys])
+	end
 	Entry(counts_merged, updates_merged)
 end
 
