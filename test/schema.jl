@@ -139,3 +139,13 @@ end
 	@test sch1 != sch0
 	@test sch3 != sch0
 end
+
+@testset "show" begin
+	j1 = JSON.parse("""{"a": []}""")
+	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
+	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
+	j4 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+
+	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
+	@test_nowarn Base.show(IOBuffer(), sch1)
+end

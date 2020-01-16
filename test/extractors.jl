@@ -133,3 +133,20 @@ end
 	@test typeof(e("a").data) == SparseMatrixCSC{Float32,Int64}
 	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
 end
+
+@testset "show" begin
+	e = ExtractCategorical(["a","b"])
+	@test_nowarn Base.show(IOBuffer(), e)
+
+	e = ExtractOneHot(["a","b"], "name", nothing)
+	@test_nowarn Base.show(IOBuffer(), e)
+
+	other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));
+	br = ExtractBranch(nothing,other)
+	@test_nowarn Base.show(IOBuffer(), br)
+
+	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
+	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)));
+	br = ExtractBranch(vector,other)
+	@test_nowarn Base.show(IOBuffer(), br)
+end
