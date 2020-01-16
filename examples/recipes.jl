@@ -67,8 +67,11 @@ m = reflectinmodel(sch, extract_data,
 ###############################################################
 opt = Flux.Optimise.ADAM()
 loss = (x,y) -> Flux.logitcrossentropy(m(x).data, y)
-valdata = data[1:1000],target[:,1:1000]
-data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
+valdata = data[1:1_000],target[:,1:1_000]
+data, target = data[1_001:10_000], target[:,1001:10_000]
+# for less recourse-chungry training, we use only part of data for trainng, but it is advised to used all, as i following line:
+# data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
+
 cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata[1]).data) .== Flux.onecold(valdata[2])))
 batch_size = 100
 iterations = 1000
