@@ -13,12 +13,12 @@ end
 @testset "Testing array conversion" begin
 	sc = ExtractArray(ExtractCategorical(2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
-	@test all(sc(nothing).data.data .== [0 0 0])
-	@test all(sc(nothing).bags .== [1:1])
+	@test ismissing(sc(nothing).data)
+	@test all(sc(nothing).bags.bags .== [0:-1])
 	sc = ExtractArray(ExtractScalar(Float64))
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
-	@test all(sc(nothing).data.data .== [0])
-	@test all(sc(nothing).bags .== [1:1])
+	@test ismissing(sc(nothing).data)
+	@test all(sc(nothing).bags.bags .== [0:-1])
 end
 
 
@@ -34,12 +34,12 @@ end
 	@test all(catobs(a1,a1).data[2].bags .== [1:4,5:8])
 
 	@test all(catobs(a1,a2).data[1].data .==[7 7; 9 9])
-	@test all(catobs(a1,a2).data[2].data.data .== [-3 0 3 6 0])
-	@test all(catobs(a1,a2).data[2].bags .== [1:4,5:5])
+	@test all(catobs(a1,a2).data[2].data.data .== [-3 0 3 6])
+	@test all(catobs(a1,a2).data[2].bags .== [1:4,0:-1])
 
 	@test all(catobs(a2,a3).data[1].data .==[7 0; 9 9])
-	@test all(catobs(a2,a3).data[2].data.data .== [0 -3 0 3 6])
-	@test all(catobs(a2,a3).data[2].bags .== [1:1,2:5])
+	@test all(catobs(a2,a3).data[2].data.data .== [-3 0 3 6])
+	@test all(catobs(a2,a3).data[2].bags .== [0:-1,1:4])
 
 	@test all(catobs(a1,a3).data[1].data .==[7 0; 9 9])
 	@test all(catobs(a1,a3).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
@@ -65,8 +65,8 @@ end
 	@test all(catobs(a1,a1).data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a1,a1).bags .== [1:4,5:8])
 
-	@test all(catobs(a1,a2).data.data .== [-3 0 3 6 0])
-	@test all(catobs(a1,a2).bags .== [1:4,5:5])
+	@test all(catobs(a1,a2).data.data .== [-3 0 3 6])
+	@test all(catobs(a1,a2).bags .== [1:4,0:-1])
 
 
 	@test all(a3.data.data .== [-3 0 3 6])
@@ -86,20 +86,20 @@ end
 
 	@test all(catobs(a1,a2).data[1].data.data .== [-3.0  0.0  3.0  6.0  0.0  3.0  6.0])
 	@test all(catobs(a1,a2).data[1].bags .== [1:4, 5:7])
-	@test all(catobs(a1,a2).data[2].data.data .== [-3.0  0.0  3.0 0])
-	@test all(catobs(a1,a2).data[2].bags .== [1:3, 4:4])
+	@test all(catobs(a1,a2).data[2].data.data .== [-3.0  0.0  3.0])
+	@test all(catobs(a1,a2).data[2].bags .== [1:3, 0:-1])
 
 
-	@test all(catobs(a2,a3).data[1].data.data .== [0.0  3.0  6.0 0])
-	@test all(catobs(a2,a3).data[1].bags .== [1:3, 4:4])
-	@test all(catobs(a2,a3).data[2].data.data .== [0 0 3 6])
-	@test all(catobs(a2,a3).data[2].bags .== [1:1, 2:4])
+	@test all(catobs(a2,a3).data[1].data.data .== [0.0  3.0  6.0])
+	@test all(catobs(a2,a3).data[1].bags .== [1:3, 0:-1])
+	@test all(catobs(a2,a3).data[2].data.data .== [0 3 6])
+	@test all(catobs(a2,a3).data[2].bags .== [0:-1, 1:3])
 
 
-	@test all(catobs(a1,a4).data[1].data.data .== [-3.0  0.0  3.0  6.0 0])
-	@test all(catobs(a1,a4).data[1].bags .== [1:4, 5:5])
-	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0 0])
-	@test all(catobs(a1,a4).data[2].bags .== [1:3, 4:4])
+	@test all(catobs(a1,a4).data[1].data.data .== [-3.0  0.0  3.0  6.0])
+	@test all(catobs(a1,a4).data[1].bags .== [1:4, 0:-1])
+	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
+	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
 end
 
 @testset "ExtractOneHot" begin
