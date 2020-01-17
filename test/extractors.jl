@@ -1,4 +1,4 @@
-using JsonGrinder, JSON, Test, SparseArrays
+using JsonGrinder, JSON, Test, SparseArrays, Flux
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch
 using Mill: catobs
 using LinearAlgebra
@@ -130,11 +130,11 @@ end
 	@test e("b").data[:] ≈ [0, 1, 0]
 	@test e("z").data[:] ≈ [0, 0, 1]
 	@test e(nothing).data[:] ≈ [0, 0, 0]
-	@test typeof(e("a").data) == SparseMatrixCSC{Float32,Int64}
-	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
+	@test typeof(e("a").data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
+	@test typeof(e(nothing).data) == SparseMatrixCSC{Bool,Int}
 
 	@test e(["a", "b"]).data[:] ≈ [1, 1, 0]
-	@test typeof(e(["a", "b"]).data) == SparseMatrixCSC{Float32,Int64}
+	@test typeof(e(["a", "b"]).data) == SparseMatrixCSC{Bool,Int}
 end
 
 @testset "show" begin

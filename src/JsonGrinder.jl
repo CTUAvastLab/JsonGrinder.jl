@@ -1,5 +1,5 @@
 module JsonGrinder
-using Mill, JSON, Printf
+using Mill, JSON, Printf, Flux
 using Mill: paddedprint, COLORS
 include("schema.jl")
 include("html_show_tools.jl")
