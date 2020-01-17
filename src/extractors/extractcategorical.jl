@@ -46,3 +46,7 @@ function Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="")
 	key *= isempty(key) ? "" : ": ";
 	paddedprint(io,"$(key)Categorical d = $(m.n)\n", color = c, pad = pad)
 end
+
+Base.reduce(::typeof(catobs), a::Vector{S}) where {S<:Flux.OneHotMatrix} = _catobs(a[:])
+catobs(a::Flux.OneHotMatrix...) = _catobs(collect(a))
+_catobs(a::AbstractArray{<:Flux.OneHotMatrix}) = Flux.OneHotMatrix(a[1].height,reduce(vcat, [i.data for i in a]))
