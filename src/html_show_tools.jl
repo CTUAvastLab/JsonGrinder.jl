@@ -33,11 +33,10 @@ end
 # because sometimes there is empty list in all jsons, this helps to determine the pruning of such element
 function schema2html(e::Nothing; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
 	c = HTML_COLORS[((length(pad)÷2)%length(COLORS))+1]
-	filled_percent = isnothing(parent_updated) ? "" : ", filled = $(10000 * e.updated ÷ parent_updated / 100)%"
-	sorted_counts = sort(collect(e.counts), by=x->x[2], rev=true)
 	ret_str = """
 $pad[Empty list element], this list is empty in all JSONs, can not infer schema, suggesting to delete key $parent_key
 """
+	ret_str
 end
 
 function schema2html(e::ArrayEntry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
