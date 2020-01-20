@@ -55,11 +55,11 @@ end
 
 
 """
-		function update!(a::Entry,v)
+		function update!(a::Entry, v)
 
 		updates the entry when seeing value v
 """
-function update!(a::Entry,v)
+function update!(a::Entry, v)
 	if length(keys(a.counts)) < max_keys
 		a.counts[v] = get(a.counts,v,0) + 1
 		# it's there because otherwise, after filling the count keys not even the existing ones are updates
@@ -200,7 +200,7 @@ function Base.show(io::IO, e::DictEntry; pad=[], key = "")
     show(io, e.childs[k[end]], pad=[pad; (c, " "^(ml-length(k[end])+4))], key = string(k[end]))
 end
 
-function update!(s::DictEntry,d::Dict)
+function update!(s::DictEntry, d::Dict)
 	s.updated +=1
 	for (k,v) in d
 		v == nothing && continue

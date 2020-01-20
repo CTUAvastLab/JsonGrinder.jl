@@ -30,6 +30,16 @@ $pad<ul class="nested" style="color: $c">$pad[Scalar - $(join(types(e)))], $(len
 	ret_str * "$pad </ul>\n"
 end
 
+# because sometimes there is empty list in all jsons, this helps to determine the pruning of such element
+function schema2html(e::Nothing; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
+	c = HTML_COLORS[((length(pad)÷2)%length(COLORS))+1]
+	filled_percent = isnothing(parent_updated) ? "" : ", filled = $(10000 * e.updated ÷ parent_updated / 100)%"
+	sorted_counts = sort(collect(e.counts), by=x->x[2], rev=true)
+	ret_str = """
+$pad[Empty list element], this list is empty in all JSONs, can not infer schema, suggesting to delete key $parent_key
+"""
+end
+
 function schema2html(e::ArrayEntry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
  	c = HTML_COLORS[((length(pad)÷2)%length(COLORS))+1]
 	# todo: fix it all so it is different method for array of entries and the rest so only nested things are truly nested
