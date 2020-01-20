@@ -1,3 +1,4 @@
+import Mill.catobs
 """
 	ExtractCategorical(s::Entry)
 	ExtractCategorical(s::UnitRange)
@@ -27,21 +28,25 @@ end
 extractsmatrix(s::ExtractCategorical) = false
 
 function (s::ExtractCategorical)(v)
-	x = sparse([get(s.keyvalemap, v, s.n)], [1], [1f0], s.n, 1)
-	ArrayNode(x)
+    x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(get(s.keyvalemap, v, s.n), s.n)])
+    ArrayNode(x,nothing)
 end
 
 function (s::ExtractCategorical)(vs::Vector)
 	is = [get(s.keyvalemap, v, s.n) for v in  vs]
 	js = fill(1, length(is))
-	vs = fill(1f0, length(is))
+	vs = fill(true, length(is))
 	x = sparse(is, js, vs, s.n, 1)
 	ArrayNode(x)
 end
 
-(s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(spzeros(Float32, s.n, 1))
+(s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(spzeros(Bool, s.n, 1))
 function Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="")
 	c = COLORS[(length(pad)%length(COLORS))+1]
 	key *= isempty(key) ? "" : ": ";
 	paddedprint(io,"$(key)Categorical d = $(m.n)\n", color = c, pad = pad)
 end
+
+Base.reduce(::typeof(catobs), a::Vector{S}) where {S<:Flux.OneHotMatrix} = _catobs(a[:])
+catobs(a::Flux.OneHotMatrix...) = _catobs(collect(a))
+_catobs(a::AbstractArray{<:Flux.OneHotMatrix}) = Flux.OneHotMatrix(a[1].height,reduce(vcat, [i.data for i in a]))
