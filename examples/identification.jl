@@ -10,10 +10,6 @@ samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/train.json")) do s
 	JSON.parse(s)
 end
 JSON.print(samples[1],2)
-test_samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/test.json")) do s
-	JSON.parse(s)
-end
-ns = extract_target.vec["device_class"].items
 
 
 ###############################################################
@@ -21,12 +17,13 @@ ns = extract_target.vec["device_class"].items
 ###############################################################
 sch = JsonGrinder.schema(samples);
 extractor = suggestextractor(sch)
-extract_target = ExtractBranch(extractor.vec,nothing)
+extract_target = ExtractBranch(nothing, Dict("device_class" => extractor.other["device_class"]));
+
 target = extractbatch(extract_target, samples).data
 extract_data = ExtractBranch(nothing, extractor.other)
 data = extractbatch(extract_data, samples)
 
-model = reflectinmodel(sch, extractor, d -> Dense(d,20, relu), d -> SegmentedMeanMax(d), b = Dict("" => d -> Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
+model = reflectinmodel(data[1:10], d -> Dense(d,20, relu), d -> SegmentedMeanMax(d), b = Dict("" => d -> Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
 model(data[1:10])
 
 ###############################################################
@@ -40,21 +37,19 @@ opt = ADAM()
 ps = params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data,y)
 
-#a little test before training
-# x, y = makebatch()
-# loss(x,y)
-# gradient(() -> sum(model(x).data), ps)
-
 cb = () -> begin
 	o = model(data).data
 	println("crossentropy = ",Flux.logitcrossentropy(o,target) ," accuracy = ",mean(Flux.onecold(softmax(o)) .== Flux.onecold(target)))
 end
 Flux.Optimise.train!(loss, ps, repeatedly(makebatch,10000), opt, cb = Flux.throttle(cb, 60))
 
-#calculate the accuracy
 cb()
 
-o = Flux.onecold(model(extractbatch(extract_data, test_samples)).data);
+test_samples = map(readlines("/Users/tomas.pevny/Downloads/dataset/test.json")) do s
+	extract_data(JSON.parse(s))
+end
+o = Flux.onecold(model(reduce(catobs, test_samples)).data);
+ns = extract_target.vec["device_class"].items
 o = [ns[i] for i in o];
 id = [s["device_id"] for s in test_samples];
 # Id,Predicted

@@ -129,12 +129,12 @@ end
 	@test e("a").data[:] ≈ [1, 0, 0]
 	@test e("b").data[:] ≈ [0, 1, 0]
 	@test e("z").data[:] ≈ [0, 0, 1]
-	@test e(nothing).data[:] ≈ [0, 0, 0]
+	@test e(nothing).data[:] ≈ [0, 0, 1]
 	@test typeof(e("a").data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
-	@test typeof(e(nothing).data) == SparseMatrixCSC{Bool,Int}
+	@test typeof(e(nothing).data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
 
-	@test e(["a", "b"]).data[:] ≈ [1, 1, 0]
-	@test typeof(e(["a", "b"]).data) == SparseMatrixCSC{Bool,Int}
+	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
+	@test typeof(e(["a", "b"]).data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
 end
 
 @testset "show" begin

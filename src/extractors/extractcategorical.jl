@@ -29,18 +29,15 @@ extractsmatrix(s::ExtractCategorical) = false
 
 function (s::ExtractCategorical)(v)
     x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(get(s.keyvalemap, v, s.n), s.n)])
-    ArrayNode(x,nothing)
+    ArrayNode(x)
 end
 
 function (s::ExtractCategorical)(vs::Vector)
-	is = [get(s.keyvalemap, v, s.n) for v in  vs]
-	js = fill(1, length(is))
-	vs = fill(true, length(is))
-	x = sparse(is, js, vs, s.n, 1)
+	x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(get(s.keyvalemap, v, s.n), s.n) for v in vs])
 	ArrayNode(x)
 end
 
-(s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(spzeros(Bool, s.n, 1))
+(s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(Flux.OneHotMatrix(s.n,[Flux.OneHotVector(s.n, s.n)]))
 function Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="")
 	c = COLORS[(length(pad)%length(COLORS))+1]
 	key *= isempty(key) ? "" : ": ";
