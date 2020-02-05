@@ -44,7 +44,7 @@ function Base.show(io::IO, m::ExtractBranch; pad = [], key::String="")
   ml = m.vec   != nothing ? maximum(length(k) for k in keys(m.vec)) : 0
   ml = m.other != nothing ? max(ml, maximum(length(k) for k in keys(m.other))) : ml
   key *=": "
-  paddedprint(io,"$(key)struct\n", color = c, pad = pad)
+  paddedprint(io,"$(key)struct\n", color = c)
 	if isnothing(m.vec)
 		paddedprint(io, "  Empty vec\n", color = c, pad=pad)
 	else

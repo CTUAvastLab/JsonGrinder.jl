@@ -166,8 +166,8 @@ end
       └── Float64
 """
 
-	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
-	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)));
+	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64))
+	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)))
 	br = ExtractBranch(vector,other)
 	buf = IOBuffer()
 	Base.show(buf, br)
@@ -181,5 +181,28 @@ end
   Other:
   └── c: Array of
       └── Float64
+"""
+
+	other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
+	br1 = ExtractBranch(nothing,other1)
+	other = Dict("a" => ExtractArray(br1), "b" => ExtractScalar(Float64,2,3))
+	br = ExtractBranch(nothing,other)
+	buf = IOBuffer()
+	Base.show(buf, br)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+: struct
+  Empty vec
+  Other:
+  ├── a: Array of
+  │    └── : struct
+  │          Empty vec
+  │          Other:
+  │          ├── a: Array of
+  │          │    └── Float64
+  │          └── b: Array of
+  │              └── Float64
+  └── b: Float64
 """
 end
