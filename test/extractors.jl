@@ -139,17 +139,47 @@ end
 
 @testset "show" begin
 	e = ExtractCategorical(["a","b"])
-	@test_nowarn Base.show(IOBuffer(), e)
+	buf = IOBuffer()
+	Base.show(buf, e)
+	str_repr = String(take!(buf))
+	@test str_repr == """Categorical d = 3\n"""
 
 	e = ExtractOneHot(["a","b"], "name", nothing)
-	@test_nowarn Base.show(IOBuffer(), e)
+	buf = IOBuffer()
+	Base.show(buf, e)
+	str_repr = String(take!(buf))
+	@test str_repr == """OneHot d = 3\n"""
 
 	other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));
 	br = ExtractBranch(nothing,other)
-	@test_nowarn Base.show(IOBuffer(), br)
+	buf = IOBuffer()
+	Base.show(buf, br)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+: struct
+  Empty vec
+  Other:
+  ├── a: Array of
+  │    └──Float64
+  └── b: Array of
+      └──Float64
+"""
 
 	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
 	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)));
 	br = ExtractBranch(vector,other)
-	@test_nowarn Base.show(IOBuffer(), br)
+	buf = IOBuffer()
+	Base.show(buf, br)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+: struct
+  Vec:
+  ├── a: Float64
+  └── b: Float64
+  Other:
+  └── c: Array of
+      └── Float64
+"""
 end

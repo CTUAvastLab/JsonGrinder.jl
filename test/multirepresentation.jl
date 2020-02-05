@@ -17,7 +17,23 @@ end
 	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
 		JsonGrinder.ExtractString(String)))
 	e = ex("Olda")
-	
-	@test_nowarn Base.show(IOBuffer(), ex)
-	@test_nowarn Base.show(IOBuffer(), e)
+
+	buf = IOBuffer()
+	Base.show(buf, ex)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+: MultiRepresentation
+  ├─── : Categorical d = 4
+  └─── : String
+"""
+
+	buf = IOBuffer()
+	Mill.dsprint(buf, e)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+TreeNode
+  ├── ArrayNode(4, 1)
+  └── ArrayNode(2053, 1)"""
 end

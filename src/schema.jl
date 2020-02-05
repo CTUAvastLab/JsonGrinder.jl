@@ -136,6 +136,8 @@ function suggestextractor(node::ArrayEntry, settings = NamedTuple())
 end
 
 
+# todo: implement merding empty arrays
+# todo: implement isempty for arrayentry so it's semantic
 function merge(es::ArrayEntry...)
 	updates_merged = sum(map(x->x.updated, es))
 	l_merged = merge(+, map(x->x.l, es)...)

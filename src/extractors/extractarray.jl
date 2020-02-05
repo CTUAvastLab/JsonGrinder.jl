@@ -35,6 +35,7 @@ extractsmatrix(s::ExtractArray) = false
 function Base.show(io::IO, m::ExtractArray; pad = [], key::String="")
 	c = COLORS[(length(pad)%length(COLORS))+1]
 	key *= isempty(key) ? "" : ": "
-	paddedprint(io,"$(key)Array of \n", color = c, pad = pad)
-	show(io,m.item, pad = vcat(replacebyspaces(pad), (c, "  └──")))
+	paddedprint(io,"$(key)Array of \n", color = c)
+	paddedprint(io, "  └── ", color=c, pad=pad)
+	show(io,m.item, pad = [pad; (c, "      ")])
 end

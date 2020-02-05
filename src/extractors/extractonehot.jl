@@ -68,5 +68,10 @@ function (e::ExtractOneHot{K,I,V})(vs::Vector) where {K, I, V}
 	ArrayNode(sparse(ids, Ones(length(ids)), x, e.n, 1))
 end
 
-
 (e::ExtractOneHot)(::Nothing) = ArrayNode(spzeros(Float32, e.n, 1))
+
+function Base.show(io::IO, m::ExtractOneHot; pad = [], key::String="")
+	c = COLORS[(length(pad)%length(COLORS))+1]
+	key *= isempty(key) ? "" : ": ";
+	paddedprint(io,"$(key)OneHot d = $(m.n)\n", color = c, pad = pad)
+end

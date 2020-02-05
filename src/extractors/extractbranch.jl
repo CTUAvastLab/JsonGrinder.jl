@@ -26,13 +26,16 @@ end
 
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
 
-function printdict(io, d::Dict, ml, c, pad, last::Bool = true)
-	k = sort(collect(keys(d)))
-  for i in 1:length(k)
-  	p = (last && i == length(k)) ? "  └───" : "  ├───"
-  	p*="─"^(ml-length(k[i]))
-		show(io, d[k[i]], pad = vcat(replacebyspaces(pad), (c,p)) , key = " "*k[i])
+function printdict(io, d::Dict, ml, c, pad)
+  k = sort(collect(keys(d)))
+  for i in 1:length(k)-1
+	  s = "  ├──"*"─"^(ml-length(k[i]))*" "
+		  paddedprint(io, s, color=c, pad=pad)
+		  show(io, d[k[i]], pad=[pad; (c, "  │"*" "^(ml-length(k[i])+2))], key = k[i])
   end
+  s = "  └──"*"─"^(ml-length(k[end]))*" "
+  paddedprint(io, s, color=c, pad=pad)
+  show(io, d[k[end]], pad=[pad; (c, " "^(ml-length(k[end])+4))], key = k[end])
 end
 
 
@@ -42,10 +45,16 @@ function Base.show(io::IO, m::ExtractBranch; pad = [], key::String="")
   ml = m.other != nothing ? max(ml, maximum(length(k) for k in keys(m.other))) : ml
   key *=": "
   paddedprint(io,"$(key)struct\n", color = c, pad = pad)
-	if m.vec != nothing
-		printdict(io, m.vec, ml, c, pad, m.other == nothing)
+	if isnothing(m.vec)
+		paddedprint(io, "  Empty vec\n", color = c, pad=pad)
+	else
+		paddedprint(io, "  Vec:\n", color = c, pad=pad)
+		printdict(io, m.vec, ml, c, pad)
 	end
-	if m.other != nothing
+	if isnothing(m.other)
+		paddedprint(io, "  Empty other\n", color = c, pad=pad)
+	else
+		paddedprint(io, "  Other:\n", color = c, pad=pad)
 		printdict(io, m.other, ml, c, pad)
 	end
 end
