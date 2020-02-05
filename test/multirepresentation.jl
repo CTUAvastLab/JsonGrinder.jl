@@ -1,4 +1,4 @@
-using JsonGrinder, JSON, Test, SparseArrays
+using JsonGrinder, JSON, Test, SparseArrays, Mill
 
 @testset "ExtractMultipleRepresentation" begin
 	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
