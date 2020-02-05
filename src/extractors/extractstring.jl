@@ -13,7 +13,7 @@ extractsmatrix(s::ExtractString) = false
 function Base.show(io::IO, m::ExtractString;pad = [], key::String="")
 	c = COLORS[(length(pad)%length(COLORS))+1]
 	key *= isempty(key) ? "" : ": ";
-	paddedprint(io,"$(key)$(m.datatype)\n", color = c, pad = pad)
+	paddedprint(io,"$(key)$(m.datatype)\n", color = c)
 end
 
 

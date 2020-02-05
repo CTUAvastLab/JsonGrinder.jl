@@ -73,7 +73,7 @@ end
 function Base.show(io::IO, m::ExtractOneHot; pad = [], key::String="")
 	c = COLORS[(length(pad)%length(COLORS))+1]
 	key *= isempty(key) ? "" : ": ";
-	paddedprint(io,"$(key)OneHot d = $(m.n)\n", color = c, pad = pad)
+	paddedprint(io,"$(key)OneHot d = $(m.n)\n", color = c)
 end
 
 Base.hash(e::ExtractOneHot, h::UInt) = hash((e.k, e.v, e.key2id, e.n), h)

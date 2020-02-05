@@ -46,7 +46,7 @@ end
 function Base.show(io::IO, m::ExtractVector; pad = [], key::String="")
 	c = COLORS[(length(pad)%length(COLORS))+1]
 	key *= isempty(key) ? "" : ": "
-	paddedprint(io,"$(key)FeatureVector with $(m.n) items\n", color = c, pad = pad)
+	paddedprint(io,"$(key)FeatureVector with $(m.n) items\n", color = c)
 end
 
 Base.hash(e::ExtractVector, h::UInt) = hash(e.n, h)
