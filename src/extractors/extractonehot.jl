@@ -75,3 +75,6 @@ function Base.show(io::IO, m::ExtractOneHot; pad = [], key::String="")
 	key *= isempty(key) ? "" : ": ";
 	paddedprint(io,"$(key)OneHot d = $(m.n)\n", color = c, pad = pad)
 end
+
+Base.hash(e::ExtractOneHot, h::UInt) = hash((e.k, e.v, e.key2id, e.n), h)
+Base.:(==)(e1::ExtractOneHot, e2::ExtractOneHot) = e1.k === e2.k && e1.v === e2.v && e1.key2id == e2.key2id && e1.n === e2.n

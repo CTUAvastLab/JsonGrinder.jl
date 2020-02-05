@@ -93,3 +93,6 @@ end
 
 
 extractbatch(extractor, samples) = reduce(catobs, map(s-> extractor(s), samples))
+
+Base.hash(e::ExtractBranch, h::UInt) = hash((e.vec, e.other), h)
+Base.:(==)(e1::ExtractBranch, e2::ExtractBranch) = e1.vec == e2.vec && e1.other == e2.other

@@ -47,3 +47,6 @@ end
 Base.reduce(::typeof(catobs), a::Vector{S}) where {S<:Flux.OneHotMatrix} = _catobs(a[:])
 catobs(a::Flux.OneHotMatrix...) = _catobs(collect(a))
 _catobs(a::AbstractArray{<:Flux.OneHotMatrix}) = Flux.OneHotMatrix(a[1].height,reduce(vcat, [i.data for i in a]))
+
+Base.hash(e::ExtractCategorical, h::UInt) = hash((e.keyvalemap, e.n), h)
+Base.:(==)(e1::ExtractCategorical, e2::ExtractCategorical) = e1.keyvalemap === e2.keyvalemap && e1.n == e2.n

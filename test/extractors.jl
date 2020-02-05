@@ -206,3 +206,25 @@ end
   └── b: Float64
 """
 end
+
+@testset "equals and hash test" begin
+	other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
+	br1 = ExtractBranch(nothing,other1)
+	other11 = Dict("a" => ExtractArray(br1), "b" => ExtractScalar(Float64,2,3))
+	br11 = ExtractBranch(nothing,other11)
+
+	other2 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
+	br2 = ExtractBranch(nothing,other2)
+	other22 = Dict("a" => ExtractArray(br2), "b" => ExtractScalar(Float64,2,3))
+	br22 = ExtractBranch(nothing,other22)
+
+	@test hash(br11) === hash(br22)
+	@test hash(br11) !== hash(br1)
+	@test hash(br11) !== hash(br2)
+	@test hash(br1) === hash(br2)
+
+	@test br11 == br22
+	@test br11 != br1
+	@test br11 != br2
+	@test br1 == br2
+end

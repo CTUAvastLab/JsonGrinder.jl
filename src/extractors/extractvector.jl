@@ -48,3 +48,6 @@ function Base.show(io::IO, m::ExtractVector; pad = [], key::String="")
 	key *= isempty(key) ? "" : ": "
 	paddedprint(io,"$(key)FeatureVector with $(m.n) items\n", color = c, pad = pad)
 end
+
+Base.hash(e::ExtractVector, h::UInt) = hash(e.n, h)
+Base.:(==)(e1::ExtractVector, e2::ExtractVector) = e1.n === e2.n

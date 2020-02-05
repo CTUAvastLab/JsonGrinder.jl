@@ -25,3 +25,6 @@ function Base.show(io::IO, m::ExtractScalar;pad = [], key::String="")
 	key *= isempty(key) ? "" : ": ";
 	paddedprint(io,"$(key)$(m.datatype)\n", color = c)
 end
+
+Base.hash(e::ExtractScalar, h::UInt) = hash((e.datatype, e.c, e.s), h)
+Base.:(==)(e1::ExtractScalar, e2::ExtractScalar) = e1.datatype == e2.datatype && e1.c === e2.c && e1.s === e2.s

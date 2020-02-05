@@ -29,3 +29,6 @@ function printtuple(io, d::Tuple; c, pad, last::Bool = true)
   		show(io, d[i], pad = vcat(replacebyspaces(pad), (c,p)) , key = " ")
  	end
 end
+
+Base.hash(e::MultipleRepresentation, h::UInt) = hash(e.extractors, h)
+Base.:(==)(e1::MultipleRepresentation, e2::MultipleRepresentation) = e1.extractors == e2.extractors
