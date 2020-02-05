@@ -161,9 +161,9 @@ end
   Empty vec
   Other:
   ├── a: Array of
-  │    └──Float64
+  │    └── Float64
   └── b: Array of
-      └──Float64
+      └── Float64
 """
 
 	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
