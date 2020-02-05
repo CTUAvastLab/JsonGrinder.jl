@@ -24,8 +24,8 @@ end
 	@test str_repr ==
 """
 : MultiRepresentation
-  ├─── : Categorical d = 4
-  └─── : String
+ : Categorical d = 4
+ : String
 """
 
 	buf = IOBuffer()
