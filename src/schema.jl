@@ -135,13 +135,14 @@ function suggestextractor(node::ArrayEntry, settings = NamedTuple())
 	isnothing(e) ? e : ExtractArray(e)
 end
 
-
+Base.isempty(e::ArrayEntry) = isnothing(e.items)
 # todo: implement merding empty arrays
 # todo: implement isempty for arrayentry so it's semantic
 function merge(es::ArrayEntry...)
 	updates_merged = sum(map(x->x.updated, es))
 	l_merged = merge(+, map(x->x.l, es)...)
-	items_merged = merge(merge, map(x->x.items, es)...)
+	nonempty_items = map(x->x.items, filter(!isempty, collect(es)))
+	items_merged = isempty(nonempty_items) ? nothing : merge(merge, nonempty_items...)
 	ArrayEntry(items_merged, l_merged, updates_merged)
 end
 

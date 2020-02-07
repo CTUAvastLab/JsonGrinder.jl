@@ -195,4 +195,19 @@ end
 	@test JsonGrinder.sample_synthetic(sch1) == Dict(:a=>[Dict(:a=>2,:b=>2), Dict(:a=>2,:b=>2)])
 end
 
-# todo: add tests for merging empty arrays
+@testset "Merge empty lists" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b": []}""")
+	j2 = JSON.parse("""{"a": [{"a":3},{"b":4}], "b": []}""")
+	j3 = JSON.parse("""{"a": [{"a":1},{"b":3}], "b": []}""")
+	j4 = JSON.parse("""{"a": [{"a":2},{"b":4}], "b": [1]}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	sch123 = JsonGrinder.schema([j1, j2, j3])
+	sch12 = JsonGrinder.schema([j1, j2])
+	sch3 = JsonGrinder.schema([j3])
+	sch4 = JsonGrinder.schema([j4])
+	sch_merged123 = merge(sch12, sch3)
+	sch_merged1234 = merge(sch12, sch3, sch4)
+	@test sch == sch_merged1234
+	@test sch123 == sch_merged123
+end
