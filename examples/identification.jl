@@ -1,7 +1,7 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools
 
-using JsonGrinder: suggestextractor, ExtractCategorical, ExtractBranch
-using Mill: mapdata, sparsify, reflectinmodel
+using JsonGrinder: suggestextractor, ExtractBranch
+using Mill: reflectinmodel
 
 ###############################################################
 # start by loading all samples
@@ -20,11 +20,12 @@ extractor = suggestextractor(sch)
 extract_target = ExtractBranch(nothing, Dict("device_class" => extractor.other["device_class"]));
 
 target = extractbatch(extract_target, samples).data
-extract_data = ExtractBranch(nothing, extractor.other)
-data = extractbatch(extract_data, samples)
+delete!(extractor.other, "device_class");
+data = extractbatch(extractor, samples)
 
-model = reflectinmodel(data[1:10], d -> Dense(d,20, relu), d -> SegmentedMeanMax(d), b = Dict("" => d -> Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
-model(data[1:10])
+ds = extractor(JsonGrinder.sample_synthetic(sch))
+model = reflectinmodel(ds, d -> Dense(d,20, relu), d -> SegmentedMeanMax(d), b = Dict("" => d -> Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
+model(ds)
 
 ###############################################################
 #  train

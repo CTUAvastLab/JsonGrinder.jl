@@ -100,7 +100,7 @@ function schema2html(e::DictEntry; pad = "", max_vals=100, parent_updated=nothin
 	ret_str * pad * "</ul>\n"
 end
 
-function generate_html(sch::DictEntry, file_name="output.html"; max_vals=100)
+function generate_html(sch::DictEntry; max_vals=100)
 	tpl = mt"""
 	<!DOCTYPE html>
 	<html lang="en">
@@ -180,8 +180,12 @@ document.getElementById("copy_clipboard").addEventListener("click", function () 
 	d = Dict(
 		"list_dump" => schema2html(sch, max_vals=max_vals),
 	)
+	return(render(tpl, d))
+end
 
+function generate_html(sch::DictEntry, file_name ; max_vals=100)	
+	s = generate_html(sch; max_vals = max_vals)
 	open(file_name, "w") do f
- 		write(f, render(tpl, d))
+ 		write(f, s)
 	end
 end
