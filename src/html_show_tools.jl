@@ -189,3 +189,8 @@ function generate_html(sch::DictEntry, file_name ; max_vals=100)
  		write(f, s)
 	end
 end
+
+# Base.show(io, m::MIME{Symbol("text/html")}, sch::JsonGrinder.DictEntry) = print(io, repr(m,sch))
+
+Base.repr(::MIME"text/html", sch::DictEntry; max_vals = 100, context = nothing) = generate_html(sch; max_vals = max_vals)
+Base.showable(::MIME"text/html", ::DictEntry) = true

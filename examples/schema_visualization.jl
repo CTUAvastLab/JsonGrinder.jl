@@ -23,5 +23,9 @@ generate_html(sch, "recipes_max_vals=100.html", max_vals=100)
 generate_html(sch, "recipes.html", max_vals=nothing)
 
 using ElectronDisplay
+using ElectronDisplay: newdisplay
+display(newdisplay(),sch)
+
 using ElectronDisplay: displayhtml, newdisplay
 displayhtml(newdisplay(),generate_html(sch, max_vals = 100))
+display(newdisplay(),sch)
