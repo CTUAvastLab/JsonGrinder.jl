@@ -47,9 +47,9 @@ extract_data(JsonGrinder.sample_synthetic(sch))
 # we convert JSONs to Datasets
 ###############################################################
 # advised to use all the samples, this is just speedup to demonstrate functionality
-data = tmap(extract_data, samples[1:20_000])
+data = tmap(extract_data, samples[1:10_000])
 data = reduce(catobs, data)
-target = tmap(extract_target, samples[1:20_000])
+target = tmap(extract_target, samples[1:10_000])
 target = reduce(catobs, target).data
 
 e = sch["cuisine"]
