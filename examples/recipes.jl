@@ -47,9 +47,9 @@ extract_data(JsonGrinder.sample_synthetic(sch))
 # we convert JSONs to Datasets
 ###############################################################
 # advised to use all the samples, this is just speedup to demonstrate functionality
-data = tmap(extract_data, samples[1:10_000])
+data = tmap(extract_data, samples[1:5_000])
 data = reduce(catobs, data)
-target = tmap(extract_target, samples[1:10_000])
+target = tmap(extract_target, samples[1:5_000])
 target = reduce(catobs, target).data
 
 e = sch["cuisine"]
@@ -69,13 +69,14 @@ m = reflectinmodel(sch, extract_data,
 opt = Flux.Optimise.ADAM()
 loss = (x,y) -> Flux.logitcrossentropy(m(x).data, y)
 valdata = data[1:1_000],target[:,1:1_000]
-data, target = data[1_001:10_000], target[:,1001:10_000]
+data, target = data[1_001:5_000], target[:,1001:5_000]
 # for less recourse-chungry training, we use only part of data for trainng, but it is advised to used all, as i following line:
 # data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
 
 cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata[1]).data) .== Flux.onecold(valdata[2])))
 batch_size = 100
-iterations = 1000
+#iterations = 1000
+iterations = 100
 ps = Flux.params(m)
 mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 
@@ -108,6 +109,6 @@ mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 # schema can also be created in parallel for better performance, compare:
 
 # single threaded
-@btime JsonGrinder.schema(samples)
+# @btime JsonGrinder.schema(samples)
 # multi threaded
-@btime merge(tmap(x->JsonGrinder.schema(collect(x)), Iterators.partition(samples, 10_000))...)
+# @btime merge(tmap(x->JsonGrinder.schema(collect(x)), Iterators.partition(samples, 5_000))...)
