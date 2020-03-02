@@ -25,7 +25,7 @@ generate_html(sch, "recipes.html", max_vals=nothing)
 using ElectronDisplay
 using ElectronDisplay: newdisplay
 generated_html = generate_html(sch, max_vals = 100)
-display(newdisplay(), MIME{Symbol("text/html")}(), generated_html)
+# display(newdisplay(), MIME{Symbol("text/html")}(), generated_html)
 print("opened electron display")
 
 using ElectronDisplay: displayhtml, newdisplay
