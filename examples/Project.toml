@@ -1,5 +1,6 @@
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+ElectronDisplay = "d872a56f-244b-5cc9-b574-2017b5b909a8"
 Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
 IterTools = "c8e1da08-722c-5040-9ed9-7db0dc04731e"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
