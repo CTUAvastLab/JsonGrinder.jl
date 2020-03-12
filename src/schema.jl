@@ -258,9 +258,22 @@ newentry(v::Vector) = isempty(v) ? ArrayEntry(nothing) : ArrayEntry(newentry(v[1
 
 		create schema from an array of parsed or unparsed JSONs
 """
-function schema(a::Vector{T}) where {T<:Dict}
+
+function schema(samples::AbstractArray{T}) where {T<:Dict}
 	schema = DictEntry()
-	foreach(f -> update!(schema,f),a)
+	failed = Vector{Int}()
+	for (i, f) in enumerate(samples)
+		try 
+			update!(schema, f)
+		catch 
+			push!(failed, i)
+		end
+	end
+	if !isempty(failed)
+		println("failed on $(length(failed)) samples")
+		l = min(10, length(failed))
+		println("for example on samples with indexes$(failed[1:l])")
+	end
 	schema
 end
 
