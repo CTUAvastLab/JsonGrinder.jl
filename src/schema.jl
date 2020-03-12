@@ -300,3 +300,28 @@ Base.:(==)(e1::DictEntry, e2::DictEntry) = e1.updated === e2.updated && e1.child
 
 reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, db, da=d->SegmentedMean(d); b = Dict(), a = Dict()) =
 	reflectinmodel(ex(sample_synthetic(sch)), db, da, b=b, a=a)
+
+function make_selector(s::Symbol)
+	if s == Symbol("[]")
+		return (d) -> d.items
+	else
+		return (d) -> d.childs[s]
+	end
+end
+
+"""
+		Deletes `field` at the specified `path` from the schema `sch`.
+		For instance, the following:
+			`delete!(schema, ".field.subfield.[]", "x")``
+		deletes the field `x` from `schema` at:
+			`schema.childs[:field].childs[:subfield].items.childs`
+"""
+function Base.delete!(sch::JsonGrinder.JSONEntry, path::AbstractString, field::AbstractString)
+	@assert field != "[]"
+
+	selectors = map(Symbol, split(path, ".")[2:end])
+
+	item = reduce((s, f) -> f(s), map(make_selector, selectors), init=sch)
+
+	delete!(item.childs, Symbol(field))
+end

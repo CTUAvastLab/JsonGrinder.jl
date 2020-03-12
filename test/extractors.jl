@@ -208,12 +208,23 @@ end
 end
 
 @testset "equals and hash test" begin
-	other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
+	other1 = Dict(
+		"a" => ExtractArray(ExtractScalar(Float64,2,3)),
+		"b" => ExtractArray(ExtractScalar(Float64,2,3)),
+		"c" => ExtractCategorical(["a","b"]),
+	)
 	br1 = ExtractBranch(nothing,other1)
-	other11 = Dict("a" => ExtractArray(br1), "b" => ExtractScalar(Float64,2,3))
+	other11 = Dict(
+		"a" => ExtractArray(br1),
+		"b" => ExtractScalar(Float64,2,3),
+	)
 	br11 = ExtractBranch(nothing,other11)
 
-	other2 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
+	other2 = Dict(
+		"a" => ExtractArray(ExtractScalar(Float64,2,3)),
+		"b" => ExtractArray(ExtractScalar(Float64,2,3)),
+		"c" => ExtractCategorical(["a","b"]),
+	)
 	br2 = ExtractBranch(nothing,other2)
 	other22 = Dict("a" => ExtractArray(br2), "b" => ExtractScalar(Float64,2,3))
 	br22 = ExtractBranch(nothing,other22)
