@@ -34,7 +34,8 @@ types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
 Base.keys(e::Entry) = sort(collect(keys(e.counts)))
 function Base.show(io::IO, e::Entry;pad =[], key = "")
 	key *= isempty(key) ? ""  : ": "
-	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,join(types(e)),length(keys(e.counts)),e.updated))
+	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,
+		join(types(e)),length(keys(e.counts)),e.updated))
 end
 
 function suggestextractor(e::Entry, settings = NamedTuple())
@@ -263,9 +264,9 @@ function schema(samples::AbstractArray{T}) where {T<:Dict}
 	schema = DictEntry()
 	failed = Vector{Int}()
 	for (i, f) in enumerate(samples)
-		try 
+		try
 			update!(schema, f)
-		catch 
+		catch
 			push!(failed, i)
 		end
 	end
@@ -316,7 +317,7 @@ end
 		deletes the field `x` from `schema` at:
 			`schema.childs[:field].childs[:subfield].items.childs`
 """
-function Base.delete!(sch::JsonGrinder.JSONEntry, path::AbstractString, field::AbstractString)
+function Base.delete!(sch::JSONEntry, path::AbstractString, field::AbstractString)
 	@assert field != "[]"
 
 	selectors = map(Symbol, split(path, ".")[2:end])
