@@ -28,10 +28,18 @@ end
 
 extractsmatrix(s::ExtractArray) = false
 
-# (s::ExtractArray)(v::V) where {V<:Nothing} = BagNode(reduce(catobs, s.item.([nothing])),[1:1])
-(s::ExtractArray)(v::V) where {V<:Nothing} = BagNode(missing, [0:-1])
-(s::ExtractArray)(v::V) where {V<:Missing} = BagNode(missing, [0:-1])
-(s::ExtractArray)(v) = isempty(v) ? BagNode(missing, [0:-1]) : BagNode(reduce(catobs, s.item.(v)),[1:length(v)])
+function (s::ExtractArray)(v::V) where {V<:Union{Missing, Nothing}}
+	ds = s.item(nothing)[1:0]
+	BagNode(ds, [0:-1])
+end
+# (s::ExtractArray)(v::V) where {V<:Nothing} = BagNode(missing, [0:-1])
+# (s::ExtractArray)(v::V) where {V<:Missing} = BagNode(missing, [0:-1])
+(s::ExtractArray)(v::V) where {V<:Vector} = isempty(v) ? BagNode(missing, [0:-1]) : BagNode(reduce(catobs, map(s.item, v)),[1:length(v)])
+function (s::ExtractArray)(v)
+	@error "ExtractArray: unknown type $(typeof(v))"
+	@show v
+	BagNode(missing, [0:-1])
+end
 function Base.show(io::IO, m::ExtractArray; pad = [], key::String="")
 	c = COLORS[(length(pad)%length(COLORS))+1]
 	key *= isempty(key) ? "" : ": "
