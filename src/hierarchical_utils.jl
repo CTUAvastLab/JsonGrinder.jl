@@ -1,30 +1,24 @@
-using HierarchicalUtils
-import HierarchicalUtils: NodeType, childrenfields, children, childrenstring, InnerNode, SingletonNode, LeafNode, printtree
+import HierarchicalUtils: NodeType, childrenfields, children, childrenstring, InnerNode, SingletonNode, LeafNode,
+  printtree, noderepr
 
 # for schema structures
 NodeType(::Type{Entry}) = LeafNode()
 NodeType(::Type{ArrayEntry}) = SingletonNode()
 NodeType(::Type{DictEntry}) = InnerNode()
 
-noderepr(n::Entry) = "[Scalar - $(types(n))], $(length(keys(e.counts))) unique values, updated = $(e.updated)"
+noderepr(n::Entry) = "[Scalar - $(join(sort(string.(types(n))), ","))], $(length(keys(n.counts))) unique values, updated = $(n.updated)"
 noderepr(n::ArrayEntry) = "[" * (isnothing(n.items) ? "Empty " : "") * "List] (updated = $(n.updated))"
-noderepr(n::DictEntry) = "[" * (isnothing(n.items) ? "Empty " : "") * "Dict] (updated = $(n.updated))"
-
-
-methods(noderepr)
-NodeType(Entry)
-NodeType(ArrayEntry)
-NodeType(DictEntry)
-
-
+noderepr(n::DictEntry) = "[" * (isnothing(n.childs) ? "Empty " : "") * "Dict] (updated = $(n.updated))"
 
 childrenfields(::Type{ArrayEntry}) = (:items,)
 childrenfields(::Type{DictEntry}) = (:childs,)
 
 children(n::ArrayEntry) = (n.items,)
-children(n::DictEntry) = n.children
+children(n::DictEntry) = values(n.childs)
 
-childrenstring(n::DictEntry) = ["$k: " for k in keys(n.children)]
+childrenstring(n::DictEntry) = ["$k: " for k in keys(n.childs)]
+
+# Base.getindex(x::AbstractNode, i::Int) = x[i:i]
 #
 # # by šimon from Mill
 # NodeType(::Type{<:Union{ArrayNode, ArrayModel, BagNode{Missing}}}) = LeafNode()
