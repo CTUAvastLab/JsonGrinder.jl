@@ -29,6 +29,7 @@ end
 extractsmatrix(s::ExtractArray) = false
 
 function (s::ExtractArray)(v::V) where {V<:Union{Missing, Nothing}}
+	Mill._emptyismissing[] && return(BagNode(missing, [0:-1]))
 	ds = s.item(nothing)[1:0]
 	BagNode(ds, [0:-1])
 end
@@ -36,9 +37,9 @@ end
 (s::ExtractArray)(v::V) where {V<:Vector} = isempty(v) ? s(nothing) : BagNode(reduce(catobs, map(s.item, v)),[1:length(v)])
 
 function (s::ExtractArray)(v)
-	@error "ExtractArray: unknown type $(typeof(v))"
+	@error "Unknown type in ExtractArray $(typeof(v)), will return missing"
 	@show v
-	BagNode(missing, [0:-1])
+	s(missing)
 end
 function Base.show(io::IO, m::ExtractArray; pad = [], key::String="")
 	c = COLORS[(length(pad)%length(COLORS))+1]
