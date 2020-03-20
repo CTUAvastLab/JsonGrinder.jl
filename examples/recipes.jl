@@ -20,7 +20,7 @@ sch = JsonGrinder.schema(samples)
 # create extractor and split it into one for loading targets and
 # one for loading data, using custom function to set conditions for using n-gram representation
 ###############################################################
-delete!(sch.childs,"id")
+delete!(sch.childs,:id)
 
 limituse(d::Dict{T,Int}, limit) where {T<:AbstractString} = String.(limituse(d, limit))
 limituse(d::Dict{T,Int}, limit) where {T} = collect(filter(k -> d[k] >= limit, keys(d)))
@@ -38,9 +38,9 @@ extractor = suggestextractor(sch, (scalar_extractors=custom_scalar_extractor(), 
 
 extract_data = ExtractBranch(nothing,deepcopy(extractor.other))
 extract_target = ExtractBranch(nothing,deepcopy(extractor.other))
-delete!(extract_target.other,"ingredients")
-delete!(extract_data.other,"cuisine")
-extract_target.other["cuisine"] = JsonGrinder.ExtractCategorical(keys(sch["cuisine"]))
+delete!(extract_target.other, :ingredients)
+delete!(extract_data.other, :cuisine)
+extract_target.other[:cuisine] = JsonGrinder.ExtractCategorical(keys(sch[:cuisine]))
 
 extract_data(JsonGrinder.sample_synthetic(sch))
 ###############################################################
@@ -52,7 +52,7 @@ data = reduce(catobs, data)
 target = tmap(extract_target, samples[1:5_000])
 target = reduce(catobs, target).data
 
-e = sch["cuisine"]
+e = sch[:cuisine]
 
 ###############################################################
 # 	create the model according to the data
