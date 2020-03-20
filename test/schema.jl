@@ -140,27 +140,6 @@ end
 	@test sch3 != sch0
 end
 
-@testset "show" begin
-	j1 = JSON.parse("""{"a": []}""")
-	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
-	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
-	j4 = JSON.parse("""{"a": [{"a":2,"b":3}], "b": 5}""")
-
-	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
-	buf = IOBuffer()
-	Base.show(buf, sch1)
-	str_repr = String(take!(buf))
-	@test str_repr ==
-"""
-: [Dict] (updated = 4)
-  ├── a: [List] (updated = 4)
-  │    └── : [Dict] (updated = 5)
-  │          ├── a: [Scalar - Int64], 2 unique values, updated = 4
-  │          └── b: [Scalar - Int64], 2 unique values, updated = 4
-  └── b: [Scalar - Int64], 1 unique values, updated = 1
-"""
-end
-
 @testset "testing schema merging with max keys" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
