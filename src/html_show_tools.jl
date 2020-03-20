@@ -10,7 +10,7 @@ quantile(v::Dict{Int, Int}, p::RealVector) = quantile(v |> keys |> collect, v |>
 mean(v::Dict{Int, Int}) = mean(v |> keys |> collect, v |> values |> collect |> fweights)
 
 function schema2html(e::Entry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
-	c = HTML_COLORS[((length(pad)÷2)%length(COLORS))+1]
+	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
 	filled_percent = isnothing(parent_updated) ? "" : ", filled = $(10000 * e.updated ÷ parent_updated / 100)%"
 	sorted_counts = sort(collect(e.counts), by=x->x[2], rev=true)
 	ret_str = """
@@ -32,7 +32,7 @@ end
 
 # because sometimes there is empty list in all jsons, this helps to determine the pruning of such element
 function schema2html(e::Nothing; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
-	c = HTML_COLORS[((length(pad)÷2)%length(COLORS))+1]
+	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
 	ret_str = """
 $pad[Empty list element], this list is empty in all JSONs, can not infer schema, suggesting to delete key $parent_key
 """
@@ -40,7 +40,7 @@ $pad[Empty list element], this list is empty in all JSONs, can not infer schema,
 end
 
 function schema2html(e::ArrayEntry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
- 	c = HTML_COLORS[((length(pad)÷2)%length(COLORS))+1]
+ 	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
 	# todo: fix it all so it is different method for array of entries and the rest so only nested things are truly nested
 	filled_percent = isnothing(parent_updated) ? "" : ", filled=$(10000 * e.updated ÷ parent_updated / 100)%"
 	quantiles = quantile(e.l, [0.1, 0.5, 0.9])
@@ -78,7 +78,7 @@ $pad</ul>
 end
 
 function schema2html(e::DictEntry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
-	c = HTML_COLORS[((length(pad)÷2)%length(COLORS))+1]
+	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
     if isempty(e.childs)
     	return pad * """<ul style="color: $c">Empty Dict</ul>\n"""
     end
@@ -183,7 +183,7 @@ document.getElementById("copy_clipboard").addEventListener("click", function () 
 	return(render(tpl, d))
 end
 
-function generate_html(sch::DictEntry, file_name ; max_vals=100)	
+function generate_html(sch::DictEntry, file_name ; max_vals=100)
 	s = generate_html(sch; max_vals = max_vals)
 	open(file_name, "w") do f
  		write(f, s)

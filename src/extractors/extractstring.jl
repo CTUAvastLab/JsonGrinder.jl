@@ -10,13 +10,6 @@ ExtractString(::Type{T}) where {T<:String} = ExtractString(T, 3, 256, 2053)
 (s::ExtractString)(v::S) where {S<:Nothing}= ArrayNode(Mill.NGramMatrix([""], s.n, s.b, s.m))
 extractsmatrix(s::ExtractString) = false
 
-function Base.show(io::IO, m::ExtractString;pad = [], key::String="")
-	c = COLORS[(length(pad)%length(COLORS))+1]
-	key *= isempty(key) ? "" : ": ";
-	paddedprint(io,"$(key)$(m.datatype)\n", color = c)
-end
-
-
 """
 	extractscalar(Type{String}, n = 3, b = 256, m = 2053)
 

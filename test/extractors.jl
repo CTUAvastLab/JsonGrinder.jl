@@ -1,6 +1,6 @@
 using JsonGrinder, JSON, Test, SparseArrays, Flux
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch
-using Mill: catobs
+using Mill: catobs, nobs
 using LinearAlgebra
 
 @testset "Testing scalar conversion" begin
@@ -13,14 +13,13 @@ end
 @testset "Testing array conversion" begin
 	sc = ExtractArray(ExtractCategorical(2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
-	@test ismissing(sc(nothing).data)
+	@test nobs(sc(nothing).data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
 	sc = ExtractArray(ExtractScalar(Float64))
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
-	@test ismissing(sc(nothing).data)
+	@test nobs(sc(nothing).data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
 end
-
 
 @testset "Testing ExtractBranch" begin
 	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
@@ -45,7 +44,6 @@ end
 	@test all(catobs(a1,a3).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a1,a3).data[2].bags .== [1:4,5:8])
 
-
 	br = ExtractBranch(vector,nothing)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
@@ -53,7 +51,6 @@ end
 	@test all(a1.data .==[7; 9])
 	@test all(a2.data .==[7; 9])
 	@test all(a3.data .==[0; 9])
-
 
 	br = ExtractBranch(nothing,other)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
@@ -74,7 +71,6 @@ end
 	@test all(catobs(a3,a3).data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a3,a3).bags .== [1:4,5:8])
 end
-
 
 @testset "Testing Nested Missing Arrays" begin
 	other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));
@@ -135,76 +131,6 @@ end
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test typeof(e(["a", "b"]).data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
-end
-
-@testset "show" begin
-	e = ExtractCategorical(["a","b"])
-	buf = IOBuffer()
-	Base.show(buf, e)
-	str_repr = String(take!(buf))
-	@test str_repr == """Categorical d = 3\n"""
-
-	e = ExtractOneHot(["a","b"], "name", nothing)
-	buf = IOBuffer()
-	Base.show(buf, e)
-	str_repr = String(take!(buf))
-	@test str_repr == """OneHot d = 3\n"""
-
-	other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));
-	br = ExtractBranch(nothing,other)
-	buf = IOBuffer()
-	Base.show(buf, br)
-	str_repr = String(take!(buf))
-	@test str_repr ==
-"""
-: struct
-  Empty vec
-  Other:
-  ├── a: Array of
-  │    └── Float64
-  └── b: Array of
-      └── Float64
-"""
-
-	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64))
-	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)))
-	br = ExtractBranch(vector,other)
-	buf = IOBuffer()
-	Base.show(buf, br)
-	str_repr = String(take!(buf))
-	@test str_repr ==
-"""
-: struct
-  Vec:
-  ├── a: Float64
-  └── b: Float64
-  Other:
-  └── c: Array of
-      └── Float64
-"""
-
-	other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
-	br1 = ExtractBranch(nothing,other1)
-	other = Dict("a" => ExtractArray(br1), "b" => ExtractScalar(Float64,2,3))
-	br = ExtractBranch(nothing,other)
-	buf = IOBuffer()
-	Base.show(buf, br)
-	str_repr = String(take!(buf))
-	@test str_repr ==
-"""
-: struct
-  Empty vec
-  Other:
-  ├── a: Array of
-  │    └── : struct
-  │          Empty vec
-  │          Other:
-  │          ├── a: Array of
-  │          │    └── Float64
-  │          └── b: Array of
-  │              └── Float64
-  └── b: Float64
-"""
 end
 
 @testset "equals and hash test" begin
