@@ -32,11 +32,6 @@ end
 Entry() = Entry(Dict{Any,Int}(),0);
 types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
 Base.keys(e::Entry) = sort(collect(keys(e.counts)))
-function Base.show(io::IO, e::Entry;pad =[], key = "")
-	key *= isempty(key) ? ""  : ": "
-	paddedprint(io, @sprintf("%s[Scalar - %s], %d unique values, updated = %d\n",key,
-		join(types(e)),length(keys(e.counts)),e.updated))
-end
 
 function suggestextractor(e::Entry, settings = NamedTuple())
 	t = promote_type(unique(typeof.(keys(e.counts)))...)
@@ -102,18 +97,6 @@ end
 
 ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
 
-function Base.show(io::IO, e::ArrayEntry; pad = [], key = "")
-  c = COLORS[(length(pad)%length(COLORS))+1]
-  # paddedprint(io,"Vector with $(length(e.items)) items(s). (updated = $(e.updated))\n", color=c)
-  if isnothing(e.items)
-	paddedprint(io, "$(key): [Empty List] (updated = $(e.updated))\n", color=c)
-	return
-  end
-  paddedprint(io,"$(key): [List] (updated = $(e.updated))\n", color=c)
-  paddedprint(io, "  └── ", color=c, pad=pad)
-  show(io, e.items, pad = [pad; (c, "      ")])
-end
-
 function update!(a::ArrayEntry, b::Vector)
 	n = length(b)
 	a.updated +=1
@@ -122,7 +105,6 @@ function update!(a::ArrayEntry, b::Vector)
 	if isnothing(a.items)
 		 a.items = newentry(b).items
 	end
-	# foreach(v -> update!(a.items,v), b)
 	for v in b
 		update!(a.items,v)
 	end
@@ -137,8 +119,7 @@ function suggestextractor(node::ArrayEntry, settings = NamedTuple())
 end
 
 Base.isempty(e::ArrayEntry) = isnothing(e.items)
-# todo: implement merding empty arrays
-# todo: implement isempty for arrayentry so it's semantic
+
 function merge(es::ArrayEntry...)
 	updates_merged = sum(map(x->x.updated, es))
 	l_merged = merge(+, map(x->x.l, es)...)
@@ -165,9 +146,7 @@ end
 
 DictEntry() = DictEntry(Dict{Symbol,Any}(),0)
 Base.getindex(s::DictEntry, k::Symbol) = s.childs[k]
-Base.getindex(s::DictEntry, k::String) = s.childs[Symbol(k)]
 Base.setindex!(s::DictEntry, i, k::Symbol) = s.childs[k] = i
-Base.setindex!(s::DictEntry, i, k::String) = s.childs[Symbol(k)] = i
 Base.get(s::Dict{Symbol, <:Any}, key::String, default) = get(s, Symbol(key), default)
 
 
@@ -183,34 +162,13 @@ function json(io::IO, e::DictEntry)
 end
 
 
-function Base.show(io::IO, e::DictEntry; pad=[], key = "")
-    c = COLORS[(length(pad)%length(COLORS))+1]
-    k = sort(collect(keys(e.childs)))
-    if isempty(k)
-    	paddedprint(io, "$(key)[Empty Dict] (updated = $(e.updated))\n", color=c)
-    	return
-    end
-    ml = maximum(length.(k))
-    key *= ": "
-	  paddedprint(io, "$(key)[Dict] (updated = $(e.updated))\n", color=c)
-
-    for i in 1:length(k)-1
-    	s = "  ├──"*"─"^(ml-length(k[i]))*" "
-			paddedprint(io, s, color=c, pad=pad)
-			show(io, e.childs[k[i]], pad=[pad; (c, "  │"*" "^(ml-length(k[i])+2))], key = string(k[i]))
-    end
-    s = "  └──"*"─"^(ml-length(k[end]))*" "
-    paddedprint(io, s, color=c, pad=pad)
-    show(io, e.childs[k[end]], pad=[pad; (c, " "^(ml-length(k[end])+4))], key = string(k[end]))
-end
-
 function update!(s::DictEntry, d::Dict)
 	s.updated +=1
 	for (k,v) in d
 		v == nothing && continue
 		i = get(s.childs, k, newentry(v))
 		update!(i,v)
-		s[k] = i
+		s[Symbol(k)] = i
 	end
 end
 
@@ -229,7 +187,7 @@ function suggestextractor(e::DictEntry, settings = NamedTuple())
 	mincount = get(settings, :mincount, 0)
 	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
 	isempty(ks) && return(nothing)
-	c = [(string(k),suggestextractor(e.childs[k], settings)) for k in ks]
+	c = [(k,suggestextractor(e.childs[k], settings)) for k in ks]
 	c = filter(s -> s[2] != nothing, c)
 	isempty(c) && return(nothing)
 	mask = map(i -> extractsmatrix(i[2]), c)

@@ -21,7 +21,6 @@ end
 	@test all(sc(nothing).bags.bags .== [0:-1])
 end
 
-
 @testset "Testing ExtractBranch" begin
 	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
 	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)));
@@ -45,7 +44,6 @@ end
 	@test all(catobs(a1,a3).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a1,a3).data[2].bags .== [1:4,5:8])
 
-
 	br = ExtractBranch(vector,nothing)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
@@ -53,7 +51,6 @@ end
 	@test all(a1.data .==[7; 9])
 	@test all(a2.data .==[7; 9])
 	@test all(a3.data .==[0; 9])
-
 
 	br = ExtractBranch(nothing,other)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
@@ -74,7 +71,6 @@ end
 	@test all(catobs(a3,a3).data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a3,a3).bags .== [1:4,5:8])
 end
-
 
 @testset "Testing Nested Missing Arrays" begin
 	other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));

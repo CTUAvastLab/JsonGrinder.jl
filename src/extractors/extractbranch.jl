@@ -18,7 +18,7 @@ struct ExtractBranch{S,V} <: AbstractExtractor
 end
 
 
-function Base.getindex(m::ExtractBranch, s::String)
+function Base.getindex(m::ExtractBranch, s::Symbol)
 	m.vec != nothing && haskey(m.vec, s) && return(m.vec[s])
 	m.other != nothing && haskey(m.other, s) && return(m.other[s])
 	nothing
@@ -31,11 +31,11 @@ function printdict(io, d::Dict, ml, c, pad)
   for i in 1:length(k)-1
 	  s = "  ├──"*"─"^(ml-length(k[i]))*" "
 		  paddedprint(io, s, color=c, pad=pad)
-		  show(io, d[k[i]], pad=[pad; (c, "  │"*" "^(ml-length(k[i])+2))], key = k[i])
+		  show(io, d[k[i]], pad=[pad; (c, "  │"*" "^(ml-length(k[i])+2))], key = string(k[i]))
   end
   s = "  └──"*"─"^(ml-length(k[end]))*" "
   paddedprint(io, s, color=c, pad=pad)
-  show(io, d[k[end]], pad=[pad; (c, " "^(ml-length(k[end])+4))], key = k[end])
+  show(io, d[k[end]], pad=[pad; (c, " "^(ml-length(string(k[end]))+4))], key = string(k[end]))
 end
 
 

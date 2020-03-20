@@ -14,6 +14,8 @@ struct ExtractScalar{T<:Number,V} <: AbstractExtractor
 	s::V
 end
 
+ExtractBranch{Dict,Dict} <: ExtractBranch
+Type{ExtractBranch{Dict,Dict}} isa ExtractBranch
 ExtractScalar(datatype) = ExtractScalar(datatype, zero(datatype), one(datatype))
 extractsmatrix(s::ExtractScalar) = true
 
