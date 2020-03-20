@@ -1,6 +1,6 @@
 using JsonGrinder, JSON, Test, SparseArrays, Flux
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch
-using Mill: catobs
+using Mill: catobs, nobs
 using LinearAlgebra
 
 @testset "Testing scalar conversion" begin
@@ -13,11 +13,11 @@ end
 @testset "Testing array conversion" begin
 	sc = ExtractArray(ExtractCategorical(2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
-	@test ismissing(sc(nothing).data)
+	@test nobs(sc(nothing).data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
 	sc = ExtractArray(ExtractScalar(Float64))
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
-	@test ismissing(sc(nothing).data)
+	@test nobs(sc(nothing).data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
 end
 
