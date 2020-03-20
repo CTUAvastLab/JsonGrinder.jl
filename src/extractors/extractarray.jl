@@ -41,13 +41,7 @@ function (s::ExtractArray)(v)
 	@show v
 	s(missing)
 end
-function Base.show(io::IO, m::ExtractArray; pad = [], key::String="")
-	c = COLORS[(length(pad)%length(COLORS))+1]
-	key *= isempty(key) ? "" : ": "
-	paddedprint(io,"$(key)Array of\n", color = c)
-	paddedprint(io, "  └── ", color=c, pad=pad)
-	show(io,m.item, pad = [pad; (c, "      ")])
-end
+
 
 Base.hash(e::ExtractArray, h::UInt) = hash(e.item, h)
 Base.:(==)(e1::ExtractArray, e2::ExtractArray) = e1.item == e2.item

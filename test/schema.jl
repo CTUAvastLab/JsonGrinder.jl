@@ -13,25 +13,25 @@ using Mill: reflectinmodel
 
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
 
-	@test sch["a"].counts == Dict(4 => 4)
-	@test sch["a"].updated == 4
-	@test sch["b"].updated == 4
-	@test sch["b"]["a"].updated == 2
-	@test sch["b"]["a"].l == Dict(3 => 2)
-	@test sch["b"]["a"].items.counts == Dict(1 => 2, 2 => 2, 3 => 2)
-	@test sch["b"]["a"].items.updated == 6
-	@test sch["b"]["b"].counts == Dict(1 => 2)
-	@test sch["b"]["b"].updated == 2
-	@test sch["c"].updated == 2
-	@test sch["c"]["a"].updated == 2
-	@test sch["c"]["a"]["a"].updated == 2
-	@test sch["c"]["a"]["a"].l == Dict(2 => 1, 3 => 1)
-	@test sch["c"]["a"]["a"].items.counts == Dict(1 => 1, 2 => 2, 3 => 2)
-	@test sch["c"]["a"]["a"].items.updated == 5
-	@test sch["c"]["a"]["b"].updated == 2
-	@test sch["c"]["a"]["b"].l == Dict(2 => 1, 3 => 1)
-	@test sch["c"]["a"]["b"].items.counts == Dict(4 => 1, 5 => 2, 6 => 2)
-	@test sch["c"]["a"]["b"].items.updated == 5
+	@test sch[:a].counts == Dict(4 => 4)
+	@test sch[:a].updated == 4
+	@test sch[:b].updated == 4
+	@test sch[:b][:a].updated == 2
+	@test sch[:b][:a].l == Dict(3 => 2)
+	@test sch[:b][:a].items.counts == Dict(1 => 2, 2 => 2, 3 => 2)
+	@test sch[:b][:a].items.updated == 6
+	@test sch[:b][:b].counts == Dict(1 => 2)
+	@test sch[:b][:b].updated == 2
+	@test sch[:c].updated == 2
+	@test sch[:c][:a].updated == 2
+	@test sch[:c][:a][:a].updated == 2
+	@test sch[:c][:a][:a].l == Dict(2 => 1, 3 => 1)
+	@test sch[:c][:a][:a].items.counts == Dict(1 => 1, 2 => 2, 3 => 2)
+	@test sch[:c][:a][:a].items.updated == 5
+	@test sch[:c][:a][:b].updated == 2
+	@test sch[:c][:a][:b].l == Dict(2 => 1, 3 => 1)
+	@test sch[:c][:a][:b].items.counts == Dict(4 => 1, 5 => 2, 6 => 2)
+	@test sch[:c][:a][:b].items.updated == 5
 end
 
 @testset "testing empty arrays" begin
@@ -45,14 +45,14 @@ end
 	sch3 = JsonGrinder.schema([j2,j3,j1])
 
 	@test sch1.updated == 1
-	@test sch1["a"].updated == 1
-	@test isnothing(sch1["a"].items)
+	@test sch1[:a].updated == 1
+	@test isnothing(sch1[:a].items)
 
 	@test sch2.updated == sch3.updated
-	@test sch2["a"].l == sch3["a"].l
-	@test sch2["a"].updated == sch3["a"].updated
-	@test sch2["a"].items["a"].updated == sch3["a"].items["a"].updated
-	@test sch2["a"].items["a"].counts == sch3["a"].items["a"].counts
+	@test sch2[:a].l == sch3[:a].l
+	@test sch2[:a].updated == sch3[:a].updated
+	@test sch2[:a].items[:a].updated == sch3[:a].items[:a].updated
+	@test sch2[:a].items[:a].counts == sch3[:a].items[:a].counts
 end
 
 @testset "testing schema merging" begin
@@ -71,14 +71,14 @@ end
 	sch_merged = merge(sch1, sch2)
 
 	@test sch.updated == sch_merged.updated
-	@test sch["a"].updated == sch_merged["a"].updated
-	@test sch["a"].l == sch_merged["a"].l
-	@test sch["a"].items["a"].updated == sch_merged["a"].items["a"].updated
-	@test sch["a"].items["a"].counts == sch_merged["a"].items["a"].counts
-	@test sch["a"].items["b"].updated == sch_merged["a"].items["b"].updated
-	@test sch["a"].items["b"].counts == sch_merged["a"].items["b"].counts
-	@test sch["b"].updated == sch_merged["b"].updated
-	@test sch["b"].counts == sch_merged["b"].counts
+	@test sch[:a].updated == sch_merged[:a].updated
+	@test sch[:a].l == sch_merged[:a].l
+	@test sch[:a].items[:a].updated == sch_merged[:a].items[:a].updated
+	@test sch[:a].items[:a].counts == sch_merged[:a].items[:a].counts
+	@test sch[:a].items[:b].updated == sch_merged[:a].items[:b].updated
+	@test sch[:a].items[:b].counts == sch_merged[:a].items[:b].counts
+	@test sch[:b].updated == sch_merged[:b].updated
+	@test sch[:b].counts == sch_merged[:b].counts
 end
 
 @testset "bson and symbol keys testing" begin
@@ -97,25 +97,25 @@ end
 	bs = [(seek(b, 0); BSON.load(b)) for b in [b1,b2,b3,b4,b5,b6]]
 	sch = JsonGrinder.schema(bs)
 
-	@test sch["a"].counts == Dict(4 => 4)
-	@test sch["a"].updated == 4
-	@test sch["b"].updated == 4
-	@test sch["b"]["a"].updated == 2
-	@test sch["b"]["a"].l == Dict(3 => 2)
-	@test sch["b"]["a"].items.counts == Dict(1 => 2, 2 => 2, 3 => 2)
-	@test sch["b"]["a"].items.updated == 6
-	@test sch["b"]["b"].counts == Dict(1 => 2)
-	@test sch["b"]["b"].updated == 2
-	@test sch["c"].updated == 2
-	@test sch["c"]["a"].updated == 2
-	@test sch["c"]["a"]["a"].updated == 2
-	@test sch["c"]["a"]["a"].l == Dict(2 => 1, 3 => 1)
-	@test sch["c"]["a"]["a"].items.counts == Dict(1 => 1, 2 => 2, 3 => 2)
-	@test sch["c"]["a"]["a"].items.updated == 5
-	@test sch["c"]["a"]["b"].updated == 2
-	@test sch["c"]["a"]["b"].l == Dict(2 => 1, 3 => 1)
-	@test sch["c"]["a"]["b"].items.counts == Dict(4 => 1, 5 => 2, 6 => 2)
-	@test sch["c"]["a"]["b"].items.updated == 5
+	@test sch[:a].counts == Dict(4 => 4)
+	@test sch[:a].updated == 4
+	@test sch[:b].updated == 4
+	@test sch[:b][:a].updated == 2
+	@test sch[:b][:a].l == Dict(3 => 2)
+	@test sch[:b][:a].items.counts == Dict(1 => 2, 2 => 2, 3 => 2)
+	@test sch[:b][:a].items.updated == 6
+	@test sch[:b][:b].counts == Dict(1 => 2)
+	@test sch[:b][:b].updated == 2
+	@test sch[:c].updated == 2
+	@test sch[:c][:a].updated == 2
+	@test sch[:c][:a][:a].updated == 2
+	@test sch[:c][:a][:a].l == Dict(2 => 1, 3 => 1)
+	@test sch[:c][:a][:a].items.counts == Dict(1 => 1, 2 => 2, 3 => 2)
+	@test sch[:c][:a][:a].items.updated == 5
+	@test sch[:c][:a][:b].updated == 2
+	@test sch[:c][:a][:b].l == Dict(2 => 1, 3 => 1)
+	@test sch[:c][:a][:b].items.counts == Dict(4 => 1, 5 => 2, 6 => 2)
+	@test sch[:c][:a][:b].items.updated == 5
 end
 
 @testset "equals and hash test" begin

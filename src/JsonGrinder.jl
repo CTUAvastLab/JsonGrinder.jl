@@ -1,6 +1,5 @@
 module JsonGrinder
 using Mill, JSON, Printf, Flux
-using Mill: paddedprint, COLORS
 using HierarchicalUtils
 include("schema.jl")
 include("html_show_tools.jl")
@@ -20,8 +19,8 @@ export suggestextractor, schema, extractbatch, generate_html
 
 include("hierarchical_utils.jl")
 
-# Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = show(io, Base.typename(T))
-# Base.show(io::IO, ::MIME"text/plain", n::Union{JSONEntry, AbstractExtractor}) = HierarchicalUtils.printtree(io, n; trav=false)
+Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = show(io, Base.typename(T))
+Base.show(io::IO, ::MIME"text/plain", n::Union{JSONEntry, AbstractExtractor}) = HierarchicalUtils.printtree(io, n; trav=false)
 Base.getindex(n::Union{JSONEntry, AbstractExtractor}, i::AbstractString) = HierarchicalUtils.walk(n, i)
 
 end # module

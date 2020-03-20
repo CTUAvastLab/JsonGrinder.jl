@@ -1,4 +1,6 @@
 using JsonGrinder, JSON, Test, SparseArrays, Mill
+using HierarchicalUtils
+import HierarchicalUtils: printtree
 
 @testset "ExtractMultipleRepresentation" begin
 	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
@@ -19,21 +21,20 @@ end
 	e = ex("Olda")
 
 	buf = IOBuffer()
-	Base.show(buf, ex)
+	printtree(buf, ex, trav=true)
 	str_repr = String(take!(buf))
 	@test str_repr ==
 """
-: MultiRepresentation
- : Categorical d = 4
- : String
-"""
+MultiRepresentation [""]
+  ├── Categorical d = 4 ["E"]
+  └── String ["U"]"""
 
 	buf = IOBuffer()
-	Mill.dsprint(buf, e)
+	printtree(buf, e, trav=true)
 	str_repr = String(take!(buf))
 	@test str_repr ==
 """
-TreeNode
-  ├── ArrayNode(4, 1)
-  └── ArrayNode(2053, 1)"""
+TreeNode [""]
+  ├── ArrayNode(4, 1) ["E"]
+  └── ArrayNode(2053, 1) ["U"]"""
 end

@@ -96,3 +96,62 @@ end
 @testset "TypeIterator" begin
 	@test collect(TypeIterator{ExtractArray}(ext)) == [ext["Y"], ext["u"], ext["w"]]
 end
+
+@testset "show" begin
+	e = ExtractCategorical(["a","b"])
+	buf = IOBuffer()
+	printtree(buf, e)
+	str_repr = String(take!(buf))
+	@test str_repr == """Categorical d = 3"""
+
+	e = ExtractOneHot(["a","b"], "name", nothing)
+	buf = IOBuffer()
+	printtree(buf, e)
+	str_repr = String(take!(buf))
+	@test str_repr == """OneHot d = 3"""
+
+	other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));
+	br = ExtractBranch(nothing,other)
+	buf = IOBuffer()
+	printtree(buf, br, trav=true)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+Dict [""]
+  ├── a: Array of ["E"]
+  │       └── Float64 ["M"]
+  └── b: Array of ["U"]
+          └── Float64 ["c"]"""
+
+	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64))
+	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)))
+	br = ExtractBranch(vector,other)
+	buf = IOBuffer()
+	printtree(buf, br, trav=true)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+Dict [""]
+  ├── a: Float64 ["E"]
+  ├── b: Float64 ["U"]
+  └── c: Array of ["k"]
+          └── Float64 ["s"]"""
+
+	other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
+	br1 = ExtractBranch(nothing,other1)
+	other = Dict("a" => ExtractArray(br1), "b" => ExtractScalar(Float64,2,3))
+	br = ExtractBranch(nothing,other)
+	buf = IOBuffer()
+	printtree(buf, br, trav=true)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+Dict [""]
+  ├── a: Array of ["E"]
+  │       └── Dict ["M"]
+  │             ├── a: Array of ["O"]
+  │             │       └── Float64 ["P"]
+  │             └── b: Array of ["Q"]
+  │                     └── Float64 ["R"]
+  └── b: Float64 ["U"]"""
+end

@@ -31,7 +31,6 @@ noderepr(n::ExtractCategorical) = "Categorical d = $(n.n)"
 noderepr(n::ExtractOneHot) = "OneHot d = $(n.n)"
 noderepr(n::ExtractScalar) = "$(n.datatype)"
 noderepr(n::ExtractString) = "$(n.datatype)"
-# not sure what to do with it
 noderepr(n::ExtractVector) = "FeatureVector with $(n.n) items"
 noderepr(n::MultipleRepresentation) = "MultiRepresentation"
 

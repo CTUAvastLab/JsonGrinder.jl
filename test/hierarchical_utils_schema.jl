@@ -1,6 +1,6 @@
 using Mill, JSON, BSON, Flux, JsonGrinder, Test
 using HierarchicalUtils
-import HierarchicalUtils: NodeType, childrenfields, children, InnerNode, SingletonNode, LeafNode, printtree
+import HierarchicalUtils: printtree
 using JsonGrinder: DictEntry, suggestextractor, schema
 using Mill: reflectinmodel
 

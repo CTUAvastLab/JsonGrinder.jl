@@ -38,11 +38,6 @@ function (s::ExtractCategorical)(vs::Vector)
 end
 
 (s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(Flux.OneHotMatrix(s.n,[Flux.OneHotVector(s.n, s.n)]))
-function Base.show(io::IO, m::ExtractCategorical;pad = [], key::String="")
-	c = COLORS[(length(pad)%length(COLORS))+1]
-	key *= isempty(key) ? "" : ": ";
-	paddedprint(io,"$(key)Categorical d = $(m.n)\n", color = c)
-end
 
 Base.reduce(::typeof(catobs), a::Vector{S}) where {S<:Flux.OneHotMatrix} = _catobs(a[:])
 catobs(a::Flux.OneHotMatrix...) = _catobs(collect(a))
