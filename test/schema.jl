@@ -32,6 +32,8 @@ using Mill: reflectinmodel
 	@test sch[:c][:a][:b].l == Dict(2 => 1, 3 => 1)
 	@test sch[:c][:a][:b].items.counts == Dict(4 => 1, 5 => 2, 6 => 2)
 	@test sch[:c][:a][:b].items.updated == 5
+
+	@test keys(sch[:a]) == [4]
 end
 
 @testset "testing empty arrays" begin
@@ -189,4 +191,31 @@ end
 	sch_merged1234 = merge(sch12, sch3, sch4)
 	@test sch == sch_merged1234
 	@test sch123 == sch_merged123
+end
+
+@testset "Fail empty bag extractor" begin
+	ex = JsonGrinder.newentry([])
+	@test_throws ArgumentError suggestextractor(ex)
+end
+
+@testset "delete in path" begin
+	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
+	j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}}""")
+	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
+	j4 = JSON.parse("""{"a": 4, "b": {}}""")
+	j5 = JSON.parse("""{"b": {}}""")
+	j6 = JSON.parse("""{}""")
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
+	@test children(sch[:c][:a]) == (a=sch[:c][:a][:a], b=sch[:c][:a][:b])
+	delete!(sch, ".c.a", "a")
+	@test children(sch[:c][:a]) == (b=sch[:c][:a][:b],)
+end
+
+@testset "schema with fail" begin
+	j1 = JSON.parse("""{"d": ["ahoj"]}""")
+	j2 = JSON.parse("""{"d": 1}""")
+
+	sch = JsonGrinder.schema([j1,j2])
+	@test sch[:d].updated == 1
 end

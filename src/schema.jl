@@ -7,9 +7,6 @@ abstract type JSONEntry end
 StringOrNumber = Union{String,Number}
 max_keys = 10000
 
-# so I can pretty print symbols
-length(s::Symbol) = length(string(s))
-
 function updatemaxkeys!(n::Int)
 	global max_keys = n
 end
@@ -148,19 +145,6 @@ DictEntry() = DictEntry(Dict{Symbol,Any}(),0)
 Base.getindex(s::DictEntry, k::Symbol) = s.childs[k]
 Base.setindex!(s::DictEntry, i, k::Symbol) = s.childs[k] = i
 Base.get(s::Dict{Symbol, <:Any}, key::String, default) = get(s, Symbol(key), default)
-
-
-function json(io::IO, e::DictEntry)
-	println(io,"{")
-	println(io,"\"updated\": $(e.updated)")
-	for k in keys(e.childs)
-		print(io, "\"$(k)\": ")
-		json(io, e.childs[k])
-		println(io)
-	end
-	println(io,"}")
-end
-
 
 function update!(s::DictEntry, d::Dict)
 	s.updated +=1
