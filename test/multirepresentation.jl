@@ -14,7 +14,7 @@ import HierarchicalUtils: printtree
 	@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(80, 1), (98, 1), (206, 1), (738, 1),
 		(1062, 1), (1856, 1)]
 
-	@text !JsonGrinder.extractsmatrix(ex)
+	@test !JsonGrinder.extractsmatrix(ex)
 
 	ex2 = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
 		JsonGrinder.ExtractString(String)))
