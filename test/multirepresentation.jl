@@ -23,8 +23,8 @@ import HierarchicalUtils: printtree
 
 	ex3 = MultipleRepresentation((ExtractCategorical(["Polda", "Tonda", "Milada"]),
 		JsonGrinder.ExtractString(String)))
-	@test hash(ex) !== hash(ex2)
-	@test ex != ex2
+	@test hash(ex) !== hash(ex3)
+	@test ex != ex3
 end
 
 @testset "show" begin
