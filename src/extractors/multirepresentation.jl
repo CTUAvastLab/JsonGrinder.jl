@@ -10,7 +10,7 @@ struct MultipleRepresentation{E<:Tuple}
 end
 
 
-(m::MultipleRepresentation)(x) = TreeNode(map(e -> e(x), m.extractors))
+(m::MultipleRepresentation)(x) = ProductNode(map(e -> e(x), m.extractors))
 
 extractsmatrix(s::MultipleRepresentation) = false
 

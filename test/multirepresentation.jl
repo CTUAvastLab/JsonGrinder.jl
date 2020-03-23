@@ -46,7 +46,7 @@ MultiRepresentation [""]
 	str_repr = String(take!(buf))
 	@test str_repr ==
 """
-TreeNode [""]
+ProductNode [""]
   ├── ArrayNode(4, 1) ["E"]
   └── ArrayNode(2053, 1) ["U"]"""
 end
