@@ -1,5 +1,5 @@
 using JsonGrinder, JSON, Test, SparseArrays, Flux
-using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch
+using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch, ExtractVector
 using Mill: catobs, nobs
 using LinearAlgebra
 
@@ -19,6 +19,25 @@ end
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
 	@test nobs(sc(nothing).data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
+end
+
+@testset "Testing feature vector conversion" begin
+	sc = ExtractVector(5)
+	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
+	@test sc([1, 2, 2, 3, 4]).data isa Array{Float32, 2}
+	sc = ExtractVector{Int64}(5)
+	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
+	@test sc([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
+	@test all(sc(nothing).data .== [0, 0, 0, 0, 0])
+
+	@test !JsonGrinder.extractsmatrix(sc)
+
+	# feature vector longer than expected
+	sc = ExtractVector(5)
+	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
+end
+
+@testset "Testing feature vector too long" begin
 end
 
 @testset "Testing ExtractBranch" begin
@@ -138,6 +157,7 @@ end
 		"a" => ExtractArray(ExtractScalar(Float64,2,3)),
 		"b" => ExtractArray(ExtractScalar(Float64,2,3)),
 		"c" => ExtractCategorical(["a","b"]),
+		"d" => ExtractVector(4),
 	)
 	br1 = ExtractBranch(nothing,other1)
 	other11 = Dict(
@@ -150,6 +170,7 @@ end
 		"a" => ExtractArray(ExtractScalar(Float64,2,3)),
 		"b" => ExtractArray(ExtractScalar(Float64,2,3)),
 		"c" => ExtractCategorical(["a","b"]),
+		"d" => ExtractVector(4),
 	)
 	br2 = ExtractBranch(nothing,other2)
 	other22 = Dict("a" => ExtractArray(br2), "b" => ExtractScalar(Float64,2,3))

@@ -13,6 +13,18 @@ import HierarchicalUtils: printtree
 	@test size(e.data[2].data) == (2053, 1)
 	@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(80, 1), (98, 1), (206, 1), (738, 1),
 		(1062, 1), (1856, 1)]
+
+	@text !JsonGrinder.extractsmatrix(ex)
+
+	ex2 = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
+		JsonGrinder.ExtractString(String)))
+	@test hash(ex) === hash(ex2)
+	@test ex == ex2
+
+	ex3 = MultipleRepresentation((ExtractCategorical(["Polda", "Tonda", "Milada"]),
+		JsonGrinder.ExtractString(String)))
+	@test hash(ex) !== hash(ex2)
+	@test ex != ex2
 end
 
 @testset "show" begin
