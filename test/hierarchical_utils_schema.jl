@@ -22,15 +22,15 @@ sch = schema([j1,j2,j3,j4,j5,j6])
 [Dict] (updated = 6) [""]
   ├── a: [Scalar - Int64], 1 unique values, updated = 4 ["E"]
   ├── b: [Dict] (updated = 4) ["U"]
-  │       ├── a: [List] (updated = 2) ["Y"]
-  │       │       └── [Scalar - Int64], 3 unique values, updated = 6 ["a"]
-  │       └── b: [Scalar - Int64], 1 unique values, updated = 2 ["c"]
+  │        ├── a: [List] (updated = 2) ["Y"]
+  │        │        └── [Scalar - Int64], 3 unique values, updated = 6 ["a"]
+  │        └── b: [Scalar - Int64], 1 unique values, updated = 2 ["c"]
   └── c: [Dict] (updated = 2) ["k"]
-          └── a: [Dict] (updated = 2) ["s"]
-                  ├── a: [List] (updated = 2) ["u"]
-                  │       └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["v"]
-                  └── b: [List] (updated = 2) ["w"]
-                          └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["x"]"""
+           └── a: [Dict] (updated = 2) ["s"]
+                    ├── a: [List] (updated = 2) ["u"]
+                    │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["v"]
+                    └── b: [List] (updated = 2) ["w"]
+                             └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["x"]"""
 end
 
 @testset "nnodes" begin
