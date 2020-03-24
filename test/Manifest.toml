@@ -105,9 +105,9 @@ version = "3.8.0"
 
 [[CompilerSupportLibraries_jll]]
 deps = ["Libdl", "Pkg"]
-git-tree-sha1 = "aa832564f930a7fc9290972526908d01a35aefac"
+git-tree-sha1 = "067567a322fe466c5ec8d01413eee7127bd11699"
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "0.3.0+0"
+version = "0.3.1+0"
 
 [[ConstructionBase]]
 git-tree-sha1 = "a2a6a5fea4d6f730ec4c18a76d27ec10e8ec1c50"
@@ -213,9 +213,9 @@ version = "2.0.1"
 
 [[HierarchicalUtils]]
 deps = ["Setfield"]
-git-tree-sha1 = "28fb4b8f5ced9932e88eaa76416b8f4c0a9a53d2"
+git-tree-sha1 = "c9707a8b2887f5598ace2d4c7611fabd7611b064"
 uuid = "f9ccea15-0695-44b9-8113-df7c26ae4fa9"
-version = "0.0.4"
+version = "0.0.5"
 
 [[IRTools]]
 deps = ["InteractiveUtils", "MacroTools", "Test"]
@@ -300,10 +300,10 @@ uuid = "66a33bbf-0c2b-5fc8-a008-9da813334f0a"
 version = "0.5.1"
 
 [[MacroTools]]
-deps = ["DataStructures", "Markdown", "Random"]
-git-tree-sha1 = "07ee65e03e28ca88bc9a338a3726ae0c3efaa94b"
+deps = ["Markdown", "Random"]
+git-tree-sha1 = "f7d2e3f654af75f01ec49be82c231c382214223a"
 uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
-version = "0.5.4"
+version = "0.5.5"
 
 [[MappedArrays]]
 git-tree-sha1 = "e2a02fe7ee86a10c707ff1756ab1650b40b140bb"
@@ -321,10 +321,10 @@ uuid = "e89f7d12-3494-54d1-8411-f7d8b9ae1f27"
 version = "0.5.0"
 
 [[Mill]]
-deps = ["Combinatorics", "DataFrames", "DataStructures", "Flux", "LearnBase", "MLDataPattern", "SparseArrays", "Statistics", "Zygote"]
-git-tree-sha1 = "4e5eec118f9001ad93057d9b8a8f2889dc908ec4"
+deps = ["Combinatorics", "DataFrames", "DataStructures", "Flux", "HierarchicalUtils", "LearnBase", "MLDataPattern", "SparseArrays", "Statistics", "Zygote"]
+git-tree-sha1 = "d37662acbd71e6a5ccdd03b81d6fc27f60fe2602"
 uuid = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
-version = "1.0.6"
+version = "1.0.7"
 
 [[Missings]]
 deps = ["DataAPI"]
@@ -513,9 +513,9 @@ version = "1.2.11+8"
 
 [[Zygote]]
 deps = ["ArrayLayouts", "DiffRules", "FFTW", "FillArrays", "ForwardDiff", "IRTools", "InteractiveUtils", "LinearAlgebra", "MacroTools", "NNlib", "NaNMath", "Random", "Requires", "SpecialFunctions", "Statistics", "ZygoteRules"]
-git-tree-sha1 = "4a3c8decdf1d498cd13fe29827350d727a3b3854"
+git-tree-sha1 = "740a4b4f80d00d51859a6410c4d7374d106aaa6e"
 uuid = "e88e6eb3-aa80-5325-afca-941959d7151f"
-version = "0.4.10"
+version = "0.4.11"
 
 [[ZygoteRules]]
 deps = ["MacroTools"]
