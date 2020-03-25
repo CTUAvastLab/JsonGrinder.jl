@@ -23,15 +23,15 @@ ext = suggestextractor(sch)
 Dict [""]
   ├── a: Int64 ["E"]
   ├── b: Dict ["U"]
-  │       ├── a: Array of ["Y"]
-  │       │       └── Int64 ["a"]
-  │       └── b: Int64 ["c"]
+  │        ├── a: Array of ["Y"]
+  │        │        └── Int64 ["a"]
+  │        └── b: Int64 ["c"]
   └── c: Dict ["k"]
-          └── a: Dict ["s"]
-                  ├── a: Array of ["u"]
-                  │       └── Float64 ["v"]
-                  └── b: Array of ["w"]
-                          └── Float64 ["x"]"""
+           └── a: Dict ["s"]
+                    ├── a: Array of ["u"]
+                    │        └── Float64 ["v"]
+                    └── b: Array of ["w"]
+                             └── Float64 ["x"]"""
 end
 
 @testset "nnodes" begin
@@ -119,9 +119,9 @@ end
 """
 Dict [""]
   ├── a: Array of ["E"]
-  │       └── Float64 ["M"]
+  │        └── Float64 ["M"]
   └── b: Array of ["U"]
-          └── Float64 ["c"]"""
+           └── Float64 ["c"]"""
 
 	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64))
 	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)))
@@ -135,7 +135,7 @@ Dict [""]
   ├── a: Float64 ["E"]
   ├── b: Float64 ["U"]
   └── c: Array of ["k"]
-          └── Float64 ["s"]"""
+           └── Float64 ["s"]"""
 
 	other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
 	br1 = ExtractBranch(nothing,other1)
@@ -148,10 +148,10 @@ Dict [""]
 """
 Dict [""]
   ├── a: Array of ["E"]
-  │       └── Dict ["M"]
-  │             ├── a: Array of ["O"]
-  │             │       └── Float64 ["P"]
-  │             └── b: Array of ["Q"]
-  │                     └── Float64 ["R"]
+  │        └── Dict ["M"]
+  │              ├── a: Array of ["O"]
+  │              │        └── Float64 ["P"]
+  │              └── b: Array of ["Q"]
+  │                       └── Float64 ["R"]
   └── b: Float64 ["U"]"""
 end
