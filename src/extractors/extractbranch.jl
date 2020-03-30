@@ -37,11 +37,9 @@ extractsmatrix(s::ExtractBranch) = false
 # end
 
 function (s::ExtractBranch{S,V})(v::Dict) where {S<:Dict,V<:Dict}
-	x = vcat([f(get(v,k,nothing)) for (k,f) in s.vec]...)
-	o = [Symbol(k) => f(get(v,k,nothing)) for (k,f) in s.other]
-	# o = [f(get(v,k,nothing)) for (k,f) in s.other]
+	x = vcat([f(get(v,string(k),nothing)) for (k,f) in s.vec]...)
+	o = [k => f(get(v,string(k),nothing)) for (k,f) in s.other]
 	data = (; :scalars => x,o...)
-	# data = tuple(x, o...)
 	TreeNode(data)
 end
 

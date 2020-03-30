@@ -219,3 +219,28 @@ end
 	sch = JsonGrinder.schema([j1,j2])
 	@test sch[:d].updated == 1
 end
+
+@testset "extractor from schema" begin
+	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
+	j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}}""")
+	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
+	j4 = JSON.parse("""{"a": 4, "b": {}}""")
+	j5 = JSON.parse("""{"b": {}}""")
+	j6 = JSON.parse("""{}""")
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
+	ext = suggestextractor(sch)
+
+	@test ext[:a] isa ExtractScalar{Int64, Int64}
+	@test ext[:b][:a] isa ExtractArray{ExtractScalar{Int64,Int64}}
+	@test ext[:b][:b] isa ExtractScalar{Int64,Int64}
+	@test ext[:c][:a][:a] isa ExtractArray{ExtractScalar{Float64,Float64}}
+	@test ext[:c][:a][:b] isa ExtractArray{ExtractScalar{Float64,Float64}}
+
+	e1 = ext(j1)
+	@test e1.data.scalars.data[1, 1] == 4
+	@test e1.data.b.data.a.data.data == [1 2 3]
+	@test e1.data.b.data.scalars.data[1, 1] == 1
+	@test isempty(e1.data.c.data.a.data.data)
+	@test isempty(e1.data.c.data.b.data.data)
+end

@@ -37,9 +37,6 @@ end
 	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
 end
 
-@testset "Testing feature vector too long" begin
-end
-
 @testset "Testing ExtractBranch" begin
 	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
 	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)));
