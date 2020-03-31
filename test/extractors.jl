@@ -199,7 +199,7 @@ end
 	@test ext[:e] isa ExtractBranch
 	@test isnothing(ext[:f])
 end
-#
+# 
 # @testset "Extractor number " begin
 # 	j1 = JSON.parse("""{"a": "1", "b": "a", "c": "1.1", "d": 1.1, "e": "1.2"}""")
 # 	j2 = JSON.parse("""{"a": "2", "b": "b", "c": "2", "d": 2, "e": "1.3"}""")
@@ -208,6 +208,7 @@ end
 #
 # 	sch = JsonGrinder.schema([j1, j2, j3, j4])
 # 	ext = suggestextractor(sch)
+#
 # 	isfloat(s::AbstractString) = tryparse(Float64, s) isa Number
 # 	isint(s::AbstractString) = tryparse(Int64, s) isa Number
 # 	isnumeric(s::AbstractString) = tryparse(Float64, s) isa Number
@@ -215,8 +216,11 @@ end
 # 	isnumeric("5.5")
 # 	isnumeric
 # 	e = sch[:a]
-# 	all(isfloat.(unique(keys(sch[:a].counts))))
-# 	all(isint.(unique(keys(sch[:a].counts))))
+#
+# 	all(isint.(unique(keys(e.counts))))
+# 	all(isfloat.(unique(keys(e.counts))))
+#
+# 	JsonGrinder.extractscalar(Int64)
 #
 # 	all(isfloat.(unique(keys(sch[:b].counts))))
 # 	all(isint.(unique(keys(sch[:b].counts))))
@@ -231,4 +235,16 @@ end
 # 	@test ext[:d] isa ExtractScalar
 # 	@test ext[:e] isa ExtractBranch
 # 	@test isnothing(ext[:f])
+# end
+#
+#
+# function default_scalar_extractor()
+# 	[(e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
+# 		e -> ExtractCategorical(collect(keys(e.counts)))),
+# 	(e -> all(isint.(unique(keys(e.counts))))
+# 	 e -> extractscalar()),
+# 	(e -> all(isfloat.(unique(keys(e.counts))))
+#  	 e -> extractscalar()),
+# 	(e -> true,
+# 		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
 # end

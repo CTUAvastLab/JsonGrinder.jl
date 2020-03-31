@@ -29,6 +29,7 @@ end
 Entry() = Entry(Dict{Any,Int}(),0);
 types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
 Base.keys(e::Entry) = sort(collect(keys(e.counts)))
+Base.isempty(e::Entry) = false
 
 function suggestextractor(e::Entry, settings = NamedTuple())
 	t = promote_type(unique(typeof.(keys(e.counts)))...)
@@ -93,6 +94,7 @@ mutable struct ArrayEntry <: JSONEntry
 end
 
 ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
+Base.isempty(e::ArrayEntry) = e.items isa ArrayEntry ? isempty(e.items) : isnothing(e.items)
 
 function update!(a::ArrayEntry, b::Vector)
 	n = length(b)
@@ -114,10 +116,6 @@ function suggestextractor(node::ArrayEntry, settings = NamedTuple())
 	e = suggestextractor(node.items, settings)
 	isnothing(e) ? e : ExtractArray(e)
 end
-
-Base.isempty(e::ArrayEntry) = e.items isa ArrayEntry ? isempty(e.items) : isnothing(e.items)
-Base.isempty(e::Entry) = false
-Base.isempty(e::DictEntry) = false
 
 function merge(es::ArrayEntry...)
 	updates_merged = sum(map(x->x.updated, es))
@@ -147,6 +145,7 @@ DictEntry() = DictEntry(Dict{Symbol,Any}(),0)
 Base.getindex(s::DictEntry, k::Symbol) = s.childs[k]
 Base.setindex!(s::DictEntry, i, k::Symbol) = s.childs[k] = i
 Base.get(s::Dict{Symbol, <:Any}, key::String, default) = get(s, Symbol(key), default)
+Base.isempty(e::DictEntry) = false
 
 function update!(s::DictEntry, d::Dict)
 	s.updated +=1
