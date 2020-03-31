@@ -32,7 +32,7 @@ Base.keys(e::Entry) = sort(collect(keys(e.counts)))
 
 function suggestextractor(e::Entry, settings = NamedTuple())
 	t = promote_type(unique(typeof.(keys(e.counts)))...)
-	t == Any  && @error "JSON does not have a fixed type scheme, quitting"
+	t == Any && @error "JSON does not have a fixed type scheme, quitting"
 
 	for (c, ex) in get(settings, :scalar_extractors, default_scalar_extractor())
 		c(e) && return ex(e)
@@ -108,14 +108,16 @@ function update!(a::ArrayEntry, b::Vector)
 end
 
 function suggestextractor(node::ArrayEntry, settings = NamedTuple())
-	if isnothing(node.items)
-		throw(ArgumentError("empty array, can not suggest extractor"))
+	if isempty(node)
+		@error "empty array, can not suggest extractor"
 	end
 	e = suggestextractor(node.items, settings)
 	isnothing(e) ? e : ExtractArray(e)
 end
 
-Base.isempty(e::ArrayEntry) = isnothing(e.items)
+Base.isempty(e::ArrayEntry) = e.items isa ArrayEntry ? isempty(e.items) : isnothing(e.items)
+Base.isempty(e::Entry) = false
+Base.isempty(e::DictEntry) = false
 
 function merge(es::ArrayEntry...)
 	updates_merged = sum(map(x->x.updated, es))
@@ -169,18 +171,20 @@ end
 """
 function suggestextractor(e::DictEntry, settings = NamedTuple())
 	mincount = get(settings, :mincount, 0)
-	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
-	isempty(ks) && return(nothing)
+	ks = filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
+	# to omit empty lists by default
+	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
+	isempty(ks) && return nothing
 	c = [(k,suggestextractor(e.childs[k], settings)) for k in ks]
 	c = filter(s -> s[2] != nothing, c)
-	isempty(c) && return(nothing)
+	isempty(c) && return nothing
 	mask = map(i -> extractsmatrix(i[2]), c)
 	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
 
 
 function merge(es::DictEntry...)
-	updates_merged = sum(map(x->x.updated, es))
+	updates_merged = sum(map(updated, es))
 	childs_merged = merge(merge, map(x->x.childs, es)...)
 	DictEntry(childs_merged, updates_merged)
 end
