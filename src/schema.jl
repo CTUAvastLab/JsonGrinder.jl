@@ -31,8 +31,10 @@ types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
 Base.keys(e::Entry) = sort(collect(keys(e.counts)))
 Base.isempty(e::Entry) = false
 
+unify_types(e::Entry) = promote_type(unique(typeof.(keys(e.counts)))...)
+
 function suggestextractor(e::Entry, settings = NamedTuple())
-	t = promote_type(unique(typeof.(keys(e.counts)))...)
+	t = unify_types(e::Entry)
 	t == Any && @error "JSON does not have a fixed type scheme, quitting"
 
 	for (c, ex) in get(settings, :scalar_extractors, default_scalar_extractor())
@@ -40,11 +42,18 @@ function suggestextractor(e::Entry, settings = NamedTuple())
 	end
 end
 
+isfloat(s::AbstractString) = tryparse(Float64, s) isa Number
+isint(s::AbstractString) = tryparse(Int64, s) isa Number
+
 function default_scalar_extractor()
 	[(e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
 		e -> ExtractCategorical(collect(keys(e.counts)))),
+	 (e -> unify_types(e::Entry) <: AbstractString && all(isint.(unique(keys(e.counts)))),
+		e -> extractscalar(Int64)),
+	 (e -> unify_types(e::Entry) <: AbstractString && all(isfloat.(unique(keys(e.counts)))),
+	 	e -> extractscalar(Float64)),
 	(e -> true,
-		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
+		e -> extractscalar(unify_types(e::Entry))),]
 end
 
 
