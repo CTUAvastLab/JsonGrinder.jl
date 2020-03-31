@@ -121,6 +121,7 @@ end
 function suggestextractor(node::ArrayEntry, settings = NamedTuple())
 	if isempty(node)
 		@error "empty array, can not suggest extractor"
+		return nothing
 	end
 	e = suggestextractor(node.items, settings)
 	isnothing(e) ? e : ExtractArray(e)
@@ -182,6 +183,9 @@ function suggestextractor(e::DictEntry, settings = NamedTuple())
 	ks = filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
 	# to omit empty lists by default
 	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
+	for k in filter(k->isempty(e.childs[k]), keys(e.childs))
+		@warn "key $k contains empty array, skipping"
+	end
 	isempty(ks) && return nothing
 	c = [(k,suggestextractor(e.childs[k], settings)) for k in ks]
 	c = filter(s -> s[2] != nothing, c)

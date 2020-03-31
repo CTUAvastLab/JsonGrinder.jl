@@ -195,7 +195,7 @@ end
 
 @testset "Fail empty bag extractor" begin
 	ex = JsonGrinder.newentry([])
-	@test_throws ArgumentError suggestextractor(ex)
+	@test isnothing(suggestextractor(ex))
 end
 
 @testset "delete in path" begin
