@@ -29,21 +29,31 @@ end
 Entry() = Entry(Dict{Any,Int}(),0);
 types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
 Base.keys(e::Entry) = sort(collect(keys(e.counts)))
+Base.isempty(e::Entry) = false
+
+unify_types(e::Entry) = promote_type(unique(typeof.(keys(e.counts)))...)
 
 function suggestextractor(e::Entry, settings = NamedTuple())
-	t = promote_type(unique(typeof.(keys(e.counts)))...)
-	t == Any  && @error "JSON does not have a fixed type scheme, quitting"
+	t = unify_types(e::Entry)
+	t == Any && @error "JSON does not have a fixed type scheme, quitting"
 
 	for (c, ex) in get(settings, :scalar_extractors, default_scalar_extractor())
 		c(e) && return ex(e)
 	end
 end
 
+isfloat(s::AbstractString) = tryparse(Float64, s) isa Number
+isint(s::AbstractString) = tryparse(Int64, s) isa Number
+
 function default_scalar_extractor()
 	[(e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
 		e -> ExtractCategorical(collect(keys(e.counts)))),
+	 (e -> unify_types(e::Entry) <: AbstractString && all(isint.(unique(keys(e.counts)))),
+		e -> extractscalar(Int64)),
+	 (e -> unify_types(e::Entry) <: AbstractString && all(isfloat.(unique(keys(e.counts)))),
+	 	e -> extractscalar(Float64)),
 	(e -> true,
-		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
+		e -> extractscalar(unify_types(e::Entry))),]
 end
 
 
@@ -93,6 +103,7 @@ mutable struct ArrayEntry <: JSONEntry
 end
 
 ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
+Base.isempty(e::ArrayEntry) = e.items isa ArrayEntry ? isempty(e.items) : isnothing(e.items)
 
 function update!(a::ArrayEntry, b::Vector)
 	n = length(b)
@@ -108,14 +119,13 @@ function update!(a::ArrayEntry, b::Vector)
 end
 
 function suggestextractor(node::ArrayEntry, settings = NamedTuple())
-	if isnothing(node.items)
-		throw(ArgumentError("empty array, can not suggest extractor"))
+	if isempty(node)
+		@error "empty array, can not suggest extractor"
+		return nothing
 	end
 	e = suggestextractor(node.items, settings)
 	isnothing(e) ? e : ExtractArray(e)
 end
-
-Base.isempty(e::ArrayEntry) = isnothing(e.items)
 
 function merge(es::ArrayEntry...)
 	updates_merged = sum(map(x->x.updated, es))
@@ -145,6 +155,7 @@ DictEntry() = DictEntry(Dict{Symbol,Any}(),0)
 Base.getindex(s::DictEntry, k::Symbol) = s.childs[k]
 Base.setindex!(s::DictEntry, i, k::Symbol) = s.childs[k] = i
 Base.get(s::Dict{Symbol, <:Any}, key::String, default) = get(s, Symbol(key), default)
+Base.isempty(e::DictEntry) = false
 
 function update!(s::DictEntry, d::Dict)
 	s.updated +=1
@@ -169,18 +180,23 @@ end
 """
 function suggestextractor(e::DictEntry, settings = NamedTuple())
 	mincount = get(settings, :mincount, 0)
-	ks = Iterators.filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
-	isempty(ks) && return(nothing)
+	ks = filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
+	# to omit empty lists by default
+	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
+	for k in filter(k->isempty(e.childs[k]), keys(e.childs))
+		@warn "key $k contains empty array, skipping"
+	end
+	isempty(ks) && return nothing
 	c = [(k,suggestextractor(e.childs[k], settings)) for k in ks]
 	c = filter(s -> s[2] != nothing, c)
-	isempty(c) && return(nothing)
+	isempty(c) && return nothing
 	mask = map(i -> extractsmatrix(i[2]), c)
 	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
 end
 
 
 function merge(es::DictEntry...)
-	updates_merged = sum(map(x->x.updated, es))
+	updates_merged = sum(map(updated, es))
 	childs_merged = merge(merge, map(x->x.childs, es)...)
 	DictEntry(childs_merged, updates_merged)
 end

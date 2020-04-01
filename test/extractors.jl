@@ -183,3 +183,36 @@ end
 	@test br11 != br2
 	@test br1 == br2
 end
+
+@testset "Extractor skip empty lists" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b": [], "c": [[], []], "d": 1, "e": {"a": 1}, "f": {"a": []}}""")
+	j2 = JSON.parse("""{"a": [{"a":3},{"b":4}], "b": [], "c": [[]], "d": 1, "e": {"a": 2}, "f": {"a": []}}""")
+	j3 = JSON.parse("""{"a": [{"a":1},{"b":3}], "b": [], "c": [[], [], [], []], "d": 2, "e": {"a": 3}, "f": {"a": []}}""")
+	j4 = JSON.parse("""{"a": [{"a":2},{"b":4}], "b": [], "c": [], "d": 4, "e": {"a": 3}, "f": {"a": []}}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	ext = suggestextractor(sch)
+	@test ext[:a] isa ExtractArray
+	@test isnothing(ext[:b])
+	@test isnothing(ext[:c])
+	@test ext[:d] isa ExtractScalar
+	@test ext[:e] isa ExtractBranch
+	@test isnothing(ext[:f])
+end
+
+@testset "Extractor of numbers as strings" begin
+	j1 = JSON.parse("""{"a": "1", "b": "a", "c": "1.1", "d": 1.1, "e": "1.2", "f": 1}""")
+	j2 = JSON.parse("""{"a": "2", "b": "b", "c": "2", "d": 2, "e": "1.3", "f": 2}""")
+	j3 = JSON.parse("""{"a": "3", "b": "c", "c": "2.3", "d": 2.3, "e": "1.4", "f": 3}""")
+	j4 = JSON.parse("""{"a": "4", "b": "c", "c": "5", "d": 5, "e": "1.4", "f": 3}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	ext = suggestextractor(sch)
+
+	@test ext[:a].datatype <: Int64
+	@test ext[:b].datatype <: String
+	@test ext[:c].datatype <: Float64
+	@test ext[:d].datatype <: Float64
+	@test ext[:e].datatype <: Float64
+	@test ext[:f].datatype <: Int64
+end
