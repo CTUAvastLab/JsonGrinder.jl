@@ -34,8 +34,7 @@ end
 	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k,10, relu));
 	o = m(ds).data
-	i = 1
-	o[:,i] ≈ m(dss[i]).data
+
 	for i in 1:length(dss)
 		@test o[:,i] ≈ m(dss[i]).data
 	end
