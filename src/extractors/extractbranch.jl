@@ -5,7 +5,7 @@
 		other::Dict{String,Any}
 	end
 
-	extracts all items in `vec` and in `other` and return them as a TreeNode.
+	extracts all items in `vec` and in `other` and return them as a ProductNode.
 """
 struct ExtractBranch{S,V} <: AbstractExtractor
 	vec::S
@@ -33,14 +33,14 @@ extractsmatrix(s::ExtractBranch) = false
 # 	x = vcat([f(get(v,k,nothing)) for (k,f) in s.vec]...)
 # 	o = [f(get(v,k,nothing)) for (k,f) in s.other]
 # 	data = tuple(x, o...)
-# 	TreeNode(data)
+# 	ProductNode(data)
 # end
 
 function (s::ExtractBranch{S,V})(v::Dict) where {S<:Dict,V<:Dict}
 	x = vcat([f(get(v,String(k),nothing)) for (k,f) in s.vec]...)
 	o = [Symbol(k) => f(get(v,String(k),nothing)) for (k,f) in s.other]
 	data = (; :scalars => x,o...)
-	TreeNode(data)
+	ProductNode(data)
 end
 
 (s::ExtractBranch{S,V})(v::Dict) where {S<:Dict,V<:Nothing} = vcat([f(get(v,k,nothing)) for (k,f) in s.vec]...)
@@ -52,7 +52,7 @@ function (s::ExtractBranch{S,V})(v::Dict) where {S<:Nothing,V<:Dict}
 		# return(o[1])
 		return(o[1].second)
 	else
-		return(TreeNode((;o...)))
+		return(ProductNode((;o...)))
 	end
 end
 

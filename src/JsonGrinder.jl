@@ -4,7 +4,7 @@ using HierarchicalUtils
 include("schema.jl")
 include("html_show_tools.jl")
 
-using Mill: ArrayNode, BagNode, TreeNode, catobs
+using Mill: ArrayNode, BagNode, ProductNode, catobs
 include("extractors/extractarray.jl")
 include("extractors/extractbranch.jl")
 include("extractors/extractcategorical.jl")

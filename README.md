@@ -53,9 +53,9 @@ dss = reduce(catobs, ds)
 or for convenience joined into a single command
 ```julia
 julia> ds = extractbatch(extractor, [j1, j2])
-TreeNode
+ProductNode
   ├── scalars: ArrayNode(1, 2)
-  ├── c: TreeNode
+  ├── c: ProductNode
   │     ├── scalars: ArrayNode(1, 2)
   │     └── b: ArrayNode(2053, 2)
   └── b: ArrayNode(2053, 2)
