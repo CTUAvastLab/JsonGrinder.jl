@@ -48,12 +48,12 @@ isint(s::AbstractString) = tryparse(Int64, s) isa Number
 function default_scalar_extractor()
 	[(e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
 		e -> ExtractCategorical(collect(keys(e.counts)))),
-	 (e -> unify_types(e::Entry) <: AbstractString && all(isint.(unique(keys(e.counts)))),
-		e -> extractscalar(Int64)),
-	 (e -> unify_types(e::Entry) <: AbstractString && all(isfloat.(unique(keys(e.counts)))),
-	 	e -> extractscalar(Float64)),
+	 (e -> unify_types(e) <: AbstractString && all(isint.(unique(keys(e.counts)))),
+		e -> extractscalar(Int64, e)),
+	 (e -> unify_types(e) <: AbstractString && all(isfloat.(unique(keys(e.counts)))),
+	 	e -> extractscalar(Float64, e)),
 	(e -> true,
-		e -> extractscalar(unify_types(e::Entry))),]
+		e -> extractscalar(unify_types(e), e)),]
 end
 
 

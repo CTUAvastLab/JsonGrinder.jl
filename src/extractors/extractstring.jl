@@ -26,3 +26,6 @@ extractscalar(::Type{T}, m = zero(T), s = one(T)) where {T<:Number} = ExtractSca
 
 Base.hash(e::ExtractString, h::UInt) = hash((e.datatype, e.n, e.b, e.m), h)
 Base.:(==)(e1::ExtractString, e2::ExtractString) = e1.datatype == e2.datatype && e1.n === e2.n && e1.b === e2.b && e1.m === e2.m
+
+# to be compatible with the number version
+extractscalar(::Type{T}, e::Entry) where {T<:AbstractString} = extractscalar(T)

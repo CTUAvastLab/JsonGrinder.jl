@@ -231,16 +231,16 @@ end
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
 	ext = suggestextractor(sch)
 
-	@test ext[:a] isa ExtractScalar{Int64, Int64}
-	@test ext[:b][:a] isa ExtractArray{ExtractScalar{Int64,Int64}}
-	@test ext[:b][:b] isa ExtractScalar{Int64,Int64}
+	@test ext[:a] isa ExtractScalar{Int64, Float64}
+	@test ext[:b][:a] isa ExtractArray{ExtractScalar{Int64,Float64}}
+	@test ext[:b][:b] isa ExtractScalar{Int64,Float64}
 	@test ext[:c][:a][:a] isa ExtractArray{ExtractScalar{Float64,Float64}}
 	@test ext[:c][:a][:b] isa ExtractArray{ExtractScalar{Float64,Float64}}
 
 	e1 = ext(j1)
-	@test e1.data.scalars.data[1, 1] == 4
-	@test e1.data.b.data.a.data.data == [1 2 3]
-	@test e1.data.b.data.scalars.data[1, 1] == 1
+	@test e1.data.scalars.data[1, 1] == 0
+	@test e1.data.b.data.a.data.data == [0. 0.5 1.]
+	@test e1.data.b.data.scalars.data[1, 1] == 0.
 	@test isempty(e1.data.c.data.a.data.data)
 	@test isempty(e1.data.c.data.b.data.data)
 end

@@ -30,11 +30,12 @@ end
 
 	sch = JsonGrinder.schema([j1,j2,j3])
 	extractor = suggestextractor(sch)
-	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5,j6])
+	dss = map(extractor, [j1,j2,j3,j4,j5,j6])
 	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k,10, relu));
 	o = m(ds).data
-
+	i = 1
+	o[:,i] ≈ m(dss[i]).data
 	for i in 1:length(dss)
 		@test o[:,i] ≈ m(dss[i]).data
 	end

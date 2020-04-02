@@ -17,6 +17,19 @@ end
 ExtractScalar(datatype) = ExtractScalar(datatype, zero(datatype), one(datatype))
 extractsmatrix(s::ExtractScalar) = true
 
+function extractscalar(::Type{T}, e::Entry) where {T<:Number}
+	if unify_types(e) <: AbstractString
+		values = parse.(T, keys(e.counts))
+	else
+		values = keys(e.counts)
+	end
+	min_val = minimum(values)
+	max_val = maximum(values)
+	c = float(min_val)
+	s = max_val == min_val ? 1. : float(1 / (max_val - min_val))
+	ExtractScalar(T, c, s)
+end
+
 (s::ExtractScalar{T,V})(v) where {T<:Number,V}			 = ArrayNode(s.s .* (fill(s.datatype(v),1,1) .- s.c))
 (s::ExtractScalar{T,V} where {V,T<:Number})(v::String)   = s((parse(s.datatype,v)))
 (s::ExtractScalar{T,V})(v::S) where {T<:Number,V,S<:Nothing}= ArrayNode(fill(zero(T),(1,1)))

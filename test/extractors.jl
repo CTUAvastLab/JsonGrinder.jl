@@ -215,4 +215,14 @@ end
 	@test ext[:d].datatype <: Float64
 	@test ext[:e].datatype <: Float64
 	@test ext[:f].datatype <: Int64
+
+	ext_j1 = ext(j1)
+	ext_j2 = ext(j2)
+	ext_j3 = ext(j3)
+	ext_j4 = ext(j4)
+
+	@test ext_j1["U"].data ≈ [0, 0, 0, 0, 0]
+	@test ext_j2["U"].data ≈ [0.5, 1/3, 3/13, 0.5, 3/13]
+	@test ext_j3["U"].data ≈ [1, 2/3, 4/13, 1, 4/13]
+	@test ext_j4["U"].data ≈ [1, 1, 1, 1, 1]
 end
