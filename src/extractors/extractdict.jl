@@ -47,12 +47,12 @@ end
 
 function (s::ExtractDict{S,V})(v::Dict) where {S<:Nothing,V<:Dict}
 	# o = [f(get(v,k,nothing)) for (k,f) in s.other]
-	o = [Symbol(k) => f(get(v,k,nothing)) for (k,f) in s.other]
+	o = [Symbol(k) => f(get(v,String(k),nothing)) for (k,f) in s.other]
 	if length(o) == 1
 		# return(o[1])
-		return(o[1].second)
+		return o[1].second
 	else
-		return(ProductNode((;o...)))
+		return ProductNode((;o...))
 	end
 end
 
