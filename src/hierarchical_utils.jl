@@ -19,7 +19,7 @@ children(n::DictEntry) = (; n.childs...)
 
 # for extractor structures
 NodeType(::Type{T}) where T <: ExtractArray = SingletonNode()
-NodeType(::Type{T}) where T <: ExtractBranch = InnerNode()
+NodeType(::Type{T}) where T <: ExtractDict = InnerNode()
 NodeType(::Type{T}) where T <: ExtractCategorical = LeafNode()
 NodeType(::Type{T}) where T <: ExtractOneHot = LeafNode()
 NodeType(::Type{T}) where T <: ExtractScalar = LeafNode()
@@ -28,7 +28,7 @@ NodeType(::Type{T}) where T <: ExtractVector = LeafNode()
 NodeType(::Type{T}) where T <: MultipleRepresentation = InnerNode()
 
 noderepr(n::ExtractArray) = "Array of"
-noderepr(n::ExtractBranch) = "Dict"
+noderepr(n::ExtractDict) = "Dict"
 noderepr(n::ExtractCategorical) = "Categorical d = $(n.n)"
 noderepr(n::ExtractOneHot) = "OneHot d = $(n.n)"
 noderepr(n::ExtractScalar) = "$(n.datatype)"
@@ -37,9 +37,9 @@ noderepr(n::ExtractVector) = "FeatureVector with $(n.n) items"
 noderepr(n::MultipleRepresentation) = "MultiRepresentation"
 
 childrenfields(::Type{T}) where T <: ExtractArray = (:item,)
-childrenfields(::Type{T}) where T <: ExtractBranch = (:vec, :other)
+childrenfields(::Type{T}) where T <: ExtractDict = (:vec, :other)
 childrenfields(::Type{T}) where T <: MultipleRepresentation = (:extractors,)
 
 children(n::ExtractArray) = (n.item,)
-children(n::ExtractBranch) = (; Dict(Symbol(k)=>v for (k,v) in merge(filter(!isnothing, [n.vec, n.other])...))...)
+children(n::ExtractDict) = (; Dict(Symbol(k)=>v for (k,v) in merge(filter(!isnothing, [n.vec, n.other])...))...)
 children(n::MultipleRepresentation) = n.extractors

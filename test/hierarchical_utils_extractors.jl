@@ -111,7 +111,7 @@ end
 	@test str_repr == """OneHot d = 3"""
 
 	other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));
-	br = ExtractBranch(nothing,other)
+	br = ExtractDict(nothing,other)
 	buf = IOBuffer()
 	printtree(buf, br, trav=true)
 	str_repr = String(take!(buf))
@@ -125,7 +125,7 @@ Dict [""]
 
 	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64))
 	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)))
-	br = ExtractBranch(vector,other)
+	br = ExtractDict(vector,other)
 	buf = IOBuffer()
 	printtree(buf, br, trav=true)
 	str_repr = String(take!(buf))
@@ -138,9 +138,9 @@ Dict [""]
            └── Float64 ["s"]"""
 
 	other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
-	br1 = ExtractBranch(nothing,other1)
+	br1 = ExtractDict(nothing,other1)
 	other = Dict("a" => ExtractArray(br1), "b" => ExtractScalar(Float64,2,3))
-	br = ExtractBranch(nothing,other)
+	br = ExtractDict(nothing,other)
 	buf = IOBuffer()
 	printtree(buf, br, trav=true)
 	str_repr = String(take!(buf))

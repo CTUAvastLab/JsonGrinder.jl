@@ -191,7 +191,7 @@ function suggestextractor(e::DictEntry, settings = NamedTuple())
 	c = filter(s -> s[2] != nothing, c)
 	isempty(c) && return nothing
 	mask = map(i -> extractsmatrix(i[2]), c)
-	ExtractBranch(Dict(c[mask]),Dict(c[.! mask]))
+	ExtractDict(Dict(c[mask]),Dict(c[.! mask]))
 end
 
 

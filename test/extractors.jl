@@ -1,5 +1,5 @@
 using JsonGrinder, JSON, Test, SparseArrays, Flux
-using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractBranch, ExtractVector
+using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
 using Mill: catobs, nobs
 using LinearAlgebra
 
@@ -37,10 +37,10 @@ end
 	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
 end
 
-@testset "Testing ExtractBranch" begin
+@testset "Testing ExtractDict" begin
 	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
 	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)));
-	br = ExtractBranch(vector,other)
+	br = ExtractDict(vector,other)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
 	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
@@ -60,7 +60,7 @@ end
 	@test all(catobs(a1,a3).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a1,a3).data[2].bags .== [1:4,5:8])
 
-	br = ExtractBranch(vector,nothing)
+	br = ExtractDict(vector,nothing)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
 	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
@@ -68,7 +68,7 @@ end
 	@test all(a2.data .==[7; 9])
 	@test all(a3.data .==[0; 9])
 
-	br = ExtractBranch(nothing,other)
+	br = ExtractDict(nothing,other)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
 	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
@@ -90,7 +90,7 @@ end
 
 @testset "Testing Nested Missing Arrays" begin
 	other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));
-	br = ExtractBranch(nothing,other)
+	br = ExtractDict(nothing,other)
 	a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]))
 	a2 = br(Dict("b" => [2,3,4]))
 	a3 = br(Dict("a" => [2,3,4]))
@@ -156,12 +156,12 @@ end
 		"c" => ExtractCategorical(["a","b"]),
 		"d" => ExtractVector(4),
 	)
-	br1 = ExtractBranch(nothing,other1)
+	br1 = ExtractDict(nothing,other1)
 	other11 = Dict(
 		"a" => ExtractArray(br1),
 		"b" => ExtractScalar(Float64,2,3),
 	)
-	br11 = ExtractBranch(nothing,other11)
+	br11 = ExtractDict(nothing,other11)
 
 	other2 = Dict(
 		"a" => ExtractArray(ExtractScalar(Float64,2,3)),
@@ -169,9 +169,9 @@ end
 		"c" => ExtractCategorical(["a","b"]),
 		"d" => ExtractVector(4),
 	)
-	br2 = ExtractBranch(nothing,other2)
+	br2 = ExtractDict(nothing,other2)
 	other22 = Dict("a" => ExtractArray(br2), "b" => ExtractScalar(Float64,2,3))
-	br22 = ExtractBranch(nothing,other22)
+	br22 = ExtractDict(nothing,other22)
 
 	@test hash(br11) === hash(br22)
 	@test hash(br11) !== hash(br1)
@@ -196,7 +196,7 @@ end
 	@test isnothing(ext[:b])
 	@test isnothing(ext[:c])
 	@test ext[:d] isa ExtractScalar
-	@test ext[:e] isa ExtractBranch
+	@test ext[:e] isa ExtractDict
 	@test isnothing(ext[:f])
 end
 

@@ -1,6 +1,6 @@
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools
 using Serialization
-using JsonGrinder: suggestextractor, ExtractBranch
+using JsonGrinder: suggestextractor, ExtractDict
 using Mill: reflectinmodel
 
 ###############################################################
@@ -17,7 +17,7 @@ JSON.print(samples[3],2)
 ###############################################################
 sch = JsonGrinder.schema(samples);
 extractor = suggestextractor(sch)
-extract_target = ExtractBranch(nothing, Dict("device_class" => extractor.other["device_class"]));
+extract_target = ExtractDict(nothing, Dict("device_class" => extractor.other["device_class"]));
 
 target = extractbatch(extract_target, samples).data
 delete!(extractor.other, "device_class");
