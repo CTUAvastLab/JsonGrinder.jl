@@ -241,6 +241,6 @@ end
 	@test e1.data.scalars.data[1, 1] == 0
 	@test e1.data.b.data.a.data.data == [0. 0.5 1.]
 	@test e1.data.b.data.scalars.data[1, 1] == 0.
-	@test isempty(e1.data.c.data.a.data.data)
-	@test isempty(e1.data.c.data.b.data.data)
+	@test e1.data.c.data.a.data.data == [0. 0.5 1.]
+	@test e1.data.c.data.b.data.data == [0. 0.5 1.]
 end
