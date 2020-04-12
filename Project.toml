@@ -1,7 +1,7 @@
 name = "JsonGrinder"
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
 authors = ["pevnak <pevnak@gmail.com>", "Matej Racinsky <racinsky.matej@seznam.cz>"]
-version = "1.2.1"
+version = "1.2.2"
 
 [deps]
 BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
