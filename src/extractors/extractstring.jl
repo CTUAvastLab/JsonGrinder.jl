@@ -6,8 +6,10 @@ struct ExtractString{T} <: AbstractExtractor
 end
 
 ExtractString(::Type{T}) where {T<:String} = ExtractString(T, 3, 256, 2053)
-(s::ExtractString)(v)   = ArrayNode(Mill.NGramMatrix([v], s.n, s.b, s.m))
+(s::ExtractString)(v::String)   = ArrayNode(Mill.NGramMatrix([v], s.n, s.b, s.m))
+(s::ExtractString)(v::AbstractString)   = s(String(v))
 (s::ExtractString)(v::S) where {S<:Nothing}= ArrayNode(Mill.NGramMatrix([""], s.n, s.b, s.m))
+(s::ExtractString)(v) = s(nothing)
 extractsmatrix(s::ExtractString) = false
 
 """

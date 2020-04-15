@@ -183,43 +183,43 @@ end
 	@test br11 != br2
 	@test br1 == br2
 end
-# todo: add it once it will be in git
-#
-# @testset "Extractor of keys as field" begin
-# 	js = [Dict(randstring(5) => rand()) for _ in 1:1000];
-# 	sch = JsonGrinder.schema(js);
-# 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500));
-#
-# 	b = ext(js[1]);
-# 	k = only(keys(js[1]));
-# 	@test b.data[:item].data[1] == (js[1][k] - ext.item.c) * ext.item.s;
-# 	@test b.data[:key].data.s[1] == k;
-#
-# 	b = ext(nothing);
-# 	@test nobs(b) == 1
-# 	@test nobs(b.data) == 0
-# 	b = ext(Dict());
-# 	@test nobs(b) == 1
-# 	@test nobs(b.data) == 0
-#
-# 	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000]
-# 	sch = JsonGrinder.schema(js)
-# 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
-#
-# 	b = ext(js[1]);
-# 	k = only(keys(js[1]))
-# 	i = ext.item(js[1][k])
-# 	@test b.data[:item][:b].data.data == i[:b].data.data
-# 	@test b.data[:item][:scalars].data == i[:scalars].data
-# 	@test b.data[:key].data.s[1] == k
-#
-# 	b = ext(nothing);
-# 	@test nobs(b) == 1
-# 	@test nobs(b.data) == 0
-# 	b = ext(Dict());
-# 	@test nobs(b) == 1
-# 	@test nobs(b.data) == 0
-# end
+
+@testset "Extractor of keys as field" begin
+	JsonGrinder.updatemaxkeys!(1000)
+	js = [Dict(randstring(5) => rand()) for _ in 1:1000];
+	sch = JsonGrinder.schema(js);
+	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500));
+
+	b = ext(js[1]);
+	k = only(keys(js[1]));
+	@test b.data[:item].data[1] ≈ (js[1][k] - ext.item.c) * ext.item.s;
+	@test b.data[:key].data.s[1] == k;
+
+	b = ext(nothing);
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
+	b = ext(Dict());
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
+
+	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000]
+	sch = JsonGrinder.schema(js)
+	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
+
+	b = ext(js[1]);
+	k = only(keys(js[1]))
+	i = ext.item(js[1][k])
+	@test b.data[:item][:b].data.data == i[:b].data.data
+	@test b.data[:item][:scalars].data == i[:scalars].data
+	@test b.data[:key].data.s[1] == k
+
+	b = ext(nothing);
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
+	b = ext(Dict());
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
+end
 
 @testset "Extractor skip empty lists" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b": [], "c": [[], []], "d": 1, "e": {"a": 1}, "f": {"a": []}}""")
@@ -292,4 +292,18 @@ end
 	@test ext_j2["U"].data.data ≈ [0 .25 .5 .75]
 	@test ext_j3["U"].data.data ≈ [0 .25 .5 .75 1.]
 	@test ext_j4["U"].data.data ≈ [0 .25 .5]
+end
+
+@testset "testing irregular extractor" begin
+	j1 = JSON.parse("""{"a": 4}""")
+	j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}}""")
+	j3 = JSON.parse("""{"a": [1, 2, 3 , 4]}""")
+
+	sch = schema([j1,j2,j3])
+	ext = suggestextractor(sch)
+	a = ext(j1)
+	@test a.data[1].data[1] == 0
+	@test a.data[2].data[:a].data.s[1] == ""
+	@test nobs(a.data[3]) == 1
+	@test nobs(a.data[3].data) == 0
 end

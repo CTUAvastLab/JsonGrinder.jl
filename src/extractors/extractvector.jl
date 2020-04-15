@@ -21,7 +21,8 @@ ExtractVector(n::Int) = ExtractVector{Float32}(n)
 
 extractsmatrix(s::ExtractVector) = false
 
-(s::ExtractVector{T})(v::V) where {T, V<:Nothing} = ArrayNode(zeros(T, s.n,1))
+(s::ExtractVector{T})(::Nothing) where {T} = ArrayNode(zeros(T, s.n,1))
+(s::ExtractVector)(v) = s(nothing) 
 function (s::ExtractVector{T})(v::V) where {T,V<:AbstractArray}
 	isempty(v) && return s(nothing)
 	x = zeros(T, s.n, 1)

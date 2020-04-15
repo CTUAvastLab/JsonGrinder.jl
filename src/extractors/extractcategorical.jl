@@ -7,8 +7,8 @@ import Mill.catobs
 	Converts a single item to a one-hot encoded vector. There is always alocated an extra
 	element for a unknown value
 """
-struct ExtractCategorical{I<:Dict} <: AbstractExtractor
-	keyvalemap::I
+struct ExtractCategorical{V,I} <: AbstractExtractor
+	keyvalemap::Dict{V,I}
 	n::Int
 end
 
@@ -27,17 +27,18 @@ end
 
 extractsmatrix(s::ExtractCategorical) = false
 
-function (s::ExtractCategorical)(v)
+function (s::ExtractCategorical{V,I})(v::V) where {V,I}
     x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(get(s.keyvalemap, v, s.n), s.n)])
     ArrayNode(x)
 end
 
-function (s::ExtractCategorical)(vs::Vector)
+function (s::ExtractCategorical{V,I})(vs::Vector{V}) where {V,I}
 	x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(get(s.keyvalemap, v, s.n), s.n) for v in vs])
 	ArrayNode(x)
 end
 
-(s::ExtractCategorical)(v::V) where {V<:Nothing} =  ArrayNode(Flux.OneHotMatrix(s.n,[Flux.OneHotVector(s.n, s.n)]))
+(s::ExtractCategorical)(::Nothing) =  ArrayNode(Flux.OneHotMatrix(s.n,[Flux.OneHotVector(s.n, s.n)]))
+(s::ExtractCategorical)(v) = s(nothing)
 
 Base.reduce(::typeof(catobs), a::Vector{S}) where {S<:Flux.OneHotMatrix} = _catobs(a[:])
 catobs(a::Flux.OneHotMatrix...) = _catobs(collect(a))

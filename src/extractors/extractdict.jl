@@ -28,13 +28,8 @@ replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
 
 extractsmatrix(s::ExtractDict) = false
 (s::ExtractDict)(v::V) where {V<:Nothing} = s(Dict{String,Any}())
+(s::ExtractDict)(v)  = s(nothing)
 
-# function (s::ExtractDict{S,V})(v::Dict) where {S<:Dict,V<:Dict}
-# 	x = vcat([f(get(v,k,nothing)) for (k,f) in s.vec]...)
-# 	o = [f(get(v,k,nothing)) for (k,f) in s.other]
-# 	data = tuple(x, o...)
-# 	ProductNode(data)
-# end
 
 function (s::ExtractDict{S,V})(v::Dict) where {S<:Dict,V<:Dict}
 	x = vcat([f(get(v,String(k),nothing)) for (k,f) in s.vec]...)

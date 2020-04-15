@@ -2,12 +2,10 @@ import HierarchicalUtils: NodeType, childrenfields, children, InnerNode, Singlet
 
 # for schema structures
 NodeType(::Type{Nothing}) = LeafNode()  # because sometimes we have empty array extractor
-NodeType(::Type{Entry}) = LeafNode()
 NodeType(::Type{ArrayEntry}) = SingletonNode()
 NodeType(::Type{DictEntry}) = InnerNode()
 
 noderepr(n::Nothing) = "Nothing"
-noderepr(n::Entry) = "[Scalar - $(join(sort(string.(types(n))), ","))], $(length(keys(n.counts))) unique values, updated = $(n.updated)"
 noderepr(n::ArrayEntry) = "[" * (isnothing(n.items) ? "Empty " : "") * "List] (updated = $(n.updated))"
 noderepr(n::DictEntry) = "[" * (isnothing(n.childs) ? "Empty " : "") * "Dict] (updated = $(n.updated))"
 

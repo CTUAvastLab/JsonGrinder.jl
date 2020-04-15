@@ -1,6 +1,7 @@
 using Mill, JSON, BSON, Flux, JsonGrinder, Test
 
-using JsonGrinder: DictEntry, suggestextractor, schema
+using JsonGrinder: suggestextractor, schema
+using JsonGrinder: DictEntry, Entry, MultiEntry, ArrayEntry
 using Mill: reflectinmodel
 
 @testset "basic behavior testing" begin
@@ -15,7 +16,7 @@ using Mill: reflectinmodel
 
 	@test sch[:a].counts == Dict(4 => 4)
 	@test sch[:a].updated == 4
-	@test sch[:b].updated == 4
+	@test sch[:b].updated == 2
 	@test sch[:b][:a].updated == 2
 	@test sch[:b][:a].l == Dict(3 => 2)
 	@test sch[:b][:a].items.counts == Dict(1 => 2, 2 => 2, 3 => 2)
@@ -36,6 +37,59 @@ using Mill: reflectinmodel
 	@test keys(sch[:a]) == [4]
 end
 
+@testset "testing irregular schema" begin
+	j1 = JSON.parse("""{"a": 4}""")
+	j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}}""")
+	j3 = JSON.parse("""{"a": [1, 2, 3 , 4]}""")
+
+
+	sch = JsonGrinder.DictEntry()
+	JsonGrinder.update!(sch, j1)
+	@test typeof(sch[:a]) <: Entry
+	JsonGrinder.update!(sch, j2)
+	JsonGrinder.update!(sch, j3)
+	@test typeof(sch[:a]) <: MultiEntry
+	@test typeof(sch[:a][1]) <: Entry
+	@test typeof(sch[:a][2]) <: DictEntry
+	@test typeof(sch[:a][3]) <: ArrayEntry
+
+	jsons = [j1, j2, j3]
+	types = [Entry, DictEntry, ArrayEntry]
+	for ii in [[1,2,3], [3,2,1], [2,3,1],[2,1,3] , [1,3,2]]
+		sch = JsonGrinder.DictEntry()
+		JsonGrinder.update!(sch, jsons[ii[1]])
+		@test typeof(sch[:a]) <: types[ii[1]]
+		JsonGrinder.update!(sch, jsons[ii[2]])
+		JsonGrinder.update!(sch, jsons[ii[3]])
+		@test typeof(sch[:a]) <: MultiEntry
+		@test typeof(sch[:a][1]) <: types[ii[1]]
+		@test typeof(sch[:a][2]) <: types[ii[2]]
+		@test typeof(sch[:a][3]) <: types[ii[3]]
+	end
+
+	jsons = [Dict("a" => [j["a"]]) for j in jsons]
+	for ii in [[1,2,3], [3,2,1], [2,3,1],[2,1,3] , [1,3,2]]
+		sch = JsonGrinder.DictEntry()
+		JsonGrinder.update!(sch, jsons[ii[1]])
+		@test typeof(sch[:a]) <: ArrayEntry
+		@test typeof(sch[:a].items) <: types[ii[1]]
+		JsonGrinder.update!(sch, jsons[ii[2]])
+		JsonGrinder.update!(sch, jsons[ii[3]])
+		@test typeof(sch[:a].items)  <: MultiEntry
+		@test typeof(sch[:a].items[1]) <: types[ii[1]]
+		@test typeof(sch[:a].items[2]) <: types[ii[2]]
+		@test typeof(sch[:a].items[3]) <: types[ii[3]]
+	end
+
+	j1 = JSON.parse("""{"a": 4}""")
+	j2 = JSON.parse("""{"a": "hello"}""")
+	sch = JsonGrinder.DictEntry()
+	JsonGrinder.update!(sch, j1)
+	@test typeof(sch[:a]) <: Entry
+	JsonGrinder.update!(sch, j2)
+
+end
+
 @testset "testing empty arrays" begin
 	j1 = JSON.parse("""{"a": []}""")
 	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
@@ -47,8 +101,7 @@ end
 	sch3 = JsonGrinder.schema([j2,j3,j1])
 
 	@test sch1.updated == 1
-	@test sch1[:a].updated == 1
-	@test isnothing(sch1[:a].items)
+	@test isempty(keys(sch1))
 
 	@test sch2.updated == sch3.updated
 	@test sch2[:a].l == sch3[:a].l
@@ -101,7 +154,7 @@ end
 
 	@test sch[:a].counts == Dict(4 => 4)
 	@test sch[:a].updated == 4
-	@test sch[:b].updated == 4
+	@test sch[:b].updated == 2
 	@test sch[:b][:a].updated == 2
 	@test sch[:b][:a].l == Dict(3 => 2)
 	@test sch[:b][:a].items.counts == Dict(1 => 2, 2 => 2, 3 => 2)

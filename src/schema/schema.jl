@@ -15,9 +15,22 @@ function updatemaxkeys!(n::Int)
 	global max_keys = n
 end
 
+function safe_update!(s::JSONEntry, d)
+	success = update!(s, d);
+	isnothing(success) && return(nothing)
+	success && return(s)
+	@info "Instability in the schema detected. Using multiple representation."
+	s = MultiEntry([s], 0)
+	update!(s, d)
+	return(s)
+end
+safe_update!(::Nothing, d) = newentry!(d)
+update!(s::JSONEntry, d) = false
+
 include("scalar.jl")
 include("dict.jl")
 include("array.jl")
+include("multientry.jl")
 include("makeschema.jl")
 
 # todo: otestovat si schema pro inty a floaty v různém pořadí
