@@ -244,3 +244,9 @@ end
 	@test e1.data.c.data.a.data.data == [0. 0.5 1.]
 	@test e1.data.c.data.b.data.data == [0. 0.5 1.]
 end
+
+@testset "mixing substrings with strings" begin
+	a, b = split("a b")
+	sch = JsonGrinder.schema([Dict("k" => a), Dict("k" => b), Dict("k" => "a"), Dict("k" => "b")])
+	@test sch.childs[:k].counts == Dict("a"=>2, "b"=>2)
+end

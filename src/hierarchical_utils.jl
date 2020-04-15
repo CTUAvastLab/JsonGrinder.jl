@@ -18,15 +18,13 @@ children(n::ArrayEntry) = (n.items,)
 children(n::DictEntry) = (; n.childs...)
 
 # for extractor structures
+# default extractor
+NodeType(::Type{T}) where T <: AbstractExtractor = LeafNode()
 NodeType(::Type{T}) where T <: ExtractArray = SingletonNode()
 NodeType(::Type{T}) where T <: ExtractDict = InnerNode()
-NodeType(::Type{T}) where T <: ExtractCategorical = LeafNode()
-NodeType(::Type{T}) where T <: ExtractOneHot = LeafNode()
-NodeType(::Type{T}) where T <: ExtractScalar = LeafNode()
-NodeType(::Type{T}) where T <: ExtractString = LeafNode()
-NodeType(::Type{T}) where T <: ExtractVector = LeafNode()
 NodeType(::Type{T}) where T <: MultipleRepresentation = InnerNode()
 
+noderepr(::T) where T <: AbstractExtractor = "$(Base.nameof(T))"
 noderepr(n::ExtractArray) = "Array of"
 noderepr(n::ExtractDict) = "Dict"
 noderepr(n::ExtractCategorical) = "Categorical d = $(n.n)"

@@ -95,3 +95,30 @@ end
 @testset "TypeIterator" begin
 	@test collect(TypeIterator{DictEntry}(sch)) == [sch[""], sch["U"], sch["k"], sch["s"]]
 end
+
+@testset "print with empty lists" begin
+	j1 = JSON.parse("""{"a": 4, "c": { "a": {"a":[1,2,3],"b":[4,5,6]}}, "d":[]}""",inttype=Float64)
+	j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}, "d":[]}""")
+	j3 = JSON.parse("""{"a": 4, "d":[]}""")
+	j4 = JSON.parse("""{"a": 4, "d":[]}""")
+	j5 = JSON.parse("""{"d":[]}""")
+	j6 = JSON.parse("""{}""")
+
+	sch = schema([j1,j2,j3,j4,j5,j6])
+
+	buf = IOBuffer()
+	printtree(buf, sch, trav=true)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+[Dict] (updated = 6) [""]
+  ├── a: [Scalar - Int64], 1 unique values, updated = 4 ["E"]
+  ├── c: [Dict] (updated = 2) ["U"]
+  │        └── a: [Dict] (updated = 2) ["c"]
+  │                 ├── a: [List] (updated = 2) ["e"]
+  │                 │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["f"]
+  │                 └── b: [List] (updated = 2) ["g"]
+  │                          └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["h"]
+  └── d: [Empty List] (updated = 5) ["k"]
+           └── Nothing ["s"]"""
+end

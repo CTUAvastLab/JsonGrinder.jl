@@ -226,3 +226,30 @@ end
 	@test ext_j3["U"].data ≈ [1, 2/3, 4/13, 1, 4/13]
 	@test ext_j4["U"].data ≈ [1, 1, 1, 1, 1]
 end
+
+# @testset "Suggest feature vector extraction" begin
+# 	j1 = JSON.parse("""{"a": "1", "b": [1, 2, 3], "c": [1, 2, 3]}""")
+# 	j2 = JSON.parse("""{"a": "2", "b": [2, 2, 3], "c": [1, 2, 3, 4]}""")
+# 	j3 = JSON.parse("""{"a": "3", "b": [3, 2, 3], "c": [1, 2, 3, 4, 5]}""")
+# 	j4 = JSON.parse("""{"a": "4", "b": [2, 3, 4], "c": [1, 2, 3]}""")
+#
+# 	sch = JsonGrinder.schema([j1, j2, j3, j4])
+# 	ext = suggestextractor(sch)
+#
+# 	@test ext[:a].datatype <: Int64
+# 	@test ext[:b].datatype <: String
+# 	@test ext[:c].datatype <: Float64
+# 	@test ext[:d].datatype <: Float64
+# 	@test ext[:e].datatype <: Float64
+# 	@test ext[:f].datatype <: Int64
+#
+# 	ext_j1 = ext(j1)
+# 	ext_j2 = ext(j2)
+# 	ext_j3 = ext(j3)
+# 	ext_j4 = ext(j4)
+#
+# 	@test ext_j1["U"].data ≈ [0, 0, 0, 0, 0]
+# 	@test ext_j2["U"].data ≈ [0.5, 1/3, 3/13, 0.5, 3/13]
+# 	@test ext_j3["U"].data ≈ [1, 2/3, 4/13, 1, 4/13]
+# 	@test ext_j4["U"].data ≈ [1, 1, 1, 1, 1]
+# end
