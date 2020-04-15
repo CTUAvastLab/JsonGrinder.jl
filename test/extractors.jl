@@ -1,4 +1,4 @@
-using JsonGrinder, JSON, Test, SparseArrays, Flux
+using JsonGrinder, JSON, Test, SparseArrays, Flux, Random
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
 using Mill: catobs, nobs
 using LinearAlgebra
@@ -182,6 +182,42 @@ end
 	@test br11 != br1
 	@test br11 != br2
 	@test br1 == br2
+end
+
+@testset "Extractor of keys as field" begin
+	js = [Dict(randstring(5) => rand()) for _ in 1:1000];
+	sch = JsonGrinder.schema(js);
+	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500));
+
+	b = ext(js[1]);
+	k = only(keys(js[1]));
+	@test b.data[:item].data[1] == (js[1][k] - ext.item.c) * ext.item.s;
+	@test b.data[:key].data.s[1] == k;
+
+	b = ext(nothing);
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
+	b = ext(Dict());
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
+
+	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000] 
+	sch = JsonGrinder.schema(js)
+	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
+
+	b = ext(js[1]);
+	k = only(keys(js[1]))
+	i = ext.item(js[1][k])
+	@test b.data[:item][:b].data.data == i[:b].data.data
+	@test b.data[:item][:scalars].data == i[:scalars].data
+	@test b.data[:key].data.s[1] == k
+
+	b = ext(nothing);
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
+	b = ext(Dict());
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
 end
 
 @testset "Extractor skip empty lists" begin

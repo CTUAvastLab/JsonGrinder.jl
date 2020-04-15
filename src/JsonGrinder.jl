@@ -1,10 +1,10 @@
 module JsonGrinder
 using Mill, JSON, Printf, Flux
+using Transducers
 using HierarchicalUtils
-include("schema.jl")
-include("html_show_tools.jl")
 
 using Mill: ArrayNode, BagNode, ProductNode, catobs
+include("schema/schema.jl")
 include("extractors/extractarray.jl")
 include("extractors/extractdict.jl")
 include("extractors/extractcategorical.jl")
@@ -12,7 +12,9 @@ include("extractors/extractscalar.jl")
 include("extractors/extractstring.jl")
 include("extractors/extractvector.jl")
 include("extractors/extractonehot.jl")
+include("extractors/extract_keyasfield.jl")
 include("extractors/multirepresentation.jl")
+include("html_show_tools.jl")
 
 export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString
 export suggestextractor, schema, extractbatch, generate_html
