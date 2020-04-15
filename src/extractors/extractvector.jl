@@ -1,24 +1,17 @@
 """
 	struct ExtractVector{T}
-		item::T
+		item::Int
 	end
 
 	represents an array of a fixed length, typically a feature vector
 
 ```juliadoctest
-julia> sc = ExtractVector(Float32)
+julia> sc = ExtractVector(4)
 julia> sc([2,3,1,4]).data
-3×4 Array{Float32,2}:
- 1.0  0.0  0.0  0.0
- 0.0  1.0  0.0  0.0
- 0.0  0.0  0.0  1.0
-
-```
-
-```juliadoctest
-julia> sc = ExtractVector(ExtractScalar())
-julia> sc([2,3,4]).data
- 2.0  3.0  4.0
+3×1 Array{Float32,2}:
+ 2.0
+ 3.0
+ 1.0
 ```
 """
 struct ExtractVector{T} <: AbstractExtractor

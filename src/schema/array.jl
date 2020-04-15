@@ -34,13 +34,13 @@ end
 
 function suggestextractor(node::ArrayEntry, settings = NamedTuple(); path = "")
 	if isempty(node)
-		@error "$(path) is an empty array, therefore I can not suggest extractor."
+		@warn "$(path) is an empty array, therefore I can not suggest extractor."
 		return nothing
 	end
 
 	if length(node.l) == 1 && typeof(node.items) <: Entry && promote_type(unique(typeof.(keys(node.items.counts)))...) <: Number
 		@info "$(path) is an array of numbers with of same length, therefore it will be treated as a vector."
-		ExtractVector(only(collect(keys(node.l))))
+		return ExtractVector(only(collect(keys(node.l))))
 	end
 	e = suggestextractor(node.items, settings, path = path)
 	isnothing(e) ? e : ExtractArray(e)
@@ -57,4 +57,3 @@ end
 Base.hash(e::ArrayEntry, h::UInt) = hash((e.items, e.l, e.updated), h)
 Base.:(==)(e1::ArrayEntry, e2::ArrayEntry) = e1.updated === e2.updated && e1.l == e2.l && e1.items == e2.items
 sample_synthetic(e::ArrayEntry) = repeat([sample_synthetic(e.items)], 2)
-

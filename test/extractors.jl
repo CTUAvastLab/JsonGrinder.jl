@@ -183,42 +183,43 @@ end
 	@test br11 != br2
 	@test br1 == br2
 end
-
-@testset "Extractor of keys as field" begin
-	js = [Dict(randstring(5) => rand()) for _ in 1:1000];
-	sch = JsonGrinder.schema(js);
-	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500));
-
-	b = ext(js[1]);
-	k = only(keys(js[1]));
-	@test b.data[:item].data[1] == (js[1][k] - ext.item.c) * ext.item.s;
-	@test b.data[:key].data.s[1] == k;
-
-	b = ext(nothing);
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
-	b = ext(Dict());
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
-
-	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000] 
-	sch = JsonGrinder.schema(js)
-	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
-
-	b = ext(js[1]);
-	k = only(keys(js[1]))
-	i = ext.item(js[1][k])
-	@test b.data[:item][:b].data.data == i[:b].data.data
-	@test b.data[:item][:scalars].data == i[:scalars].data
-	@test b.data[:key].data.s[1] == k
-
-	b = ext(nothing);
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
-	b = ext(Dict());
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
-end
+# todo: add it once it will be in git
+#
+# @testset "Extractor of keys as field" begin
+# 	js = [Dict(randstring(5) => rand()) for _ in 1:1000];
+# 	sch = JsonGrinder.schema(js);
+# 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500));
+#
+# 	b = ext(js[1]);
+# 	k = only(keys(js[1]));
+# 	@test b.data[:item].data[1] == (js[1][k] - ext.item.c) * ext.item.s;
+# 	@test b.data[:key].data.s[1] == k;
+#
+# 	b = ext(nothing);
+# 	@test nobs(b) == 1
+# 	@test nobs(b.data) == 0
+# 	b = ext(Dict());
+# 	@test nobs(b) == 1
+# 	@test nobs(b.data) == 0
+#
+# 	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000]
+# 	sch = JsonGrinder.schema(js)
+# 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
+#
+# 	b = ext(js[1]);
+# 	k = only(keys(js[1]))
+# 	i = ext.item(js[1][k])
+# 	@test b.data[:item][:b].data.data == i[:b].data.data
+# 	@test b.data[:item][:scalars].data == i[:scalars].data
+# 	@test b.data[:key].data.s[1] == k
+#
+# 	b = ext(nothing);
+# 	@test nobs(b) == 1
+# 	@test nobs(b.data) == 0
+# 	b = ext(Dict());
+# 	@test nobs(b) == 1
+# 	@test nobs(b.data) == 0
+# end
 
 @testset "Extractor skip empty lists" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b": [], "c": [[], []], "d": 1, "e": {"a": 1}, "f": {"a": []}}""")
@@ -263,29 +264,32 @@ end
 	@test ext_j4["U"].data ≈ [1, 1, 1, 1, 1]
 end
 
-# @testset "Suggest feature vector extraction" begin
-# 	j1 = JSON.parse("""{"a": "1", "b": [1, 2, 3], "c": [1, 2, 3]}""")
-# 	j2 = JSON.parse("""{"a": "2", "b": [2, 2, 3], "c": [1, 2, 3, 4]}""")
-# 	j3 = JSON.parse("""{"a": "3", "b": [3, 2, 3], "c": [1, 2, 3, 4, 5]}""")
-# 	j4 = JSON.parse("""{"a": "4", "b": [2, 3, 4], "c": [1, 2, 3]}""")
-#
-# 	sch = JsonGrinder.schema([j1, j2, j3, j4])
-# 	ext = suggestextractor(sch)
-#
-# 	@test ext[:a].datatype <: Int64
-# 	@test ext[:b].datatype <: String
-# 	@test ext[:c].datatype <: Float64
-# 	@test ext[:d].datatype <: Float64
-# 	@test ext[:e].datatype <: Float64
-# 	@test ext[:f].datatype <: Int64
-#
-# 	ext_j1 = ext(j1)
-# 	ext_j2 = ext(j2)
-# 	ext_j3 = ext(j3)
-# 	ext_j4 = ext(j4)
-#
-# 	@test ext_j1["U"].data ≈ [0, 0, 0, 0, 0]
-# 	@test ext_j2["U"].data ≈ [0.5, 1/3, 3/13, 0.5, 3/13]
-# 	@test ext_j3["U"].data ≈ [1, 2/3, 4/13, 1, 4/13]
-# 	@test ext_j4["U"].data ≈ [1, 1, 1, 1, 1]
-# end
+@testset "Suggest feature vector extraction" begin
+	j1 = JSON.parse("""{"a": "1", "b": [1, 2, 3], "c": [1, 2, 3]}""")
+	j2 = JSON.parse("""{"a": "2", "b": [2, 2, 3], "c": [1, 2, 3, 4]}""")
+	j3 = JSON.parse("""{"a": "3", "b": [3, 2, 3], "c": [1, 2, 3, 4, 5]}""")
+	j4 = JSON.parse("""{"a": "4", "b": [2, 3, 4], "c": [1, 2, 3]}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	ext = suggestextractor(sch)
+
+	@test ext[:a].datatype <: Int64
+	@test ext[:b] isa ExtractVector
+	@test ext[:b].n == 3
+	@test ext[:c] isa ExtractArray{ExtractScalar{Int64, Float64}}
+
+	ext_j1 = ext(j1)
+	ext_j2 = ext(j2)
+	ext_j3 = ext(j3)
+	ext_j4 = ext(j4)
+
+	@test ext_j1["E"].data ≈ [1, 2, 3]
+	@test ext_j2["E"].data ≈ [2, 2, 3]
+	@test ext_j3["E"].data ≈ [3, 2, 3]
+	@test ext_j4["E"].data ≈ [2, 3, 4]
+
+	@test ext_j1["U"].data.data ≈ [0 .25 .5]
+	@test ext_j2["U"].data.data ≈ [0 .25 .5 .75]
+	@test ext_j3["U"].data.data ≈ [0 .25 .5 .75 1.]
+	@test ext_j4["U"].data.data ≈ [0 .25 .5]
+end

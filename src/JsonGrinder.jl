@@ -12,7 +12,6 @@ include("extractors/extractscalar.jl")
 include("extractors/extractstring.jl")
 include("extractors/extractvector.jl")
 include("extractors/extractonehot.jl")
-include("extractors/extract_keyasfield.jl")
 include("extractors/multirepresentation.jl")
 include("html_show_tools.jl")
 
