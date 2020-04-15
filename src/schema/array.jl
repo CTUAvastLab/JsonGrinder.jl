@@ -11,7 +11,7 @@
 		`updated` counts how many times the struct was updated.
 """
 mutable struct ArrayEntry <: JSONEntry
-	items	# Tried to make type stable optional type, didn't work
+	items
 	l::Dict{Int,Int}
 	updated::Int
 end
@@ -27,9 +27,11 @@ function update!(a::ArrayEntry, b::Vector)
 	if isnothing(a.items)
 		 a.items = newentry(b).items
 	end
+
 	for v in b
-		update!(a.items,v)
+		a.items = safe_update!(a.items,v)
 	end
+	return(true)
 end
 
 function suggestextractor(node::ArrayEntry, settings = NamedTuple(); path = "")

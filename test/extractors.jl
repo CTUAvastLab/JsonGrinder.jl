@@ -185,13 +185,14 @@ end
 end
 
 @testset "Extractor of keys as field" begin
+	JsonGrinder.updatemaxkeys!(1000)
 	js = [Dict(randstring(5) => rand()) for _ in 1:1000];
 	sch = JsonGrinder.schema(js);
 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500));
 
 	b = ext(js[1]);
 	k = only(keys(js[1]));
-	@test b.data[:item].data[1] == (js[1][k] - ext.item.c) * ext.item.s;
+	@test b.data[:item].data[1] ≈ (js[1][k] - ext.item.c) * ext.item.s;
 	@test b.data[:key].data.s[1] == k;
 
 	b = ext(nothing);
@@ -226,7 +227,7 @@ end
 	j3 = JSON.parse("""{"a": [{"a":1},{"b":3}], "b": [], "c": [[], [], [], []], "d": 2, "e": {"a": 3}, "f": {"a": []}}""")
 	j4 = JSON.parse("""{"a": [{"a":2},{"b":4}], "b": [], "c": [], "d": 4, "e": {"a": 3}, "f": {"a": []}}""")
 
-	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	sch = JsonGrinder.schema([j1, j2, j3, j4]);
 	ext = suggestextractor(sch)
 	@test ext[:a] isa ExtractArray
 	@test isnothing(ext[:b])
@@ -261,4 +262,19 @@ end
 	@test ext_j2["U"].data ≈ [0.5, 1/3, 3/13, 0.5, 3/13]
 	@test ext_j3["U"].data ≈ [1, 2/3, 4/13, 1, 4/13]
 	@test ext_j4["U"].data ≈ [1, 1, 1, 1, 1]
+end
+
+
+@testset "testing irregular extractor" begin
+	j1 = JSON.parse("""{"a": 4}""")
+	j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}}""")
+	j3 = JSON.parse("""{"a": [1, 2, 3 , 4]}""")
+
+	sch = schema([j1,j2,j3])
+	ext = suggestextractor(sch)
+	a = ext(j1)
+	@test a.data[1].data[1] == 0
+	@test a.data[2].data[:a].data.s[1] == ""
+	@test nobs(a.data[3]) == 1
+	@test nobs(a.data[3].data) == 0
 end

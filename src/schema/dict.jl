@@ -24,13 +24,20 @@ Base.keys(e::DictEntry) = keys(e.childs)
 function update!(s::DictEntry, d::Dict)
 	s.updated +=1
 	for (k,v) in d
+		kc = Symbol(k) 
 		v == nothing && continue
-		i = get(s.childs, k, newentry(v))
-		update!(i,v)
-		s[Symbol(k)] = i
+		isempty(v) && continue
+		if haskey(s.childs, kc)
+			s.childs[kc] = safe_update!(s.childs[kc], v)
+		else
+			o = newentry!(v)
+			if !isnothing(o)
+				s.childs[kc] = o 
+			end
+		end
 	end
+	return(true)
 end
-
 
 """
 		suggestextractor(e::DictEntry, settings = NamedTuple())
@@ -64,8 +71,8 @@ end
 
 function key_as_field(e::DictEntry, settings; path = "")
 	@info "$(path) seems to store values in keys, therefore node is treated as bag with keys as extra values."
-	child_schema = reduce(merge, Map(identity), collect(values(e.childs)), init = nothing)
-	key_schema = Entry()
+	child_schema = reduce(merge, Map(identity), collect(values(e.childs)), init = nothing);
+	key_schema = Entry(String(first(keys(e))))
 	for k in keys(e)
 		update!(key_schema, k)
 	end

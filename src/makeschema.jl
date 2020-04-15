@@ -1,26 +1,12 @@
 
 """
-		newentry(v)
-
-		creates new entry describing json according to the type of v
-"""
-newentry(v::Dict) = DictEntry()
-newentry(v::A) where {A<:StringOrNumber} = Entry(v)
-newentry(v::Vector) = isempty(v) ? ArrayEntry(nothing) : ArrayEntry(newentry(v[1]))
-function newentry!(v)
-	c = newentry(v)
-	update!(c, v)
-	c
-end
-
-"""
-		function schema(a::Vector{T}) where {T<:Dict}
+		function Schema(a::Vector{T}) where {T<:Dict}
 		function schema(a::Vector{T}) where {T<:AbstractString}
 
 		create schema from an array of parsed or unparsed JSONs
 """
 
-function schema(samples::AbstractArray{T}) where {T<:Dict}
+function Schema(iterator::Base.Iterators.Enumerate)
 	schema = DictEntry()
 	failed = Vector{Int}()
 	for (i, f) in enumerate(samples)
@@ -38,10 +24,13 @@ function schema(samples::AbstractArray{T}) where {T<:Dict}
 	schema
 end
 
-function schema(samples::AbstractArray{T}) where {T<:AbstractString}
+Schema(samples::AbstractArray{T}) where {T<:Dict} = Schema(enumerate(samples))
+
+
+function Schema(file::String) where {T<:AbstractString}
 	schema = DictEntry()
 	failed = Vector{Int}()
-	for (i, f) in enumerate(samples)
+	for (i, f) in enumerate(readlines(file))
 		try
 			update!(schema, JSON.parse(f))
 		catch

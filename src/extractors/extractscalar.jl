@@ -30,9 +30,10 @@ function extractscalar(::Type{T}, e::Entry) where {T<:Number}
 	ExtractScalar(T, c, s)
 end
 
-(s::ExtractScalar{T,V})(v) where {T<:Number,V}			 = ArrayNode(s.s .* (fill(s.datatype(v),1,1) .- s.c))
-(s::ExtractScalar{T,V} where {V,T<:Number})(v::String)   = s((parse(s.datatype,v)))
-(s::ExtractScalar{T,V})(v::S) where {T<:Number,V,S<:Nothing}= ArrayNode(fill(zero(T),(1,1)))
+(s::ExtractScalar{T,V})(v::Nothing) where {T,V} = ArrayNode(fill(zero(T),(1,1)))
+(s::ExtractScalar)(v::Number) = ArrayNode(s.s .* (fill(s.datatype(v),1,1) .- s.c))
+(s::ExtractScalar)(v::AbstractString) = s((parse(s.datatype,v)))
+(s::ExtractScalar{T,V})(v)  where {T,V} = s(nothing)
 
 Base.hash(e::ExtractScalar, h::UInt) = hash((e.datatype, e.c, e.s), h)
 Base.:(==)(e1::ExtractScalar, e2::ExtractScalar) = e1.datatype == e2.datatype && e1.c === e2.c && e1.s === e2.s

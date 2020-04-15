@@ -36,12 +36,7 @@ end
 
 (s::ExtractArray)(v::V) where {V<:Vector} = isempty(v) ? s(nothing) : BagNode(reduce(catobs, map(s.item, v)),[1:length(v)])
 
-function (s::ExtractArray)(v)
-	@error "Unknown type in ExtractArray $(typeof(v)), will return missing"
-	@show v
-	s(missing)
-end
-
+(s::ExtractArray)(v) = s(missing)
 
 Base.hash(e::ExtractArray, h::UInt) = hash(e.item, h)
 Base.:(==)(e1::ExtractArray, e2::ExtractArray) = e1.item == e2.item
