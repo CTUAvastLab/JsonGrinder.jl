@@ -3,7 +3,7 @@ import Base: merge, length
 
 abstract type AbstractExtractor end
 abstract type JSONEntry end
-StringOrNumber = Union{String,Number}
+StringOrNumber = Union{AbstractString,Number}
 max_keys = 10000
 
 """
@@ -19,6 +19,11 @@ include("scalar.jl")
 include("dict.jl")
 include("array.jl")
 include("makeschema.jl")
+
+# todo: otestovat si schema pro inty a floaty v různém pořadí
+# todo : pro multirepresentation mít inty a stringy
+# todo: pro stringy to natvrdo přetypovat na abstractstringy, aby to pobralo šimonovu issue
+# todo: otestovat když mám na stejném fieldu stringy a dictionary, co se stane když bude první dict nebo string, otestovat a popsat
 
 updated(s::T) where {T<:JSONEntry} = s.updated
 merge(combine::typeof(merge), es::JSONEntry...) = merge(es...)
