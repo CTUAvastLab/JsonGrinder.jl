@@ -1,4 +1,6 @@
 # copied from https://github.com/JuliaLang/julia/blob/v1.4.1/base/iterators.jl#L1269
+using Base: @propagate_inbounds
+
 """
     only(x)
 Returns the one and only element of collection `x`, and throws an `ArgumentError` if the
