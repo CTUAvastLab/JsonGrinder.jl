@@ -24,7 +24,7 @@ Base.keys(e::DictEntry) = keys(e.childs)
 function update!(s::DictEntry, d::Dict)
 	s.updated +=1
 	for (k,v) in d
-		kc = Symbol(k) 
+		kc = Symbol(k)
 		v == nothing && continue
 		isempty(v) && continue
 		if haskey(s.childs, kc)
@@ -32,11 +32,11 @@ function update!(s::DictEntry, d::Dict)
 		else
 			o = newentry!(v)
 			if !isnothing(o)
-				s.childs[kc] = o 
+				s.childs[kc] = o
 			end
 		end
 	end
-	return(true)
+	return true
 end
 
 """
@@ -48,7 +48,7 @@ end
 		`settings.mincount` contains minimum repetition of the key to be included into
 		the extractor (if missing it is equal to zero)
 		`settings.key_as_field` of the number of keys exceeds this value, it is assumed that
-		keys contains a value, which means that they will be treated as strings. 
+		keys contains a value, which means that they will be treated as strings.
 		`settings` can be any container supporting `get` function
 """
 function suggestextractor(e::DictEntry, settings = NamedTuple(); path = "")

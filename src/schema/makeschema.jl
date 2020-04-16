@@ -20,12 +20,12 @@ end
 		create schema from an array of parsed or unparsed JSONs
 """
 
-function schema(samples::AbstractArray{T}) where {T<:Dict}
+function schema(samples::AbstractArray, map_fun::Function)
 	schema = DictEntry()
 	failed = Vector{Int}()
 	for (i, f) in enumerate(samples)
 		try
-			update!(schema, f)
+			update!(schema, map_fun(f))
 		catch
 			push!(failed, i)
 		end
@@ -38,20 +38,5 @@ function schema(samples::AbstractArray{T}) where {T<:Dict}
 	schema
 end
 
-function schema(samples::AbstractArray{T}) where {T<:AbstractString}
-	schema = DictEntry()
-	failed = Vector{Int}()
-	for (i, f) in enumerate(samples)
-		try
-			update!(schema, JSON.parse(f))
-		catch
-			push!(failed, i)
-		end
-	end
-	if !isempty(failed)
-		println("failed on $(length(failed)) samples")
-		l = min(10, length(failed))
-		println("for example on samples with indexes$(failed[1:l])")
-	end
-	schema
-end
+schema(samples::AbstractArray{T}) where {T<:Dict} = schema(samples, identity)
+schema(samples::AbstractArray{T}) where {T<:AbstractString} = schema(samples, JSON.parse)

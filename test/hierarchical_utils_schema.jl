@@ -5,7 +5,7 @@ using JsonGrinder: DictEntry, suggestextractor, schema
 using Mill: reflectinmodel
 
 j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
-j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}}""")
+j2 = JSON.parse("""{"a": 4, "c": {"a":{"a":[2,3],"b":[5,6]}}}""")
 j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
 j4 = JSON.parse("""{"a": 4, "b": {}}""")
 j5 = JSON.parse("""{"b": {}}""")
@@ -21,7 +21,7 @@ sch = schema([j1,j2,j3,j4,j5,j6])
 """
 [Dict] (updated = 6) [""]
   ├── a: [Scalar - Int64], 1 unique values, updated = 4 ["E"]
-  ├── b: [Dict] (updated = 4) ["U"]
+  ├── b: [Dict] (updated = 2) ["U"]
   │        ├── a: [List] (updated = 2) ["Y"]
   │        │        └── [Scalar - Int64], 3 unique values, updated = 6 ["a"]
   │        └── b: [Scalar - Int64], 1 unique values, updated = 2 ["c"]
@@ -113,12 +113,10 @@ end
 """
 [Dict] (updated = 6) [""]
   ├── a: [Scalar - Int64], 1 unique values, updated = 4 ["E"]
-  ├── c: [Dict] (updated = 2) ["U"]
-  │        └── a: [Dict] (updated = 2) ["c"]
-  │                 ├── a: [List] (updated = 2) ["e"]
-  │                 │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["f"]
-  │                 └── b: [List] (updated = 2) ["g"]
-  │                          └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["h"]
-  └── d: [Empty List] (updated = 5) ["k"]
-           └── Nothing ["s"]"""
+  └── c: [Dict] (updated = 2) ["U"]
+           └── a: [Dict] (updated = 2) ["c"]
+                    ├── a: [List] (updated = 2) ["e"]
+                    │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["f"]
+                    └── b: [List] (updated = 2) ["g"]
+                             └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["h"]"""
 end

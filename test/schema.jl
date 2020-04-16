@@ -222,7 +222,7 @@ end
 @testset "Sample synthetic" begin
 	j1 = JSON.parse("""{"a": []}""")
 	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
-	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
+	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
 	j4 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
 
 	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
@@ -244,6 +244,20 @@ end
 	sch_merged1234 = merge(sch12, sch3, sch4)
 	@test sch == sch_merged1234
 	@test sch123 == sch_merged123
+end
+
+@testset "Symmetry" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b": []}""")
+	j2 = JSON.parse("""{"a": [{"a":3},{"b":4}], "b": [1]}""")
+	j3 = JSON.parse("""{"a": [{"a":1},{"b":3}], "b": []}""")
+
+	sch1 = JsonGrinder.schema([j1, j2, j3])
+	sch2 = JsonGrinder.schema([j2, j1, j3])
+	sch3 = JsonGrinder.schema([j3, j2, j1])
+	sch4 = JsonGrinder.schema([j1, j3, j2])
+	@test sch1 == sch2
+	@test sch1 == sch3
+	@test sch2 == sch3
 end
 
 @testset "Fail empty bag extractor" begin
