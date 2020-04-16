@@ -138,7 +138,7 @@ end
 """
 [Dict] (updated = 6) [""]
   ├── a: [Scalar - Int64], 1 unique values, updated = 4 ["E"]
-  └── c: [MultiEntry] (updated = 3) ["U"]
+  └── c: [MultiEntry] (updated = 5) ["U"]
            ├── 1: [Dict] (updated = 2) ["Y"]
            │        └── a: [Dict] (updated = 2) ["a"]
            │                 ├── a: [List] (updated = 2) ["aU"]
@@ -166,10 +166,10 @@ end
 	@test str_repr ==
 """
 [Dict] (updated = 6) [""]
-  └── a: [MultiEntry] (updated = 5) ["U"]
+  └── a: [MultiEntry] (updated = 6) ["U"]
            ├── 1: [Scalar - String], 3 unique values, updated = 3 ["c"]
            ├── 2: [List] (updated = 1) ["k"]
-           │        └── [MultiEntry] (updated = 1) ["o"]
+           │        └── [MultiEntry] (updated = 3) ["o"]
            │              ├── 1: [Scalar - String], 2 unique values, updated = 2 ["p"]
            │              └── 2: [Scalar - Int64], 1 unique values, updated = 1 ["q"]
            └── 3: [Scalar - Float64,Int64], 2 unique values, updated = 2 ["s"]"""

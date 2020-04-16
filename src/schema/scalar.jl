@@ -58,6 +58,7 @@ function _update!(a::Entry, v)
 	return true
 end
 
+# todo: try how merging will work with non-stable schema, probably it'll need some fixes
 function merge(es::Entry...)
 	updates_merged = sum(map(x->x.updated, es))
 	counts_merged = merge(+, map(x->x.counts, es)...)
