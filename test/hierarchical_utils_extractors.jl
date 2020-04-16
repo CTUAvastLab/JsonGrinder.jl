@@ -4,9 +4,9 @@ import HierarchicalUtils: NodeType, childrenfields, children, InnerNode, Singlet
 using JsonGrinder: DictEntry, suggestextractor, schema
 using Mill: reflectinmodel
 
-j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
-j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}}""")
-j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
+j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],    "b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
+j2 = JSON.parse("""{"a": 4, "c": {"a":{"a":[2,3], "b":[5,6]}}}""")
+j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3,4],  "b": 1}}""")
 j4 = JSON.parse("""{"a": 4, "b": {}}""")
 j5 = JSON.parse("""{"b": {}}""")
 j6 = JSON.parse("""{}""")
@@ -23,7 +23,8 @@ ext = suggestextractor(sch)
 Dict [""]
   ├── a: Int64 ["E"]
   ├── b: Dict ["U"]
-  │        ├── a: FeatureVector with 3 items ["Y"]
+  │        ├── a: Array of ["Y"]
+  │        │        └── Int64 ["a"]
   │        └── b: Int64 ["c"]
   └── c: Dict ["k"]
            └── a: Dict ["s"]
@@ -34,9 +35,9 @@ Dict [""]
 end
 
 @testset "nnodes" begin
-    @test nnodes(ext) == 11
+    @test nnodes(ext) == 12
     @test nnodes(ext[:a]) == 1
-    @test nnodes(ext[:b]) == 3
+    @test nnodes(ext[:b]) == 4
     @test nnodes(ext[:c]) == 6
 end
 
@@ -48,7 +49,7 @@ end
 	@test children(ext) == (a=ext[:a], b=ext[:b], c=ext[:c])
 	@test children(ext[:a]) == []
 	@test children(ext[:b]) == (a=ext[:b][:a], b=ext[:b][:b])
-	@test children(ext[:b][:a]) == []
+	@test children(ext[:b][:a]) == (ext[:b][:a].item,)
 	@test children(ext[:b][:b]) == []
 	@test children(ext[:c]) == (a=ext[:c][:a],)
 	@test children(ext[:c][:a]) == (a=ext[:c][:a][:a], b=ext[:c][:a][:b])
