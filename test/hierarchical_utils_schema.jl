@@ -120,3 +120,57 @@ end
                     └── b: [List] (updated = 2) ["g"]
                              └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["h"]"""
 end
+
+@testset "print with multi entry" begin
+	j1 = JSON.parse("""{"a": 4, "c": { "a": {"a":[1,2,3],"b":[4,5,6]}}, "d":[]}""",inttype=Float64)
+	j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}, "d":[]}""")
+	j3 = JSON.parse("""{"a": 4, "c": 5, "d":[]}""")
+	j4 = JSON.parse("""{"a": 4, "c": 6.5, "d":[]}""")
+	j5 = JSON.parse("""{"c": ["Oh", "Hi", "Mark"], "d":[]}""")
+	j6 = JSON.parse("""{}""")
+
+	sch = schema([j1,j2,j3,j4,j5,j6])
+
+	buf = IOBuffer()
+	printtree(buf, sch, trav=true)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+[Dict] (updated = 6) [""]
+  ├── a: [Scalar - Int64], 1 unique values, updated = 4 ["E"]
+  └── c: [MultiEntry] (updated = 3) ["U"]
+           ├── 1: [Dict] (updated = 2) ["Y"]
+           │        └── a: [Dict] (updated = 2) ["a"]
+           │                 ├── a: [List] (updated = 2) ["aU"]
+           │                 │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["ak"]
+           │                 └── b: [List] (updated = 2) ["b*"]
+           │                          └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["bE"]
+           ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2 ["c"]
+           └── 3: [List] (updated = 1) ["g"]
+                    └── [Scalar - String], 3 unique values, updated = 3 ["i"]"""
+end
+
+@testset "print with multi entry 2" begin
+	j1 = JSON.parse("""{"a": "4"}""",inttype=Float64)
+	j2 = JSON.parse("""{"a": ["It's", "over", 9000]}""")
+	j3 = JSON.parse("""{"a": 5.5}""")
+	j4 = JSON.parse("""{"a": "5.5"}""")
+	j5 = JSON.parse("""{"a": "Oh, Hi Mark"}""")
+	j6 = JSON.parse("""{"a": 4}""")
+
+	sch = schema([j1,j2,j3,j4,j5,j6])
+
+	buf = IOBuffer()
+	printtree(buf, sch, trav=true)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+[Dict] (updated = 6) [""]
+  └── a: [MultiEntry] (updated = 5) ["U"]
+           ├── 1: [Scalar - String], 3 unique values, updated = 3 ["c"]
+           ├── 2: [List] (updated = 1) ["k"]
+           │        └── [MultiEntry] (updated = 1) ["o"]
+           │              ├── 1: [Scalar - String], 2 unique values, updated = 2 ["p"]
+           │              └── 2: [Scalar - Int64], 1 unique values, updated = 1 ["q"]
+           └── 3: [Scalar - Float64,Int64], 2 unique values, updated = 2 ["s"]"""
+end

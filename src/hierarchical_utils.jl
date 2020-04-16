@@ -4,16 +4,20 @@ import HierarchicalUtils: NodeType, childrenfields, children, InnerNode, Singlet
 NodeType(::Type{Nothing}) = LeafNode()  # because sometimes we have empty array extractor
 NodeType(::Type{ArrayEntry}) = SingletonNode()
 NodeType(::Type{DictEntry}) = InnerNode()
+NodeType(::Type{T}) where T <: MultiEntry = InnerNode()
 
 noderepr(n::Nothing) = "Nothing"
 noderepr(n::ArrayEntry) = "[" * (isnothing(n.items) ? "Empty " : "") * "List] (updated = $(n.updated))"
 noderepr(n::DictEntry) = "[" * (isnothing(n.childs) ? "Empty " : "") * "Dict] (updated = $(n.updated))"
+noderepr(n::MultiEntry) = "[" * (isempty(n.childs) ? "Empty " : "") * "MultiEntry] (updated = $(n.updated))"
 
 childrenfields(::Type{ArrayEntry}) = (:items,)
 childrenfields(::Type{DictEntry}) = (:childs,)
+childrenfields(::Type{T}) where T <: MultiEntry = (:childs,)
 
 children(n::ArrayEntry) = (n.items,)
 children(n::DictEntry) = (; n.childs...)
+children(n::MultiEntry) = (; Dict( Symbol(k) => v for (k,v) in enumerate(n.childs))...)
 
 # for extractor structures
 # default extractor
