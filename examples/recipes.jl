@@ -22,7 +22,6 @@ sch = JsonGrinder.schema(samples)
 ###############################################################
 delete!(sch.childs,:id)
 
-limituse(d::Dict{T,Int}, limit) where {T<:AbstractString} = String.(limituse(d, limit))
 limituse(d::Dict{T,Int}, limit) where {T} = collect(filter(k -> d[k] >= limit, keys(d)))
 
 function custom_scalar_extractor()
