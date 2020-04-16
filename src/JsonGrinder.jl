@@ -9,6 +9,7 @@ using Mill: ArrayNode, BagNode, ProductNode, catobs
 if VERSION < v"1.4.0"
     @info "including polyfill for function only from Julia 1.4"
     include("polyfill_1_4.jl")
+    export only
 end
 
 include("schema/schema.jl")
@@ -25,7 +26,6 @@ include("html_show_tools.jl")
 
 export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString
 export suggestextractor, schema, extractbatch, generate_html
-
 include("hierarchical_utils.jl")
 
 Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = show(io, Base.typename(T))
