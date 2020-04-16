@@ -32,7 +32,7 @@ end
 
 (s::ExtractScalar{T,V})(v::Nothing) where {T,V} = ArrayNode(fill(zero(T),(1,1)))
 (s::ExtractScalar)(v::Number) = ArrayNode(s.s .* (fill(s.datatype(v),1,1) .- s.c))
-(s::ExtractScalar)(v::AbstractString) = s((parse(s.datatype,v)))
+(s::ExtractScalar)(v::AbstractString) = s((tryparse(s.datatype,v)))
 (s::ExtractScalar{T,V})(v)  where {T,V} = s(nothing)
 
 Base.hash(e::ExtractScalar, h::UInt) = hash((e.datatype, e.c, e.s), h)

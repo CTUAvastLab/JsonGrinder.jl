@@ -14,22 +14,27 @@ mutable struct Entry{T} <: JSONEntry
 	updated::Int
 end
 
+is_numeric(s::AbstractString, T::Type{<:Number}) = tryparse(T, s) isa Number
+isfloat(s::AbstractString) = is_numeric(s, Float64)
+isint(s::AbstractString) = is_numeric(s, Int64)
 
-isfloat(s::AbstractString) = tryparse(Float64, s) isa Number
-isint(s::AbstractString) = tryparse(Int64, s) isa Number
-
-Entry(s::T) where {T<:Number} = Entry(Dict{Number,Int}(),0);
-function Entry(s::T) where {T<:AbstractString} 
-	# isint(s) && return(Entry(parse(Int, s)))
-	# isfloat(s) && return(Entry(parse(Float64, s)))
-	return(Entry(Dict{T,Int}(),0))
+Entry(s::T) where {T<:Number} = Entry(Dict{Number,Int}(),0)
+function Entry(s::T) where {T<:AbstractString}
+	return Entry(Dict{T,Int}(),0)
 end
 
-types(e::Entry) = unique(typeof.(collect(keys(e.counts))))
-Base.keys(e::Entry) = sort(collect(keys(e.counts)))
+Base.keys(e::Entry) = e.counts |> keys |> collect |> sort
 Base.isempty(e::Entry) = false
 
-unify_types(e::Entry) = promote_type(unique(typeof.(keys(e.counts)))...)
+types(e::Entry) = e.counts |> keys .|> (typeof) |> unique
+unify_types(e::Entry) = promote_type(types(e)...)
+
+is_castable(e, T::Type{<:Number}) = unify_types(e) <: AbstractString && e.counts |> keys .|> (x->is_numeric(x, T)) |> all
+is_intable(e) = is_castable(e, Int64)
+is_floatable(e) = is_castable(e, Float64)
+is_numeric_entry(e, T::Type{<:Number}) = unify_types(e) <: T
+is_int_entry(e) = is_numeric_entry(e, Integer)
+is_float_entry(e) = is_numeric_entry(e, AbstractFloat)
 
 """
 		function update!(a::Entry, v)
@@ -38,10 +43,8 @@ unify_types(e::Entry) = promote_type(unique(typeof.(keys(e.counts)))...)
 """
 update!(a::Entry{T}, v::Number) where {T<:Number} = _update!(a, v)
 update!(a::Entry{T}, v::AbstractString) where {T<:AbstractString} = _update!(a, v)
-function update!(a::Entry{T}, s::AbstractString) where {T<:Number} 
-	isint(s) && return(_update!(a, parse(Int, s)))
-	isfloat(s) && return(_update!(a, parse(Float64, s)))
-	return(false)
+function update!(a::Entry{T}, s::AbstractString) where {T<:Number}
+	return false
 end
 
 function _update!(a::Entry, v)
@@ -52,9 +55,8 @@ function _update!(a::Entry, v)
 		a.counts[v] += 1
 	end
 	a.updated +=1
-	return(true)
+	return true
 end
-
 
 function merge(es::Entry...)
 	updates_merged = sum(map(x->x.updated, es))
@@ -64,6 +66,18 @@ function merge(es::Entry...)
 		counts_merged = Dict(counts_merged_list[1:max_keys])
 	end
 	Entry(counts_merged, updates_merged)
+end
+
+function merge_inplace!(e::Entry, es::Entry...)
+	es = [e; es...]
+	updates_merged = sum(map(x->x.updated, es))
+	counts_merged = merge(+, map(x->x.counts, es)...)
+	if length(counts_merged) > max_keys
+		counts_merged_list = sort(collect(counts_merged), by=x->x[2], rev=true)
+		counts_merged = Dict(counts_merged_list[1:max_keys])
+	end
+	e.counts = counts_merged
+	e.updated = updates_merged
 end
 
 function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "")
@@ -76,11 +90,11 @@ function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "")
 end
 
 function default_scalar_extractor()
-	[(e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
-		e -> ExtractCategorical(collect(keys(e.counts)))),
-	 (e -> unify_types(e) <: AbstractString && all(isint.(unique(keys(e.counts)))),
+	[(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len <= 10000),
+		e -> ExtractCategorical(keys(e))),
+	 (e -> is_intable(e),
 		e -> extractscalar(Int64, e)),
-	 (e -> unify_types(e) <: AbstractString && all(isfloat.(unique(keys(e.counts)))),
+	 (e -> is_floatable(e),
 	 	e -> extractscalar(Float64, e)),
 	(e -> true,
 		e -> extractscalar(unify_types(e), e)),]

@@ -16,13 +16,13 @@ function updatemaxkeys!(n::Int)
 end
 
 function safe_update!(s::JSONEntry, d)
-	success = update!(s, d);
-	isnothing(success) && return(nothing)
-	success && return(s)
+	success = update!(s, d)
+	isnothing(success) && return nothing
+	success && return s
 	@info "Instability in the schema detected. Using multiple representation."
-	s = MultiEntry([s], 0)
+	s = MultiEntry([s], s.updated)
 	update!(s, d)
-	return(s)
+	return s
 end
 safe_update!(::Nothing, d) = newentry!(d)
 update!(s::JSONEntry, d) = false

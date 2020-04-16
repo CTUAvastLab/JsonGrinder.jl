@@ -1,4 +1,4 @@
-using JsonGrinder, JSON, Test, SparseArrays, Flux, Random
+using JsonGrinder, JSON, Test, SparseArrays, Flux, Random, HierarchicalUtils
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
 using Mill: catobs, nobs
 using LinearAlgebra
@@ -313,30 +313,139 @@ end
 
 @testset "Mixed scalar extraction" begin
 	j1 = JSON.parse("""{"a": "1"}""")
-	j2 = JSON.parse("""{"a": 2}""")
+	j2 = JSON.parse("""{"a": 4}""")
 	j3 = JSON.parse("""{"a": "3.1"}""")
-	j4 = JSON.parse("""{"a": 4.5}""")
+	j4 = JSON.parse("""{"a": 2.5}""")
 
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	sch_hash = hash(sch)
 	ext = suggestextractor(sch)
+	@test sch_hash == hash(sch)	# testing that my entry parkour does not modify schema
+	@test nchildren(ext[:a]) == 1
+
+	e1 = ext(j1)
+	e2 = ext(j2)
+	e3 = ext(j3)
+	e4 = ext(j4)
+	@test e1["U"].data ≈ [0]
+	@test e2["U"].data ≈ [1]
+	@test e3["U"].data ≈ [0.7]
+	@test e4["U"].data ≈ [0.5]
 end
 
-@testset "pevnak" begin
-	# todo: check printing if it's ok
+@testset "Mixed scalar extraction with other types" begin
+	j1 = JSON.parse("""{"a": "1"}""")
+	j2 = JSON.parse("""{"a": 2.5}""")
+	j3 = JSON.parse("""{"a": "3.1"}""")
+	j4 = JSON.parse("""{"a": 5}""")
+	j5 = JSON.parse("""{"a": "4.5"}""")
+	j6 = JSON.parse("""{"a": [1, 2, 3, 4, 5]}""")
+	j7 = JSON.parse("""{"a": {"Sylvanas is the worst warchief ever": "yes"}}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3, j4, j5, j6, j7])
+	ext = suggestextractor(sch)
+
+	buf = IOBuffer()
+	printtree(buf, sch)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+[Dict] (updated = 7)
+  └── a: [MultiEntry] (updated = 7)
+           ├── 1: [Scalar - String], 3 unique values, updated = 3
+           ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
+           ├── 3: [List] (updated = 1)
+           │        └── [Scalar - Int64], 5 unique values, updated = 5
+           └── 4: [Dict] (updated = 1)
+                    └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1"""
+
+	buf = IOBuffer()
+	printtree(buf, ext)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+"""
+Dict
+  └── a: MultiRepresentation
+           ├── FeatureVector with 5 items
+           ├── Dict
+           │     └── Sylvanas is the worst warchief ever: String
+           └── Float64"""
+
+	e1 = ext(j1)
+	e2 = ext(j2)
+	e3 = ext(j3)
+	e4 = ext(j4)
+	e5 = ext(j5)
+	@test e1["k"].data ≈ [0]
+	@test e2["k"].data ≈ [0.375]
+	@test e3["k"].data ≈ [0.525]
+	@test e4["k"].data ≈ [1.0]
+	@test e5["k"].data ≈ [0.875]
+end
+
+@testset "mixing numeric and non-numeric strings" begin
 	j1 = JSON.parse("""{"a": "hello"}""")
-	j2 = JSON.parse("""{"a": 5}""")
-	j3 = JSON.parse("""{"a": 3.0}""")
+	j2 = JSON.parse("""{"a": "4"}""")
+	j3 = JSON.parse("""{"a": 5}""")
+	j4 = JSON.parse("""{"a": 3.0}""")
+	j5 = JSON.parse("""{"a": [1, 2, 3, 4, 5]}""")
 
-	sch = JsonGrinder.schema([j1, j2, j3])
+	sch = JsonGrinder.schema([j1, j2, j3, j4, j5])
 	ext = suggestextractor(sch)
+
+	buf = IOBuffer()
+	printtree(buf, sch)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+	"""
+	[Dict] (updated = 5)
+	  └── a: [MultiEntry] (updated = 5)
+	           ├── 1: [Scalar - String], 2 unique values, updated = 2
+	           ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
+	           └── 3: [List] (updated = 1)
+	                    └── [Scalar - Int64], 5 unique values, updated = 5"""
+
+	buf = IOBuffer()
+	printtree(buf, ext)
+	str_repr = String(take!(buf))
+	@test str_repr ==
+	"""
+	Dict
+	  └── a: MultiRepresentation
+	           ├── String
+	           ├── Float64
+	           └── FeatureVector with 5 items"""
+
+	e1 = ext(j1)
+	e2 = ext(j2)
+	e3 = ext(j3)
+	e4 = ext(j4)
+	e5 = ext(j5)
+	@test e1["U"].data ≈ [0]
+	@test e2["U"].data ≈ [0.5]
+	@test e3["U"].data ≈ [1.0]
+	@test e4["U"].data ≈ [0]
+	@test e5["U"].data ≈ [0]
 end
 
-@testset "pevnak2" begin
-	# todo: fis this so it's as expected
-	j1 = JSON.parse("""{"a": "5"}""")
-	j2 = JSON.parse("""{"a": 5}""")
-	j3 = JSON.parse("""{"a": 3.0}""")
-
-	sch = JsonGrinder.schema([j1, j2, j3])
-	ext = suggestextractor(sch)
+@testset "empty string and substring" begin
+	a, b, c = split("a b ", " ")
+	@test a isa SubString{String}
+	@test b isa SubString{String}
+	@test c isa SubString{String}
+	@test c == ""
+	d = "d"
+	e = ""
+	ext = JsonGrinder.extractscalar(AbstractString)
+	ext(a).data.s[1]
+	SparseMatrixCSC(ext(a).data)
+	ext(b).data.s[1]
+	SparseMatrixCSC(ext(b).data)
+	ext(c).data.s[1]
+	SparseMatrixCSC(ext(c).data)
+	ext(d).data.s[1]
+	SparseMatrixCSC(ext(d).data)
+	ext(e).data.s[1]
+	SparseMatrixCSC(ext(e).data)
+	@test SparseMatrixCSC(ext(c).data) == SparseMatrixCSC(ext(e).data)
 end

@@ -42,7 +42,6 @@ end
 	j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}}""")
 	j3 = JSON.parse("""{"a": [1, 2, 3 , 4]}""")
 
-
 	sch = JsonGrinder.DictEntry()
 	JsonGrinder.update!(sch, j1)
 	@test typeof(sch[:a]) <: Entry
@@ -282,14 +281,6 @@ end
 	@test children(sch[:b].items) == (b=sch[:b].items[:b],)
 end
 
-@testset "schema with fail" begin
-	j1 = JSON.parse("""{"d": ["ahoj"]}""")
-	j2 = JSON.parse("""{"d": 1}""")
-
-	sch = JsonGrinder.schema([j1,j2])
-	@test sch[:d].updated == 1
-end
-
 @testset "extractor from schema" begin
 	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
 	j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
@@ -319,4 +310,26 @@ end
 	a, b = split("a b")
 	sch = JsonGrinder.schema([Dict("k" => a), Dict("k" => b), Dict("k" => "a"), Dict("k" => "b")])
 	@test sch.childs[:k].counts == Dict("a"=>2, "b"=>2)
+end
+
+@testset "testing merge inplace" begin
+	j1 = JSON.parse("""{"a": 1}""")
+	j2 = JSON.parse("""{"a": 2}""")
+	j3 = JSON.parse("""{"a": 3}""")
+	j4 = JSON.parse("""{"a": 1}""")
+	j5 = JSON.parse("""{"a": 2}""")
+	j6 = JSON.parse("""{"a": 3}""")
+
+	# todo: otestovat jak funguje newentry s víceprvkovám polem
+	sch1 = JsonGrinder.schema([j1,j2,j3])
+	sch2 = JsonGrinder.schema([j4,j5,j6])
+	sch1[:a]
+	sch2[:a]
+	@test sch1[:a].counts == Dict(2=>1,3=>1,1=>1)
+	@test sch1[:a].updated == 3
+	@test sch2[:a].counts == Dict(2=>1,3=>1,1=>1)
+	@test sch2[:a].updated == 3
+	JsonGrinder.merge_inplace!(sch1[:a], sch2[:a])
+	@test sch1[:a].counts == Dict(2=>2,3=>2,1=>2)
+	@test sch1[:a].updated == 6
 end
