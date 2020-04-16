@@ -23,8 +23,7 @@ ext = suggestextractor(sch)
 Dict [""]
   ├── a: Int64 ["E"]
   ├── b: Dict ["U"]
-  │        ├── a: Array of ["Y"]
-  │        │        └── Int64 ["a"]
+  │        ├── a: FeatureVector with 3 items ["Y"]
   │        └── b: Int64 ["c"]
   └── c: Dict ["k"]
            └── a: Dict ["s"]
@@ -35,9 +34,9 @@ Dict [""]
 end
 
 @testset "nnodes" begin
-    @test nnodes(ext) == 12
+    @test nnodes(ext) == 11
     @test nnodes(ext[:a]) == 1
-    @test nnodes(ext[:b]) == 4
+    @test nnodes(ext[:b]) == 3
     @test nnodes(ext[:c]) == 6
 end
 

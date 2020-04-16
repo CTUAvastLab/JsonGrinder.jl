@@ -21,6 +21,7 @@ NodeType(::Type{T}) where T <: AbstractExtractor = LeafNode()
 NodeType(::Type{T}) where T <: ExtractArray = SingletonNode()
 NodeType(::Type{T}) where T <: ExtractDict = InnerNode()
 NodeType(::Type{T}) where T <: MultipleRepresentation = InnerNode()
+NodeType(::Type{T}) where {T<: ExtractKeyAsField} = InnerNode()
 
 noderepr(::T) where T <: AbstractExtractor = "$(Base.nameof(T))"
 noderepr(n::ExtractArray) = "Array of"
@@ -31,11 +32,14 @@ noderepr(n::ExtractScalar) = "$(n.datatype)"
 noderepr(n::ExtractString) = "$(n.datatype)"
 noderepr(n::ExtractVector) = "FeatureVector with $(n.n) items"
 noderepr(n::MultipleRepresentation) = "MultiRepresentation"
+noderepr(e::ExtractKeyAsField) = "KeyAsField"
 
 childrenfields(::Type{T}) where T <: ExtractArray = (:item,)
 childrenfields(::Type{T}) where T <: ExtractDict = (:vec, :other)
 childrenfields(::Type{T}) where T <: MultipleRepresentation = (:extractors,)
+childrenfields(::Type{T})  where {T<: ExtractKeyAsField} = (:key, :item)
 
 children(n::ExtractArray) = (n.item,)
 children(n::ExtractDict) = (; Dict(Symbol(k)=>v for (k,v) in merge(filter(!isnothing, [n.vec, n.other])...))...)
 children(n::MultipleRepresentation) = n.extractors
+children(e::ExtractKeyAsField) = (e.key, e.item)

@@ -28,8 +28,3 @@ end
 
 Base.hash(e::ExtractKeyAsField, h::UInt) = hash((e.key, e.item), h)
 Base.:(==)(e1::ExtractKeyAsField, e2::ExtractKeyAsField) = e1.key == e2.key && e1.item == e2.item
-
-HierarchicalUtils.NodeType(::Type{T}) where {T<: ExtractKeyAsField}= InnerNode()
-HierarchicalUtils.childrenfields(::Type{T})  where {T<: ExtractKeyAsField} = (:key,:item)
-HierarchicalUtils.noderepr(e::ExtractKeyAsField) = "KeyAsField"
-HierarchicalUtils.children(e::ExtractKeyAsField) = (e.key, e.item)

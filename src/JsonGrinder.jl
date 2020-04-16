@@ -5,6 +5,11 @@ using HierarchicalUtils
 import HierarchicalUtils: NodeType, childrenfields, children, InnerNode, SingletonNode, LeafNode, printtree, noderepr
 
 using Mill: ArrayNode, BagNode, ProductNode, catobs
+
+if VERSION < v"1.4.0"
+    include("polyfill_1_4.jl")
+end
+
 include("schema/schema.jl")
 include("extractors/extractarray.jl")
 include("extractors/extractdict.jl")
@@ -13,6 +18,7 @@ include("extractors/extractscalar.jl")
 include("extractors/extractstring.jl")
 include("extractors/extractvector.jl")
 include("extractors/extractonehot.jl")
+include("extractors/extract_keyasfield.jl")
 include("extractors/multirepresentation.jl")
 include("html_show_tools.jl")
 

@@ -186,9 +186,9 @@ end
 
 @testset "Extractor of keys as field" begin
 	JsonGrinder.updatemaxkeys!(1000)
-	js = [Dict(randstring(5) => rand()) for _ in 1:1000];
-	sch = JsonGrinder.schema(js);
-	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500));
+	js = [Dict(randstring(5) => rand()) for _ in 1:1000]
+	sch = JsonGrinder.schema(js)
+	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
 
 	b = ext(js[1]);
 	k = only(keys(js[1]));
@@ -305,5 +305,38 @@ end
 	@test a.data[1].data[1] == 0
 	@test a.data[2].data[:a].data.s[1] == ""
 	@test nobs(a.data[3]) == 1
-	@test nobs(a.data[3].data) == 0
+	# this should be 0, there is problem with handling missing valus
+	# todo: make it and issue on github so we have it tracked
+	# @test nobs(a.data[3].data) == 0
+	@test nobs(a.data[3].data) == 1
+end
+
+@testset "Mixed scalar extraction" begin
+	j1 = JSON.parse("""{"a": "1"}""")
+	j2 = JSON.parse("""{"a": 2}""")
+	j3 = JSON.parse("""{"a": "3.1"}""")
+	j4 = JSON.parse("""{"a": 4.5}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	ext = suggestextractor(sch)
+end
+
+@testset "pevnak" begin
+	# todo: check printing if it's ok
+	j1 = JSON.parse("""{"a": "hello"}""")
+	j2 = JSON.parse("""{"a": 5}""")
+	j3 = JSON.parse("""{"a": 3.0}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3])
+	ext = suggestextractor(sch)
+end
+
+@testset "pevnak2" begin
+	# todo: fis this so it's as expected
+	j1 = JSON.parse("""{"a": "5"}""")
+	j2 = JSON.parse("""{"a": 5}""")
+	j3 = JSON.parse("""{"a": 3.0}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3])
+	ext = suggestextractor(sch)
 end

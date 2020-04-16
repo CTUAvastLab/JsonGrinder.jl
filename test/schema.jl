@@ -1,5 +1,5 @@
 using Mill, JSON, BSON, Flux, JsonGrinder, Test
-
+using HierarchicalUtils
 using JsonGrinder: suggestextractor, schema
 using JsonGrinder: DictEntry, Entry, MultiEntry, ArrayEntry
 using Mill: reflectinmodel
@@ -252,10 +252,10 @@ end
 end
 
 @testset "delete in path" begin
-	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
-	j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}}""")
-	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
-	j4 = JSON.parse("""{"a": 4, "b": {}}""")
+	j1 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}],"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
+	j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
+	j3 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}]}""")
+	j4 = JSON.parse("""{"a": 4, "b": [{}]}""")
 	j5 = JSON.parse("""{"b": {}}""")
 	j6 = JSON.parse("""{}""")
 
@@ -263,6 +263,9 @@ end
 	@test children(sch[:c][:a]) == (a=sch[:c][:a][:a], b=sch[:c][:a][:b])
 	delete!(sch, ".c.a", "a")
 	@test children(sch[:c][:a]) == (b=sch[:c][:a][:b],)
+	@test children(sch[:b].items) == (a=sch[:b].items[:a], b=sch[:b].items[:b])
+	delete!(sch, ".b.[]", "a")
+	@test children(sch[:b].items) == (b=sch[:b].items[:b],)
 end
 
 @testset "schema with fail" begin
@@ -275,7 +278,7 @@ end
 
 @testset "extractor from schema" begin
 	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
-	j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}}""")
+	j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
 	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
 	j4 = JSON.parse("""{"a": 4, "b": {}}""")
 	j5 = JSON.parse("""{"b": {}}""")
@@ -285,14 +288,14 @@ end
 	ext = suggestextractor(sch)
 
 	@test ext[:a] isa ExtractScalar{Int64, Float64}
-	@test ext[:b][:a] isa ExtractArray{ExtractScalar{Int64,Float64}}
+	@test ext[:b][:a] isa ExtractVector{Float32}
 	@test ext[:b][:b] isa ExtractScalar{Int64,Float64}
 	@test ext[:c][:a][:a] isa ExtractArray{ExtractScalar{Float64,Float64}}
 	@test ext[:c][:a][:b] isa ExtractArray{ExtractScalar{Float64,Float64}}
 
 	e1 = ext(j1)
 	@test e1.data.scalars.data[1, 1] == 0
-	@test e1.data.b.data.a.data.data == [0. 0.5 1.]
+	@test e1.data.b.data.a.data ≈ [1., 2., 3.]
 	@test e1.data.b.data.scalars.data[1, 1] == 0.
 	@test e1.data.c.data.a.data.data == [0. 0.5 1.]
 	@test e1.data.c.data.b.data.data == [0. 0.5 1.]
