@@ -433,19 +433,8 @@ end
 	@test a isa SubString{String}
 	@test b isa SubString{String}
 	@test c isa SubString{String}
+	@test d isa String
+	@test e isa String
 	@test c == ""
-	d = "d"
-	e = ""
-	ext = JsonGrinder.extractscalar(AbstractString)
-	ext(a).data.s[1]
-	SparseMatrixCSC(ext(a).data)
-	ext(b).data.s[1]
-	SparseMatrixCSC(ext(b).data)
-	ext(c).data.s[1]
-	SparseMatrixCSC(ext(c).data)
-	ext(d).data.s[1]
-	SparseMatrixCSC(ext(d).data)
-	ext(e).data.s[1]
-	SparseMatrixCSC(ext(e).data)
 	@test SparseMatrixCSC(ext(c).data) == SparseMatrixCSC(ext(e).data)
 end
