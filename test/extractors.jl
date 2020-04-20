@@ -430,11 +430,14 @@ end
 
 @testset "empty string and substring" begin
 	a, b, c = split("a b ", " ")
+	d = "d"
+	e = ""
 	@test a isa SubString{String}
 	@test b isa SubString{String}
 	@test c isa SubString{String}
 	@test d isa String
 	@test e isa String
 	@test c == ""
+	ext = JsonGrinder.extractscalar(AbstractString)
 	@test SparseMatrixCSC(ext(c).data) == SparseMatrixCSC(ext(e).data)
 end
