@@ -71,7 +71,7 @@ end
 
 function key_as_field(e::DictEntry, settings; path = "")
 	@info "$(path) seems to store values in keys, therefore node is treated as bag with keys as extra values."
-	child_schema = reduce(merge, Map(identity), collect(values(e.childs)), init = nothing);
+	child_schema = reduce(merge, collect(values(e.childs)), init = nothing)
 	key_schema = Entry(String(first(keys(e))))
 	for k in keys(e)
 		update!(key_schema, k)

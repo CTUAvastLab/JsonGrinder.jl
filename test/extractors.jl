@@ -190,15 +190,15 @@ end
 	sch = JsonGrinder.schema(js)
 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
 
-	b = ext(js[1]);
-	k = only(keys(js[1]));
-	@test b.data[:item].data[1] ≈ (js[1][k] - ext.item.c) * ext.item.s;
-	@test b.data[:key].data.s[1] == k;
+	b = ext(js[1])
+	k = only(keys(js[1]))
+	@test b.data[:item].data[1] ≈ (js[1][k] - ext.item.c) * ext.item.s
+	@test b.data[:key].data.s[1] == k
 
-	b = ext(nothing);
+	b = ext(nothing)
 	@test nobs(b) == 1
 	@test nobs(b.data) == 0
-	b = ext(Dict());
+	b = ext(Dict())
 	@test nobs(b) == 1
 	@test nobs(b.data) == 0
 
@@ -206,17 +206,17 @@ end
 	sch = JsonGrinder.schema(js)
 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
 
-	b = ext(js[1]);
+	b = ext(js[1])
 	k = only(keys(js[1]))
 	i = ext.item(js[1][k])
 	@test b.data[:item][:b].data.data == i[:b].data.data
 	@test b.data[:item][:scalars].data == i[:scalars].data
 	@test b.data[:key].data.s[1] == k
 
-	b = ext(nothing);
+	b = ext(nothing)
 	@test nobs(b) == 1
 	@test nobs(b.data) == 0
-	b = ext(Dict());
+	b = ext(Dict())
 	@test nobs(b) == 1
 	@test nobs(b.data) == 0
 end
