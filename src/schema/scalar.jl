@@ -104,7 +104,3 @@ end
 Base.hash(e::Entry, h::UInt) = hash((e.counts, e.updated), h)
 Base.:(==)(e1::Entry, e2::Entry) = e1.updated === e2.updated && e1.counts == e2.counts
 sample_synthetic(e::Entry) = first(keys(e.counts))
-
-
-NodeType(::Type{T}) where {T<:Entry} = LeafNode()
-noderepr(n::Entry) = "[Scalar - $(join(sort(string.(types(n))), ","))], $(length(keys(n.counts))) unique values, updated = $(n.updated)"

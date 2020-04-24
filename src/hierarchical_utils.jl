@@ -4,9 +4,11 @@ import HierarchicalUtils: NodeType, childrenfields, children, InnerNode, Singlet
 NodeType(::Type{Nothing}) = LeafNode()  # because sometimes we have empty array extractor
 NodeType(::Type{ArrayEntry}) = SingletonNode()
 NodeType(::Type{DictEntry}) = InnerNode()
-NodeType(::Type{T}) where T <: MultiEntry = InnerNode()
+NodeType(::Type{MultiEntry}) where {T<:MultiEntry} = InnerNode()
+NodeType(::Type{T}) where {T<:Entry} = LeafNode()
 
 noderepr(n::Nothing) = "Nothing"
+noderepr(n::Entry) = "[Scalar - $(join(sort(string.(types(n))), ","))], $(length(keys(n.counts))) unique values, updated = $(n.updated)"
 noderepr(n::ArrayEntry) = "[" * (isnothing(n.items) ? "Empty " : "") * "List] (updated = $(n.updated))"
 noderepr(n::DictEntry) = "[" * (isnothing(n.childs) ? "Empty " : "") * "Dict] (updated = $(n.updated))"
 noderepr(n::MultiEntry) = "[" * (isempty(n.childs) ? "Empty " : "") * "MultiEntry] (updated = $(n.updated))"
