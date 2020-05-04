@@ -100,6 +100,25 @@ function schema2html(e::DictEntry; pad = "", max_vals=100, parent_updated=nothin
 	ret_str * pad * "</ul>\n"
 end
 
+function schema2html(e::MultiEntry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
+	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
+	filled_percent = isnothing(parent_updated) ? "" : ", filled=$(10000 * e.updated ÷ parent_updated / 100)%"
+	ret_str = pad * """<ul class="nested" style="color: $c">[MultiEntry] (updated=$(e.updated)$filled_percent)\n"""
+	i = 0
+    for (key, val) in enumerate(e.childs)
+		child_key = """$parent_key["$key"]"""
+		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$child_key" value="$child_key"></label>\n"""
+		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, parent_updated=e.updated, parent_key=child_key)
+		ret_str *= pad*" "^2 * "</li>\n"
+		i += 1
+		if i == max_vals
+			ret_str *= pad*" "^2 * "<li>and other $(length(e.childs) - i) values</li>\n"
+			break
+		end
+    end
+	ret_str * pad * "</ul>\n"
+end
+
 function generate_html(sch::DictEntry; max_vals=100)
 	tpl = mt"""
 	<!DOCTYPE html>
