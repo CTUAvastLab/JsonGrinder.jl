@@ -4,7 +4,7 @@ using JsonGrinder: suggestextractor, schema
 using JsonGrinder: DictEntry, Entry, MultiEntry, ArrayEntry
 using Mill: reflectinmodel
 
-@testset "basic behavior testing" begin
+@testset "Basic behavior testing" begin
 	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
 	j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}}""")
 	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
@@ -37,7 +37,7 @@ using Mill: reflectinmodel
 	@test keys(sch[:a]) == [4]
 end
 
-@testset "testing irregular schema" begin
+@testset "Irregular schema" begin
 	j1 = JSON.parse("""{"a": 4}""")
 	j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}}""")
 	j3 = JSON.parse("""{"a": [1, 2, 3 , 4]}""")
@@ -89,7 +89,7 @@ end
 
 end
 
-@testset "testing empty arrays" begin
+@testset "Empty arrays" begin
 	j1 = JSON.parse("""{"a": []}""")
 	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
@@ -109,7 +109,7 @@ end
 	@test sch2[:a].items[:a].counts == sch3[:a].items[:a].counts
 end
 
-@testset "testing schema merging" begin
+@testset "Schema merging" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
 	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
@@ -135,7 +135,7 @@ end
 	@test sch[:b].counts == sch_merged[:b].counts
 end
 
-@testset "bson and symbol keys testing" begin
+@testset "Bson and symbol keys testing" begin
 	b1 = IOBuffer()
 	j1 = BSON.bson(b1, Dict(:a=>4, :b=>Dict(:a=>[1,2,3], :b=>1), :c=>Dict(:a=>Dict(:a=>[1,2,3],:b=>[4,5,6]))))
 	b2 = IOBuffer()
@@ -172,7 +172,7 @@ end
 	@test sch[:c][:a][:b].items.updated == 5
 end
 
-@testset "equals and hash test" begin
+@testset "Equals and hash test" begin
 	j1 = JSON.parse("""{"a": []}""")
 	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
@@ -194,7 +194,7 @@ end
 	@test sch3 != sch0
 end
 
-@testset "testing schema merging with max keys" begin
+@testset "Schema merging with max keys" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
 	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
@@ -264,7 +264,7 @@ end
 	@test isnothing(suggestextractor(ex))
 end
 
-@testset "delete in path" begin
+@testset "Delete in path" begin
 	j1 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}],"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
 	j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
 	j3 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}]}""")
@@ -281,7 +281,7 @@ end
 	@test children(sch[:b].items) == (b=sch[:b].items[:b],)
 end
 
-@testset "extractor from schema" begin
+@testset "Extractor from schema" begin
 	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
 	j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
 	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
@@ -306,13 +306,13 @@ end
 	@test e1.data.c.data.b.data.data == [0. 0.5 1.]
 end
 
-@testset "mixing substrings with strings" begin
+@testset "Mixing substrings with strings" begin
 	a, b = split("a b")
 	sch = JsonGrinder.schema([Dict("k" => a), Dict("k" => b), Dict("k" => "a"), Dict("k" => "b")])
 	@test sch.childs[:k].counts == Dict("a"=>2, "b"=>2)
 end
 
-@testset "testing merge inplace" begin
+@testset "Merge inplace" begin
 	j1 = JSON.parse("""{"a": 1}""")
 	j2 = JSON.parse("""{"a": 2}""")
 	j3 = JSON.parse("""{"a": 3}""")
@@ -332,4 +332,46 @@ end
 	JsonGrinder.merge_inplace!(sch1[:a], sch2[:a])
 	@test sch1[:a].counts == Dict(2=>2,3=>2,1=>2)
 	@test sch1[:a].updated == 6
+end
+
+@testset "Merging of irregular schemas" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
+	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
+	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+	j4 = JSON.parse("""{"a": []}""")
+	j5 = JSON.parse("""{}""")
+	j6 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}], "b":1}""")
+	j7 = JSON.parse("""{"a": [{"a":4,"b":5},{"b":6,"a":7}], "b":2}""")
+	j8 = JSON.parse("""{"a": [{"a":9,"b":10},{"b":11,"a":12}], "b":2}""")
+	j9 = JSON.parse("""{"a": 4, "b":2}""")
+	j10 = JSON.parse("""{"a": 11, "b":2}""")
+	j11 = JSON.parse("""{"a": 7, "b":2}""")
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11])
+	sch11 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
+	sch12 = JsonGrinder.schema([j7,j8,j9,j10,j11])
+	sch21 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8])
+	sch22 = JsonGrinder.schema([j9,j10,j11])
+	sch31 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j9])
+	sch32 = JsonGrinder.schema([j8,j10,j11])
+
+	oof(x...) = print(typeof(x))
+
+	oof(sch11[:a], sch12[:a])
+	oof(sch12[:a], sch11[:a])
+
+	oof(sch21[:a], sch22[:a])
+	oof(sch22[:a], sch21[:a])
+
+	sch1 = merge(sch11, sch12)
+	sch2 = merge(sch21, sch22)
+	sch3 = merge(sch31, sch32)
+
+	@test sch == sch1
+	@test sch == sch2
+	@test sch == sch3
+
+	@test hash(sch) === hash(sch1)
+	@test hash(sch) === hash(sch2)
+	@test hash(sch) === hash(sch3)
 end

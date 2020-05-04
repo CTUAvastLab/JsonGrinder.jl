@@ -21,7 +21,7 @@ using JsonGrinder, JSON, Test, SparseArrays
 	@test isfile("schema_test_maxvals=5.html")
 end
 
-@testset "Generating HTML Schema" begin
+@testset "Generating Irregular HTML schema" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
 	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
