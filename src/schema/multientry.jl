@@ -62,11 +62,11 @@ function merge(es::MultiEntry...)
 end
 
 # todo: make it fucking work!!!
-function merge(es::E...) where
-	updates_merged = sum(map(updated, es))
-	childs_merged = merge(merge, map(x->x.childs, es)...)
-	DictEntry(childs_merged, updates_merged)
-end
+#function merge(es::E...) where
+#	updates_merged = sum(map(updated, es))
+#	childs_merged = merge(merge, map(x->x.childs, es)...)
+#	DictEntry(childs_merged, updates_merged)
+#end
 
 sample_synthetic(e::MultiEntry) = [sample_synthetic(v) for v in e.childs]
 Base.hash(e::MultiEntry, h::UInt) = hash((e.childs, e.updated), h)
