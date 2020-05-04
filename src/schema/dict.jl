@@ -21,14 +21,14 @@ Base.get(s::Dict{Symbol, <:Any}, key::String, default) = get(s, Symbol(key), def
 Base.isempty(e::DictEntry) = false
 Base.keys(e::DictEntry) = keys(e.childs)
 
-function update!(s::DictEntry, d::Dict)
+function update!(s::DictEntry, d::Dict; path = "")
 	s.updated +=1
 	for (k,v) in d
 		kc = Symbol(k)
 		v == nothing && continue
 		isempty(v) && continue
 		if haskey(s.childs, kc)
-			s.childs[kc] = safe_update!(s.childs[kc], v)
+			s.childs[kc] = safe_update!(s.childs[kc], v, path="$path[$k]")
 		else
 			o = newentry!(v)
 			if !isnothing(o)
@@ -74,7 +74,7 @@ function key_as_field(e::DictEntry, settings; path = "")
 	child_schema = reduce(merge, collect(values(e.childs)), init = nothing)
 	key_schema = Entry(String(first(keys(e))))
 	for k in keys(e)
-		update!(key_schema, k)
+		update!(key_schema, k, path=path)
 	end
 	ExtractKeyAsField(ExtractString(Float32, 3, 256, 2053), suggestextractor(child_schema, settings, path = path*"[:childs]"))
 end

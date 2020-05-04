@@ -19,7 +19,7 @@ end
 ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
 Base.isempty(e::ArrayEntry) = e.items isa ArrayEntry ? isempty(e.items) : isnothing(e.items)
 
-function update!(a::ArrayEntry, b::Vector)
+function update!(a::ArrayEntry, b::Vector; path = "")
 	n = length(b)
 	a.updated +=1
 	a.l[n] = get(a.l,n,0) + 1
@@ -28,8 +28,8 @@ function update!(a::ArrayEntry, b::Vector)
 		 a.items = newentry(b).items
 	end
 
-	for v in b
-		a.items = safe_update!(a.items,v)
+	for (i, v) in enumerate(b)
+		a.items = safe_update!(a.items,v,path="$path[$i]")
 	end
 	return(true)
 end

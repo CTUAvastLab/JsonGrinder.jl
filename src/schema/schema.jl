@@ -15,17 +15,17 @@ function updatemaxkeys!(n::Int)
 	global max_keys = n
 end
 
-function safe_update!(s::JSONEntry, d)
+function safe_update!(s::JSONEntry, d; path = "")
 	success = update!(s, d)
 	isnothing(success) && return nothing
 	success && return s
-	@info "Instability in the schema detected. Using multiple representation."
+	@info "In path $path: Instability in the schema detected. Using multiple representation."
 	s = MultiEntry([s], s.updated)
-	update!(s, d)
+	update!(s, d, path=path)
 	return s
 end
-safe_update!(::Nothing, d) = newentry!(d)
-update!(s::JSONEntry, d) = false
+safe_update!(::Nothing, d; path = "") = newentry!(d)
+update!(s::JSONEntry, d; path = "") = false
 
 include("scalar.jl")
 include("dict.jl")

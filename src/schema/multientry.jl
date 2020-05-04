@@ -19,12 +19,12 @@ Base.isempty(e::MultiEntry) = isempty(e.childs)
 Base.keys(e::MultiEntry) = collect(1:length(e.childs))
 
 
-function update!(s::MultiEntry, d)
+function update!(s::MultiEntry, d; path = "")
 	s.updated += 1
-	for c in s.childs
-		update!(c, d) && return true
+	for (i, c) in enumerate(s.childs)
+		update!(c, d, path="$path[$i]") && return true
 	end
-	new_child = safe_update!(newentry(d), d)
+	new_child = safe_update!(newentry(d), d, path=path)
 	push!(s.childs, new_child)
 	return true
 end

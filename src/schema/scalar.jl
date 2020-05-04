@@ -41,9 +41,9 @@ is_float_entry(e) = is_numeric_entry(e, AbstractFloat)
 
 		updates the entry when seeing value v
 """
-update!(a::Entry{T}, v::Number) where {T<:Number} = _update!(a, v)
-update!(a::Entry{T}, v::AbstractString) where {T<:AbstractString} = _update!(a, v)
-function update!(a::Entry{T}, s::AbstractString) where {T<:Number}
+update!(a::Entry{T}, v::Number; path = "") where {T<:Number} = _update!(a, v)
+update!(a::Entry{T}, v::AbstractString; path = "") where {T<:AbstractString} = _update!(a, v)
+function update!(a::Entry{T}, s::AbstractString; path = "") where {T<:Number}
 	return false
 end
 
@@ -54,7 +54,7 @@ function _update!(a::Entry, v)
 	elseif haskey(a.counts, v)
 		a.counts[v] += 1
 	end
-	a.updated +=1
+	a.updated += 1
 	return true
 end
 
