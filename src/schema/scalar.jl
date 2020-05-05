@@ -60,8 +60,8 @@ end
 
 # todo: try how merging will work with non-stable schema, probably it'll need some fixes
 function merge(es::Entry...)
-	updates_merged = sum(map(x->x.updated, es))
-	counts_merged = merge(+, map(x->x.counts, es)...)
+	updates_merged = sum(updated.(es))
+	counts_merged = merge(+, counts.(es)...)
 	if length(counts_merged) > max_keys
 		counts_merged_list = sort(collect(counts_merged), by=x->x[2], rev=true)
 		counts_merged = Dict(counts_merged_list[1:max_keys])
@@ -71,8 +71,8 @@ end
 
 function merge_inplace!(e::Entry, es::Entry...)
 	es = [e; es...]
-	updates_merged = sum(map(x->x.updated, es))
-	counts_merged = merge(+, map(x->x.counts, es)...)
+	updates_merged = sum(updated.(es))
+	counts_merged = merge(+, counts.(es)...)
 	if length(counts_merged) > max_keys
 		counts_merged_list = sort(collect(counts_merged), by=x->x[2], rev=true)
 		counts_merged = Dict(counts_merged_list[1:max_keys])
@@ -101,6 +101,7 @@ function default_scalar_extractor()
 		e -> extractscalar(unify_types(e), e)),]
 end
 
+counts(s::T) where {T<:Entry} = s.counts
 Base.hash(e::Entry, h::UInt) = hash((e.counts, e.updated), h)
 Base.:(==)(e1::Entry, e2::Entry) = e1.updated === e2.updated && e1.counts == e2.counts
 sample_synthetic(e::Entry) = first(keys(e.counts))

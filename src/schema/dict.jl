@@ -80,12 +80,12 @@ function key_as_field(e::DictEntry, settings; path = "")
 end
 
 function merge(es::DictEntry...)
-	updates_merged = sum(map(updated, es))
-	childs_merged = merge(merge, map(x->x.childs, es)...)
+	updates_merged = sum(updated.(es))
+	childs_merged = merge(merge, childs.(es)...)
 	DictEntry(childs_merged, updates_merged)
 end
 
-
+childs(s::T) where {T<:DictEntry} = s.childs
 sample_synthetic(e::DictEntry) = Dict(k => sample_synthetic(v) for (k, v) in e.childs)
 Base.hash(e::DictEntry, h::UInt) = hash((e.childs, e.updated), h)
 Base.:(==)(e1::DictEntry, e2::DictEntry) = e1.updated === e2.updated && e1.childs == e2.childs

@@ -334,44 +334,38 @@ end
 	@test sch1[:a].updated == 6
 end
 
-# @testset "Merging of irregular schemas" begin
-# 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
-# 	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
-# 	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
-# 	j4 = JSON.parse("""{"a": []}""")
-# 	j5 = JSON.parse("""{}""")
-# 	j6 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}], "b":1}""")
-# 	j7 = JSON.parse("""{"a": [{"a":4,"b":5},{"b":6,"a":7}], "b":2}""")
-# 	j8 = JSON.parse("""{"a": [{"a":9,"b":10},{"b":11,"a":12}], "b":2}""")
-# 	j9 = JSON.parse("""{"a": 4, "b":2}""")
-# 	j10 = JSON.parse("""{"a": 11, "b":2}""")
-# 	j11 = JSON.parse("""{"a": 7, "b":2}""")
-#
-# 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11])
-# 	sch11 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
-# 	sch12 = JsonGrinder.schema([j7,j8,j9,j10,j11])
-# 	sch21 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8])
-# 	sch22 = JsonGrinder.schema([j9,j10,j11])
-# 	sch31 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j9])
-# 	sch32 = JsonGrinder.schema([j8,j10,j11])
-#
-# 	oof(x...) = print(typeof(x))
-#
-# 	oof(sch11[:a], sch12[:a])
-# 	oof(sch12[:a], sch11[:a])
-#
-# 	oof(sch21[:a], sch22[:a])
-# 	oof(sch22[:a], sch21[:a])
-#
-# 	sch1 = merge(sch11, sch12)
-# 	sch2 = merge(sch21, sch22)
-# 	sch3 = merge(sch31, sch32)
-#
-# 	@test sch == sch1
-# 	@test sch == sch2
-# 	@test sch == sch3
-#
-# 	@test hash(sch) === hash(sch1)
-# 	@test hash(sch) === hash(sch2)
-# 	@test hash(sch) === hash(sch3)
-# end
+@testset "Merging of irregular schemas" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
+	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
+	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+	j4 = JSON.parse("""{"a": []}""")
+	j5 = JSON.parse("""{}""")
+	j6 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}], "b":1}""")
+	j7 = JSON.parse("""{"a": [{"a":4,"b":5},{"b":6,"a":7}], "b":2}""")
+	j8 = JSON.parse("""{"a": [{"a":9,"b":10},{"b":11,"a":12}], "b":2}""")
+	j9 = JSON.parse("""{"a": 4, "b":2}""")
+	j10 = JSON.parse("""{"a": 11, "b":2}""")
+	j11 = JSON.parse("""{"a": 7, "b":2}""")
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11])
+	sch11 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
+	sch12 = JsonGrinder.schema([j7,j8,j9])
+	sch13 = JsonGrinder.schema([j10,j11])
+	sch21 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8])
+	sch22 = JsonGrinder.schema([j9,j10,j11])
+	sch31 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j9])
+	sch32 = JsonGrinder.schema([j8,j10])
+	sch33 = JsonGrinder.schema([j11,j7])
+
+	sch1 = merge(sch11, sch12, sch13)
+	sch2 = merge(sch21, sch22)
+	sch3 = merge(sch31, sch32, sch33)
+
+	@test sch == sch1
+	@test sch == sch2
+	@test sch == sch3
+
+	@test hash(sch) === hash(sch1)
+	@test hash(sch) === hash(sch2)
+	@test hash(sch) === hash(sch3)
+end

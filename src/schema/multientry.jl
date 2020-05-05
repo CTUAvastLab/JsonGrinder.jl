@@ -56,18 +56,40 @@ function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "")
 end
 
 function merge(es::MultiEntry...)
-	updates_merged = sum(map(updated, es))
-	childs_merged = merge(merge, map(x->x.childs, es)...)
-	DictEntry(childs_merged, updates_merged)
+	updates_merged = sum(updated.(es))
+	entries = childs.(es) |> Iterators.flatten |> collect
+	entry_types = entries .|> typeof |> unique
+	merged_childs = [merge(filter(x->x isa t, entries)...) for t in entry_types]
+	MultiEntry(merged_childs, updates_merged)
 end
 
-# todo: make it fucking work!!!
-#function merge(es::E...) where
-#	updates_merged = sum(map(updated, es))
-#	childs_merged = merge(merge, map(x->x.childs, es)...)
-#	DictEntry(childs_merged, updates_merged)
-#end
+# this is merging of different types, merging them
+function merge(es::JSONEntry...)
+	multi_entries = filter(e->e isa MultiEntry, es)
+	multi_entry = if isempty(multi_entries)
+		MultiEntry([], 0)
+	else
+		merge(multi_entries...)
+	end
 
+	other_entries = filter(e->!(e isa MultiEntry), es)
+	updates_merged = sum(updated.(other_entries))
+	multi_entry.updated += updates_merged
+	entry_types = other_entries .|> typeof |> unique
+	merged_entries = [merge(filter(x->x isa t, other_entries)...) for t in entry_types]
+	multi_entry_types = map(typeof, multi_entry.childs)
+	for e in merged_entries
+		idx = findfirst(x->e isa x, multi_entry_types)
+		if isnothing(idx)
+			push!(multi_entry.childs, e)
+		else
+			multi_entry.childs[idx] = merge(multi_entry.childs[idx], e)
+		end
+	end
+	multi_entry
+end
+
+childs(s::T) where {T<:MultiEntry} = s.childs
 sample_synthetic(e::MultiEntry) = [sample_synthetic(v) for v in e.childs]
 Base.hash(e::MultiEntry, h::UInt) = hash((e.childs, e.updated), h)
 Base.:(==)(e1::MultiEntry, e2::MultiEntry) = e1.updated === e2.updated && e1.childs == e2.childs

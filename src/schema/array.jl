@@ -31,7 +31,7 @@ function update!(a::ArrayEntry, b::Vector; path = "")
 	for (i, v) in enumerate(b)
 		a.items = safe_update!(a.items,v,path="$path[$i]")
 	end
-	return(true)
+	return true
 end
 
 function suggestextractor(node::ArrayEntry, settings = NamedTuple(); path = "")
@@ -49,13 +49,15 @@ function suggestextractor(node::ArrayEntry, settings = NamedTuple(); path = "")
 end
 
 function merge(es::ArrayEntry...)
-	updates_merged = sum(map(x->x.updated, es))
-	l_merged = merge(+, map(x->x.l, es)...)
-	nonempty_items = map(x->x.items, filter(!isempty, collect(es)))
+	updates_merged = sum(updated.(es))
+	l_merged = merge(+, l.(es)...)
+	nonempty_items = items.(filter(!isempty, collect(es)))
 	items_merged = isempty(nonempty_items) ? nothing : merge(merge, nonempty_items...)
 	ArrayEntry(items_merged, l_merged, updates_merged)
 end
 
+l(s::T) where {T<:ArrayEntry} = s.l
+items(s::T) where {T<:ArrayEntry} = s.items
 Base.hash(e::ArrayEntry, h::UInt) = hash((e.items, e.l, e.updated), h)
 Base.:(==)(e1::ArrayEntry, e2::ArrayEntry) = e1.updated === e2.updated && e1.l == e2.l && e1.items == e2.items
 sample_synthetic(e::ArrayEntry) = repeat([sample_synthetic(e.items)], 2)
