@@ -17,10 +17,10 @@ JSON.print(samples[3],2)
 ###############################################################
 sch = JsonGrinder.schema(samples);
 extractor = suggestextractor(sch)
-extract_target = ExtractDict(nothing, Dict("device_class" => extractor.other["device_class"]));
+extract_target = ExtractDict(nothing, Dict(:device_class => extractor.other[:device_class]));
 
 target = extractbatch(extract_target, samples).data
-delete!(extractor.other, "device_class");
+delete!(extractor.other, :device_class);
 data = extractbatch(extractor, samples)
 
 ds = extractor(JsonGrinder.sample_synthetic(sch))
@@ -44,29 +44,17 @@ cb = () -> begin
 end
 Flux.Optimise.train!(loss, ps, repeatedly(makebatch,10000), opt, cb = Flux.throttle(cb, 60))
 
-# serialize("/Users/tomas.pevny/Work/Presentations/JuliaMeetup/device_model.jls",(model, extractor, schema))
-###############################################################
-#  Let's demonstrate the explainability
-###############################################################
-(model, extractor, schema) = deserialize("/Users/tomas.pevny/Work/Presentations/JuliaMeetup/device_model.jls")
-using ExplainMill
-i = 3
-j = argmax(model(data[i]).data)[1]
-argmax(target[i]) == j
-eds = explain(data[i], model, j)
-print_explained(eds, extractor)
 
 ###############################################################
 #  Classify test data
 ###############################################################
 test_samples = map(readlines("/Users/tomas.pevny/Work/Presentations/JuliaMeetup/dataset/test.json")) do s
-	extract_data(JSON.parse(s))
+	extractor(JSON.parse(s))
 end
 o = Flux.onecold(model(reduce(catobs, test_samples)).data);
-ns = extract_target.vec["device_class"].items
-o = [ns[i] for i in o];
-id = [s["device_id"] for s in test_samples];
-
+ns = extract_target[:device_class].keyvalemap
+ns = Dict([ v => k for (k,v) in ns]...)
+o = [ns[i] for i in o]
 # Id,Predicted
 # crossentropy = 0.028738448 accuracy = 0.999067454149829. = F-score 0.86994
-writedlm("/Users/tomas.pevny/Work/Presentations/JuliaMeetup/dataset/kaggle.csv",hcat(id, o), ",")
+# writedlm("/Users/tomas.pevny/Work/Presentations/JuliaMeetup/dataset/kaggle.csv",hcat(id, o), ",")
