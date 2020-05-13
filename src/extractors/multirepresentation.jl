@@ -5,11 +5,12 @@
 	processed by all extractors in the order
 
 """
-struct MultipleRepresentation{E<:Tuple}
+struct MultipleRepresentation{E<:NamedTuple}
 	extractors::E
 end
 
-MultipleRepresentation(v::Vector) = MultipleRepresentation(tuple(v...))
+MultipleRepresentation(vs::Vector) = MultipleRepresentation((;[Symbol("e$(i)") => v for (i,v) in enumerate(vs)]...))
+MultipleRepresentation(vs::Tuple) = MultipleRepresentation((;[Symbol("e$(i)") => v for (i,v) in enumerate(vs)]...))
 (m::MultipleRepresentation)(x) = ProductNode(map(e -> e(x), m.extractors))
 
 extractsmatrix(s::MultipleRepresentation) = false

@@ -19,7 +19,6 @@ end
 
 		create schema from an array of parsed or unparsed JSONs
 """
-
 function schema(samples::AbstractArray, map_fun::Function)
 	schema = DictEntry()
 	failed = Vector{Int}()
@@ -38,5 +37,6 @@ function schema(samples::AbstractArray, map_fun::Function)
 	schema
 end
 
+schema(map_fun::Function, samples::AbstractArray) = schema(samples, map_fun)
 schema(samples::AbstractArray{T}) where {T<:Dict} = schema(samples, identity)
 schema(samples::AbstractArray{T}) where {T<:AbstractString} = schema(samples, JSON.parse)

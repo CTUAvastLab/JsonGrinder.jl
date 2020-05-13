@@ -38,15 +38,11 @@ end
 	@test str_repr ==
 """
 MultiRepresentation [""]
-  ├── Categorical d = 4 ["E"]
-  └── String ["U"]"""
+  ├── e1: Categorical d = 4 ["E"]
+  └── e2: String ["U"]"""
 
 	buf = IOBuffer()
 	printtree(buf, e, trav=true)
 	str_repr = String(take!(buf))
-	@test str_repr ==
-"""
-ProductNode [""]
-  ├── ArrayNode(4, 1) ["E"]
-  └── ArrayNode(2053, 1) ["U"]"""
+	@test str_repr == "ProductNode [\"\"]\n  ├── e1: ArrayNode(4, 1) [\"E\"]\n  └── e2: ArrayNode(2053, 1) [\"U\"]"
 end
