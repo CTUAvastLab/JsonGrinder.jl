@@ -366,10 +366,10 @@ end
 """
 Dict
   └── a: MultiRepresentation
-           ├── FeatureVector with 5 items
-           ├── Dict
-           │     └── Sylvanas is the worst warchief ever: String
-           └── Float64"""
+           ├── e1: FeatureVector with 5 items
+           ├── e2: Dict
+           │         └── Sylvanas is the worst warchief ever: String
+           └── e3: Float64"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
@@ -412,9 +412,9 @@ end
 	"""
 	Dict
 	  └── a: MultiRepresentation
-	           ├── String
-	           ├── Float64
-	           └── FeatureVector with 5 items"""
+	           ├── e1: String
+	           ├── e2: Float64
+	           └── e3: FeatureVector with 5 items"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
