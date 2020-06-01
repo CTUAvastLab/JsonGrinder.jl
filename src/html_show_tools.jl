@@ -88,7 +88,7 @@ function schema2html(e::DictEntry; pad = "", max_vals=100, parent_updated=nothin
 	i = 0
     for (key, val) in sort(e.childs)
 		child_key = """$parent_key["$key"]"""
-		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$child_key" value="$child_key"></label>\n"""
+		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$(escapeHTML(child_key))" value="$(escapeHTML(child_key))"></label>\n"""
 		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, parent_updated=e.updated, parent_key=child_key)
 		ret_str *= pad*" "^2 * "</li>\n"
 		i += 1
@@ -107,7 +107,7 @@ function schema2html(e::MultiEntry; pad = "", max_vals=100, parent_updated=nothi
 	i = 0
     for (key, val) in enumerate(e.childs)
 		child_key = """$parent_key["$key"]"""
-		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$child_key" value="$child_key"></label>\n"""
+		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$(escapeHTML(child_key))" value="$(escapeHTML(child_key))"></label>\n"""
 		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, parent_updated=e.updated, parent_key=child_key)
 		ret_str *= pad*" "^2 * "</li>\n"
 		i += 1
