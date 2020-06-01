@@ -118,6 +118,8 @@ function schema2html(e::MultiEntry; pad = "", max_vals=100, parent_updated=nothi
     end
 	ret_str * pad * "</ul>\n"
 end
+# queryselectorall v js místo getelementsbyclassname
+# a zkusit minifikovat to html-vyházet odsazení, a kouknout na rozdíl velikostí
 
 function generate_html(sch::DictEntry; max_vals=100)
 	tpl = mt"""
@@ -169,21 +171,25 @@ function generate_html(sch::DictEntry; max_vals=100)
 		</div>
 		{{{list_dump}}}
 <script>
-Array.prototype.forEach.call(document.getElementsByClassName("caret"), function (toggler, index) {
-	toggler.addEventListener("click", function () {
+
+document.querySelectorAll(".caret").forEach((toggler, index) => {
+	// I need anonymous function, not arrow function, to preserve the context
+	toggler.addEventListener("click", function() {
 		this.parentElement.querySelector(".nested").classList.toggle("active");
 		this.classList.toggle("caret-down");
 	});
 });
-Array.prototype.forEach.call(document.querySelectorAll("label > input[type=checkbox]"), function (toggler, index) {
-	toggler.addEventListener("change", function () {
+
+document.querySelectorAll("label > input[type=checkbox]").forEach((toggler, index) => {
+// I need anonymous function, not arrow function, to preserve the context
+	toggler.addEventListener("change", function() {
 		document.getElementById("selectors_output").innerHTML = Array
 			.from(document.querySelectorAll("label > input[type=checkbox]:checked"))
 			.map(x => x.parentElement.textContent).join("<br/>");
 	});
 });
-document.getElementById("copy_clipboard").addEventListener("click", function () {
-	console.log(document.getElementById("selectors_output").innerText);
+
+document.getElementById("copy_clipboard").addEventListener("click", () => {
 	let range = document.createRange();
 	range.selectNode(document.getElementById("selectors_output"));
 	window.getSelection().removeAllRanges(); // clear current selection
@@ -192,8 +198,8 @@ document.getElementById("copy_clipboard").addEventListener("click", function () 
 	window.getSelection().removeAllRanges();// to deselect
 });
 </script>
-		</body>
-		</html>
+</body>
+</html>
 """
 
 	d = Dict(
