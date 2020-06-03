@@ -17,3 +17,4 @@ extractsmatrix(s::MultipleRepresentation) = false
 
 Base.hash(e::MultipleRepresentation, h::UInt) = hash(e.extractors, h)
 Base.:(==)(e1::MultipleRepresentation, e2::MultipleRepresentation) = e1.extractors == e2.extractors
+Base.getindex(e::MultipleRepresentation, i::Int) = e.extractors[i]

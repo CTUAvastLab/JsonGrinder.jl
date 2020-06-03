@@ -20,8 +20,7 @@ function ExtractCategorical(ks::Vector)
 		return(nothing)
 	end
 	ks = sort(unique(ks));
-	T = typeof(ks[1])
-	ExtractCategorical(Dict{T,Int}(zip(ks, 1:length(ks))), length(ks) +1)
+	ExtractCategorical(Dict(zip(ks, 1:length(ks))), length(ks) +1)
 end
 
 
