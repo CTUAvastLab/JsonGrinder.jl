@@ -30,8 +30,8 @@ types(e::Entry) = e.counts |> keys .|> (typeof) |> unique
 unify_types(e::Entry) = promote_type(types(e)...)
 
 is_castable(e, T::Type{<:Number}) = unify_types(e) <: AbstractString && e.counts |> keys .|> (x->is_numeric(x, T)) |> all
-is_intable(e) = is_castable(e, Int64)
-is_floatable(e) = is_castable(e, Float64)
+is_intable(e) = is_castable(e, Int32)
+is_floatable(e) = is_castable(e, FloatType)
 is_numeric_entry(e, T::Type{<:Number}) = unify_types(e) <: T
 is_int_entry(e) = is_numeric_entry(e, Integer)
 is_float_entry(e) = is_numeric_entry(e, AbstractFloat)
@@ -94,9 +94,9 @@ function default_scalar_extractor()
 	[(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len <= 10000),
 		e -> ExtractCategorical(keys(e))),
 	 (e -> is_intable(e),
-		e -> extractscalar(Int64, e)),
+		e -> extractscalar(Int32, e)),
 	 (e -> is_floatable(e),
-	 	e -> extractscalar(Float64, e)),
+	 	e -> extractscalar(FloatType, e)),
 	(e -> true,
 		e -> extractscalar(unify_types(e), e)),]
 end

@@ -15,7 +15,7 @@ end
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
 	@test nobs(sc(nothing).data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
-	sc = ExtractArray(ExtractScalar(Float64))
+	sc = ExtractArray(ExtractScalar(Float32))
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
 	@test nobs(sc(nothing).data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
@@ -89,7 +89,7 @@ end
 end
 
 @testset "Testing Nested Missing Arrays" begin
-	other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));
+	other = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),"b" => ExtractArray(ExtractScalar(Float32,2,3)));
 	br = ExtractDict(nothing,other)
 	a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]))
 	a2 = br(Dict("b" => [2,3,4]))
@@ -112,6 +112,8 @@ end
 	@test all(catobs(a1,a4).data[1].bags .== [1:4, 0:-1])
 	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
 	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
+
+	@test all(a4.data[2].data.data isa Array{Float32,2})
 end
 
 @testset "ExtractOneHot" begin
@@ -246,17 +248,22 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
 	ext = suggestextractor(sch)
 
-	@test ext[:a].datatype <: Int64
+	@test ext[:a].datatype <: Float32
 	@test ext[:b].datatype <: String
-	@test ext[:c].datatype <: Float64
-	@test ext[:d].datatype <: Float64
-	@test ext[:e].datatype <: Float64
-	@test ext[:f].datatype <: Int64
+	@test ext[:c].datatype <: Float32
+	@test ext[:d].datatype <: Float32
+	@test ext[:e].datatype <: Float32
+	@test ext[:f].datatype <: Float32
 
 	ext_j1 = ext(j1)
 	ext_j2 = ext(j2)
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
+
+	@test eltype(ext_j1[:scalars].data) <: Float32
+	@test eltype(ext_j2[:scalars].data) <: Float32
+	@test eltype(ext_j3[:scalars].data) <: Float32
+	@test eltype(ext_j4[:scalars].data) <: Float32
 
 	@test ext_j1["U"].data ≈ [0, 0, 0, 0, 0]
 	@test ext_j2["U"].data ≈ [0.5, 1/3, 3/13, 0.5, 3/13]
@@ -273,10 +280,10 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
 	ext = suggestextractor(sch)
 
-	@test ext[:a].datatype <: Int64
+	@test ext[:a].datatype <: Float32
 	@test ext[:b] isa ExtractVector
 	@test ext[:b].n == 3
-	@test ext[:c] isa ExtractArray{ExtractScalar{Int64, Float64}}
+	@test ext[:c] isa ExtractArray{ExtractScalar{Float32, Float32}}
 
 	ext_j1 = ext(j1)
 	ext_j2 = ext(j2)
@@ -292,6 +299,27 @@ end
 	@test ext_j2["U"].data.data ≈ [0 .25 .5 .75]
 	@test ext_j3["U"].data.data ≈ [0 .25 .5 .75 1.]
 	@test ext_j4["U"].data.data ≈ [0 .25 .5]
+end
+
+@testset "Extractor typed missing bags" begin
+	j1 = JSON.parse("""{"a": []}""")
+	j2 = JSON.parse("""{"a": [1, 2]}""")
+	j3 = JSON.parse("""{"a": [1, 2, 3]}""")
+	j4 = JSON.parse("""{"a": [1, 2, 3, 4]}""")
+	j5 = JSON.parse("""{"a": [1, 2, 3, 4, 5]}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	ext = suggestextractor(sch)
+
+	ext_j1 = ext(j1)
+	ext_j2 = ext(j2)
+	ext_j3 = ext(j3)
+	ext_j4 = ext(j4)
+
+	@test ext_j1.data.data isa Array{Float32,2}
+	@test ext_j2.data.data isa Array{Float32,2}
+	@test ext_j3.data.data isa Array{Float32,2}
+	@test ext_j4.data.data isa Array{Float32,2}
 end
 
 @testset "testing irregular extractor" begin
@@ -369,7 +397,7 @@ Dict
            ├── e1: FeatureVector with 5 items
            ├── e2: Dict
            │         └── Sylvanas is the worst warchief ever: String
-           └── e3: Float64"""
+           └── e3: Float32"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
@@ -413,7 +441,7 @@ end
 	Dict
 	  └── a: MultiRepresentation
 	           ├── e1: String
-	           ├── e2: Float64
+	           ├── e2: Float32
 	           └── e3: FeatureVector with 5 items"""
 
 	e1 = ext(j1)

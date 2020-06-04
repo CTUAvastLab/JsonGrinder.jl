@@ -5,6 +5,7 @@ import HierarchicalUtils: NodeType, childrenfields, children, InnerNode, Singlet
 
 using Mill: ArrayNode, BagNode, ProductNode, catobs
 
+const FloatType = Float32
 if VERSION < v"1.4.0"
     @info "including polyfill for function only from Julia 1.4"
     include("polyfill_1_4.jl")

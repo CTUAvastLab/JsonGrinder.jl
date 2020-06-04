@@ -25,9 +25,9 @@ function extractscalar(::Type{T}, e::Entry) where {T<:Number}
 	end
 	min_val = minimum(values)
 	max_val = maximum(values)
-	c = float(min_val)
-	s = max_val == min_val ? 1. : float(1 / (max_val - min_val))
-	ExtractScalar(T, c, s)
+	c = convert(FloatType, min_val)
+	s = max_val == min_val ? convert(FloatType, 1) : convert(FloatType, 1 / (max_val - min_val))
+	ExtractScalar(FloatType, c, s)
 end
 
 (s::ExtractScalar{T,V})(v::Nothing) where {T,V} = ArrayNode(fill(zero(T),(1,1)))
