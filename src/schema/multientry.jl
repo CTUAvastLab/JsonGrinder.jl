@@ -50,8 +50,8 @@ end
 function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "")
 	# consolidation of types, type wrangling of numeric strings takes place here
 	# trying to unify types and create new child entries for them. Merging string + numbers
-	e = merge_entries_with_cast(e, Int64, Integer)
-	e = merge_entries_with_cast(e, Float64, AbstractFloat)
+	e = merge_entries_with_cast(e, Int32, Integer)
+	e = merge_entries_with_cast(e, FloatType, AbstractFloat)
 	MultipleRepresentation(map(i -> suggestextractor(i, settings; path = path),e.childs))
 end
 
