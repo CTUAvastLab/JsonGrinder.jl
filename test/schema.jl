@@ -292,11 +292,11 @@ end
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
 	ext = suggestextractor(sch)
 
-	@test ext[:a] isa ExtractScalar{Int64, Float64}
+	@test ext[:a] isa ExtractScalar{Float32, Float32}
 	@test ext[:b][:a] isa ExtractVector{Float32}
-	@test ext[:b][:b] isa ExtractScalar{Int64,Float64}
-	@test ext[:c][:a][:a] isa ExtractArray{ExtractScalar{Float64,Float64}}
-	@test ext[:c][:a][:b] isa ExtractArray{ExtractScalar{Float64,Float64}}
+	@test ext[:b][:b] isa ExtractScalar{Float32,Float32}
+	@test ext[:c][:a][:a] isa ExtractArray{ExtractScalar{Float32,Float32}}
+	@test ext[:c][:a][:b] isa ExtractArray{ExtractScalar{Float32,Float32}}
 
 	e1 = ext(j1)
 	@test e1.data.scalars.data[1, 1] == 0

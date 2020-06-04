@@ -21,17 +21,17 @@ ext = suggestextractor(sch)
 		@test str_repr ==
 """
 Dict [""]
-  ├── a: Int64 ["E"]
+  ├── a: Float32 ["E"]
   ├── b: Dict ["U"]
   │        ├── a: Array of ["Y"]
-  │        │        └── Int64 ["a"]
-  │        └── b: Int64 ["c"]
+  │        │        └── Float32 ["a"]
+  │        └── b: Float32 ["c"]
   └── c: Dict ["k"]
            └── a: Dict ["s"]
                     ├── a: Array of ["u"]
-                    │        └── Float64 ["v"]
+                    │        └── Float32 ["v"]
                     └── b: Array of ["w"]
-                             └── Float64 ["x"]"""
+                             └── Float32 ["x"]"""
 end
 
 @testset "nnodes" begin
