@@ -370,33 +370,52 @@ end
 	@test hash(sch) === hash(sch3)
 end
 
-# @testset "Merging strings with numbers" begin
-# 	j1 = JSON.parse("""{"a": "4", "b": "2"}""")
-# 	j2 = JSON.parse("""{"a": "11", "b": "2"}""")
-# 	j3 = JSON.parse("""{"a": 7, "b": "2"}""")
-# 	j4 = JSON.parse("""{"a": 4, "b": 2}""")
-# 	j5 = JSON.parse("""{"a": "11", "b": 2}""")
-# 	j6 = JSON.parse("""{"a": "7", "b": 2}""")
-#
-# 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
-# 	sch11 = JsonGrinder.schema([j1,j2])
-# 	sch12 = JsonGrinder.schema([j3,j4])
-# 	sch13 = JsonGrinder.schema([j5,j6])
-# 	# sch21 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8])
-# 	# sch22 = JsonGrinder.schema([j9,j10,j11])
-# 	# sch31 = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j9])
-# 	# sch32 = JsonGrinder.schema([j8,j10])
-# 	# sch33 = JsonGrinder.schema([j11,j7])
-#
-# 	sch1 = merge(sch11, sch12, sch13)
-# 	sch2 = merge(sch21, sch22)
-# 	sch3 = merge(sch31, sch32, sch33)
-#
-# 	@test sch == sch1
-# 	@test sch == sch2
-# 	@test sch == sch3
-#
-# 	@test hash(sch) === hash(sch1)
-# 	@test hash(sch) === hash(sch2)
-# 	@test hash(sch) === hash(sch3)
-# end
+@testset "Merging strings with numbers" begin
+	j1 = JSON.parse("""{"a": "4", "b": "2"}""")
+	j2 = JSON.parse("""{"a": "11", "b": "2"}""")
+	j3 = JSON.parse("""{"a": 7, "b": "3"}""")
+	j4 = JSON.parse("""{"a": 4, "b": 3}""")
+	j5 = JSON.parse("""{"a": "11", "b": 3}""")
+	j6 = JSON.parse("""{"a": "7", "b": 4}""")
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
+	sch11 = JsonGrinder.schema([j1,j2])
+	sch12 = JsonGrinder.schema([j3,j4])
+	sch13 = JsonGrinder.schema([j5,j6])
+	sch21 = JsonGrinder.schema([j1,j2,j3])
+	sch22 = JsonGrinder.schema([j4,j5,j6])
+
+	sch1 = merge(sch11, sch12, sch13)
+	sch2 = merge(sch21, sch22)
+
+	@test sch == sch1
+	@test sch == sch2
+
+	@test hash(sch) === hash(sch1)
+	@test hash(sch) === hash(sch2)
+end
+
+
+@testset "Schema merging with max keys and irregularities" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
+	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
+	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+	j4 = JSON.parse("""{"a": [1, 2, 3, 4, 5, 6, 7]}""")
+	j5 = JSON.parse("""{}""")
+	j6 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":2}], "b":4}""")
+	j7 = JSON.parse("""{"a": [{"a":4,"b":5},{"b":6,"a":7}], "b":2}""")
+	j8 = JSON.parse("""{"a": [{"a":9,"b":10},{"b":11,"a":12}], "b":"1"}""")
+	j9 = JSON.parse("""{"a": [{"a":4,"b":3},{"b":2,"a":1}], "b":"2"}""")
+	j10 = JSON.parse("""{"a": [{"a":11,"b":12},{"b":13,"a":"14"}], "b":"3"}""")
+	j11 = JSON.parse("""{"a": [{"a":7,"b":5},{"b":6,"a":"6"}], "b":"4"}""")
+
+	JsonGrinder.updatemaxkeys!(4)
+	# todo: otestovat jak funguje newentry s víceprvkovám polem
+	sch1 = JsonGrinder.schema([j1,j2,j3,j4,j5,j11])
+	sch2 = JsonGrinder.schema([j6,j7,j8,j9,j10])
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11])
+	sch_merged = merge(sch1, sch2)
+
+	@test sch == sch_merged
+end

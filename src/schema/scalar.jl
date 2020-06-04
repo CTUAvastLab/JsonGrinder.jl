@@ -60,13 +60,23 @@ end
 
 # todo: try how merging will work with non-stable schema, probably it'll need some fixes
 function merge(es::Entry...)
+	entry_types = es .|> typeof |> unique
 	updates_merged = sum(updated.(es))
-	counts_merged = merge(+, counts.(es)...)
-	if length(counts_merged) > max_keys
-		counts_merged_list = sort(collect(counts_merged), by=x->x[2], rev=true)
-		counts_merged = Dict(counts_merged_list[1:max_keys])
+	if length(entry_types) > 1
+		multi_entry = MultiEntry([], updates_merged)
+		other_entries = filter(e->!(e isa MultiEntry), es)
+		# merging here also takes care of max_keys, which is not done for multi-entries
+		merged_entries = [merge(filter(x->x isa t, other_entries)...) for t in entry_types]
+		multi_entry.childs = merged_entries
+		multi_entry
+	else
+		counts_merged = merge(+, counts.(es)...)
+		if length(counts_merged) > max_keys
+			counts_merged_list = sort(collect(counts_merged), by=x->x[2], rev=true)
+			counts_merged = Dict(counts_merged_list[1:max_keys])
+		end
+		Entry(counts_merged, updates_merged)
 	end
-	Entry(counts_merged, updates_merged)
 end
 
 function merge_inplace!(e::Entry, es::Entry...)
