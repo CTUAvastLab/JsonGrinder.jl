@@ -61,6 +61,11 @@ end
 # todo: try how merging will work with non-stable schema, probably it'll need some fixes
 function merge(es::Entry...)
 	entry_types = es .|> typeof |> unique
+	if promote_type(unify_types.(es)...) <: AbstractFloat
+		entry_types = [first(filter(x->unify_types(x) <: AbstractFloat, es))]
+	elseif promote_type(unify_types.(es)...) <: Integer
+		entry_types = [first(filter(x->unify_types(x) <: Integer, es))]
+	end
 	updates_merged = sum(updated.(es))
 	if length(entry_types) > 1
 		multi_entry = MultiEntry([], updates_merged)
