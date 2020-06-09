@@ -5,7 +5,7 @@
 	processed by all extractors in the order
 
 """
-struct MultipleRepresentation{E<:NamedTuple}
+struct MultipleRepresentation{E<:Union{NamedTuple, Tuple}}
 	extractors::E
 end
 
