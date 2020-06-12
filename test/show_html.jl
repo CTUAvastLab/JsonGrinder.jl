@@ -1,5 +1,35 @@
 using JsonGrinder, JSON, Test, SparseArrays
 
+@testset "Strigifying" begin
+	@test JsonGrinder.stringify(1, 2) == "1: 2"
+	@test JsonGrinder.stringify("<b>a</b>", 2) == "&lt;b&gt;a&lt;/b&gt;: 2"
+	@test length("a<bcd" ^ 1_000) == 5_000
+	@test JsonGrinder.stringify("a<bcd" ^ 1_000, 3, max_len=20) == "a&lt;bcda&lt;bcda&lt;bcda&lt;bcd: 3"
+end
+
+@testset "Entry creation" begin
+	e = JsonGrinder.newentry("a")
+	JsonGrinder.update!(e, "a")
+	JsonGrinder.update!(e, "a")
+	JsonGrinder.update!(e, "<b")
+	JsonGrinder.update!(e, "c")
+	JsonGrinder.update!(e, "d")
+	JsonGrinder.update!(e, "d")
+	JsonGrinder.update!(e, "d")
+	JsonGrinder.update!(e, "e" ^ 1_000)
+	html = JsonGrinder.schema2html(e, max_len=10)
+	html2 = """<ul class="nested" style="color: #4E79A7">[Scalar - String], 5 unique values,
+	(updated = 8, min=eeeeeeeeee: 1, max=d: 3)
+	  <li>d: 3</li>
+	  <li>a: 2</li>
+	  <li>&lt;b: 1</li>
+	  <li>c: 1</li>
+	  <li>eeeeeeeeee: 1</li>
+	 </ul>
+	"""
+	@test html == html2
+end
+
 @testset "Generating HTML Schema" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")

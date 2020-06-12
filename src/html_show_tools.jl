@@ -8,21 +8,24 @@ HTML_COLORS = ["#4E79A7","#F28E2C","#E15759","#76B7B2","#59A14F", "#EDC949","#AF
 quantile(v::Dict{Int, Int}, p::Number) = quantile(v |> keys |> collect, v |> values |> collect |> fweights, [p])[1]
 quantile(v::Dict{Int, Int}, p::RealVector) = quantile(v |> keys |> collect, v |> values |> collect |> fweights, p)
 mean(v::Dict{Int, Int}) = mean(v |> keys |> collect, v |> values |> collect |> fweights)
-stringify(arg::Pair) = stringify(arg.first, arg.second)
-stringify(arg1::String, arg2) = "$(escapeHTML(arg1)): $(arg2)"
-stringify(arg1, arg2) = "$(arg1): $(arg2)"
+stringify(arg::Pair; max_len=1_000) = stringify(arg.first, arg.second, max_len=max_len)
+stringify(arg1::String, arg2; max_len=1_000) = "$(escapeHTML(first(arg1, max_len))): $(arg2)"
+stringify(arg1, arg2; max_len=1_000) = "$(arg1): $(arg2)"
 
-function schema2html(e::Entry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
+function schema2html(e::Entry; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
 	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
 	filled_percent = isnothing(parent_updated) ? "" : ", filled = $(10000 * e.updated ÷ parent_updated / 100)%"
 	sorted_counts = sort(collect(e.counts), by=x->x[2], rev=true)
+	min_repr = stringify(sorted_counts[end], max_len=max_len)
+	max_repr = stringify(sorted_counts[1], max_len=max_len)
 	ret_str = """
 $pad<ul class="nested" style="color: $c">$pad[Scalar - $(join(types(e)))], $(length(keys(e.counts))) unique values,
-(updated = $(e.updated)$filled_percent, min=$(stringify(sorted_counts[end])), max=$(stringify(sorted_counts[1])))
+(updated = $(e.updated)$filled_percent, min=$min_repr, max=$max_repr)
 """
 	i = 0
     for (key, val) in sorted_counts
-		ret_str *= pad*" "^2 * "<li>$(stringify(key, val))</li>\n"
+		pair_repr = stringify(key, val, max_len=max_len)
+		ret_str *= pad*" "^2 * "<li>$pair_repr</li>\n"
 		i += 1
 		if i == max_vals
 			ret_str *= pad*" "^2 * "<li>and other $(length(e.counts) - i) values</li>\n"
@@ -33,7 +36,7 @@ $pad<ul class="nested" style="color: $c">$pad[Scalar - $(join(types(e)))], $(len
 end
 
 # because sometimes there is empty list in all jsons, this helps to determine the pruning of such element
-function schema2html(e::Nothing; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
+function schema2html(e::Nothing; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
 	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
 	ret_str = """
 $pad[Empty list element], this list is empty in all JSONs, can not infer schema, suggesting to delete key $parent_key
@@ -41,7 +44,7 @@ $pad[Empty list element], this list is empty in all JSONs, can not infer schema,
 	ret_str
 end
 
-function schema2html(e::ArrayEntry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
+function schema2html(e::ArrayEntry; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
  	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
 	# todo: fix it all so it is different method for array of entries and the rest so only nested things are truly nested
 	filled_percent = isnothing(parent_updated) ? "" : ", filled=$(10000 * e.updated ÷ parent_updated / 100)%"
@@ -72,14 +75,14 @@ $pad</ul>
 $pad</li>
 $pad<li><span class="caret">and data</span>
 """
-	ret_str *= schema2html(e.items, pad=pad*" "^2, max_vals=max_vals, parent_key="$parent_key.items")
+	ret_str *= schema2html(e.items, pad=pad*" "^2, max_vals=max_vals, max_len=max_len, parent_key="$parent_key.items")
 	ret_str * """
 $pad</li>
 $pad</ul>
 """
 end
 
-function schema2html(e::DictEntry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
+function schema2html(e::DictEntry; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
 	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
     if isempty(e.childs)
     	return pad * """<ul style="color: $c">Empty Dict</ul>\n"""
@@ -91,7 +94,7 @@ function schema2html(e::DictEntry; pad = "", max_vals=100, parent_updated=nothin
     for (key, val) in sort(e.childs)
 		child_key = """$parent_key["$key"]"""
 		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$(escapeHTML(child_key))" value="$(escapeHTML(child_key))"></label>\n"""
-		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, parent_updated=e.updated, parent_key=child_key)
+		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, max_len=max_len, parent_updated=e.updated, parent_key=child_key)
 		ret_str *= pad*" "^2 * "</li>\n"
 		i += 1
 		if i == max_vals
@@ -102,7 +105,7 @@ function schema2html(e::DictEntry; pad = "", max_vals=100, parent_updated=nothin
 	ret_str * pad * "</ul>\n"
 end
 
-function schema2html(e::MultiEntry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
+function schema2html(e::MultiEntry; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
 	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
 	filled_percent = isnothing(parent_updated) ? "" : ", filled=$(10000 * e.updated ÷ parent_updated / 100)%"
 	ret_str = pad * """<ul class="nested" style="color: $c">[MultiEntry] (updated=$(e.updated)$filled_percent)\n"""
@@ -110,7 +113,7 @@ function schema2html(e::MultiEntry; pad = "", max_vals=100, parent_updated=nothi
     for (key, val) in enumerate(e.childs)
 		child_key = """$parent_key["$key"]"""
 		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$(escapeHTML(child_key))" value="$(escapeHTML(child_key))"></label>\n"""
-		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, parent_updated=e.updated, parent_key=child_key)
+		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, max_len=max_len, parent_updated=e.updated, parent_key=child_key)
 		ret_str *= pad*" "^2 * "</li>\n"
 		i += 1
 		if i == max_vals
@@ -123,7 +126,7 @@ end
 # queryselectorall v js místo getelementsbyclassname
 # a zkusit minifikovat to html-vyházet odsazení, a kouknout na rozdíl velikostí
 
-function generate_html(sch::DictEntry; max_vals=100)
+function generate_html(sch::DictEntry; max_vals=100, max_len=1_000)
 	tpl = mt"""
 	<!DOCTYPE html>
 	<html lang="en">
@@ -205,13 +208,13 @@ document.getElementById("copy_clipboard").addEventListener("click", () => {
 """
 
 	d = Dict(
-		"list_dump" => schema2html(sch, max_vals=max_vals),
+		"list_dump" => schema2html(sch, max_vals=max_vals, max_len=max_len),
 	)
 	return(render(tpl, d))
 end
 
-function generate_html(sch::DictEntry, file_name ; max_vals=100)
-	s = generate_html(sch; max_vals = max_vals)
+function generate_html(sch::DictEntry, file_name ; max_vals=100, max_len=1_000)
+	s = generate_html(sch; max_vals=max_vals, max_len=max_len)
 	open(file_name, "w") do f
  		write(f, s)
 	end
@@ -219,5 +222,5 @@ end
 
 # Base.show(io, m::MIME{Symbol("text/html")}, sch::JsonGrinder.DictEntry) = print(io, repr(m,sch))
 
-Base.repr(::MIME"text/html", sch::DictEntry; max_vals = 100, context = nothing) = generate_html(sch; max_vals = max_vals)
+Base.repr(::MIME"text/html", sch::DictEntry; max_vals = 100, max_len=1_000, context = nothing) = generate_html(sch; max_vals=max_vals, max_len=max_len)
 Base.showable(::MIME"text/html", ::DictEntry) = true
