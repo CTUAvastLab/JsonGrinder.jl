@@ -8,6 +8,8 @@ using JsonGrinder, JSON, Test, SparseArrays
 end
 
 @testset "Entry creation" begin
+	JsonGrinder.updatemaxkeys!(10)
+
 	e = JsonGrinder.newentry("a")
 	JsonGrinder.update!(e, "a")
 	JsonGrinder.update!(e, "a")
