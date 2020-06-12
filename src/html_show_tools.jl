@@ -1,4 +1,4 @@
-using Mustache, HttpCommon
+using Mustache, HttpCommon, DataStructures
 using StatsBase: RealVector, fweights
 import Statistics: quantile, mean
 
