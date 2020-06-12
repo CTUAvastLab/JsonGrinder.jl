@@ -8,6 +8,9 @@ HTML_COLORS = ["#4E79A7","#F28E2C","#E15759","#76B7B2","#59A14F", "#EDC949","#AF
 quantile(v::Dict{Int, Int}, p::Number) = quantile(v |> keys |> collect, v |> values |> collect |> fweights, [p])[1]
 quantile(v::Dict{Int, Int}, p::RealVector) = quantile(v |> keys |> collect, v |> values |> collect |> fweights, p)
 mean(v::Dict{Int, Int}) = mean(v |> keys |> collect, v |> values |> collect |> fweights)
+stringify(arg::Pair) = stringify(arg.first, arg.second)
+stringify(arg1::String, arg2) = "$(escapeHTML(arg1)): $(arg2)"
+stringify(arg1, arg2) = "$(arg1): $(arg2)"
 
 function schema2html(e::Entry; pad = "", max_vals=100, parent_updated=nothing, parent_key="")
 	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
@@ -15,13 +18,11 @@ function schema2html(e::Entry; pad = "", max_vals=100, parent_updated=nothing, p
 	sorted_counts = sort(collect(e.counts), by=x->x[2], rev=true)
 	ret_str = """
 $pad<ul class="nested" style="color: $c">$pad[Scalar - $(join(types(e)))], $(length(keys(e.counts))) unique values,
-(updated = $(e.updated)$filled_percent, min=$(Tuple(sorted_counts[end])), max=$(Tuple(sorted_counts[1])))
+(updated = $(e.updated)$filled_percent, min=$(stringify(sorted_counts[end])), max=$(stringify(sorted_counts[1])))
 """
 	i = 0
     for (key, val) in sorted_counts
-		key_repr = key isa String ? escapeHTML(key) : "$key"
-		val_repr = val isa String ? escapeHTML(val) : "$val"
-		ret_str *= pad*" "^2 * "<li>$key_repr: $val_repr</li>\n"
+		ret_str *= pad*" "^2 * "<li>$(stringify(key, val))</li>\n"
 		i += 1
 		if i == max_vals
 			ret_str *= pad*" "^2 * "<li>and other $(length(e.counts) - i) values</li>\n"
