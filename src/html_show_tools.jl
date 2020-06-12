@@ -20,7 +20,8 @@ $pad<ul class="nested" style="color: $c">$pad[Scalar - $(join(types(e)))], $(len
 	i = 0
     for (key, val) in sorted_counts
 		key_repr = key isa String ? escapeHTML(key) : "$key"
-		ret_str *= pad*" "^2 * "<li>$key_repr: $val</li>\n"
+		val_repr = val isa String ? escapeHTML(val) : "$val"
+		ret_str *= pad*" "^2 * "<li>$key_repr: $val_repr</li>\n"
 		i += 1
 		if i == max_vals
 			ret_str *= pad*" "^2 * "<li>and other $(length(e.counts) - i) values</li>\n"
