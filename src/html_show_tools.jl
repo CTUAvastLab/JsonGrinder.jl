@@ -91,7 +91,7 @@ function schema2html(e::DictEntry; pad = "", max_vals=100, max_len=1_000, parent
 	filled_percent = isnothing(parent_updated) ? "" : ", filled=$(10000 * e.updated ÷ parent_updated / 100)%"
 	ret_str = pad * """<ul class="$class" style="color: $c">[Dict] (updated=$(e.updated)$filled_percent)\n"""
 	i = 0
-    for (key, val) in sort(e.childs)
+    for (key, val) in sort(collect(e.childs))
 		child_key = """$parent_key["$key"]"""
 		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$(escapeHTML(child_key))" value="$(escapeHTML(child_key))"></label>\n"""
 		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, max_len=max_len, parent_updated=e.updated, parent_key=child_key)
