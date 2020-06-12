@@ -1,4 +1,5 @@
-using Mustache, HttpCommon, DataStructures
+using Mustache, HttpCommon
+using DataStructures: OrderedDict
 using StatsBase: RealVector, fweights
 import Statistics: quantile, mean
 
