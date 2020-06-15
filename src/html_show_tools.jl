@@ -28,10 +28,15 @@ function schema2html(e::Entry; pad = "", max_vals=100, max_len=1_000, parent_upd
 $pad<ul class="nested" style="color: $c">$pad[Scalar - $(join(types(e)))], $(length(keys(e.counts))) unique values,
 (updated = $(e.updated)$filled_percent, min=$min_repr, max=$max_repr)
 """
-	counts2process = Iterators.take(enumerate(sorted_counts), max_vals)
+
+	counts2process = if isnothing(max_vals)
+		enumerate(sorted_counts)
+	else
+		Iterators.take(enumerate(sorted_counts), max_vals)
+	end
 	li_part = join(tmap(i->pair2html(i[1], i[2].first, i[2].second, max_len, pad), Threads.nthreads(), counts2process))
 	ret_str *= li_part
-	if length(sorted_counts) > max_vals
+	if !isnothing(max_vals) && length(sorted_counts) > max_vals
 		ret_str *= pad*" "^2 * "<li>and other $(length(e.counts) - max_vals) values</li>\n"
 	end
 	ret_str * "$pad </ul>\n"
