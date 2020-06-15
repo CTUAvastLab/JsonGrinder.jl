@@ -1,4 +1,4 @@
-using Mustache, HttpCommon
+using Mustache, HttpCommon, ThreadTools
 using DataStructures: OrderedDict
 using StatsBase: RealVector, fweights
 import Statistics: quantile, mean
@@ -13,6 +13,11 @@ stringify(arg::Pair; max_len=1_000) = stringify(arg.first, arg.second, max_len=m
 stringify(arg1::String, arg2; max_len=1_000) = "$(escapeHTML(first(arg1, max_len))): $(arg2)"
 stringify(arg1, arg2; max_len=1_000) = "$(arg1): $(arg2)"
 
+function pair2html(i, key, val, max_len, pad)
+	pair_repr = stringify(key, val, max_len=max_len)
+	pad*" "^2 * "<li>$pair_repr</li>\n"
+end
+
 function schema2html(e::Entry; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
 	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
 	filled_percent = isnothing(parent_updated) ? "" : ", filled = $(10000 * e.updated ÷ parent_updated / 100)%"
@@ -23,16 +28,12 @@ function schema2html(e::Entry; pad = "", max_vals=100, max_len=1_000, parent_upd
 $pad<ul class="nested" style="color: $c">$pad[Scalar - $(join(types(e)))], $(length(keys(e.counts))) unique values,
 (updated = $(e.updated)$filled_percent, min=$min_repr, max=$max_repr)
 """
-	i = 0
-    for (key, val) in sorted_counts
-		pair_repr = stringify(key, val, max_len=max_len)
-		ret_str *= pad*" "^2 * "<li>$pair_repr</li>\n"
-		i += 1
-		if i == max_vals
-			ret_str *= pad*" "^2 * "<li>and other $(length(e.counts) - i) values</li>\n"
-			break
-		end
-    end
+	counts2process = Iterators.take(enumerate(sorted_counts), max_vals)
+	li_part = join(tmap(i->pair2html(i[1], i[2].first, i[2].second, max_len, pad), Threads.nthreads(), counts2process))
+	ret_str *= li_part
+	if length(sorted_counts) > max_vals
+		ret_str *= pad*" "^2 * "<li>and other $(length(e.counts) - max_vals) values</li>\n"
+	end
 	ret_str * "$pad </ul>\n"
 end
 
@@ -93,7 +94,7 @@ function schema2html(e::DictEntry; pad = "", max_vals=100, max_len=1_000, parent
 	ret_str = pad * """<ul class="$class" style="color: $c">[Dict] (updated=$(e.updated)$filled_percent)\n"""
 	i = 0
     for (key, val) in sort!(OrderedDict(e.childs))
-		child_key = """$parent_key["$key"]"""
+		child_key = """$parent_key[$(repr(Symbol(key)))]"""
 		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$(escapeHTML(child_key))" value="$(escapeHTML(child_key))"></label>\n"""
 		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, max_len=max_len, parent_updated=e.updated, parent_key=child_key)
 		ret_str *= pad*" "^2 * "</li>\n"
