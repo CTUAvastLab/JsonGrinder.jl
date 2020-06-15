@@ -32,6 +32,34 @@ end
 	@test html == html2
 end
 
+@testset "Dict Entry creation" begin
+	JsonGrinder.updatemaxkeys!(10)
+
+	j1 = JSON.parse("""{"a": 1, "P P": 2}""")
+	j2 = JSON.parse("""{"a": 2, "P P": 2}""")
+	j3 = JSON.parse("""{"a": 2, "P P": 2}""")
+	sch = JsonGrinder.schema([j1,j2,j3])
+
+	html = JsonGrinder.schema2html(sch, max_len=10)
+	html2 = """<ul class="top_dict" style="color: #4E79A7">[Dict] (updated=3)
+	  <li><span class="caret">P P</span> - <label>[Symbol("P P")]<input type="checkbox" name="[Symbol(&quot;P P&quot;)]" value="[Symbol(&quot;P P&quot;)]"></label>
+	    <ul class="nested" style="color: #E15759">    [Scalar - Int64], 1 unique values,
+	(updated = 3, filled = 100.0%, min=2: 3, max=2: 3)
+	      <li>2: 3</li>
+	     </ul>
+	  </li>
+	  <li><span class="caret">a</span> - <label>[:a]<input type="checkbox" name="[:a]" value="[:a]"></label>
+	    <ul class="nested" style="color: #E15759">    [Scalar - Int64], 2 unique values,
+	(updated = 3, filled = 100.0%, min=1: 1, max=2: 2)
+	      <li>2: 2</li>
+	      <li>1: 1</li>
+	     </ul>
+	  </li>
+	</ul>
+	"""
+	@test html == html2
+end
+
 @testset "Generating HTML Schema" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
