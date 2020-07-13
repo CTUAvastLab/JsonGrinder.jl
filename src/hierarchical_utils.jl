@@ -1,4 +1,4 @@
-import HierarchicalUtils: NodeType, childrenfields, children, InnerNode, SingletonNode, LeafNode, printtree, noderepr
+import HierarchicalUtils: NodeType, children, InnerNode, LeafNode, printtree, noderepr
 
 # for schema structures
 NodeType(::Type{Nothing}) = LeafNode()  # because sometimes we have empty array extractor
