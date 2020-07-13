@@ -93,7 +93,7 @@ end
 end
 
 @testset "TypeIterator" begin
-	@test collect(TypeIterator{DictEntry}(sch)) == [sch[""], sch["U"], sch["k"], sch["s"]]
+	@test collect(TypeIterator(sch, DictEntry)) == [sch[""], sch["U"], sch["k"], sch["s"]]
 end
 
 @testset "print with empty lists" begin
