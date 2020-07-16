@@ -1,7 +1,7 @@
 module JsonGrinder
 using Mill, JSON, Printf, Flux
 using HierarchicalUtils
-import HierarchicalUtils: NodeType, childrenfields, children, InnerNode, SingletonNode, LeafNode, printtree, noderepr
+import HierarchicalUtils: NodeType, children, InnerNode, LeafNode, printtree, noderepr
 
 using Mill: ArrayNode, BagNode, ProductNode, catobs
 
