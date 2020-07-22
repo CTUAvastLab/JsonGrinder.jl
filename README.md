@@ -26,23 +26,23 @@ j2 = JSON.parse("""{"a": 2, "b": "hello world", "c":{ "a":2 ,"b": "hello"}}""")
 Let's estimate a schema from those two documents
 ```julia
 julia> sch = schema([j1,j2])
-: [Dict]
+[Dict] (updated = 2)
   ├── a: [Scalar - Int64], 2 unique values, updated = 2
   ├── b: [Scalar - String], 2 unique values, updated = 2
-  └── c: [Dict]
-      ├── a: [Scalar - Int64], 2 unique values, updated = 2
-      └── b: [Scalar - String], 2 unique values, updated = 2
+  └── c: [Dict] (updated = 2)
+           ├── a: [Scalar - Int64], 2 unique values, updated = 2
+           └── b: [Scalar - String], 2 unique values, updated = 2
 ```
 
 Let's create a default extractor
 ```julia
 julia> extractor = suggestextractor(sch)
-: struct
-  ├─── a: Int64
-  ├─── b: String
-  └─── c: struct
-        ├─── a: Int64
-        └─── b: String
+Dict
+  ├── a: Float32
+  ├── b: String
+  └── c: Dict
+           ├── a: Float32
+           └── b: String
 ```
 
 Now we can convert the data to data either by
@@ -54,24 +54,22 @@ or for convenience joined into a single command
 ```julia
 julia> ds = extractbatch(extractor, [j1, j2])
 ProductNode
-  ├── scalars: ArrayNode(1, 2)
-  ├── c: ProductNode
-  │     ├── scalars: ArrayNode(1, 2)
-  │     └── b: ArrayNode(2053, 2)
-  └── b: ArrayNode(2053, 2)
+  ├──────── b: ArrayNode(2053, 2)
+  ├──────── c: ProductNode
+  │              ├──────── b: ArrayNode(2053, 2)
+  │              └── scalars: ArrayNode(1, 2)
+  └── scalars: ArrayNode(1, 2)
 ```
 
 Now, we use a convenient function `reflectinmodel` which creates a model that can process our dataset
 ```julia
 julia> m = reflectinmodel(ds, d -> Chain(Dense(d,10, relu), Dense(10,4)))
-ProductModel (
-  ├── scalars: ArrayModel(Chain(Dense(1, 10, relu), Dense(10, 4)))
-  ├── c: ProductModel (
-  │     ├── scalars: ArrayModel(Chain(Dense(1, 10, relu), Dense(10, 4)))
-  │     └── b: ArrayModel(Chain(Dense(2053, 10, relu), Dense(10, 4)))
-  │    ) ↦  ArrayModel(Chain(Dense(8, 10, relu), Dense(10, 4)))
-  └── b: ArrayModel(Chain(Dense(2053, 10, relu), Dense(10, 4)))
- ) ↦  ArrayModel(Chain(Dense(12, 10, relu), Dense(10, 4)))
+ProductModel ↦ ArrayModel(Chain(Dense(12, 10, relu), Dense(10, 4)))
+  ├──────── b: ArrayModel(Chain(Dense(2053, 10, relu), Dense(10, 4)))
+  ├──────── c: ProductModel ↦ ArrayModel(Chain(Dense(8, 10, relu), Dense(10, 4)))
+  │              ├──────── b: ArrayModel(Chain(Dense(2053, 10, relu), Dense(10, 4)))
+  │              └── scalars: ArrayModel(Chain(Dense(1, 10, relu), Dense(10, 4)))
+  └── scalars: ArrayModel(Chain(Dense(1, 10, relu), Dense(10, 4)))
 ```
 
 and finally, we can do all the usual stuff with it
@@ -86,7 +84,7 @@ julia> m(ds).data
 
 * Customization of extractors:
 
-While extractors of Dictionaries and Lists are straighforward, as the first one is converted to `Mill.ProductNode` and the latter to `Mill.BagNode`. The extractor of scalars can benefit from customization. This can be to some extent automatized by defining its own conversion rules in a list of [(criterion, extractor),...] where criterion is a function accepting `JsonEntry` and outputing `true` and `false` and extractor is a function of `JsonEntry` again returning a function extracting given entry. This list is passed to `suggestextractor(schema, (scalar_extractors = [(criterion, extractor),...]))`
+While extractors of Dictionaries and Lists are straighforward, as the first one is converted to `Mill.ProductNode` and the latter to `Mill.BagNode`. The extractor of scalars can benefit from customization. This can be to some extent automatized by defining its own conversion rules in a list of [(criterion, extractor),...] where criterion is a function accepting `JSONEntry` and outputing `true` and `false` and extractor is a function of `JSONEntry` again returning a function extracting given entry. This list is passed to `suggestextractor(schema, (scalar_extractors = [(criterion, extractor),...]))`
 
 For example a default list of extractors is
 ```julia
