@@ -13,6 +13,7 @@ if VERSION < v"1.4.0"
 end
 
 include("schema/schema.jl")
+include("extractors/auxiliary.jl")
 include("extractors/extractarray.jl")
 include("extractors/extractdict.jl")
 include("extractors/extractcategorical.jl")

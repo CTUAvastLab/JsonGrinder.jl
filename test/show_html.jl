@@ -21,7 +21,7 @@ end
 	JsonGrinder.update!(e, "e" ^ 1_000)
 	html = JsonGrinder.schema2html(e, max_len=10)
 	html2 = """<ul class="nested" style="color: #4E79A7">[Scalar - String], 5 unique values,
-	(updated = 8, min=eeeeeeeeee: 1, max=d: 3)
+	(updated=8, min=eeeeeeeeee: 1, max=d: 3)
 	  <li>d: 3</li>
 	  <li>a: 2</li>
 	  <li>&lt;b: 1</li>
@@ -37,20 +37,20 @@ end
 
 	j1 = JSON.parse("""{"a": 1, "P P": 2}""")
 	j2 = JSON.parse("""{"a": 2, "P P": 2}""")
-	j3 = JSON.parse("""{"a": 2, "P P": 2}""")
+	j3 = JSON.parse("""{"a": 2}""")
 	sch = JsonGrinder.schema([j1,j2,j3])
 
 	html = JsonGrinder.schema2html(sch, max_len=10)
 	html2 = """<ul class="top_dict" style="color: #4E79A7">[Dict] (updated=3)
 	  <li><span class="caret">P P</span> - <label>[Symbol("P P")]<input type="checkbox" name="[Symbol(&quot;P P&quot;)]" value="[Symbol(&quot;P P&quot;)]"></label>
 	    <ul class="nested" style="color: #E15759">    [Scalar - Int64], 1 unique values,
-	(updated = 3, filled = 100.0%, min=2: 3, max=2: 3)
-	      <li>2: 3</li>
+	(updated=2, filled=66.67%, min=2: 2, max=2: 2)
+	      <li>2: 2</li>
 	     </ul>
 	  </li>
 	  <li><span class="caret">a</span> - <label>[:a]<input type="checkbox" name="[:a]" value="[:a]"></label>
 	    <ul class="nested" style="color: #E15759">    [Scalar - Int64], 2 unique values,
-	(updated = 3, filled = 100.0%, min=1: 1, max=2: 2)
+	(updated=3, filled=100.00%, min=1: 1, max=2: 2)
 	      <li>2: 2</li>
 	      <li>1: 1</li>
 	     </ul>
@@ -98,4 +98,62 @@ end
 
 	JsonGrinder.generate_html(sch, "schema_test_maxvals=5.html", max_vals=5)
 	@test isfile("schema_test_maxvals=5.html")
+end
+
+@testset "Dict Entry creation" begin
+	JsonGrinder.updatemaxkeys!(10)
+
+	j1 = JSON.parse("""{"a": 1, "P P": 2}""")
+	j2 = JSON.parse("""{"a": 2, "P P": 2}""")
+	j3 = JSON.parse("""{"a": 2, "P P": 2}""")
+	sch = JsonGrinder.schema([j1,j2,j3])
+
+	html = JsonGrinder.schema2html(sch, max_len=nothing, max_vals=nothing)
+	html2 = """<ul class="top_dict" style="color: #4E79A7">[Dict] (updated=3)
+	  <li><span class="caret">P P</span> - <label>[Symbol("P P")]<input type="checkbox" name="[Symbol(&quot;P P&quot;)]" value="[Symbol(&quot;P P&quot;)]"></label>
+	    <ul class="nested" style="color: #E15759">    [Scalar - Int64], 1 unique values,
+	(updated=3, filled=100.00%, min=2: 3, max=2: 3)
+	      <li>2: 3</li>
+	     </ul>
+	  </li>
+	  <li><span class="caret">a</span> - <label>[:a]<input type="checkbox" name="[:a]" value="[:a]"></label>
+	    <ul class="nested" style="color: #E15759">    [Scalar - Int64], 2 unique values,
+	(updated=3, filled=100.00%, min=1: 1, max=2: 2)
+	      <li>2: 2</li>
+	      <li>1: 1</li>
+	     </ul>
+	  </li>
+	</ul>
+	"""
+	@test html == html2
+end
+
+@testset "Printing cropped list" begin
+	JsonGrinder.updatemaxkeys!(10)
+
+	j1 = JSON.parse("""{"a": 1, "P P": 2}""")
+	j2 = JSON.parse("""{"a": 2, "P P": 2}""")
+	j3 = JSON.parse("""{"a": 3, "P P": 3}""")
+	sch = JsonGrinder.schema([j1,j2,j3])
+
+	html = JsonGrinder.schema2html(sch, max_vals=2)
+	html2 = """<ul class="top_dict" style="color: #4E79A7">[Dict] (updated=3)
+  <li><span class="caret">P P</span> - <label>[Symbol("P P")]<input type="checkbox" name="[Symbol(&quot;P P&quot;)]" value="[Symbol(&quot;P P&quot;)]"></label>
+    <ul class="nested" style="color: #E15759">    [Scalar - Int64], 2 unique values,
+(updated=3, filled=100.00%, min=3: 1, max=2: 2)
+      <li>2: 2</li>
+      <li>3: 1</li>
+     </ul>
+  </li>
+  <li><span class="caret">a</span> - <label>[:a]<input type="checkbox" name="[:a]" value="[:a]"></label>
+    <ul class="nested" style="color: #E15759">    [Scalar - Int64], 3 unique values,
+(updated=3, filled=100.00%, min=1: 1, max=2: 1)
+      <li>2: 1</li>
+      <li>3: 1</li>
+      <li>and other 1 values</li>
+     </ul>
+  </li>
+</ul>
+"""
+	@test html == html2
 end

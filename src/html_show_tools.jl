@@ -1,6 +1,7 @@
 using Mustache, HttpCommon, ThreadTools
 using DataStructures: OrderedDict
 using StatsBase: RealVector, fweights
+using Printf
 import Statistics: quantile, mean
 
 # used tableau 10 colormap
@@ -12,6 +13,8 @@ mean(v::Dict{Int, Int}) = mean(v |> keys |> collect, v |> values |> collect |> f
 stringify(arg::Pair; max_len=1_000) = stringify(arg.first, arg.second, max_len=max_len)
 stringify(arg1::String, arg2; max_len=1_000) = "$(escapeHTML(first(arg1, max_len))): $(arg2)"
 stringify(arg1, arg2; max_len=1_000) = "$(arg1): $(arg2)"
+calc_filled_percent(e, parent_updated) = isnothing(parent_updated) ? "" : @sprintf ", filled=%.2f%%" (100 * e.updated / parent_updated)
+pad_color(pad) = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
 
 function pair2html(i, key, val, max_len, pad)
 	pair_repr = stringify(key, val, max_len=max_len)
@@ -19,14 +22,14 @@ function pair2html(i, key, val, max_len, pad)
 end
 
 function schema2html(e::Entry; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
-	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
-	filled_percent = isnothing(parent_updated) ? "" : ", filled = $(10000 * e.updated ÷ parent_updated / 100)%"
+	c = pad_color(pad)
+	filled_percent = calc_filled_percent(e, parent_updated)
 	sorted_counts = sort(collect(e.counts), by=x->x[2], rev=true)
 	min_repr = stringify(sorted_counts[end], max_len=max_len)
 	max_repr = stringify(sorted_counts[1], max_len=max_len)
 	ret_str = """
 $pad<ul class="nested" style="color: $c">$pad[Scalar - $(join(types(e)))], $(length(keys(e.counts))) unique values,
-(updated = $(e.updated)$filled_percent, min=$min_repr, max=$max_repr)
+(updated=$(e.updated)$filled_percent, min=$min_repr, max=$max_repr)
 """
 
 	counts2process = if isnothing(max_vals)
@@ -52,9 +55,9 @@ $pad[Empty list element], this list is empty in all JSONs, can not infer schema,
 end
 
 function schema2html(e::ArrayEntry; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
- 	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
+ 	c = pad_color(pad)
 	# todo: fix it all so it is different method for array of entries and the rest so only nested things are truly nested
-	filled_percent = isnothing(parent_updated) ? "" : ", filled=$(10000 * e.updated ÷ parent_updated / 100)%"
+	filled_percent = calc_filled_percent(e, parent_updated)
 	quantiles = quantile(e.l, [0.1, 0.5, 0.9])
 	min_val = minimum(keys(e.l))
 	max_val = maximum(keys(e.l))
@@ -90,21 +93,22 @@ $pad</ul>
 end
 
 function schema2html(e::DictEntry; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
-	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
+	c = pad_color(pad)
     if isempty(e.childs)
     	return pad * """<ul style="color: $c">Empty Dict</ul>\n"""
     end
 	class = isempty(pad) ? "top_dict" : "nested"
-	filled_percent = isnothing(parent_updated) ? "" : ", filled=$(10000 * e.updated ÷ parent_updated / 100)%"
+	filled_percent = calc_filled_percent(e, parent_updated)
 	ret_str = pad * """<ul class="$class" style="color: $c">[Dict] (updated=$(e.updated)$filled_percent)\n"""
 	i = 0
-    for (key, val) in sort!(OrderedDict(e.childs))
+	ordered_childs = OrderedDict(e.childs)
+    for (key, val) in sort!(ordered_childs)
 		child_key = """$parent_key[$(repr(Symbol(key)))]"""
 		ret_str *= pad*" "^2 * """<li><span class="caret">$key</span> - <label>$child_key<input type="checkbox" name="$(escapeHTML(child_key))" value="$(escapeHTML(child_key))"></label>\n"""
 		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, max_len=max_len, parent_updated=e.updated, parent_key=child_key)
 		ret_str *= pad*" "^2 * "</li>\n"
 		i += 1
-		if i == max_vals
+		if !isnothing(max_vals) && i == max_vals && length(ordered_childs) > max_vals
 			ret_str *= pad*" "^2 * "<li>and other $(length(e.childs) - i) values</li>\n"
 			break
 		end
@@ -113,8 +117,8 @@ function schema2html(e::DictEntry; pad = "", max_vals=100, max_len=1_000, parent
 end
 
 function schema2html(e::MultiEntry; pad = "", max_vals=100, max_len=1_000, parent_updated=nothing, parent_key="")
-	c = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
-	filled_percent = isnothing(parent_updated) ? "" : ", filled=$(10000 * e.updated ÷ parent_updated / 100)%"
+	c = pad_color(pad)
+	filled_percent = calc_filled_percent(e, parent_updated)
 	ret_str = pad * """<ul class="nested" style="color: $c">[MultiEntry] (updated=$(e.updated)$filled_percent)\n"""
 	i = 0
     for (key, val) in enumerate(e.childs)
@@ -123,7 +127,7 @@ function schema2html(e::MultiEntry; pad = "", max_vals=100, max_len=1_000, paren
 		ret_str *= schema2html(val, pad=pad*" "^4, max_vals=max_vals, max_len=max_len, parent_updated=e.updated, parent_key=child_key)
 		ret_str *= pad*" "^2 * "</li>\n"
 		i += 1
-		if i == max_vals
+		if !isnothing(max_vals) && i == max_vals && length(e.childs) > max_vals
 			ret_str *= pad*" "^2 * "<li>and other $(length(e.childs) - i) values</li>\n"
 			break
 		end
