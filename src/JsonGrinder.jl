@@ -25,7 +25,7 @@ include("extractors/extract_keyasfield.jl")
 include("extractors/multirepresentation.jl")
 include("html_show_tools.jl")
 
-export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString
+export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString, AuxiliaryExtractor
 export suggestextractor, schema, extractbatch, generate_html
 include("hierarchical_utils.jl")
 
