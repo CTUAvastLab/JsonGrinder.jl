@@ -6,7 +6,7 @@
 	end
 
 	Keeps statistics about scalar values of a one key and also about items inside a key
-	`count` counts how many times given value appeared (at most max_keys is held)
+	`counts` counts how many times given value appeared (at most max_keys is held)
 	`updated` counts how many times the entry was updated
 """
 mutable struct Entry{T} <: JSONEntry
