@@ -5,6 +5,8 @@ using JsonGrinder, JSON, Test, SparseArrays
 	@test JsonGrinder.stringify("<b>a</b>", 2) == "&lt;b&gt;a&lt;/b&gt;: 2"
 	@test length("a<bcd" ^ 1_000) == 5_000
 	@test JsonGrinder.stringify("a<bcd" ^ 1_000, 3, max_len=20) == "a&lt;bcda&lt;bcda&lt;bcda&lt;bcd: 3"
+	@test JsonGrinder.stringify("a<bcd" ^ 5, 3, max_len=10) == "a&lt;bcda&lt;bcd: 3"
+	@test JsonGrinder.stringify("a<bcd" ^ 5, 3, max_len=nothing) == "a&lt;bcda&lt;bcda&lt;bcda&lt;bcda&lt;bcd: 3"
 end
 
 @testset "Entry creation" begin

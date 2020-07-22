@@ -11,7 +11,7 @@ quantile(v::Dict{Int, Int}, p::Number) = quantile(v |> keys |> collect, v |> val
 quantile(v::Dict{Int, Int}, p::RealVector) = quantile(v |> keys |> collect, v |> values |> collect |> fweights, p)
 mean(v::Dict{Int, Int}) = mean(v |> keys |> collect, v |> values |> collect |> fweights)
 stringify(arg::Pair; max_len=1_000) = stringify(arg.first, arg.second, max_len=max_len)
-stringify(arg1::String, arg2; max_len=1_000) = "$(escapeHTML(first(arg1, max_len))): $(arg2)"
+stringify(arg1::String, arg2; max_len=1_000) = isnothing(max_len) ? "$(escapeHTML(arg1)): $(arg2)" : "$(escapeHTML(first(arg1, max_len))): $(arg2)"
 stringify(arg1, arg2; max_len=1_000) = "$(arg1): $(arg2)"
 calc_filled_percent(e, parent_updated) = isnothing(parent_updated) ? "" : @sprintf ", filled=%.2f%%" (100 * e.updated / parent_updated)
 pad_color(pad) = HTML_COLORS[((length(pad)÷2)%length(HTML_COLORS))+1]
@@ -72,10 +72,11 @@ $pad<li><span class="caret">with following frequencies</span>
 $pad<ul class="nested">
 """
  	i = 0
- 	for (key, val) in sort(collect(e.l))
+	sorted_el = sort(collect(e.l))
+ 	for (key, val) in sorted_el
 		ret_str *= pad*" "^2 * "<li>$key: $val</li>\n"
 		i += 1
-		if i == max_vals
+		if !isnothing(max_vals) && i == max_vals && length(sorted_el) > max_vals
 			ret_str *= pad*" "^2 * "<li>and other $(length(e.l) - i) values</li>\n"
 			break
 		end
