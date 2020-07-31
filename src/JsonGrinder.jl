@@ -6,11 +6,6 @@ import HierarchicalUtils: NodeType, children, InnerNode, LeafNode, printtree, no
 using Mill: ArrayNode, BagNode, ProductNode, catobs
 
 const FloatType = Float32
-if VERSION < v"1.4.0"
-    @info "including polyfill for function only from Julia 1.4"
-    include("polyfill_1_4.jl")
-    export only
-end
 
 include("schema/schema.jl")
 include("extractors/auxiliary.jl")
@@ -24,13 +19,13 @@ include("extractors/extractonehot.jl")
 include("extractors/extract_keyasfield.jl")
 include("extractors/multirepresentation.jl")
 include("html_show_tools.jl")
+include("hierarchical_utils.jl")
 
 export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString, AuxiliaryExtractor
 export suggestextractor, schema, extractbatch, generate_html
-include("hierarchical_utils.jl")
 
 Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = show(io, Base.typename(T))
-Base.show(io::IO, ::MIME"text/plain", n::Union{JSONEntry, AbstractExtractor}) = HierarchicalUtils.printtree(io, n; trav=false)
+Base.show(io::IO, ::MIME"text/plain", n::Union{JSONEntry, AbstractExtractor}) = HierarchicalUtils.printtree(io, n; trav=false, trunc=3)
 Base.getindex(n::Union{JSONEntry, AbstractExtractor}, i::AbstractString) = HierarchicalUtils.walk(n, i)
 
 end # module
