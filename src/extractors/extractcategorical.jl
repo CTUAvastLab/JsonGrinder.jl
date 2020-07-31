@@ -12,7 +12,7 @@ struct ExtractCategorical{V,I} <: AbstractExtractor
 	n::Int
 end
 
-ExtractCategorical(s::Entry) = ExtractCategorical(keys(s.counts))
+ExtractCategorical(s::Entry) = ExtractCategorical(collect(keys(s.counts)))
 ExtractCategorical(s::UnitRange) = ExtractCategorical(collect(s))
 function ExtractCategorical(ks::Vector)
 	if isempty(ks)

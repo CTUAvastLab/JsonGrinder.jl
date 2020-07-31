@@ -149,6 +149,17 @@ end
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test typeof(e(["a", "b"]).data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
+
+	@test isnothing(ExtractCategorical([]))
+	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
+	@test e2("a").data[:] ≈ [1, 0, 0]
+	@test e2("c").data[:] ≈ [0, 1, 0]
+	@test e2("b").data[:] ≈ [0, 0, 1]
+	@test e2(nothing).data[:] ≈ [0, 0, 1]
+
+	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
+	@test catobs(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
+	@test e(Dict(1=>2)).data[:] ≈ [0, 0, 1]
 end
 
 @testset "equals and hash test" begin
@@ -468,4 +479,15 @@ end
 	@test c == ""
 	ext = JsonGrinder.extractscalar(AbstractString)
 	@test SparseMatrixCSC(ext(c).data) == SparseMatrixCSC(ext(e).data)
+end
+
+@testset "key as field" begin
+	j1 = JSON.parse("""{"a": 1}""")
+	j2 = JSON.parse("""{"b": 2.5}""")
+	j3 = JSON.parse("""{"c": 3.1}""")
+	j4 = JSON.parse("""{"d": 5}""")
+	j5 = JSON.parse("""{"e": 4.5}""")
+	j6 = JSON.parse("""{"f": 5}""")
+	sch = JsonGrinder.schema([j1, j2, j3, j4, j5, j6])
+	JsonGrinder.key_as_field(sch)
 end
