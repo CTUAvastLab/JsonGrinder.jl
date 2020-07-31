@@ -489,5 +489,10 @@ end
 	j5 = JSON.parse("""{"e": 4.5}""")
 	j6 = JSON.parse("""{"f": 5}""")
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5, j6])
-	JsonGrinder.key_as_field(sch)
+	e = JsonGrinder.key_as_field(sch, NamedTuple(), path = "")
+	@test e isa JsonGrinder.ExtractKeyAsField
+
+	e2 = JsonGrinder.key_as_field(sch, NamedTuple(), path = "")
+	@test hash(e) === hash(e2)
+	@test e == e2
 end
