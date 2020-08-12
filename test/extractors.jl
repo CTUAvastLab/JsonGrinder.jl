@@ -465,20 +465,25 @@ end
 	@test e3["U"].data ≈ [1.0]
 	@test e4["U"].data ≈ [0]
 	@test e5["U"].data ≈ [0]
+
+	@test hash(ext) !== hash(suggestextractor(JsonGrinder.schema([j1, j2, j4, j5])))
 end
 
 @testset "empty string and substring" begin
 	a, b, c = split("a b ", " ")
 	d = "d"
 	e = ""
+	f = 5.2
 	@test a isa SubString{String}
 	@test b isa SubString{String}
 	@test c isa SubString{String}
 	@test d isa String
 	@test e isa String
+	@test f isa AbstractFloat
 	@test c == ""
 	ext = JsonGrinder.extractscalar(AbstractString)
 	@test SparseMatrixCSC(ext(c).data) == SparseMatrixCSC(ext(e).data)
+	@test ext(f) == ext(nothing)
 end
 
 @testset "key as field" begin
@@ -495,4 +500,21 @@ end
 	e2 = JsonGrinder.key_as_field(sch, NamedTuple(), path = "")
 	@test hash(e) === hash(e2)
 	@test e == e2
+end
+
+@testset "AuxiliaryExtractor HUtils" begin
+	e2 = ExtractCategorical(["a","b"])
+	e = AuxiliaryExtractor(e2, (ext, sample)->ext(String(sample)))
+
+	@test e("b") == e(:b)
+	@test e("b").data ≈ [0, 1, 0]
+	@test e(:b).data ≈ [0, 1, 0]
+
+	buf = IOBuffer()
+    printtree(buf, e)
+    str_repr = String(take!(buf))
+    @test str_repr ==
+	"""
+Auxiliary extractor with
+  └── Categorical d = 3"""
 end
