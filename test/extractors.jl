@@ -384,31 +384,25 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5, j6, j7])
 	ext = suggestextractor(sch)
 
-	buf = IOBuffer()
-	printtree(buf, sch)
-	str_repr = String(take!(buf))
-	@test str_repr ==
-"""
-[Dict] (updated = 7)
-  └── a: [MultiEntry] (updated = 7)
-           ├── 1: [Scalar - String], 3 unique values, updated = 3
-           ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
-           ├── 3: [List] (updated = 1)
-           │        └── [Scalar - Int64], 5 unique values, updated = 5
-           └── 4: [Dict] (updated = 1)
-                    └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1"""
+	@test buf_printtree(sch) ==
+    """
+    [Dict] (updated = 7)
+      └── a: [MultiEntry] (updated = 7)
+               ├── 1: [Scalar - String], 3 unique values, updated = 3
+               ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
+               ├── 3: [List] (updated = 1)
+               │        └── [Scalar - Int64], 5 unique values, updated = 5
+               └── 4: [Dict] (updated = 1)
+                        └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1"""
 
-	buf = IOBuffer()
-	printtree(buf, ext)
-	str_repr = String(take!(buf))
-	@test str_repr ==
-"""
-Dict
-  └── a: MultiRepresentation
-           ├── e1: FeatureVector with 5 items
-           ├── e2: Dict
-           │         └── Sylvanas is the worst warchief ever: String
-           └── e3: Float32"""
+	@test buf_printtree(ext) ==
+    """
+    Dict
+      └── MultiRepresentation
+            ├── e1: FeatureVector with 5 items
+            ├── e2: Dict
+            │         └── String
+            └── e3: Float32"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
@@ -432,10 +426,7 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5])
 	ext = suggestextractor(sch)
 
-	buf = IOBuffer()
-	printtree(buf, sch)
-	str_repr = String(take!(buf))
-	@test str_repr ==
+	@test buf_printtree(sch) ==
 	"""
 	[Dict] (updated = 5)
 	  └── a: [MultiEntry] (updated = 5)
@@ -444,16 +435,13 @@ end
 	           └── 3: [List] (updated = 1)
 	                    └── [Scalar - Int64], 5 unique values, updated = 5"""
 
-	buf = IOBuffer()
-	printtree(buf, ext)
-	str_repr = String(take!(buf))
-	@test str_repr ==
+	@test buf_printtree(ext) ==
 	"""
-	Dict
-	  └── a: MultiRepresentation
-	           ├── e1: String
-	           ├── e2: Float32
-	           └── e3: FeatureVector with 5 items"""
+    Dict
+      └── MultiRepresentation
+            ├── e1: String
+            ├── e2: Float32
+            └── e3: FeatureVector with 5 items"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
@@ -510,11 +498,32 @@ end
 	@test e("b").data ≈ [0, 1, 0]
 	@test e(:b).data ≈ [0, 1, 0]
 
-	buf = IOBuffer()
-    printtree(buf, e)
-    str_repr = String(take!(buf))
-    @test str_repr ==
+    @test buf_printtree(e) ==
 	"""
-Auxiliary extractor with
-  └── Categorical d = 3"""
+    Auxiliary extractor with
+      └── Categorical d = 3"""
 end
+
+@testset "Skipping single dict key" begin
+	j1 = JSON.parse("""{"a": []}""")
+	j2 = JSON.parse("""{"a": [1, 2]}""")
+	j3 = JSON.parse("""{"a": [1, 2, 3]}""")
+	j4 = JSON.parse("""{"a": [1, 2, 3, 4]}""")
+	j5 = JSON.parse("""{"a": [1, 2, 3, 4, 5]}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3, j4, j5])
+	ext = suggestextractor(sch)
+
+	@test buf_printtree(ext) ==
+	"""
+	Dict
+	  └── Array of
+	        └── Float32"""
+
+	ext_j2 = ext(j2)
+    @test buf_printtree(ext_j2) ==
+    """
+    BagNode with 1 bag(s)
+      └── ArrayNode(1, 2)"""
+end
+# todo: test extractdict with single child and also printing to try the hutils integration
