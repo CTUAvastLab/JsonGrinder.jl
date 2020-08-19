@@ -48,7 +48,7 @@ end
     @test children(ext[:b]) == (a=ext[:b][:a], b=ext[:b][:b])
     @test children(ext[:b][:a]) == (ext[:b][:a].item,)
     @test children(ext[:b][:b]) == ()
-    @test children(ext[:c]) == (a=ext[:c][:a],)
+    @test children(ext[:c]) == (ext[:c][:a],)
     @test children(ext[:c][:a]) == (a=ext[:c][:a][:a], b=ext[:c][:a][:b])
     @test children(ext[:c][:a][:a]) == (ext[:c][:a][:a].item,)
     @test children(ext[:c][:a][:b]) == (ext[:c][:a][:b].item,)
