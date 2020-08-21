@@ -35,5 +35,6 @@ end
 (s::ExtractScalar)(v::AbstractString) = s((tryparse(s.datatype,v)))
 (s::ExtractScalar{T,V})(v)  where {T,V} = s(nothing)
 
+Base.length(e::ExtractScalar) = 1
 Base.hash(e::ExtractScalar, h::UInt) = hash((e.datatype, e.c, e.s), h)
 Base.:(==)(e1::ExtractScalar, e2::ExtractScalar) = e1.datatype == e2.datatype && e1.c === e2.c && e1.s === e2.s

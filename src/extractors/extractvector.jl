@@ -37,5 +37,6 @@ function (s::ExtractVector{T})(v::V) where {T,V<:AbstractArray}
 	ArrayNode(x)
 end
 
+Base.length(e::ExtractVector) = e.n
 Base.hash(e::ExtractVector, h::UInt) = hash(e.n, h)
 Base.:(==)(e1::ExtractVector, e2::ExtractVector) = e1.n === e2.n
