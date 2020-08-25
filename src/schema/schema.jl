@@ -4,7 +4,7 @@ import Base: merge, length
 abstract type AbstractExtractor end
 abstract type JSONEntry end
 StringOrNumber = Union{AbstractString,Number}
-max_keys = 10000
+max_keys = 10_000
 
 """
 	updatemaxkeys!(n::Int)
@@ -13,6 +13,19 @@ max_keys = 10000
 """
 function updatemaxkeys!(n::Int)
 	global max_keys = n
+end
+
+max_len = 10_000
+
+"""
+	updatemaxlen!(n::Int)
+
+	limits the maximum size of string values in statistics of nodes in JSON. Default value is 10000.
+	Longer strings will be trimmed and their length and hash will be appended to retain the uniqueness.
+	This is due to some strings being very long and causing the schema to be even order of magnitute larger than needed.
+"""
+function updatemaxlen!(n::Int)
+	global max_len = n
 end
 
 function safe_update!(s::JSONEntry, d; path = "")

@@ -395,7 +395,6 @@ end
 	@test hash(sch) === hash(sch2)
 end
 
-
 @testset "Schema merging with max keys and irregularities" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
@@ -418,4 +417,27 @@ end
 	sch_merged = merge(sch1, sch2)
 
 	@test sch == sch_merged
+end
+
+@testset "Schema with string shortening" begin
+	j1 = JSON.parse("""{"a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}""")
+	j2 = JSON.parse("""{"a": "b"}""")
+	j3 = JSON.parse("""{"a": "🅱️"}""")
+	j4 = JSON.parse("""{"a": "aaaaaaaaaaa"}""")
+	j5 = JSON.parse("""{"a": "aaaaaaaaaa"}""")
+	j6 = JSON.parse("""{"a": "aaaaaaaaa"}""")
+	j7 = JSON.parse("""{"a": "$("a"^100)"}""")
+
+	max_string_len = 10
+	sha1len = 40
+	shorten_suffix = 1 + 3 + 1 + sha1len
+
+	JsonGrinder.updatemaxlen!(max_string_len)
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7])
+	@test sch[:a].counts |> keys .|> length |> maximum <= max_string_len + shorten_suffix
+	@test max_string_len + shorten_suffix < 100		# sanity check that we actually shortened it
+
+	JsonGrinder.updatemaxlen!(10_000)
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7])
+	@test sch[:a].counts |> keys .|> length |> maximum == 100
 end
