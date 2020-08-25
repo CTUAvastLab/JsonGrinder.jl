@@ -446,3 +446,48 @@ end
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7])
 	@test sch[:a].counts |> keys .|> length |> maximum == 100
 end
+
+@testset "Schema with string shortening" begin
+	j1 = JSON.parse("""{"a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}""")
+	j2 = JSON.parse("""{"a": "b"}""")
+	j3 = JSON.parse("""{"a": "🅱️"}""")
+	j4 = JSON.parse("""{"a": "aaaaaaaaaaa"}""")
+	j5 = JSON.parse("""{"a": "aaaaaaaaaa"}""")
+	j6 = JSON.parse("""{"a": "aaaaaaaaa"}""")
+	j7 = JSON.parse("""{"a": "$("a"^100)"}""")
+
+	max_string_len = 10
+	sha1len = 40
+	shorten_suffix = 1 + 3 + 1 + sha1len
+
+	prev_len = JsonGrinder.max_len
+	JsonGrinder.updatemaxlen!(max_string_len)
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7])
+	@test sch[:a].counts |> keys .|> length |> maximum <= max_string_len + shorten_suffix
+	@test max_string_len + shorten_suffix < 100		# sanity check that we actually shortened it
+
+	JsonGrinder.updatemaxlen!(prev_len)
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7])
+	@test sch[:a].counts |> keys .|> length |> maximum == 100
+end
+
+@testset "Schema with fails" begin
+	j1 = JSON.parse("""{"a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}""")
+	j2 = Dict("a"=>JsonGrinder)
+
+	sch = JsonGrinder.schema([j1,j2])
+	@test sch[:a].updated == 1
+end
+
+@testset "Schema with raw jsons" begin
+	j1 = """{"a": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}"""
+	j2 = """{"a": "b"}"""
+	j3 = """{"a": "🅱️"}"""
+	j4 = """{"a": "aaaaaaaaaaa"}"""
+	j5 = """{"a": "aaaaaaaaaa"}"""
+	j6 = """{"a": "aaaaaaaaa"}"""
+	j7 = """{"a": "$("a"^100)"}"""
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7])
+	@test sch[:a].updated == 7
+end
