@@ -35,10 +35,4 @@ children(n::ExtractArray) = (n.item,)
 children(n::MultipleRepresentation) = n.extractors
 children(e::ExtractKeyAsField) = (e.key, e.item)
 children(n::AuxiliaryExtractor) = (n.extractor,)
-# consistency with skipping single child during extraction
-extract_dict_children(n) = (; Dict(Symbol(k)=>v for (k,v) in merge(filter(!isnothing, [n.vec, n.other])...))...)
-children(n::ExtractDict) = extract_dict_children(n)
-function children(n::ExtractDict{S,V}) where {S<:Nothing,V<:Dict}
-    childs = extract_dict_children(n)
-    length(childs) == 1 ? tuple(first(childs)) : childs
-end
+children(n::ExtractDict) = (; Dict(Symbol(k)=>v for (k,v) in merge(filter(!isnothing, [n.vec, n.other])...))...)
