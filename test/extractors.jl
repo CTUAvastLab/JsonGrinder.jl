@@ -73,19 +73,18 @@ end
 	a2 = br(Dict("a" => 5, "b" => 7))
 	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
 
-	@test all(a1.data.data .== [-3 0 3 6])
-	@test all(a1.bags .== [1:4])
-	@test all(catobs(a1,a1).data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a1,a1).bags .== [1:4,5:8])
+	@test all(a1[:c].data.data .== [-3 0 3 6])
+	@test all(a1[:c].bags .== [1:4])
+	@test all(catobs(a1,a1)[:c].data.data .== [-3 0 3 6 -3 0 3 6])
+	@test all(catobs(a1,a1)[:c].bags .== [1:4,5:8])
 
-	@test all(catobs(a1,a2).data.data .== [-3 0 3 6])
-	@test all(catobs(a1,a2).bags .== [1:4,0:-1])
+	@test all(catobs(a1,a2)[:c].data.data .== [-3 0 3 6])
+	@test all(catobs(a1,a2)[:c].bags .== [1:4,0:-1])
 
-
-	@test all(a3.data.data .== [-3 0 3 6])
-	@test all(a3.bags .== [1:4])
-	@test all(catobs(a3,a3).data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a3,a3).bags .== [1:4,5:8])
+	@test all(a3[:c].data.data .== [-3 0 3 6])
+	@test all(a3[:c].bags .== [1:4])
+	@test all(catobs(a3,a3)[:c].data.data .== [-3 0 3 6 -3 0 3 6])
+	@test all(catobs(a3,a3)[:c].bags .== [1:4,5:8])
 end
 
 @testset "Testing Nested Missing Arrays" begin
