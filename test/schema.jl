@@ -207,6 +207,7 @@ end
 	j10 = JSON.parse("""{"a": [{"a":11,"b":12},{"b":13,"a":14}], "b":2}""")
 	j11 = JSON.parse("""{"a": [{"a":7,"b":5},{"b":6,"a":6}], "b":2}""")
 
+	prev_keys = JsonGrinder.max_keys
 	JsonGrinder.updatemaxkeys!(6)
 	# todo: otestovat jak funguje newentry s víceprvkovám polem
 	sch1 = JsonGrinder.schema([j1,j2,j3,j4,j5,j11])
@@ -216,6 +217,7 @@ end
 	sch_merged = merge(sch1, sch2)
 
 	@test sch == sch_merged
+	JsonGrinder.updatemaxkeys!(prev_keys)
 end
 
 @testset "Sample synthetic" begin
@@ -408,6 +410,7 @@ end
 	j10 = JSON.parse("""{"a": [{"a":11,"b":12},{"b":13,"a":"14"}], "b":"3"}""")
 	j11 = JSON.parse("""{"a": [{"a":7,"b":5},{"b":6,"a":"6"}], "b":"4"}""")
 
+	prev_keys = JsonGrinder.max_keys
 	JsonGrinder.updatemaxkeys!(4)
 	# todo: otestovat jak funguje newentry s víceprvkovám polem
 	sch1 = JsonGrinder.schema([j1,j2,j3,j4,j5,j11])
@@ -417,6 +420,7 @@ end
 	sch_merged = merge(sch1, sch2)
 
 	@test sch == sch_merged
+	JsonGrinder.updatemaxkeys!(prev_keys)
 end
 
 @testset "Schema with string shortening" begin
@@ -432,12 +436,13 @@ end
 	sha1len = 40
 	shorten_suffix = 1 + 3 + 1 + sha1len
 
+	prev_len = JsonGrinder.max_len
 	JsonGrinder.updatemaxlen!(max_string_len)
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7])
 	@test sch[:a].counts |> keys .|> length |> maximum <= max_string_len + shorten_suffix
 	@test max_string_len + shorten_suffix < 100		# sanity check that we actually shortened it
 
-	JsonGrinder.updatemaxlen!(10_000)
+	JsonGrinder.updatemaxlen!(prev_len)
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7])
 	@test sch[:a].counts |> keys .|> length |> maximum == 100
 end
