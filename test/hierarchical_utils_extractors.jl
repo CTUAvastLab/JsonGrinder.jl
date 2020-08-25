@@ -24,11 +24,11 @@ ext = suggestextractor(sch)
       │        │        └── Float32 ["a"]
       │        └── b: Float32 ["c"]
       └── c: Dict ["k"]
-               └── Dict ["s"]
-                     ├── a: Array of ["u"]
-                     │        └── Float32 ["v"]
-                     └── b: Array of ["w"]
-                              └── Float32 ["x"]"""
+               └── a: Dict ["s"]
+                        ├── a: Array of ["u"]
+                        │        └── Float32 ["v"]
+                        └── b: Array of ["w"]
+                                 └── Float32 ["x"]"""
 end
 
 @testset "nnodes" begin
@@ -48,7 +48,7 @@ end
     @test children(ext[:b]) == (a=ext[:b][:a], b=ext[:b][:b])
     @test children(ext[:b][:a]) == (ext[:b][:a].item,)
     @test children(ext[:b][:b]) == ()
-    @test children(ext[:c]) == (ext[:c][:a],)
+    @test children(ext[:c]) == (a=ext[:c][:a],)
     @test children(ext[:c][:a]) == (a=ext[:c][:a][:a], b=ext[:c][:a][:b])
     @test children(ext[:c][:a][:a]) == (ext[:c][:a][:a].item,)
     @test children(ext[:c][:a][:b]) == (ext[:c][:a][:b].item,)
