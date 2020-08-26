@@ -177,7 +177,7 @@ end
     buf = IOBuffer()
     Base.show(buf, sch)
     str_repr = String(take!(buf))
-    @test str_repr == "JsonGrinder.DictEntry"
+    @test str_repr == "DictEntry"
 
     buf = IOBuffer()
     Base.show(buf, "text/plain", sch)
