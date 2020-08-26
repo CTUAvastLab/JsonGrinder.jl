@@ -64,8 +64,7 @@ end
 
 @testset "Nothing creation" begin
 	html = JsonGrinder.schema2html(nothing, max_len=10)
-	html2 = """[Empty list element], this list is empty in all JSONs, can not infer schema, suggesting to delete key
-	"""
+	html2 = "[Empty list element], this list is empty in all JSONs, can not infer schema, suggesting to delete key \n"
 	@test html == html2
 end
 
