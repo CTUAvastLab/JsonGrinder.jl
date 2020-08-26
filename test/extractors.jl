@@ -35,6 +35,8 @@ end
 	# feature vector longer than expected
 	sc = ExtractVector(5)
 	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
+	@test sc([5, 6]).data ≈ [5, 6, 0, 0, 0]
+	@test sc(Dict(1=>2)).data ≈ zeros(5)
 end
 
 @testset "Testing ExtractDict" begin
@@ -309,6 +311,21 @@ end
 	@test ext_j2["U"].data.data ≈ [0 .25 .5 .75]
 	@test ext_j3["U"].data.data ≈ [0 .25 .5 .75 1.]
 	@test ext_j4["U"].data.data ≈ [0 .25 .5]
+end
+
+@testset "Suggest complex" begin
+	JsonGrinder.updatemaxkeys!(1000)
+	js = [Dict("a" => rand(), "b" => Dict(randstring(5) => rand()), "c"=>[rand(), rand()], "d"=>[rand() for i in 1:rand(1:10)]) for _ in 1:1000]
+	sch = JsonGrinder.schema(js)
+	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
+
+	@test ext[:a].datatype <: Float32
+	@test ext[:b] isa JsonGrinder.ExtractKeyAsField
+	@test ext[:b].key.datatype <: Float32
+	@test ext[:b].item.datatype <: Float32
+	@test ext[:c] isa ExtractVector
+	@test ext[:c].n == 2
+	@test ext[:d] isa ExtractArray
 end
 
 @testset "Extractor typed missing bags" begin
