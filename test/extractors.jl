@@ -49,18 +49,22 @@ end
 	@test all(catobs(a1,a1).data[1].data .==[7 7; 9 9])
 	@test all(catobs(a1,a1).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a1,a1).data[2].bags .== [1:4,5:8])
+	@test all(catobs(a1,a1).metadata .== [["b", "a"], ["b", "a"]])
 
 	@test all(catobs(a1,a2).data[1].data .==[7 7; 9 9])
 	@test all(catobs(a1,a2).data[2].data.data .== [-3 0 3 6])
 	@test all(catobs(a1,a2).data[2].bags .== [1:4,0:-1])
+	@test all(catobs(a1,a2).metadata .== [["b", "a"], ["b", "a"]])
 
 	@test all(catobs(a2,a3).data[1].data .==[7 0; 9 9])
 	@test all(catobs(a2,a3).data[2].data.data .== [-3 0 3 6])
 	@test all(catobs(a2,a3).data[2].bags .== [0:-1,1:4])
+	@test all(catobs(a2,a3).metadata .== [["b", "a"], ["b", "a"]])
 
 	@test all(catobs(a1,a3).data[1].data .==[7 0; 9 9])
 	@test all(catobs(a1,a3).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a1,a3).data[2].bags .== [1:4,5:8])
+	@test all(catobs(a1,a3).metadata .== [["b", "a"], ["b", "a"]])
 
 	br = ExtractDict(vector,nothing)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
