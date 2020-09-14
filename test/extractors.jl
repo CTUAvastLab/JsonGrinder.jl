@@ -35,6 +35,8 @@ end
 	# feature vector longer than expected
 	sc = ExtractVector(5)
 	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
+	@test sc([5, 6]).data ≈ [5, 6, 0, 0, 0]
+	@test sc(Dict(1=>2)).data ≈ zeros(5)
 end
 
 @testset "Testing ExtractDict" begin
@@ -47,18 +49,22 @@ end
 	@test all(catobs(a1,a1).data[1].data .==[7 7; 9 9])
 	@test all(catobs(a1,a1).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a1,a1).data[2].bags .== [1:4,5:8])
+	@test all(catobs(a1,a1).metadata .== [["b", "a"], ["b", "a"]])
 
 	@test all(catobs(a1,a2).data[1].data .==[7 7; 9 9])
 	@test all(catobs(a1,a2).data[2].data.data .== [-3 0 3 6])
 	@test all(catobs(a1,a2).data[2].bags .== [1:4,0:-1])
+	@test all(catobs(a1,a2).metadata .== [["b", "a"], ["b", "a"]])
 
 	@test all(catobs(a2,a3).data[1].data .==[7 0; 9 9])
 	@test all(catobs(a2,a3).data[2].data.data .== [-3 0 3 6])
 	@test all(catobs(a2,a3).data[2].bags .== [0:-1,1:4])
+	@test all(catobs(a2,a3).metadata .== [["b", "a"], ["b", "a"]])
 
 	@test all(catobs(a1,a3).data[1].data .==[7 0; 9 9])
 	@test all(catobs(a1,a3).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a1,a3).data[2].bags .== [1:4,5:8])
+	@test all(catobs(a1,a3).metadata .== [["b", "a"], ["b", "a"]])
 
 	br = ExtractDict(vector,nothing)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
@@ -73,19 +79,18 @@ end
 	a2 = br(Dict("a" => 5, "b" => 7))
 	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
 
-	@test all(a1.data.data .== [-3 0 3 6])
-	@test all(a1.bags .== [1:4])
-	@test all(catobs(a1,a1).data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a1,a1).bags .== [1:4,5:8])
+	@test all(a1[:c].data.data .== [-3 0 3 6])
+	@test all(a1[:c].bags .== [1:4])
+	@test all(catobs(a1,a1)[:c].data.data .== [-3 0 3 6 -3 0 3 6])
+	@test all(catobs(a1,a1)[:c].bags .== [1:4,5:8])
 
-	@test all(catobs(a1,a2).data.data .== [-3 0 3 6])
-	@test all(catobs(a1,a2).bags .== [1:4,0:-1])
+	@test all(catobs(a1,a2)[:c].data.data .== [-3 0 3 6])
+	@test all(catobs(a1,a2)[:c].bags .== [1:4,0:-1])
 
-
-	@test all(a3.data.data .== [-3 0 3 6])
-	@test all(a3.bags .== [1:4])
-	@test all(catobs(a3,a3).data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a3,a3).bags .== [1:4,5:8])
+	@test all(a3[:c].data.data .== [-3 0 3 6])
+	@test all(a3[:c].bags .== [1:4])
+	@test all(catobs(a3,a3)[:c].data.data .== [-3 0 3 6 -3 0 3 6])
+	@test all(catobs(a3,a3)[:c].bags .== [1:4,5:8])
 end
 
 @testset "Testing Nested Missing Arrays" begin
@@ -312,6 +317,21 @@ end
 	@test ext_j4["U"].data.data ≈ [0 .25 .5]
 end
 
+@testset "Suggest complex" begin
+	JsonGrinder.updatemaxkeys!(1000)
+	js = [Dict("a" => rand(), "b" => Dict(randstring(5) => rand()), "c"=>[rand(), rand()], "d"=>[rand() for i in 1:rand(1:10)]) for _ in 1:1000]
+	sch = JsonGrinder.schema(js)
+	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
+
+	@test ext[:a].datatype <: Float32
+	@test ext[:b] isa JsonGrinder.ExtractKeyAsField
+	@test ext[:b].key.datatype <: Float32
+	@test ext[:b].item.datatype <: Float32
+	@test ext[:c] isa ExtractVector
+	@test ext[:c].n == 2
+	@test ext[:d] isa ExtractArray
+end
+
 @testset "Extractor typed missing bags" begin
 	j1 = JSON.parse("""{"a": []}""")
 	j2 = JSON.parse("""{"a": [1, 2]}""")
@@ -327,10 +347,10 @@ end
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
-	@test ext_j1.data.data isa Array{Float32,2}
-	@test ext_j2.data.data isa Array{Float32,2}
-	@test ext_j3.data.data isa Array{Float32,2}
-	@test ext_j4.data.data isa Array{Float32,2}
+	@test ext_j1[:a].data.data isa Array{Float32,2}
+	@test ext_j2[:a].data.data isa Array{Float32,2}
+	@test ext_j3[:a].data.data isa Array{Float32,2}
+	@test ext_j4[:a].data.data isa Array{Float32,2}
 end
 
 @testset "testing irregular extractor" begin
@@ -341,13 +361,13 @@ end
 	sch = schema([j1,j2,j3])
 	ext = suggestextractor(sch)
 	a = ext(j1)
-	@test a.data[1].data[1] == 0
-	@test a.data[2].data[:a].data.s[1] == ""
-	@test nobs(a.data[3]) == 1
+	@test a[:a].data[1].data[1] == 0
+	@test a[:a].data[2].data[:a].data.s[1] == ""
+	@test nobs(a[:a].data[3]) == 1
 	# this should be 0, there is problem with handling missing valus
 	# todo: make it and issue on github so we have it tracked
-	# @test nobs(a.data[3].data) == 0
-	@test nobs(a.data[3].data) == 1
+	@test_broken nobs(a.data[3].data) == 0
+	@test nobs(a[:a].data[3].data) == 1
 end
 
 @testset "Mixed scalar extraction" begin
@@ -366,10 +386,10 @@ end
 	e2 = ext(j2)
 	e3 = ext(j3)
 	e4 = ext(j4)
-	@test e1["U"].data ≈ [0]
-	@test e2["U"].data ≈ [1]
-	@test e3["U"].data ≈ [0.7]
-	@test e4["U"].data ≈ [0.5]
+	@test e1["k"].data ≈ [0]
+	@test e2["k"].data ≈ [1]
+	@test e3["k"].data ≈ [0.7]
+	@test e4["k"].data ≈ [0.5]
 end
 
 @testset "Mixed scalar extraction with other types" begin
@@ -398,22 +418,31 @@ end
 	@test buf_printtree(ext) ==
     """
     Dict
-      └── MultiRepresentation
-            ├── e1: FeatureVector with 5 items
-            ├── e2: Dict
-            │         └── String
-            └── e3: Float32"""
+      └── a: MultiRepresentation
+               ├── e1: FeatureVector with 5 items
+               ├── e2: Dict
+               │         └── Sylvanas is the worst warchief ever: String
+               └── e3: Float32"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
 	e3 = ext(j3)
 	e4 = ext(j4)
 	e5 = ext(j5)
-	@test e1["k"].data ≈ [0]
-	@test e2["k"].data ≈ [0.375]
-	@test e3["k"].data ≈ [0.525]
-	@test e4["k"].data ≈ [1.0]
-	@test e5["k"].data ≈ [0.875]
+	@test e1["s"].data ≈ [0]
+	@test e2["s"].data ≈ [0.375]
+	@test e3["s"].data ≈ [0.525]
+	@test e4["s"].data ≈ [1.0]
+	@test e5["s"].data ≈ [0.875]
+
+	@test buf_printtree(e1) ==
+	"""
+	ProductNode
+	  └── a: ProductNode
+	           ├── e1: ArrayNode(5, 1)
+	           ├── e2: ProductNode
+	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053, 1)
+	           └── e3: ArrayNode(1, 1)"""
 end
 
 @testset "mixing numeric and non-numeric strings" begin
@@ -437,22 +466,22 @@ end
 
 	@test buf_printtree(ext) ==
 	"""
-    Dict
-      └── MultiRepresentation
-            ├── e1: String
-            ├── e2: Float32
-            └── e3: FeatureVector with 5 items"""
+	Dict
+	  └── a: MultiRepresentation
+	           ├── e1: String
+	           ├── e2: Float32
+	           └── e3: FeatureVector with 5 items"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
 	e3 = ext(j3)
 	e4 = ext(j4)
 	e5 = ext(j5)
-	@test e1["U"].data ≈ [0]
-	@test e2["U"].data ≈ [0.5]
-	@test e3["U"].data ≈ [1.0]
-	@test e4["U"].data ≈ [0]
-	@test e5["U"].data ≈ [0]
+	@test e1["k"].data ≈ [0]
+	@test e2["k"].data ≈ [0.5]
+	@test e3["k"].data ≈ [1.0]
+	@test e4["k"].data ≈ [0]
+	@test e5["k"].data ≈ [0]
 
 	@test hash(ext) !== hash(suggestextractor(JsonGrinder.schema([j1, j2, j4, j5])))
 end
@@ -517,13 +546,13 @@ end
 	@test buf_printtree(ext) ==
 	"""
 	Dict
-	  └── Array of
-	        └── Float32"""
+	  └── a: Array of
+	           └── Float32"""
 
 	ext_j2 = ext(j2)
     @test buf_printtree(ext_j2) ==
     """
-    BagNode with 1 bag(s)
-      └── ArrayNode(1, 2)"""
+	ProductNode
+	  └── a: BagNode with 1 bag(s)
+	           └── ArrayNode(1, 2)"""
 end
-# todo: test extractdict with single child and also printing to try the hutils integration

@@ -1,4 +1,4 @@
-module JsonGrindermodule JsonGrinder
+module JsonGrinder
 using Mill, JSON, Printf, Flux
 using HierarchicalUtils
 import HierarchicalUtils: NodeType, children, InnerNode, LeafNode, printtree, noderepr

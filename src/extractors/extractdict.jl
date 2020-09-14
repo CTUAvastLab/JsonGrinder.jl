@@ -35,20 +35,14 @@ function (s::ExtractDict{S,V})(v::Dict) where {S<:Dict,V<:Dict}
 	x = vcat([f(get(v,String(k),nothing)) for (k,f) in s.vec]...)
 	o = [Symbol(k) => f(get(v,String(k),nothing)) for (k,f) in s.other]
 	data = (; :scalars => x,o...)
-	ProductNode(data)
+	ProductNode(data, [collect(keys(s.vec))])
 end
 
 (s::ExtractDict{S,V})(v::Dict) where {S<:Dict,V<:Nothing} = vcat([f(get(v,k,nothing)) for (k,f) in s.vec]...)
 
 function (s::ExtractDict{S,V})(v::Dict) where {S<:Nothing,V<:Dict}
-	# o = [f(get(v,k,nothing)) for (k,f) in s.other]
 	o = [Symbol(k) => f(get(v,String(k),nothing)) for (k,f) in s.other]
-	if length(o) == 1
-		# return(o[1])
-		return o[1].second
-	else
-		return ProductNode((;o...))
-	end
+	ProductNode((;o...))
 end
 
 

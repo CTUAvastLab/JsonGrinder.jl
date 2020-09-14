@@ -1,3 +1,4 @@
+import SHA: sha1
 
 """
 	mutable struct Entry <: JSONEntry
@@ -36,6 +37,9 @@ is_numeric_entry(e, T::Type{<:Number}) = unify_types(e) <: T
 is_int_entry(e) = is_numeric_entry(e, Integer)
 is_float_entry(e) = is_numeric_entry(e, AbstractFloat)
 
+shorten_if_str(v) = v
+shorten_if_str(v::AbstractString) = length(v) > max_len ? "$(first(v, max_len))_$(length(v))_$(bytes2hex(sha1(v)))" : v
+
 """
 		function update!(a::Entry, v)
 
@@ -48,6 +52,7 @@ function update!(a::Entry{T}, s::AbstractString; path = "") where {T<:Number}
 end
 
 function _update!(a::Entry, v)
+	v = shorten_if_str(v)
 	if length(keys(a.counts)) < max_keys
 		a.counts[v] = get(a.counts,v,0) + 1
 		# it's there because otherwise, after filling the count keys not even the existing ones are updates

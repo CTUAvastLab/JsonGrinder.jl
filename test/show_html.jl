@@ -62,6 +62,12 @@ end
 	@test html == html2
 end
 
+@testset "Nothing creation" begin
+	html = JsonGrinder.schema2html(nothing, max_len=10)
+	html2 = "[Empty list element], this list is empty in all JSONs, can not infer schema, suggesting to delete key \n"
+	@test html == html2
+end
+
 @testset "Generating HTML Schema" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
 	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")

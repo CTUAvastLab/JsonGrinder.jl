@@ -49,7 +49,7 @@ extract_data(JsonGrinder.sample_synthetic(sch))
 data = tmap(extract_data, samples[1:5_000])
 data = reduce(catobs, data)
 target = tmap(extract_target, samples[1:5_000])
-target = reduce(catobs, target).data
+target = reduce(catobs, target)[:cuisine].data
 
 e = sch[:cuisine]
 

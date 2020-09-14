@@ -162,3 +162,29 @@ end
                │              └── 2: [Scalar - Int64], 1 unique values, updated = 1 ["q"]
                └── 3: [Scalar - Float64,Int64], 2 unique values, updated = 2 ["s"]"""
 end
+
+
+@testset "Base.show" begin
+    j1 = JSON.parse("""{"a": "4"}""",inttype=Float64)
+    j2 = JSON.parse("""{"a": ["It's", "over", 9000]}""")
+    j3 = JSON.parse("""{"a": 5.5}""")
+    j4 = JSON.parse("""{"a": "5.5"}""")
+    j5 = JSON.parse("""{"a": "Oh, Hi Mark"}""")
+    j6 = JSON.parse("""{"a": 4}""")
+
+    sch = schema([j1,j2,j3,j4,j5,j6])
+
+    buf = IOBuffer()
+    Base.show(buf, sch)
+    str_repr = String(take!(buf))
+    @test str_repr == "DictEntry"
+
+    buf = IOBuffer()
+    Base.show(buf, "text/plain", sch)
+    str_repr = String(take!(buf))
+
+    buf = IOBuffer()
+    HierarchicalUtils.printtree(buf, sch; trav=false, trunc=3)
+    str_repr2 = String(take!(buf))
+    @test str_repr == str_repr2
+end
