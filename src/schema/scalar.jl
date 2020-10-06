@@ -47,9 +47,7 @@ shorten_if_str(v::AbstractString) = length(v) > max_len ? "$(first(v, max_len))_
 """
 update!(a::Entry{T}, v::Number; path = "") where {T<:Number} = _update!(a, v)
 update!(a::Entry{T}, v::AbstractString; path = "") where {T<:AbstractString} = _update!(a, v)
-function update!(a::Entry{T}, s::AbstractString; path = "") where {T<:Number}
-	return false
-end
+update!(a::Entry{T}, s::AbstractString; path = "") where {T<:Number} = false
 
 function _update!(a::Entry, v)
 	v = shorten_if_str(v)
