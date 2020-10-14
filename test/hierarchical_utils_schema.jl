@@ -184,7 +184,7 @@ end
     str_repr = String(take!(buf))
 
     buf = IOBuffer()
-    HierarchicalUtils.printtree(buf, sch; trav=false, trunc=3)
+    HierarchicalUtils.printtree(buf, sch; trav=false, htrunc=3)
     str_repr2 = String(take!(buf))
     @test str_repr == str_repr2
 end
