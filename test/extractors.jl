@@ -79,18 +79,18 @@ end
 	a2 = br(Dict("a" => 5, "b" => 7))
 	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
 
-	@test all(a1[:c].data.data .== [-3 0 3 6])
-	@test all(a1[:c].bags .== [1:4])
-	@test all(catobs(a1,a1)[:c].data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a1,a1)[:c].bags .== [1:4,5:8])
+	@test all(a1.data.data .== [-3 0 3 6])
+	@test all(a1.bags .== [1:4])
+	@test all(catobs(a1,a1).data.data .== [-3 0 3 6 -3 0 3 6])
+	@test all(catobs(a1,a1).bags .== [1:4,5:8])
 
-	@test all(catobs(a1,a2)[:c].data.data .== [-3 0 3 6])
-	@test all(catobs(a1,a2)[:c].bags .== [1:4,0:-1])
+	@test all(catobs(a1,a2).data.data .== [-3 0 3 6])
+	@test all(catobs(a1,a2).bags .== [1:4,0:-1])
 
-	@test all(a3[:c].data.data .== [-3 0 3 6])
-	@test all(a3[:c].bags .== [1:4])
-	@test all(catobs(a3,a3)[:c].data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a3,a3)[:c].bags .== [1:4,5:8])
+	@test all(a3.data.data .== [-3 0 3 6])
+	@test all(a3.bags .== [1:4])
+	@test all(catobs(a3,a3).data.data .== [-3 0 3 6 -3 0 3 6])
+	@test all(catobs(a3,a3).bags .== [1:4,5:8])
 end
 
 @testset "Testing Nested Missing Arrays" begin
@@ -347,10 +347,10 @@ end
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
-	@test ext_j1[:a].data.data isa Array{Float32,2}
-	@test ext_j2[:a].data.data isa Array{Float32,2}
-	@test ext_j3[:a].data.data isa Array{Float32,2}
-	@test ext_j4[:a].data.data isa Array{Float32,2}
+	@test ext_j1.data.data isa Array{Float32,2}
+	@test ext_j2.data.data isa Array{Float32,2}
+	@test ext_j3.data.data isa Array{Float32,2}
+	@test ext_j4.data.data isa Array{Float32,2}
 end
 
 @testset "testing irregular extractor" begin
@@ -361,13 +361,13 @@ end
 	sch = schema([j1,j2,j3])
 	ext = suggestextractor(sch)
 	a = ext(j1)
-	@test a[:a].data[1].data[1] == 0
-	@test a[:a].data[2].data[:a].data.s[1] == ""
-	@test nobs(a[:a].data[3]) == 1
+	@test a[:e1].data[1] == 0
+	@test a[:e2].data[:a].data.s[1] == ""
+	@test nobs(a[:e3]) == 1
 	# this should be 0, there is problem with handling missing valus
 	# todo: make it and issue on github so we have it tracked
-	@test_broken nobs(a.data[3].data) == 0
-	@test nobs(a[:a].data[3].data) == 1
+	@test_broken nobs(a[:e3].data) == 0
+	@test nobs(a[:e3].data) == 1
 end
 
 @testset "Mixed scalar extraction" begin
@@ -386,10 +386,10 @@ end
 	e2 = ext(j2)
 	e3 = ext(j3)
 	e4 = ext(j4)
-	@test e1["k"].data ≈ [0]
-	@test e2["k"].data ≈ [1]
-	@test e3["k"].data ≈ [0.7]
-	@test e4["k"].data ≈ [0.5]
+	@test e1["U"].data ≈ [0]
+	@test e2["U"].data ≈ [1]
+	@test e3["U"].data ≈ [0.7]
+	@test e4["U"].data ≈ [0.5]
 end
 
 @testset "Mixed scalar extraction with other types" begin
@@ -417,32 +417,30 @@ end
 
 	@test buf_printtree(ext) ==
     """
-    Dict
-      └── a: MultiRepresentation
-               ├── e1: FeatureVector with 5 items
-               ├── e2: Dict
-               │         └── Sylvanas is the worst warchief ever: String
-               └── e3: Float32"""
+	Dict
+	  └── a: MultiRepresentation
+	           ├── e1: FeatureVector with 5 items
+	           ├── e2: Dict
+	           │         └── Sylvanas is the worst warchief ever: String
+	           └── e3: Float32"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
 	e3 = ext(j3)
 	e4 = ext(j4)
 	e5 = ext(j5)
-	@test e1["s"].data ≈ [0]
-	@test e2["s"].data ≈ [0.375]
-	@test e3["s"].data ≈ [0.525]
-	@test e4["s"].data ≈ [1.0]
-	@test e5["s"].data ≈ [0.875]
+	@test e1["k"].data ≈ [0]
+	@test e2["k"].data ≈ [0.375]
+	@test e3["k"].data ≈ [0.525]
+	@test e4["k"].data ≈ [1.0]
+	@test e5["k"].data ≈ [0.875]
 
 	@test buf_printtree(e1) ==
 	"""
 	ProductNode
-	  └── a: ProductNode
-	           ├── e1: ArrayNode(5, 1)
-	           ├── e2: ProductNode
-	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053, 1)
-	           └── e3: ArrayNode(1, 1)"""
+	  ├── e1: ArrayNode(5, 1)
+	  ├── e2: ArrayNode(2053, 1)
+	  └── e3: ArrayNode(1, 1)"""
 end
 
 @testset "mixing numeric and non-numeric strings" begin
@@ -477,11 +475,11 @@ end
 	e3 = ext(j3)
 	e4 = ext(j4)
 	e5 = ext(j5)
-	@test e1["k"].data ≈ [0]
-	@test e2["k"].data ≈ [0.5]
-	@test e3["k"].data ≈ [1.0]
-	@test e4["k"].data ≈ [0]
-	@test e5["k"].data ≈ [0]
+	@test e1["U"].data ≈ [0]
+	@test e2["U"].data ≈ [0.5]
+	@test e3["U"].data ≈ [1.0]
+	@test e4["U"].data ≈ [0]
+	@test e5["U"].data ≈ [0]
 
 	@test hash(ext) !== hash(suggestextractor(JsonGrinder.schema([j1, j2, j4, j5])))
 end
@@ -552,7 +550,6 @@ end
 	ext_j2 = ext(j2)
     @test buf_printtree(ext_j2) ==
     """
-	ProductNode
-	  └── a: BagNode with 1 bag(s)
-	           └── ArrayNode(1, 2)"""
+    BagNode with 1 bag(s)
+      └── ArrayNode(1, 2)"""
 end

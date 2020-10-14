@@ -42,13 +42,13 @@ end
 end
 
 @testset "children" begin
-    @test children(sch) == (a=sch[:a], b=sch[:b], c=sch[:c])
+    @test children(sch) == [:a=>sch[:a], :b=>sch[:b], :c=>sch[:c]]
     @test children(sch[:a]) == ()
-    @test children(sch[:b]) == (a=sch[:b][:a], b=sch[:b][:b])
+    @test children(sch[:b]) == [:a=>sch[:b][:a], :b=>sch[:b][:b]]
     @test children(sch[:b][:a]) == (sch[:b][:a].items,)
     @test children(sch[:b][:b]) == ()
-    @test children(sch[:c]) == (a=sch[:c][:a],)
-    @test children(sch[:c][:a]) == (a=sch[:c][:a][:a], b=sch[:c][:a][:b])
+    @test children(sch[:c]) == [:a=>sch[:c][:a]]
+    @test children(sch[:c][:a]) == [:a=>sch[:c][:a][:a], :b=>sch[:c][:a][:b]]
     @test children(sch[:c][:a][:a]) == (sch[:c][:a][:a].items,)
     @test children(sch[:c][:a][:b]) == (sch[:c][:a][:b].items,)
 end
@@ -90,7 +90,7 @@ end
 end
 
 @testset "TypeIterator" begin
-    @test collect(TypeIterator(sch, DictEntry)) == [sch[""], sch["U"], sch["k"], sch["s"]]
+    @test collect(TypeIterator(DictEntry, sch)) == [sch[""], sch["U"], sch["k"], sch["s"]]
 end
 
 @testset "print with empty lists" begin
@@ -184,7 +184,7 @@ end
     str_repr = String(take!(buf))
 
     buf = IOBuffer()
-    HierarchicalUtils.printtree(buf, sch; trav=false, trunc=3)
+    HierarchicalUtils.printtree(buf, sch; trav=false, htrunc=3)
     str_repr2 = String(take!(buf))
     @test str_repr == str_repr2
 end

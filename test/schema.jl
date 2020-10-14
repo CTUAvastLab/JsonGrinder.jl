@@ -275,12 +275,12 @@ end
 	j6 = JSON.parse("""{}""")
 
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
-	@test children(sch[:c][:a]) == (a=sch[:c][:a][:a], b=sch[:c][:a][:b])
+	@test children(sch[:c][:a]) == [:a=>sch[:c][:a][:a], :b=>sch[:c][:a][:b]]
 	delete!(sch, ".c.a", "a")
-	@test children(sch[:c][:a]) == (b=sch[:c][:a][:b],)
-	@test children(sch[:b].items) == (a=sch[:b].items[:a], b=sch[:b].items[:b])
+	@test children(sch[:c][:a]) == [:b=>sch[:c][:a][:b]]
+	@test children(sch[:b].items) == [:a=>sch[:b].items[:a], :b=>sch[:b].items[:b]]
 	delete!(sch, ".b.[]", "a")
-	@test children(sch[:b].items) == (b=sch[:b].items[:b],)
+	@test children(sch[:b].items) == [:b=>sch[:b].items[:b]]
 end
 
 @testset "Extractor from schema" begin
@@ -304,8 +304,8 @@ end
 	@test e1.data.scalars.data[1, 1] == 0
 	@test e1.data.b.data.a.data ≈ [1., 2., 3.]
 	@test e1.data.b.data.scalars.data[1, 1] == 0.
-	@test e1.data.c.data.a.data.a.data.data == [0. 0.5 1.]
-	@test e1.data.c.data.a.data.b.data.data == [0. 0.5 1.]
+	@test e1.data.c.data.a.data.data == [0. 0.5 1.]
+	@test e1.data.c.data.b.data.data == [0. 0.5 1.]
 end
 
 @testset "Mixing substrings with strings" begin
@@ -490,4 +490,42 @@ end
 
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7])
 	@test sch[:a].updated == 7
+end
+
+@testset "prune_json" begin
+	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
+	j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}}""")
+	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
+	j4 = JSON.parse("""{"a": 4, "b": {}}""")
+	j5 = JSON.parse("""{"b": {}}""")
+	j6 = JSON.parse("""{}""")
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
+
+	@test JsonGrinder.prune_json(j1, sch) == Dict(
+		"c" => Dict("a"=>Dict("b"=>[4.0, 5.0, 6.0],"a"=>[1.0, 2.0, 3.0])),
+		"b" => Dict("b"=>1.0,"a"=>[1.0, 2.0, 3.0]),
+		"a" => 4.0)
+
+	@test JsonGrinder.prune_json(j2, sch) == Dict(
+		"c" => Dict("a"=>Dict("b"=>[5, 6],"a"=>[2, 3])),
+		"a" => 4)
+
+	delete!(sch.childs, :b)
+
+	@test JsonGrinder.prune_json(j1, sch) == Dict(
+  		"c" => Dict("a"=>Dict("b"=>[4.0, 5.0, 6.0],"a"=>[1.0, 2.0, 3.0])),
+  		"a" => 4.0)
+
+	@test JsonGrinder.prune_json(j2, sch) == Dict(
+		"c" => Dict("a"=>Dict("b"=>[5, 6],"a"=>[2, 3])),
+		"a" => 4)
+
+	delete!(sch.childs, :c)
+
+	@test JsonGrinder.prune_json(j1, sch) == Dict(
+  		"a" => 4.0)
+
+	@test JsonGrinder.prune_json(j2, sch) == Dict(
+		"a" => 4)
 end

@@ -78,3 +78,17 @@ function Base.delete!(sch::JSONEntry, path::AbstractString, field::AbstractStrin
 	item = reduce((s, f) -> f(s), map(make_selector, selectors), init=sch)
 	delete!(item.childs, Symbol(field))
 end
+
+prune_json(json, sch::Entry) = json
+
+prune_json(json, sch::ArrayEntry) = map(json) do el
+	prune_json(el, sch.items)
+end
+
+function prune_json(json, sch::DictEntry)
+    out = Dict()
+    for (k,v) in children(sch)
+        String(k) ∈ keys(json) && (out[String(k)] = prune_json(json[String(k)], v))
+    end
+    out
+end

@@ -43,13 +43,13 @@ end
 end
 
 @testset "children" begin
-    @test children(ext) == (a=ext[:a], b=ext[:b], c=ext[:c])
+    @test children(ext) == [:a=>ext[:a], :b=>ext[:b], :c=>ext[:c]]
     @test children(ext[:a]) == ()
-    @test children(ext[:b]) == (a=ext[:b][:a], b=ext[:b][:b])
+    @test children(ext[:b]) == [:a=>ext[:b][:a], :b=>ext[:b][:b]]
     @test children(ext[:b][:a]) == (ext[:b][:a].item,)
     @test children(ext[:b][:b]) == ()
-    @test children(ext[:c]) == (a=ext[:c][:a],)
-    @test children(ext[:c][:a]) == (a=ext[:c][:a][:a], b=ext[:c][:a][:b])
+    @test children(ext[:c]) == [:a=>ext[:c][:a]]
+    @test children(ext[:c][:a]) == [:a=>ext[:c][:a][:a], :b=>ext[:c][:a][:b]]
     @test children(ext[:c][:a][:a]) == (ext[:c][:a][:a].item,)
     @test children(ext[:c][:a][:b]) == (ext[:c][:a][:b].item,)
 end
@@ -91,7 +91,7 @@ end
 end
 
 @testset "TypeIterator" begin
-    @test collect(TypeIterator(ext, ExtractArray)) == [ext["Y"], ext["u"], ext["w"]]
+    @test collect(TypeIterator(ExtractArray, ext)) == [ext["Y"], ext["u"], ext["w"]]
 end
 
 @testset "show" begin
