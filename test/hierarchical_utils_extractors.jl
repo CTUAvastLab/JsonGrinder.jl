@@ -91,7 +91,7 @@ end
 end
 
 @testset "TypeIterator" begin
-    @test collect(TypeIterator(ext, ExtractArray)) == [ext["Y"], ext["u"], ext["w"]]
+    @test collect(TypeIterator(ExtractArray, ext)) == [ext["Y"], ext["u"], ext["w"]]
 end
 
 @testset "show" begin

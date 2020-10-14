@@ -11,8 +11,9 @@ noderepr(n::DictEntry) = "[" * (isnothing(n.childs) ? "Empty " : "") * "Dict] (u
 noderepr(n::MultiEntry) = "[" * (isempty(n.childs) ? "Empty " : "") * "MultiEntry] (updated = $(n.updated))"
 
 children(n::ArrayEntry) = (n.items,)
-children(n::DictEntry) = (; n.childs...)
-children(n::MultiEntry) = (; Dict( Symbol(k) => v for (k,v) in enumerate(n.childs))...)
+# using vector of pairs because splatting to named tuple is not good for compiler
+children(n::DictEntry) = collect(n.childs)
+children(n::MultiEntry) = [Symbol(k) => v for (k,v) in enumerate(n.childs)]
 
 # for extractor structures
 # default extractor
@@ -35,4 +36,4 @@ children(n::ExtractArray) = (n.item,)
 children(n::MultipleRepresentation) = n.extractors
 children(e::ExtractKeyAsField) = (e.key, e.item)
 children(n::AuxiliaryExtractor) = (n.extractor,)
-children(n::ExtractDict) = (; Dict(Symbol(k)=>v for (k,v) in merge(filter(!isnothing, [n.vec, n.other])...))...)
+children(n::ExtractDict) = [Symbol(k)=>v for (k,v) in merge(filter(!isnothing, [n.vec, n.other])...)]

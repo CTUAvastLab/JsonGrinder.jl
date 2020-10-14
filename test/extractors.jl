@@ -361,13 +361,13 @@ end
 	sch = schema([j1,j2,j3])
 	ext = suggestextractor(sch)
 	a = ext(j1)
-	@test a.data[1].data[1] == 0
-	@test a.data[2].data[:a].data.s[1] == ""
-	@test nobs(a.data[3]) == 1
+	@test a[:e1].data[1] == 0
+	@test a[:e2].data[:a].data.s[1] == ""
+	@test nobs(a[:e3]) == 1
 	# this should be 0, there is problem with handling missing valus
 	# todo: make it and issue on github so we have it tracked
-	@test_broken nobs(a.data[3].data) == 0
-	@test nobs(a.data[3].data) == 1
+	@test_broken nobs(a[:e3].data) == 0
+	@test nobs(a[:e3].data) == 1
 end
 
 @testset "Mixed scalar extraction" begin
