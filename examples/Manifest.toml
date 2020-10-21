@@ -19,10 +19,10 @@ uuid = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
 version = "2.3.0"
 
 [[ArrayLayouts]]
-deps = ["FillArrays", "LinearAlgebra"]
-git-tree-sha1 = "951c3fc1ff93497c88fb1dfa893f4de55d0b38e3"
+deps = ["Compat", "FillArrays", "LinearAlgebra", "SparseArrays"]
+git-tree-sha1 = "613ee839b41d4fb5aef6494a9ac998d058729051"
 uuid = "4c555306-a7a7-4459-81d9-ec55ddd5c99a"
-version = "0.3.8"
+version = "0.4.9"
 
 [[Artifacts]]
 deps = ["Pkg"]
@@ -68,16 +68,22 @@ uuid = "324d7699-5711-5eae-9e2f-1d82baa6b597"
 version = "0.8.3"
 
 [[ChainRules]]
-deps = ["ChainRulesCore", "LinearAlgebra", "Random", "Reexport", "Requires", "Statistics"]
-git-tree-sha1 = "04afa37b7ea5fe1964ebec15b7f4769276b4edc5"
+deps = ["ChainRulesCore", "ChainRulesTestUtils", "Compat", "LinearAlgebra", "Random", "Reexport", "Requires", "Statistics"]
+git-tree-sha1 = "0f755449990428ab9349ce34718301443143914b"
 uuid = "082447d4-558c-5d27-93f4-14fc19e9eca2"
-version = "0.7.26"
+version = "0.7.28"
 
 [[ChainRulesCore]]
 deps = ["LinearAlgebra", "MuladdMacro", "SparseArrays"]
 git-tree-sha1 = "aebbda0a7c644bd8739b34f2a1b1e48f114aab49"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
 version = "0.9.17"
+
+[[ChainRulesTestUtils]]
+deps = ["ChainRulesCore", "Compat", "FiniteDifferences", "LinearAlgebra", "Random", "Test"]
+git-tree-sha1 = "157e00b3c05e63c3482aa2179abd3d2a54ad4a57"
+uuid = "cdddcdb0-9152-4a09-a978-84456f9df70a"
+version = "0.5.3"
 
 [[CodecZlib]]
 deps = ["TranscodingStreams", "Zlib_jll"]
@@ -110,9 +116,9 @@ version = "0.3.0"
 
 [[Compat]]
 deps = ["Base64", "Dates", "DelimitedFiles", "Distributed", "InteractiveUtils", "LibGit2", "Libdl", "LinearAlgebra", "Markdown", "Mmap", "Pkg", "Printf", "REPL", "Random", "SHA", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "Test", "UUIDs", "Unicode"]
-git-tree-sha1 = "f76e41cf110de7176a657c72409e722cfc86fbb6"
+git-tree-sha1 = "48608f94f3e1a755f65e7ef34684675bb3653030"
 uuid = "34da2185-b29b-5c13-b0c7-acf172513d20"
-version = "3.20.0"
+version = "3.21.0"
 
 [[CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -220,9 +226,15 @@ version = "0.9.5"
 
 [[FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays"]
-git-tree-sha1 = "4863cbb7910079369e258dee4add9d06ead5063a"
+git-tree-sha1 = "502b3de6039d5b78c76118423858d981349f3823"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "0.8.14"
+version = "0.9.7"
+
+[[FiniteDifferences]]
+deps = ["ChainRulesCore", "LinearAlgebra", "Printf", "Random", "Richardson"]
+git-tree-sha1 = "5ef56eea8b65c2ed2d11bd394629892201369b23"
+uuid = "26cc04aa-876d-5657-8c51-4c34ba976000"
+version = "0.11.2"
 
 [[FixedPointNumbers]]
 deps = ["Statistics"]
@@ -322,7 +334,7 @@ version = "0.21.1"
 deps = ["BSON", "DataStructures", "FillArrays", "Flux", "HierarchicalUtils", "HttpCommon", "JSON", "LearnBase", "LinearAlgebra", "MLDataPattern", "Mill", "Mustache", "Printf", "SHA", "SparseArrays", "Statistics", "StatsBase", "ThreadTools", "Zygote"]
 path = ".."
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
-version = "1.7.1"
+version = "1.7.2"
 
 [[Juno]]
 deps = ["Base64", "Logging", "Media", "Profile"]
@@ -397,9 +409,9 @@ version = "0.5.0"
 
 [[Mill]]
 deps = ["Combinatorics", "DataFrames", "DataStructures", "Flux", "HierarchicalUtils", "LearnBase", "LinearAlgebra", "MLDataPattern", "Setfield", "SparseArrays", "Statistics", "Zygote"]
-git-tree-sha1 = "600d51a5c040eb46deaa5d08b10e8195595c7e91"
+git-tree-sha1 = "3b805e302eb857713f1e3fc30a41ceeac1ba164e"
 uuid = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
-version = "1.5.0"
+version = "1.5.1"
 
 [[Missings]]
 deps = ["DataAPI"]
@@ -417,9 +429,9 @@ version = "0.2.2"
 
 [[Mustache]]
 deps = ["Printf", "Tables"]
-git-tree-sha1 = "627ad7585b8c6ae62bc2a0e27debfc95059dcafd"
+git-tree-sha1 = "26925183ee8926966a8387b437c5a5f33b6201cb"
 uuid = "ffc61752-8dc7-55ee-8c37-f3e9cdd09e70"
-version = "1.0.6"
+version = "1.0.7"
 
 [[NNlib]]
 deps = ["Libdl", "LinearAlgebra", "Pkg", "Requires", "Statistics"]
@@ -496,6 +508,12 @@ deps = ["UUIDs"]
 git-tree-sha1 = "28faf1c963ca1dc3ec87f166d92982e3c4a1f66d"
 uuid = "ae029012-a4dd-5104-9daa-d747884805df"
 version = "1.1.0"
+
+[[Richardson]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "776e0fdd3da5ad52067b60310ea8f3150d794c2f"
+uuid = "708f8203-808e-40c0-ba2d-98a6953ed40d"
+version = "1.2.0"
 
 [[SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
