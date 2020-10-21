@@ -40,62 +40,51 @@ end
 end
 
 @testset "Testing ExtractDict" begin
-	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64));
-	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)));
-	br = ExtractDict(vector,other)
-	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
-	a2 = br(Dict("a" => 5, "b" => 7))
-	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
-	@test all(catobs(a1,a1).data[1].data .==[7 7; 9 9])
-	@test all(catobs(a1,a1).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a1,a1).data[2].bags .== [1:4,5:8])
-	@test all(catobs(a1,a1).metadata .== [["b", "a"], ["b", "a"]])
-
-	@test all(catobs(a1,a2).data[1].data .==[7 7; 9 9])
-	@test all(catobs(a1,a2).data[2].data.data .== [-3 0 3 6])
-	@test all(catobs(a1,a2).data[2].bags .== [1:4,0:-1])
-	@test all(catobs(a1,a2).metadata .== [["b", "a"], ["b", "a"]])
-
-	@test all(catobs(a2,a3).data[1].data .==[7 0; 9 9])
-	@test all(catobs(a2,a3).data[2].data.data .== [-3 0 3 6])
-	@test all(catobs(a2,a3).data[2].bags .== [0:-1,1:4])
-	@test all(catobs(a2,a3).metadata .== [["b", "a"], ["b", "a"]])
-
-	@test all(catobs(a1,a3).data[1].data .==[7 0; 9 9])
-	@test all(catobs(a1,a3).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a1,a3).data[2].bags .== [1:4,5:8])
-	@test all(catobs(a1,a3).metadata .== [["b", "a"], ["b", "a"]])
-
-	br = ExtractDict(vector,nothing)
-	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
-	a2 = br(Dict("a" => 5, "b" => 7))
-	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
-	@test all(a1.data .==[7; 9])
-	@test all(a2.data .==[7; 9])
-	@test all(a3.data .==[0; 9])
-
-	br = ExtractDict(nothing,other)
+	dict = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64), "c" => ExtractArray(ExtractScalar(Float64,2,3)))
+	br = ExtractDict(dict)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
 	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
 
-	@test all(a1.data.data .== [-3 0 3 6])
-	@test all(a1.bags .== [1:4])
-	@test all(catobs(a1,a1).data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a1,a1).bags .== [1:4,5:8])
+	@test catobs(a1,a1)[:a].data ≈ [9 9]
+	@test catobs(a1,a1)[:b].data ≈ [7 7]
+	@test catobs(a1,a1)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
+	@test all(catobs(a1,a1)[:c].bags .== [1:4,5:8])
 
-	@test all(catobs(a1,a2).data.data .== [-3 0 3 6])
-	@test all(catobs(a1,a2).bags .== [1:4,0:-1])
+	@test catobs(a1,a2)[:a].data ≈ [9 9]
+	@test catobs(a1,a2)[:b].data ≈ [7 7]
+	@test catobs(a1,a2)[:c].data.data ≈ [-3 0 3 6]
+	@test all(catobs(a1,a2)[:c].bags .== [1:4,0:-1])
 
-	@test all(a3.data.data .== [-3 0 3 6])
-	@test all(a3.bags .== [1:4])
-	@test all(catobs(a3,a3).data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a3,a3).bags .== [1:4,5:8])
+	@test catobs(a2,a3)[:a].data ≈ [9 9]
+	@test catobs(a2,a3)[:b].data ≈ [7 0]
+	@test catobs(a2,a3)[:c].data.data ≈ [-3 0 3 6]
+	@test all(catobs(a2,a3)[:c].bags .== [0:-1,1:4])
+
+	@test catobs(a1,a3)[:a].data ≈ [9 9]
+	@test catobs(a1,a3)[:b].data ≈ [7 0]
+	@test catobs(a1,a3)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
+	@test all(catobs(a1,a3)[:c].bags .== [1:4,5:8])
+
+	@test a1[:a].data ≈ [9]
+	@test a1[:b].data ≈ [7]
+	@test a2[:a].data ≈ [9]
+	@test a2[:b].data ≈ [7]
+	@test a3[:a].data ≈ [9]
+	@test a3[:b].data ≈ [0]
+
+	@test a1[:c].data.data ≈ [-3 0 3 6]
+	@test all(a1[:c].bags .== [1:4])
+
+	@test a3[:c].data.data ≈ [-3 0 3 6]
+	@test all(a3[:c].bags .== [1:4])
+	@test catobs(a3,a3)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
+	@test all(catobs(a3,a3)[:c].bags .== [1:4,5:8])
 end
 
 @testset "Testing Nested Missing Arrays" begin
-	other = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),"b" => ExtractArray(ExtractScalar(Float32,2,3)));
-	br = ExtractDict(nothing,other)
+	dict = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),"b" => ExtractArray(ExtractScalar(Float32,2,3)))
+	br = ExtractDict(dict)
 	a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]))
 	a2 = br(Dict("b" => [2,3,4]))
 	a3 = br(Dict("a" => [2,3,4]))
@@ -174,12 +163,12 @@ end
 		"c" => ExtractCategorical(["a","b"]),
 		"d" => ExtractVector(4),
 	)
-	br1 = ExtractDict(nothing,other1)
+	br1 = ExtractDict(other1)
 	other11 = Dict(
 		"a" => ExtractArray(br1),
 		"b" => ExtractScalar(Float64,2,3),
 	)
-	br11 = ExtractDict(nothing,other11)
+	br11 = ExtractDict(other11)
 
 	other2 = Dict(
 		"a" => ExtractArray(ExtractScalar(Float64,2,3)),
@@ -187,9 +176,9 @@ end
 		"c" => ExtractCategorical(["a","b"]),
 		"d" => ExtractVector(4),
 	)
-	br2 = ExtractDict(nothing,other2)
+	br2 = ExtractDict(other2)
 	other22 = Dict("a" => ExtractArray(br2), "b" => ExtractScalar(Float64,2,3))
-	br22 = ExtractDict(nothing,other22)
+	br22 = ExtractDict(other22)
 
 	@test hash(br11) === hash(br22)
 	@test hash(br11) !== hash(br1)
@@ -227,8 +216,8 @@ end
 	b = ext(js[1])
 	k = only(keys(js[1]))
 	i = ext.item(js[1][k])
+	@test b.data[:item][:a].data == i[:a].data
 	@test b.data[:item][:b].data.data == i[:b].data.data
-	@test b.data[:item][:scalars].data == i[:scalars].data
 	@test b.data[:key].data.s[1] == k
 
 	b = ext(nothing)
@@ -276,15 +265,40 @@ end
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
-	@test eltype(ext_j1[:scalars].data) <: Float32
-	@test eltype(ext_j2[:scalars].data) <: Float32
-	@test eltype(ext_j3[:scalars].data) <: Float32
-	@test eltype(ext_j4[:scalars].data) <: Float32
+	@test eltype(ext_j1[:a].data) <: Float32
+	@test eltype(ext_j1[:b].data) <: String
+	@test eltype(ext_j1[:c].data) <: Float32
+	@test eltype(ext_j1[:d].data) <: Float32
+	@test eltype(ext_j1[:e].data) <: Float32
+	@test eltype(ext_j1[:f].data) <: Float32
 
-	@test ext_j1["U"].data ≈ [0, 0, 0, 0, 0]
-	@test ext_j2["U"].data ≈ [0.5, 1/3, 3/13, 0.5, 3/13]
-	@test ext_j3["U"].data ≈ [1, 2/3, 4/13, 1, 4/13]
-	@test ext_j4["U"].data ≈ [1, 1, 1, 1, 1]
+	@test eltype(ext_j2[:a].data) <: Float32
+	@test eltype(ext_j2[:b].data) <: String
+	@test eltype(ext_j2[:c].data) <: Float32
+	@test eltype(ext_j2[:d].data) <: Float32
+	@test eltype(ext_j2[:e].data) <: Float32
+	@test eltype(ext_j2[:f].data) <: Float32
+
+	@test eltype(ext_j3[:a].data) <: Float32
+	@test eltype(ext_j3[:b].data) <: String
+	@test eltype(ext_j3[:c].data) <: Float32
+	@test eltype(ext_j3[:d].data) <: Float32
+	@test eltype(ext_j3[:e].data) <: Float32
+	@test eltype(ext_j3[:f].data) <: Float32
+
+	@test eltype(ext_j4[:a].data) <: Float32
+	@test eltype(ext_j4[:b].data) <: String
+	@test eltype(ext_j4[:c].data) <: Float32
+	@test eltype(ext_j4[:d].data) <: Float32
+	@test eltype(ext_j4[:e].data) <: Float32
+	@test eltype(ext_j4[:f].data) <: Float32
+
+	@test ext_j1["U"].data ≈ [0]
+	@test ext_j2["U"].data ≈ [3/13]
+	@test ext_j3["U"].data ≈ [4/13]
+	@test ext_j4["U"].data ≈ [1]
+
+	# todo: add tests for Mill that it's correctly reflected in model
 end
 
 @testset "Suggest feature vector extraction" begin
@@ -306,15 +320,15 @@ end
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
-	@test ext_j1["E"].data ≈ [1, 2, 3]
-	@test ext_j2["E"].data ≈ [2, 2, 3]
-	@test ext_j3["E"].data ≈ [3, 2, 3]
-	@test ext_j4["E"].data ≈ [2, 3, 4]
+	@test ext_j1["U"].data ≈ [1, 2, 3]
+	@test ext_j2["U"].data ≈ [2, 2, 3]
+	@test ext_j3["U"].data ≈ [3, 2, 3]
+	@test ext_j4["U"].data ≈ [2, 3, 4]
 
-	@test ext_j1["U"].data.data ≈ [0 .25 .5]
-	@test ext_j2["U"].data.data ≈ [0 .25 .5 .75]
-	@test ext_j3["U"].data.data ≈ [0 .25 .5 .75 1.]
-	@test ext_j4["U"].data.data ≈ [0 .25 .5]
+	@test ext_j1["s"].data ≈ [0 .25 .5]
+	@test ext_j2["s"].data ≈ [0 .25 .5 .75]
+	@test ext_j3["s"].data ≈ [0 .25 .5 .75 1.]
+	@test ext_j4["s"].data ≈ [0 .25 .5]
 end
 
 @testset "Suggest complex" begin
@@ -347,10 +361,10 @@ end
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
-	@test ext_j1.data.data isa Array{Float32,2}
-	@test ext_j2.data.data isa Array{Float32,2}
-	@test ext_j3.data.data isa Array{Float32,2}
-	@test ext_j4.data.data isa Array{Float32,2}
+	@test ext_j1[:a].data.data isa Array{Float32,2}
+	@test ext_j2[:a].data.data isa Array{Float32,2}
+	@test ext_j3[:a].data.data isa Array{Float32,2}
+	@test ext_j4[:a].data.data isa Array{Float32,2}
 end
 
 @testset "testing irregular extractor" begin
@@ -361,13 +375,13 @@ end
 	sch = schema([j1,j2,j3])
 	ext = suggestextractor(sch)
 	a = ext(j1)
-	@test a[:e1].data[1] == 0
-	@test a[:e2].data[:a].data.s[1] == ""
-	@test nobs(a[:e3]) == 1
+	@test a[:a][:e1].data[1] == 0
+	@test a[:a][:e2].data[:a].data.s[1] == ""
+	@test nobs(a[:a][:e3]) == 1
 	# this should be 0, there is problem with handling missing valus
 	# todo: make it and issue on github so we have it tracked
 	@test_broken nobs(a[:e3].data) == 0
-	@test nobs(a[:e3].data) == 1
+	@test nobs(a[:a][:e3].data) == 1
 end
 
 @testset "Mixed scalar extraction" begin
@@ -386,10 +400,10 @@ end
 	e2 = ext(j2)
 	e3 = ext(j3)
 	e4 = ext(j4)
-	@test e1["U"].data ≈ [0]
-	@test e2["U"].data ≈ [1]
-	@test e3["U"].data ≈ [0.7]
-	@test e4["U"].data ≈ [0.5]
+	@test e1["k"].data ≈ [0]
+	@test e2["k"].data ≈ [1]
+	@test e3["k"].data ≈ [0.7]
+	@test e4["k"].data ≈ [0.5]
 end
 
 @testset "Mixed scalar extraction with other types" begin
@@ -429,18 +443,20 @@ end
 	e3 = ext(j3)
 	e4 = ext(j4)
 	e5 = ext(j5)
-	@test e1["k"].data ≈ [0]
-	@test e2["k"].data ≈ [0.375]
-	@test e3["k"].data ≈ [0.525]
-	@test e4["k"].data ≈ [1.0]
-	@test e5["k"].data ≈ [0.875]
+	@test e1["s"].data ≈ [0]
+	@test e2["s"].data ≈ [0.375]
+	@test e3["s"].data ≈ [0.525]
+	@test e4["s"].data ≈ [1.0]
+	@test e5["s"].data ≈ [0.875]
 
 	@test buf_printtree(e1) ==
 	"""
 	ProductNode
-	  ├── e1: ArrayNode(5, 1)
-	  ├── e2: ArrayNode(2053, 1)
-	  └── e3: ArrayNode(1, 1)"""
+	  └── a: ProductNode
+	           ├── e1: ArrayNode(5, 1)
+	           ├── e2: ProductNode
+	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053, 1)
+	           └── e3: ArrayNode(1, 1)"""
 end
 
 @testset "mixing numeric and non-numeric strings" begin
@@ -475,11 +491,11 @@ end
 	e3 = ext(j3)
 	e4 = ext(j4)
 	e5 = ext(j5)
-	@test e1["U"].data ≈ [0]
-	@test e2["U"].data ≈ [0.5]
-	@test e3["U"].data ≈ [1.0]
-	@test e4["U"].data ≈ [0]
-	@test e5["U"].data ≈ [0]
+	@test e1["k"].data ≈ [0]
+	@test e2["k"].data ≈ [0.5]
+	@test e3["k"].data ≈ [1.0]
+	@test e4["k"].data ≈ [0]
+	@test e5["k"].data ≈ [0]
 
 	@test hash(ext) !== hash(suggestextractor(JsonGrinder.schema([j1, j2, j4, j5])))
 end
@@ -550,6 +566,8 @@ end
 	ext_j2 = ext(j2)
     @test buf_printtree(ext_j2) ==
     """
-    BagNode with 1 bag(s)
-      └── ArrayNode(1, 2)"""
+ProductNode
+  └── a: BagNode with 1 bag(s)
+           └── ArrayNode(1, 2)"""
+		   # todo: add more tests for integration with Mill to make sure it's propagated well
 end
