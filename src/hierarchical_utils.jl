@@ -36,4 +36,4 @@ children(n::ExtractArray) = (n.item,)
 children(n::MultipleRepresentation) = n.extractors
 children(e::ExtractKeyAsField) = (e.key, e.item)
 children(n::AuxiliaryExtractor) = (n.extractor,)
-children(n::ExtractDict) = [Symbol(k)=>v for (k,v) in merge(filter(!isnothing, [n.vec, n.other])...)]
+children(n::ExtractDict) = collect(n.dict)
