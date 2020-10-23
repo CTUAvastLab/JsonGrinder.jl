@@ -35,11 +35,11 @@ end
 
 extractor = suggestextractor(sch, (scalar_extractors=custom_scalar_extractor(), mincount=100,))
 
-extract_data = ExtractDict(nothing,deepcopy(extractor.other))
-extract_target = ExtractDict(nothing,deepcopy(extractor.other))
-delete!(extract_target.other, :ingredients)
-delete!(extract_data.other, :cuisine)
-extract_target.other[:cuisine] = JsonGrinder.ExtractCategorical(keys(sch[:cuisine]))
+extract_data = ExtractDict(deepcopy(extractor.dict))
+extract_target = ExtractDict(deepcopy(extractor.dict))
+delete!(extract_target.dict, :ingredients)
+delete!(extract_data.dict, :cuisine)
+extract_target.dict[:cuisine] = JsonGrinder.ExtractCategorical(keys(sch[:cuisine]))
 
 extract_data(JsonGrinder.sample_synthetic(sch))
 ###############################################################
