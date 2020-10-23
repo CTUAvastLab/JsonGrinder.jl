@@ -96,19 +96,13 @@ end
 
 @testset "show" begin
     e = ExtractCategorical(["a","b"])
-    buf = IOBuffer()
-    printtree(buf, e)
-    str_repr = String(take!(buf))
-    @test str_repr == """Categorical d = 3"""
+    @test buf_printtree(e) == """Categorical d = 3"""
 
     e = ExtractOneHot(["a","b"], "name", nothing)
-    buf = IOBuffer()
-    printtree(buf, e)
-    str_repr = String(take!(buf))
-    @test str_repr == """OneHot d = 3"""
+    @test buf_printtree(e) == """OneHot d = 3"""
 
-    other = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)));
-    br = ExtractDict(nothing,other)
+    dict = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
+    br = ExtractDict(dict)
     @test buf_printtree(br, trav=true) ==
     """
     Dict [""]
@@ -117,9 +111,8 @@ end
       └── b: Array of ["U"]
                └── Float64 ["c"]"""
 
-    vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64))
-    other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)))
-    br = ExtractDict(vector,other)
+    dict = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64), "c" => ExtractArray(ExtractScalar(Float64,2,3)))
+    br = ExtractDict(dict)
     @test buf_printtree(br, trav=true) ==
     """
     Dict [""]
@@ -129,9 +122,9 @@ end
                └── Float64 ["s"]"""
 
     other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
-    br1 = ExtractDict(nothing,other1)
+    br1 = ExtractDict(other1)
     other = Dict("a" => ExtractArray(br1), "b" => ExtractScalar(Float64,2,3))
-    br = ExtractDict(nothing,other)
+    br = ExtractDict(other)
     @test buf_printtree(br, trav=true) ==
     """
     Dict [""]
