@@ -301,11 +301,11 @@ end
 	@test ext[:c][:a][:b] isa ExtractArray{ExtractScalar{Float32,Float32}}
 
 	e1 = ext(j1)
-	@test e1.data.scalars.data[1, 1] == 0
-	@test e1.data.b.data.a.data ≈ [1., 2., 3.]
-	@test e1.data.b.data.scalars.data[1, 1] == 0.
-	@test e1.data.c.data.a.data.data == [0. 0.5 1.]
-	@test e1.data.c.data.b.data.data == [0. 0.5 1.]
+	@test e1[:a].data ≈ [0]
+	@test e1[:b][:a].data ≈ [1, 2, 3]
+	@test e1[:b][:b].data ≈ [0]
+	@test e1[:c][:a][:a].data.data ≈ [0. 0.5 1.]
+	@test e1[:c][:a][:b].data.data ≈ [0. 0.5 1.]
 end
 
 @testset "Mixing substrings with strings" begin
