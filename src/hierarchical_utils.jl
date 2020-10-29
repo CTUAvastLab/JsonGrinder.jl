@@ -36,4 +36,4 @@ children(n::ExtractArray) = (n.item,)
 children(n::MultipleRepresentation) = n.extractors
 children(e::ExtractKeyAsField) = (e.key, e.item)
 children(n::AuxiliaryExtractor) = (n.extractor,)
-children(n::ExtractDict) = collect(n.dict)
+children(n::ExtractDict) = (; Dict(Symbol(k)=>v for (k,v) in n.dict)...)

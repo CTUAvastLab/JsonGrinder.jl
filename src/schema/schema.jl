@@ -28,11 +28,6 @@ function updatemaxlen!(n::Int)
 	global max_len = n
 end
 
-# _merge_scalars = false
-# function merge_scalars(v::Bool)
-# 	global _merge_scalars = v
-# end
-
 function safe_update!(s::JSONEntry, d; path = "")
 	success = update!(s, d)
 	isnothing(success) && return nothing
