@@ -266,28 +266,28 @@ end
 	ext_j4 = ext(j4)
 
 	@test eltype(ext_j1[:a].data) <: Float32
-	@test eltype(ext_j1[:b].data) <: String
+	@test eltype(ext_j1[:b].data) <: Int64
 	@test eltype(ext_j1[:c].data) <: Float32
 	@test eltype(ext_j1[:d].data) <: Float32
 	@test eltype(ext_j1[:e].data) <: Float32
 	@test eltype(ext_j1[:f].data) <: Float32
 
 	@test eltype(ext_j2[:a].data) <: Float32
-	@test eltype(ext_j2[:b].data) <: String
+	@test eltype(ext_j2[:b].data) <: Int64
 	@test eltype(ext_j2[:c].data) <: Float32
 	@test eltype(ext_j2[:d].data) <: Float32
 	@test eltype(ext_j2[:e].data) <: Float32
 	@test eltype(ext_j2[:f].data) <: Float32
 
 	@test eltype(ext_j3[:a].data) <: Float32
-	@test eltype(ext_j3[:b].data) <: String
+	@test eltype(ext_j3[:b].data) <: Int64
 	@test eltype(ext_j3[:c].data) <: Float32
 	@test eltype(ext_j3[:d].data) <: Float32
 	@test eltype(ext_j3[:e].data) <: Float32
 	@test eltype(ext_j3[:f].data) <: Float32
 
 	@test eltype(ext_j4[:a].data) <: Float32
-	@test eltype(ext_j4[:b].data) <: String
+	@test eltype(ext_j4[:b].data) <: Int64
 	@test eltype(ext_j4[:c].data) <: Float32
 	@test eltype(ext_j4[:d].data) <: Float32
 	@test eltype(ext_j4[:e].data) <: Float32
@@ -451,12 +451,12 @@ end
 
 	@test buf_printtree(e1) ==
 	"""
-	ProductNode
-	  └── a: ProductNode
-	           ├── e1: ArrayNode(5, 1)
-	           ├── e2: ProductNode
-	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053, 1)
-	           └── e3: ArrayNode(1, 1)"""
+	ProductNode with 1 obs
+	  └── a: ProductNode with 1 obs
+	           ├── e1: ArrayNode(5×1 Array, Float32) with 1 obs
+	           ├── e2: ProductNode with 1 obs
+	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
+	           └── e3: ArrayNode(1×1 Array, Float32) with 1 obs"""
 end
 
 @testset "mixing numeric and non-numeric strings" begin
@@ -566,8 +566,8 @@ end
 	ext_j2 = ext(j2)
     @test buf_printtree(ext_j2) ==
     """
-ProductNode
-  └── a: BagNode with 1 bag(s)
-           └── ArrayNode(1, 2)"""
+	ProductNode with 1 obs
+	  └── a: BagNode with 1 obs
+	           └── ArrayNode(1×2 Array, Float32) with 2 obs"""
 		   # todo: add more tests for integration with Mill to make sure it's propagated well
 end

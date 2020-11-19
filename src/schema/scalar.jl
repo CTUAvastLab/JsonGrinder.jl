@@ -109,6 +109,7 @@ function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "")
 end
 
 function default_scalar_extractor()
+	# todo: these values are bad, we need to make it better, with more sensible conditions
 	[(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len <= 10000),
 		e -> ExtractCategorical(keys(e))),
 	 (e -> is_intable(e),
