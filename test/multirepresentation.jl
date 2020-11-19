@@ -11,8 +11,7 @@ import HierarchicalUtils: printtree
 	@test size(e.data[1].data) == (4, 1)
 	@test e.data[1].data[:] ≈ [0, 1, 0, 0]
 	@test size(e.data[2].data) == (2053, 1)
-	@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(80, 1), (98, 1), (206, 1), (738, 1),
-		(1062, 1), (1856, 1)]
+	@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(206, 1), (272, 1), (624, 1), (738, 1), (1536, 1), (1676, 1)]
 
 	@test !JsonGrinder.extractsmatrix(ex)
 
