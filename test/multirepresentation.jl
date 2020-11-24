@@ -31,17 +31,18 @@ end
 		JsonGrinder.ExtractString(String)))
 	e = ex("Olda")
 
-	buf = IOBuffer()
-	printtree(buf, ex, trav=true)
-	str_repr = String(take!(buf))
-	@test str_repr ==
-"""
-MultiRepresentation [""]
-  ├── e1: Categorical d = 4 ["E"]
-  └── e2: String ["U"]"""
+	@test buf_printtree(ex, trav=true) ==
+	"""
+	MultiRepresentation [""]
+	  ├── e1: Categorical d = 4 ["E"]
+	  └── e2: String ["U"]"""
 
 	buf = IOBuffer()
 	printtree(buf, e, trav=true)
 	str_repr = String(take!(buf))
-	@test str_repr == "ProductNode [\"\"]\n  ├── e1: ArrayNode(4, 1) [\"E\"]\n  └── e2: ArrayNode(2053, 1) [\"U\"]"
+	@test buf_printtree(e, trav=true) ==
+	"""
+	ProductNode with 1 obs [""]
+	  ├── e1: ArrayNode(4×1 OneHotMatrix, Bool) with 1 obs ["E"]
+	  └── e2: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs ["U"]"""
 end

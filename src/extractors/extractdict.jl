@@ -21,7 +21,7 @@ function Base.getindex(m::ExtractDict, s::Symbol)
 end
 
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
-
+# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 extractsmatrix(s::ExtractDict) = false
 (s::ExtractDict)(v::V) where {V<:Nothing} = s(Dict{String,Any}())
 (s::ExtractDict)(v)  = s(nothing)

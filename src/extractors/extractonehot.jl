@@ -67,7 +67,7 @@ function (e::ExtractOneHot{K,I,V})(vs::Vector) where {K, I, V}
 	x = [Float32(v[e.v]) for v in vs]
 	ArrayNode(sparse(ids, Ones(length(ids)), x, e.n, 1))
 end
-
+# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 (e::ExtractOneHot)(::Nothing) = ArrayNode(spzeros(Float32, e.n, 1))
 (e::ExtractOneHot)(v) = e(nothing)
 

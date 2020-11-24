@@ -35,7 +35,7 @@ function (s::ExtractCategorical{V,I})(vs::Vector{V}) where {V,I}
 	x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(get(s.keyvalemap, v, s.n), s.n) for v in vs])
 	ArrayNode(x)
 end
-
+# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 (s::ExtractCategorical)(::Nothing) =  ArrayNode(Flux.OneHotMatrix(s.n,[Flux.OneHotVector(s.n, s.n)]))
 (s::ExtractCategorical)(v) = s(nothing)
 

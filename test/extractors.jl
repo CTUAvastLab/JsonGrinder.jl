@@ -370,9 +370,11 @@ end
 @testset "testing irregular extractor" begin
 	j1 = JSON.parse("""{"a": 4}""")
 	j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}}""")
-	j3 = JSON.parse("""{"a": [1, 2, 3 , 4]}""")
+	j3 = JSON.parse("""{"a": [1, 2, 3, 4]}""")
+	j4 = JSON.parse("""{"a": 5}""")
+	j5 = JSON.parse("""{"a": 3}""")
 
-	sch = schema([j1,j2,j3])
+	sch = schema([j1,j2,j3,j4,j5])
 	ext = suggestextractor(sch)
 	a = ext(j1)
 	@test a[:a][:e1].data[1] == 0
@@ -380,7 +382,7 @@ end
 	@test nobs(a[:a][:e3]) == 1
 	# this should be 0, there is problem with handling missing valus
 	# todo: make it and issue on github so we have it tracked
-	@test_broken nobs(a[:e3].data) == 0
+	@test_broken nobs(a[:a][:e3].data) == 0
 	@test nobs(a[:a][:e3].data) == 1
 end
 

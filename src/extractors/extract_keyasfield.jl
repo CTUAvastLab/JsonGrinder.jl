@@ -13,7 +13,7 @@ struct ExtractKeyAsField{S,V} <: AbstractExtractor
 end
 
 extractsmatrix(s::ExtractKeyAsField) = false
-
+# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 function (e::ExtractKeyAsField)(v::V) where {V<:Union{Missing,Nothing}}
 	BagNode(ProductNode((key = e.key(nothing), item = e.item(nothing)))[1:0], [0:-1])
 end

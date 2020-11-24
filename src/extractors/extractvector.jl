@@ -20,11 +20,11 @@ end
 ExtractVector(n::Int) = ExtractVector{FloatType}(n)
 
 extractsmatrix(s::ExtractVector) = false
-
-(s::ExtractVector{T})(::Nothing) where {T} = ArrayNode(zeros(T, s.n,1))
-(s::ExtractVector)(v) = s(nothing)
+# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
+(s::ExtractVector{T})(::Missing) where {T} = ArrayNode(fill(missing, s.n))
+(s::ExtractVector)(v) = s(missing)
 function (s::ExtractVector{T})(v::V) where {T,V<:AbstractArray}
-	isempty(v) && return s(nothing)
+	isempty(v) && return s(missing)
 	x = zeros(T, s.n, 1)
 	if length(v) > s.n
 		@warn "array too long, truncating"

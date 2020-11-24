@@ -70,9 +70,8 @@ end
 	ext = suggestextractor(sch)
 	dss = ext.([j1,j2,j3,j4,j5])
 	ds = reduce(catobs, dss)
-	m = reflectinmodel(ds, k -> Dense(k,10, relu))
+	m = reflectinmodel(ds, k -> Dense(k, 10, relu))
 
-	# todo: otestovat
 	@test NodeIterator(m, ds) |> collect == [
 		(m[""], ds[""]),
 		(m["U"], ds["U"]),
@@ -105,6 +104,14 @@ end
 		(ext["s"], m["s"]),
 		(ext["w"], m["w"]),
 	]
+	@test NodeIterator(ext, ds) |> collect == [
+		(ext[""], ds[""]),
+		(ext["U"], ds["U"]),
+		(ext["k"], ds["k"]),
+		(ext["o"], ds["o"]),
+		(ext["s"], ds["s"]),
+		(ext["w"], ds["w"]),
+	]
 	@test buf_printtree(sch) == """
 	[Dict] (updated = 5)
 	  └── a: [List] (updated = 3)
@@ -127,11 +134,12 @@ end
 	                 ├── b: ArrayModel(identity)
 	                 └── c: ArrayModel(Dense(2053, 10, relu))"""
 	@test buf_printtree(ds) == """
-	ProductNode
-	  └── a: BagNode with 5 bag(s)
-	           └── ProductNode
-	                 ├── a: ArrayNode(1, 5)
-	                 ├── b: ArrayNode(1, 5)
-	                 └── c: ArrayNode(2053, 5)"""
+	ProductNode with 5 obs
+	  └── a: BagNode with 5 obs
+	           └── ProductNode with 5 obs
+	                 ├── a: ArrayNode(1×5 Array, Float32) with 5 obs
+	                 ├── b: ArrayNode(1×5 Array, Float32) with 5 obs
+	                 └── c: ArrayNode(2053×5 NGramMatrix, Int64) with 5 obs"""
 
+	@test m[""].m.m == identity
 end

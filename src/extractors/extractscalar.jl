@@ -29,7 +29,7 @@ function extractscalar(::Type{T}, e::Entry) where {T<:Number}
 	s = max_val == min_val ? convert(FloatType, 1) : convert(FloatType, 1 / (max_val - min_val))
 	ExtractScalar(FloatType, c, s)
 end
-
+# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 (s::ExtractScalar{T,V})(v::Nothing) where {T,V} = ArrayNode(fill(zero(T),(1,1)))
 (s::ExtractScalar)(v::Number) = ArrayNode(s.s .* (fill(s.datatype(v),1,1) .- s.c))
 (s::ExtractScalar)(v::AbstractString) = s((tryparse(s.datatype,v)))
