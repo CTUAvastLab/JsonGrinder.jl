@@ -8,7 +8,7 @@ end
 ExtractString(::Type{T}) where {T<:String} = ExtractString(T, 3, 256, 2053)
 (s::ExtractString)(v::String) = ArrayNode(Mill.NGramMatrix([v], s.n, s.b, s.m))
 (s::ExtractString)(v::AbstractString) = s(String(v))
-(s::ExtractString)(v::S) where {S<:Missing} = ArrayNode(Mill.NGramMatrix(missing, s.n, s.b, s.m))
+(s::ExtractString)(v::S) where {S<:Union{Missing, Nothing}} = ArrayNode(Mill.NGramMatrix(missing, s.n, s.b, s.m))
 (s::ExtractString)(v) = s(missing)
 extractsmatrix(s::ExtractString) = false
 

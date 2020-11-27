@@ -34,7 +34,7 @@ function (s::ExtractArray)(v::V) where {V<:Union{Missing, Nothing}}
 	BagNode(ds, [0:-1])
 end
 # todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
-(s::ExtractArray)(v::V) where {V<:Vector} = isempty(v) ? s(nothing) : BagNode(reduce(catobs, map(s.item, v)),[1:length(v)])
+(s::ExtractArray)(v::V) where {V<:Vector} = isempty(v) ? s(missing) : BagNode(reduce(catobs, map(s.item, v)),[1:length(v)])
 
 (s::ExtractArray)(v) = s(missing)
 

@@ -142,4 +142,7 @@ end
 	                 └── c: ArrayNode(2053×5 NGramMatrix, Int64) with 5 obs"""
 
 	@test m[""].m.m == identity
+
+	@test nobs(dss[5]["s"].data) == 0
+	@test nobs(dss[5]) == 1
 end

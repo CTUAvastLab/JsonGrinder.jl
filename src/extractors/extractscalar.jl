@@ -30,10 +30,10 @@ function extractscalar(::Type{T}, e::Entry) where {T<:Number}
 	ExtractScalar(FloatType, c, s)
 end
 # todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
-(s::ExtractScalar{T,V})(v::Nothing) where {T,V} = ArrayNode(fill(zero(T),(1,1)))
+(s::ExtractScalar{T,V})(v::W) where {T,V,W<:Union{Missing, Nothing}} = ArrayNode(fill(missing,(1,1)))
 (s::ExtractScalar)(v::Number) = ArrayNode(s.s .* (fill(s.datatype(v),1,1) .- s.c))
 (s::ExtractScalar)(v::AbstractString) = s((tryparse(s.datatype,v)))
-(s::ExtractScalar{T,V})(v)  where {T,V} = s(nothing)
+(s::ExtractScalar{T,V})(v) where {T,V} = s(missing)
 
 Base.length(e::ExtractScalar) = 1
 # data type has different hashes for each patch version of julia

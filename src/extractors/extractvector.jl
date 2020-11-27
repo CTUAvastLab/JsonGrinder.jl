@@ -21,7 +21,7 @@ ExtractVector(n::Int) = ExtractVector{FloatType}(n)
 
 extractsmatrix(s::ExtractVector) = false
 # todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
-(s::ExtractVector{T})(::Missing) where {T} = ArrayNode(fill(missing, s.n))
+(s::ExtractVector{T})(::V) where {T,V<:Union{Missing, Nothing}} = ArrayNode(fill(missing, s.n))
 (s::ExtractVector)(v) = s(missing)
 function (s::ExtractVector{T})(v::V) where {T,V<:AbstractArray}
 	isempty(v) && return s(missing)

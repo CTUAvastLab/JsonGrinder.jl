@@ -3,11 +3,15 @@ using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict,
 using Mill: catobs, nobs
 using LinearAlgebra
 
-@testset "Testing scalar conversion" begin
+@testset "Testing ExtractScalar" begin
 	sc = ExtractScalar(Float64,2,3)
 	@test all(sc("5").data .== [9])
 	@test all(sc(5).data .== [9])
-	@test all(sc(nothing).data .== [0])
+	@test all(sc(nothing).data .=== [missing])
+	@test all(sc(missing).data .=== [missing])
+	@test nobs(sc(missing)) == 1
+	@test nobs(sc(nothing)) == 1
+	@test nobs(sc(5)) == 1
 end
 
 @testset "Testing array conversion" begin
@@ -134,26 +138,39 @@ end
 
 @testset "ExtractCategorical" begin
 	e = ExtractCategorical(["a","b"])
-	@test e("a").data[:] ≈ [1, 0, 0]
-	@test e("b").data[:] ≈ [0, 1, 0]
-	@test e("z").data[:] ≈ [0, 0, 1]
-	@test e(nothing).data[:] ≈ [0, 0, 1]
-	@test typeof(e("a").data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
-	@test typeof(e(nothing).data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
+	@test e("a").data ≈ [1, 0, 0]
+	@test e("b").data ≈ [0, 1, 0]
+	@test e("z").data ≈ [0, 0, 1]
+	@test all(e(nothing).data |> collect .=== [missing, missing, missing])
+	@test all(e(missing).data |> collect .=== [missing, missing, missing])
+	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
-	@test typeof(e(["a", "b"]).data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
+	@test all(e(["a", missing]).data |> collect .=== [true missing; false missing; false missing])
+	@test all(e(["a", missing, "x"]).data |> collect .=== [true missing false; false missing false; false missing true])
+	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Array{Union{Missing, Int64},1},Int64,Union{Missing, Bool}}
 
 	@test isnothing(ExtractCategorical([]))
 	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
-	@test e2("a").data[:] ≈ [1, 0, 0]
-	@test e2("c").data[:] ≈ [0, 1, 0]
-	@test e2("b").data[:] ≈ [0, 0, 1]
-	@test e2(nothing).data[:] ≈ [0, 0, 1]
+	@test e2("a").data ≈ [1, 0, 0]
+	@test e2("c").data ≈ [0, 1, 0]
+	@test e2("b").data ≈ [0, 0, 1]
+	@test all(e2(nothing).data |> collect .=== [missing, missing, missing])
 
 	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
 	@test catobs(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
-	@test e(Dict(1=>2)).data[:] ≈ [0, 0, 1]
+	@test all(e(Dict(1=>2)).data |> collect .=== [missing, missing, missing])
+
+	@test nobs(e("a")) == 1
+	@test nobs(e("b")) == 1
+	@test nobs(e("z")) == 1
+	@test nobs(e(nothing)) == 1
+	@test nobs(e(missing)) == 1
+	@test nobs(e(missing).data) == 1
+	@test nobs(e([missing, nothing])) == 2
+	@test nobs(e([missing, nothing, "a"])) == 3
 end
 
 @testset "equals and hash test" begin
@@ -377,13 +394,10 @@ end
 	sch = schema([j1,j2,j3,j4,j5])
 	ext = suggestextractor(sch)
 	a = ext(j1)
-	@test a[:a][:e1].data[1] == 0
-	@test a[:a][:e2].data[:a].data.s[1] == ""
+	@test a[:a][:e1].data[1] == 0.5
+	@test ismissing(a[:a][:e2].data[:a].data.s[1])
 	@test nobs(a[:a][:e3]) == 1
-	# this should be 0, there is problem with handling missing valus
-	# todo: make it and issue on github so we have it tracked
-	@test_broken nobs(a[:a][:e3].data) == 0
-	@test nobs(a[:a][:e3].data) == 1
+	@test nobs(a[:a][:e3].data) == 4
 end
 
 @testset "Mixed scalar extraction" begin
