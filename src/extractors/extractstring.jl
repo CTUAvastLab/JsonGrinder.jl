@@ -1,3 +1,14 @@
+"""
+	struct ExtractString{T} <: AbstractExtractor
+		datatype::Type{T}
+		n::Int
+		b::Int
+		m::Int
+	end
+
+	Represent `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) 
+	with base `b` and modulo `m`.
+"""
 struct ExtractString{T} <: AbstractExtractor
 	datatype::Type{T}
 	n::Int

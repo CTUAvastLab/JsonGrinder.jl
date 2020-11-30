@@ -1,6 +1,5 @@
 """
 	struct ExtractScalar{T}
-		datatype::Type{T}
 		c::T
 		s::T
 	end
@@ -8,13 +7,12 @@
 	extract a scalar value and center. If `T` is of type number, it is centered by first subtracting c and then
 	multiplying that with s.
 """
-struct ExtractScalar{T<:Number,V} <: AbstractExtractor
-	datatype::Type{T}
-	c::V
-	s::V
+struct ExtractScalar{T} <: AbstractExtractor
+	c::T
+	s::T
 end
 
-ExtractScalar(datatype) = ExtractScalar(datatype, zero(datatype), one(datatype))
+ExtractScalar(datatype) = ExtractScalar(zero(datatype), one(datatype))
 extractsmatrix(s::ExtractScalar) = true
 
 function extractscalar(::Type{T}, e::Entry) where {T<:Number}

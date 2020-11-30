@@ -12,6 +12,9 @@ using LinearAlgebra
 	@test nobs(sc(missing)) == 1
 	@test nobs(sc(nothing)) == 1
 	@test nobs(sc(5)) == 1
+
+	sc = ExtractScalar(Float32, 0.5, 4.0)
+	@test eltype(sc(1).data) == Float32
 end
 
 @testset "Testing array conversion" begin

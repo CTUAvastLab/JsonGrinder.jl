@@ -67,6 +67,7 @@ make_selector(s::Symbol) = s == Symbol("[]") ? d->d.items : d-> d.childs[s]
 		deletes the field `x` from `schema` at:
 			`schema.childs[:field].childs[:subfield].items.childs`
 """
+
 function Base.delete!(sch::JSONEntry, path::AbstractString, field::AbstractString)
 	@assert field != "[]"
 	selectors = map(Symbol, split(path, ".")[2:end])
@@ -74,6 +75,11 @@ function Base.delete!(sch::JSONEntry, path::AbstractString, field::AbstractStrin
 	delete!(item.childs, Symbol(field))
 end
 
+```
+	prune_json(json, schema)
+
+	remove keys from `json` which are not part of the `schema`
+```
 prune_json(json, sch::Entry) = json
 
 prune_json(json, sch::ArrayEntry) = map(json) do el

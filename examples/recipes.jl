@@ -22,18 +22,7 @@ sch = JsonGrinder.schema(samples)
 ###############################################################
 delete!(sch.childs,:id)
 
-limituse(d::Dict{T,Int}, limit) where {T} = collect(filter(k -> d[k] >= limit, keys(d)))
-
-function custom_scalar_extractor()
-	[(e -> promote_type(unique(typeof.(keys(e.counts)))...) <: String,
-		e -> MultipleRepresentation((ExtractCategorical(limituse(e.counts, 10)), ExtractString(String)))),
-	 (e -> (length(keys(e.counts)) / e.updated < 0.1  && length(keys(e.counts)) <= 10000),
-		e -> ExtractCategorical(collect(keys(e.counts)))),
-	 (e -> true,
-		e -> extractscalar(promote_type(unique(typeof.(keys(e.counts)))...))),]
-end
-
-extractor = suggestextractor(sch, (scalar_extractors=custom_scalar_extractor(), mincount=100,))
+extractor = suggestextractor(sch)
 
 extract_data = ExtractDict(deepcopy(extractor.dict))
 extract_target = ExtractDict(deepcopy(extractor.dict))
