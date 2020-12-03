@@ -1,6 +1,8 @@
 using Documenter
 using JsonGrinder
 
+DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
+
 makedocs(
     sitename = "JsonGrinder",
     format = Documenter.HTML(),
