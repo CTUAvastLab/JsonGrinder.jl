@@ -75,11 +75,11 @@ function Base.delete!(sch::JSONEntry, path::AbstractString, field::AbstractStrin
 	delete!(item.childs, Symbol(field))
 end
 
-```
-	prune_json(json, schema)
+"""
+ 	prune_json(json, schema)
 
-	remove keys from `json` which are not part of the `schema`
-```
+ 	remove keys from `json` which are not part of the `schema`
+"""
 prune_json(json, sch::Entry) = json
 
 prune_json(json, sch::ArrayEntry) = map(json) do el

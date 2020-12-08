@@ -138,7 +138,7 @@ end
 # queryselectorall v js místo getelementsbyclassname
 # a zkusit minifikovat to html-vyházet odsazení, a kouknout na rozdíl velikostí
 
-```
+"""
 	generate_html(sch::DictEntry; max_vals=100, max_len=1_000)
 	generate_html(sch::DictEntry, file_name ; max_vals=100, max_len=1_000)
 
@@ -148,7 +148,7 @@ end
 	`max_vals` controls maximum number of exported values in countmap
 	`max_len` controls maximum number of exported lengts of arrays
 	`file_name` a name of file to save HTML with schema
-```
+"""
 function generate_html(sch::DictEntry; max_vals=100, max_len=1_000)
 	tpl = mt"""
 	<!DOCTYPE html>
