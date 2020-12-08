@@ -23,18 +23,20 @@ extractsmatrix(s::ExtractVector) = false
 # todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 (s::ExtractVector{T})(::V) where {T,V<:Union{Missing, Nothing}} = ArrayNode(fill(missing, s.n))
 (s::ExtractVector)(v) = s(missing)
-function (s::ExtractVector{T})(v::V) where {T,V<:AbstractArray}
+function (s::ExtractVector{T})(v::V) where {T,V<:Vector}
 	isempty(v) && return s(missing)
-	x = zeros(T, s.n, 1)
 	if length(v) > s.n
 		@warn "array too long, truncating"
-		x .= v[1:s.n]
+		x = reshape(T.(v[1:s.n]), :, 1)
+		return(ArrayNode(x))
 	elseif length(v) < s.n
+		x = Matrix{Union{Missing, T}}(missing, s.n, 1)
 		x[1:length(v)] .= v
+		return(ArrayNode(x))
 	else
-		x .= v
+		x = reshape(T.(v), :, 1)
+		return(ArrayNode(x))
 	end
-	ArrayNode(x)
 end
 
 Base.length(e::ExtractVector) = e.n

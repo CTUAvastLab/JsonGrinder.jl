@@ -13,13 +13,13 @@ struct ExtractKeyAsField{S,V} <: AbstractExtractor
 end
 
 extractsmatrix(s::ExtractKeyAsField) = false
-# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
+
 function (e::ExtractKeyAsField)(v::V) where {V<:Union{Missing,Nothing}}
-	BagNode(ProductNode((key = e.key(nothing), item = e.item(nothing)))[1:0], [0:-1])
+	BagNode(ProductNode((key = e.key(missing), item = e.item(missing)))[1:0], [0:-1])
 end
 
 function (e::ExtractKeyAsField)(vs::Dict)
-	isempty(vs) && return(e(nothing))
+	isempty(vs) && return(e(missing))
 	items = map(collect(vs)) do (k,v)
 		ProductNode((key = e.key(k), item = e.item(v)))
 	end

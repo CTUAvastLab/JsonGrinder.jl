@@ -12,9 +12,11 @@ struct ExtractScalar{T} <: AbstractExtractor
 	s::T
 end
 
-ExtractScalar(datatype) = ExtractScalar(zero(datatype), one(datatype))
+ExtractScalar(T) = ExtractScalar(zero(T), one(T))
+ExtractScalar(T, c, s) = ExtractScalar(T(c), T(s))
 extractsmatrix(s::ExtractScalar) = true
 
+extractscalar(::Type{T}, m = zero(T), s = one(T)) where {T<:Number} = ExtractScalar(T, m, s)
 function extractscalar(::Type{T}, e::Entry) where {T<:Number}
 	if unify_types(e) <: AbstractString
 		values = parse.(T, keys(e.counts))
@@ -36,5 +38,5 @@ end
 Base.length(e::ExtractScalar) = 1
 # data type has different hashes for each patch version of julia
 # see https://discourse.julialang.org/t/datatype-hash-differs-per-patch-version/48827
-Base.hash(e::ExtractScalar{T}, h::UInt) where {T} = hash((string(e.datatype), e.c, e.s), h)
-Base.:(==)(e1::ExtractScalar{T}, e2::ExtractScalar{T}) where {T} = e1.datatype == e2.datatype && e1.c === e2.c && e1.s === e2.s
+Base.hash(e::ExtractScalar{T}, h::UInt) where {T} = hash((e.c, e.s), h)
+Base.:(==)(e1::ExtractScalar{T}, e2::ExtractScalar{T}) where {T} = e1.c === e2.c && e1.s === e2.s

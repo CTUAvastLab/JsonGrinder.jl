@@ -1,7 +1,16 @@
 using JsonGrinder, JSON, Test, SparseArrays, Flux, Random, HierarchicalUtils
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
-using Mill: catobs, nobs
+using Mill: catobs, nobs, MaybeHotMatrix
 using LinearAlgebra
+
+function misequals(a, b)
+	for i in 1:length(a)
+		ismissing(b[i]) && !ismissing(a[i]) && return(false)
+		ismissing(a[i]) && !ismissing(b[i]) && return(false)
+		!ismissing(a[i]) && a[i] != b[i] && return(false)
+	end
+	return(true)
+end
 
 @testset "Testing ExtractScalar" begin
 	sc = ExtractScalar(Float64,2,3)
@@ -35,19 +44,24 @@ end
 	sc = ExtractVector{Int64}(5)
 	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
 	@test sc([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
-	@test all(sc(nothing).data .== [0, 0, 0, 0, 0])
+	@test all(sc(nothing).data .=== missing)
 
 	@test !JsonGrinder.extractsmatrix(sc)
 
 	# feature vector longer than expected
-	sc = ExtractVector(5)
+	sc = ExtractVector{Float32}(5)
 	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
-	@test sc([5, 6]).data ≈ [5, 6, 0, 0, 0]
-	@test sc(Dict(1=>2)).data ≈ zeros(5)
+	@test typeof(sc([1, 2, 3, 4, 5]).data) == Array{Float32,2}
+	@test sc([5, 6]).data[1:2] ≈ [5, 6]
+	@test typeof(sc([1, 2]).data) == Array{Union{Missing,Float32},2}
+	@test all(sc([5, 6]).data[3:5] .=== missing)
+	@test all(sc(Dict(1=>2)).data .=== missing)
 end
 
 @testset "Testing ExtractDict" begin
-	dict = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64), "c" => ExtractArray(ExtractScalar(Float64,2,3)))
+	dict = Dict("a" => ExtractScalar(Float64,2,3),
+				"b" => ExtractScalar(Float64), 
+				"c" => ExtractArray(ExtractScalar(Float64,2,3)))
 	br = ExtractDict(dict)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
@@ -55,7 +69,7 @@ end
 
 	@test catobs(a1,a1)[:a].data ≈ [9 9]
 	@test catobs(a1,a1)[:b].data ≈ [7 7]
-	@test catobs(a1,a1)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
+	@test catobs(a1,a1)[:c].data.data ≈  [-3 0 3 6 -3 0 3 6]
 	@test all(catobs(a1,a1)[:c].bags .== [1:4,5:8])
 
 	@test catobs(a1,a2)[:a].data ≈ [9 9]
@@ -64,12 +78,12 @@ end
 	@test all(catobs(a1,a2)[:c].bags .== [1:4,0:-1])
 
 	@test catobs(a2,a3)[:a].data ≈ [9 9]
-	@test catobs(a2,a3)[:b].data ≈ [7 0]
+	@test misequals(catobs(a2,a3)[:b].data, [7.0 missing])
 	@test catobs(a2,a3)[:c].data.data ≈ [-3 0 3 6]
 	@test all(catobs(a2,a3)[:c].bags .== [0:-1,1:4])
 
 	@test catobs(a1,a3)[:a].data ≈ [9 9]
-	@test catobs(a1,a3)[:b].data ≈ [7 0]
+	@test misequals(catobs(a1,a3)[:b].data, [7.0 missing])
 	@test catobs(a1,a3)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
 	@test all(catobs(a1,a3)[:c].bags .== [1:4,5:8])
 
@@ -78,7 +92,7 @@ end
 	@test a2[:a].data ≈ [9]
 	@test a2[:b].data ≈ [7]
 	@test a3[:a].data ≈ [9]
-	@test a3[:b].data ≈ [0]
+	@test misequals(a3[:b].data, [missing])
 
 	@test a1[:c].data.data ≈ [-3 0 3 6]
 	@test all(a1[:c].bags .== [1:4])
@@ -90,7 +104,8 @@ end
 end
 
 @testset "Testing Nested Missing Arrays" begin
-	dict = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),"b" => ExtractArray(ExtractScalar(Float32,2,3)))
+	dict = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),
+		"b" => ExtractArray(ExtractScalar(Float32,2,3)))
 	br = ExtractDict(dict)
 	a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]))
 	a2 = br(Dict("b" => [2,3,4]))
@@ -114,7 +129,7 @@ end
 	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
 	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
 
-	@test all(a4.data[2].data.data isa Array{Float32,2})
+	@test all(a4.data[2].data.data isa Array{Missing,2})
 end
 
 @testset "ExtractOneHot" begin
@@ -125,15 +140,18 @@ end
 	e = ExtractOneHot(["a","b"], "name", "count")
 	@test e(vs).data[:] ≈ [1, 2, 0]
 	@test e(nothing).data[:] ≈ [0, 0, 0]
+	@test e(missing).data[:] ≈ [0, 0, 0]
 	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
 	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
-
+	@test typeof(e(missing).data) == SparseMatrixCSC{Float32,Int64}
 
 	e = ExtractOneHot(["a","b"], "name", nothing)
 	@test e(vs).data[:] ≈ [1, 1, 0]
 	@test e(nothing).data[:] ≈ [0, 0, 0]
+	@test e(missing).data[:] ≈ [0, 0, 0]
 	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
 	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
+	@test typeof(e(missing).data) == SparseMatrixCSC{Float32,Int64}
 	vs = JSON.parse.(["{\"name\": \"c\", \"count\" : 1}"])
 	@test e(vs).data[:] ≈ [0, 0, 1]
 	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
@@ -148,6 +166,7 @@ end
 	@test all(e(missing).data |> collect .=== [missing, missing, missing])
 	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
+	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test all(e(["a", missing]).data |> collect .=== [true missing; false missing; false missing])
@@ -161,6 +180,7 @@ end
 	@test e2("c").data ≈ [0, 1, 0]
 	@test e2("b").data ≈ [0, 0, 1]
 	@test all(e2(nothing).data |> collect .=== [missing, missing, missing])
+	@test all(e2(missing).data |> collect .=== [missing, missing, missing])
 
 	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
 	@test catobs(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
@@ -237,7 +257,7 @@ end
 	k = only(keys(js[1]))
 	i = ext.item(js[1][k])
 	@test b.data[:item][:a].data == i[:a].data
-	@test b.data[:item][:b].data.data == i[:b].data.data
+	@test b.data[:item][:b].data ==i[:b].data
 	@test b.data[:key].data.s[1] == k
 
 	b = ext(nothing)
@@ -273,12 +293,12 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
 	ext = suggestextractor(sch)
 
-	@test ext[:a].datatype <: Float32
-	@test ext[:b].datatype <: String
-	@test ext[:c].datatype <: Float32
-	@test ext[:d].datatype <: Float32
-	@test ext[:e].datatype <: Float32
-	@test ext[:f].datatype <: Float32
+	@test ext[:a] isa ExtractScalar{Float32}
+	@test ext[:b] isa ExtractString
+	@test ext[:c] isa ExtractScalar{Float32}
+	@test ext[:d] isa ExtractScalar{Float32}
+	@test ext[:e] isa ExtractScalar{Float32}
+	@test ext[:f] isa ExtractScalar{Float32}
 
 	ext_j1 = ext(j1)
 	ext_j2 = ext(j2)
@@ -330,10 +350,10 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
 	ext = suggestextractor(sch)
 
-	@test ext[:a].datatype <: Float32
+	@test ext[:a] isa ExtractScalar{Float32}
 	@test ext[:b] isa ExtractVector
 	@test ext[:b].n == 3
-	@test ext[:c] isa ExtractArray{ExtractScalar{Float32, Float32}}
+	@test ext[:c] isa ExtractArray{ExtractScalar{Float32}}
 
 	ext_j1 = ext(j1)
 	ext_j2 = ext(j2)
@@ -357,10 +377,10 @@ end
 	sch = JsonGrinder.schema(js)
 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
 
-	@test ext[:a].datatype <: Float32
+	@test ext[:a] isa ExtractScalar{Float32}
 	@test ext[:b] isa JsonGrinder.ExtractKeyAsField
-	@test ext[:b].key.datatype <: Float32
-	@test ext[:b].item.datatype <: Float32
+	@test ext[:b].key isa ExtractString
+	@test ext[:b].item isa ExtractScalar{Float32}
 	@test ext[:c] isa ExtractVector
 	@test ext[:c].n == 2
 	@test ext[:d] isa ExtractArray
@@ -381,7 +401,7 @@ end
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
-	@test ext_j1[:a].data.data isa Array{Float32,2}
+	@test ext_j1[:a].data.data isa Array{Missing,2}
 	@test ext_j2[:a].data.data isa Array{Float32,2}
 	@test ext_j3[:a].data.data isa Array{Float32,2}
 	@test ext_j4[:a].data.data isa Array{Float32,2}
@@ -468,7 +488,7 @@ end
 	@test e4["s"].data ≈ [1.0]
 	@test e5["s"].data ≈ [0.875]
 
-	@test buf_printtree(e1) ==
+	@test_broken buf_printtree(e1) ==
 	"""
 	ProductNode with 1 obs
 	  └── a: ProductNode with 1 obs
@@ -510,11 +530,11 @@ end
 	e3 = ext(j3)
 	e4 = ext(j4)
 	e5 = ext(j5)
-	@test e1["k"].data ≈ [0]
+	@test all(e1["k"].data .=== [missing])
 	@test e2["k"].data ≈ [0.5]
 	@test e3["k"].data ≈ [1.0]
-	@test e4["k"].data ≈ [0]
-	@test e5["k"].data ≈ [0]
+	@test e4["k"].data ≈ [0.0]
+	@test all(e5["k"].data .=== [missing])
 
 	@test hash(ext) !== hash(suggestextractor(JsonGrinder.schema([j1, j2, j4, j5])))
 end
@@ -533,7 +553,7 @@ end
 	@test c == ""
 	ext = JsonGrinder.extractscalar(AbstractString)
 	@test SparseMatrixCSC(ext(c).data) == SparseMatrixCSC(ext(e).data)
-	@test ext(f) == ext(nothing)
+	@test all(ext(f).data.s .=== ext(nothing).data.s)
 end
 
 @testset "key as field" begin

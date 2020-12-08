@@ -75,7 +75,7 @@ function key_as_field(e::DictEntry, settings; path = "")
 	for k in keys(e)
 		update!(key_schema, k, path=path)
 	end
-	ExtractKeyAsField(ExtractString(Float32, 3, 256, 2053), suggestextractor(child_schema, settings, path = path*"[:childs]"))
+	ExtractKeyAsField(ExtractString(3, 256, 2053), suggestextractor(child_schema, settings, path = path*"[:childs]"))
 end
 
 function merge(es::DictEntry...)
