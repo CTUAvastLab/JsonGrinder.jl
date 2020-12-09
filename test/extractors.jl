@@ -1,5 +1,7 @@
 using JsonGrinder, JSON, Test, SparseArrays, Flux, Random, HierarchicalUtils
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
+using JsonGrinder: extractempty
+using Mill
 using Mill: catobs, nobs, MaybeHotMatrix
 using LinearAlgebra
 
@@ -20,31 +22,102 @@ end
 	@test all(sc(missing).data .=== [missing])
 	@test nobs(sc(missing)) == 1
 	@test nobs(sc(nothing)) == 1
+	@test sc(extractempty).data isa Matrix{Float64}
+	@test nobs(sc(extractempty)) == 0
 	@test nobs(sc(5)) == 1
 
 	sc = ExtractScalar(Float32, 0.5, 4.0)
-	@test eltype(sc(1).data) == Float32
+	@test sc(1).data isa Matrix{Float32}
+	@test sc(extractempty).data isa Matrix{Float32}
 end
+
+
+@testset "ExtractCategorical" begin
+	e = ExtractCategorical(["a","b"])
+	@test e("a").data ≈ [1, 0, 0]
+	@test e("b").data ≈ [0, 1, 0]
+	@test e("z").data ≈ [0, 0, 1]
+	@test all(e(nothing).data |> collect .=== [missing, missing, missing])
+	@test all(e(missing).data |> collect .=== [missing, missing, missing])
+	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
+	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
+	@test e(extractempty).data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	@test nobs(e(extractempty)) == 0
+
+	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
+	@test all(e(["a", missing]).data |> collect .=== [true missing; false missing; false missing])
+	@test all(e(["a", missing, "x"]).data |> collect .=== [true missing false; false missing false; false missing true])
+	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Array{Union{Missing, Int64},1},Int64,Union{Missing, Bool}}
+
+	@test isnothing(ExtractCategorical([]))
+	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
+	@test e2("a").data ≈ [1, 0, 0]
+	@test e2("c").data ≈ [0, 1, 0]
+	@test e2("b").data ≈ [0, 0, 1]
+	@test all(e2(nothing).data |> collect .=== [missing, missing, missing])
+	@test all(e2(missing).data |> collect .=== [missing, missing, missing])
+
+	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
+	@test catobs(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
+	@test all(e(Dict(1=>2)).data |> collect .=== [missing, missing, missing])
+
+	@test nobs(e("a")) == 1
+	@test nobs(e("b")) == 1
+	@test nobs(e("z")) == 1
+	@test nobs(e(nothing)) == 1
+	@test nobs(e(missing)) == 1
+	@test nobs(e(missing).data) == 1
+	@test nobs(e([missing, nothing])) == 2
+	@test nobs(e([missing, nothing, "a"])) == 3
+
+	
+end
+
 
 @testset "Testing array conversion" begin
 	sc = ExtractArray(ExtractCategorical(2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
 	@test nobs(sc(nothing).data) == 0
+	@test sc(nothing).data.data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	@test nobs(sc(nothing).data.data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
+
+	@test nobs(sc(extractempty).data.data) == 0
+	@test nobs(sc(extractempty).data) == 0
+	@test isempty(sc(extractempty).bags.bags)
+	@test sc(extractempty).data.data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+
 	sc = ExtractArray(ExtractScalar(Float32))
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
 	@test nobs(sc(nothing).data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
+
+	@test nobs(sc(extractempty).data.data) == 0
+	@test nobs(sc(extractempty).data) == 0
+	@test isempty(sc(extractempty).bags.bags)
+	@test sc(extractempty).data.data isa Matrix{Float32}
+
+	@test sc(nothing).data.data isa Matrix{Float32}
 end
 
 @testset "Testing feature vector conversion" begin
 	sc = ExtractVector(5)
+	@test sc([1, 2, 2, 3, 4]).data isa Matrix
 	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
 	@test sc([1, 2, 2, 3, 4]).data isa Array{Float32, 2}
+	@test sc(extractempty).data isa Matrix{Float32}
+	@test nobs(sc(extractempty).data) == 0
+
 	sc = ExtractVector{Int64}(5)
 	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
 	@test sc([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
+	@test sc(nothing).data isa Matrix
 	@test all(sc(nothing).data .=== missing)
+	@test sc(extractempty).data isa Matrix{Int64}
+	@test nobs(sc(extractempty).data) == 0
+
 
 	@test !JsonGrinder.extractsmatrix(sc)
 
@@ -54,6 +127,7 @@ end
 	@test typeof(sc([1, 2, 3, 4, 5]).data) == Array{Float32,2}
 	@test sc([5, 6]).data[1:2] ≈ [5, 6]
 	@test typeof(sc([1, 2]).data) == Array{Union{Missing,Float32},2}
+	@test sc([1, 2]).data isa Matrix
 	@test all(sc([5, 6]).data[3:5] .=== missing)
 	@test all(sc(Dict(1=>2)).data .=== missing)
 end
@@ -101,6 +175,15 @@ end
 	@test all(a3[:c].bags .== [1:4])
 	@test catobs(a3,a3)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
 	@test all(catobs(a3,a3)[:c].bags .== [1:4,5:8])
+
+	a4 = br(extractempty)
+	@test nobs(a4[:a]) == 0
+	@test a4[:a].data isa Matrix{Float64}
+	@test nobs(a4[:b]) == 0
+	@test a4[:b].data isa Matrix{Float64}
+	@test nobs(a4[:c]) == 0
+	@test nobs(a4[:c].data) == 0
+	@test a4[:c].data.data isa Matrix{Float64}
 end
 
 @testset "Testing Nested Missing Arrays" begin
@@ -129,7 +212,14 @@ end
 	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
 	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
 
-	@test all(a4.data[2].data.data isa Array{Missing,2})
+	@test all(a4.data[2].data.data isa Array{Float32,2})
+	a4 = br(extractempty)
+	@test nobs(a4[:a]) == 0
+	@test nobs(a4[:a].data) == 0
+	@test a4[:a].data.data isa Matrix{Float32}
+	@test nobs(a4[:b]) == 0
+	@test nobs(a4[:b].data) == 0
+	@test a4[:b].data.data isa Matrix{Float32}
 end
 
 @testset "ExtractOneHot" begin
@@ -141,9 +231,12 @@ end
 	@test e(vs).data[:] ≈ [1, 2, 0]
 	@test e(nothing).data[:] ≈ [0, 0, 0]
 	@test e(missing).data[:] ≈ [0, 0, 0]
-	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
-	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
-	@test typeof(e(missing).data) == SparseMatrixCSC{Float32,Int64}
+	@test e(vs).data isa SparseMatrixCSC{Float32,Int64}
+	@test e(nothing).data isa SparseMatrixCSC{Float32,Int64}
+	@test e(missing).data isa SparseMatrixCSC{Float32,Int64}
+	@test e(extractempty).data isa SparseMatrixCSC{Float32,Int64}
+	@test nobs(e(extractempty)) == 0
+	@test nobs(e(extractempty).data) == 0
 
 	e = ExtractOneHot(["a","b"], "name", nothing)
 	@test e(vs).data[:] ≈ [1, 1, 0]
@@ -155,46 +248,57 @@ end
 	vs = JSON.parse.(["{\"name\": \"c\", \"count\" : 1}"])
 	@test e(vs).data[:] ≈ [0, 0, 1]
 	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
+	@test e(extractempty).data isa SparseMatrixCSC{Float32,Int64}
+	@test nobs(e(extractempty)) == 0
+	@test nobs(e(extractempty).data) == 0
 end
 
-@testset "ExtractCategorical" begin
-	e = ExtractCategorical(["a","b"])
-	@test e("a").data ≈ [1, 0, 0]
-	@test e("b").data ≈ [0, 1, 0]
-	@test e("z").data ≈ [0, 0, 1]
-	@test all(e(nothing).data |> collect .=== [missing, missing, missing])
-	@test all(e(missing).data |> collect .=== [missing, missing, missing])
-	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
-	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
-	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
+@testset "Extractor of keys as field" begin
+	JsonGrinder.updatemaxkeys!(1000)
+	js = [Dict(randstring(5) => rand()) for _ in 1:1000]
+	sch = JsonGrinder.schema(js)
+	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
 
-	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
-	@test all(e(["a", missing]).data |> collect .=== [true missing; false missing; false missing])
-	@test all(e(["a", missing, "x"]).data |> collect .=== [true missing false; false missing false; false missing true])
-	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
-	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Array{Union{Missing, Int64},1},Int64,Union{Missing, Bool}}
+	b = ext(js[1])
+	k = only(keys(js[1]))
+	@test b.data[:item].data[1] ≈ (js[1][k] - ext.item.c) * ext.item.s
+	@test b.data[:key].data.s[1] == k
 
-	@test isnothing(ExtractCategorical([]))
-	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
-	@test e2("a").data ≈ [1, 0, 0]
-	@test e2("c").data ≈ [0, 1, 0]
-	@test e2("b").data ≈ [0, 0, 1]
-	@test all(e2(nothing).data |> collect .=== [missing, missing, missing])
-	@test all(e2(missing).data |> collect .=== [missing, missing, missing])
+	b = ext(nothing)
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
+	b = ext(Dict())
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
 
-	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
-	@test catobs(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
-	@test all(e(Dict(1=>2)).data |> collect .=== [missing, missing, missing])
+	b = ext(extractempty)
+	@test nobs(b) == 0
+	@test nobs(b.data) == 0
+	@test nobs(b.data[:item]) == 0
+	@test b.data[:item].data isa Matrix{Float32}
+	@test nobs(b.data[:key]) == 0
+	@test b.data[:key].data isa Mill.NGramMatrix{String,Array{String,1},Int64}
 
-	@test nobs(e("a")) == 1
-	@test nobs(e("b")) == 1
-	@test nobs(e("z")) == 1
-	@test nobs(e(nothing)) == 1
-	@test nobs(e(missing)) == 1
-	@test nobs(e(missing).data) == 1
-	@test nobs(e([missing, nothing])) == 2
-	@test nobs(e([missing, nothing, "a"])) == 3
+
+	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000]
+	sch = JsonGrinder.schema(js)
+	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
+
+	b = ext(js[1])
+	k = only(keys(js[1]))
+	i = ext.item(js[1][k])
+	@test b.data[:item][:a].data == i[:a].data
+	@test b.data[:item][:b].data ==i[:b].data
+	@test b.data[:key].data.s[1] == k
+
+	b = ext(nothing)
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
+	b = ext(Dict())
+	@test nobs(b) == 1
+	@test nobs(b.data) == 0
 end
+
 
 @testset "equals and hash test" begin
 	other1 = Dict(
@@ -229,43 +333,6 @@ end
 	@test br11 != br1
 	@test br11 != br2
 	@test br1 == br2
-end
-
-@testset "Extractor of keys as field" begin
-	JsonGrinder.updatemaxkeys!(1000)
-	js = [Dict(randstring(5) => rand()) for _ in 1:1000]
-	sch = JsonGrinder.schema(js)
-	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
-
-	b = ext(js[1])
-	k = only(keys(js[1]))
-	@test b.data[:item].data[1] ≈ (js[1][k] - ext.item.c) * ext.item.s
-	@test b.data[:key].data.s[1] == k
-
-	b = ext(nothing)
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
-	b = ext(Dict())
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
-
-	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000]
-	sch = JsonGrinder.schema(js)
-	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
-
-	b = ext(js[1])
-	k = only(keys(js[1]))
-	i = ext.item(js[1][k])
-	@test b.data[:item][:a].data == i[:a].data
-	@test b.data[:item][:b].data ==i[:b].data
-	@test b.data[:key].data.s[1] == k
-
-	b = ext(nothing)
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
-	b = ext(Dict())
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
 end
 
 @testset "Extractor skip empty lists" begin
@@ -401,7 +468,7 @@ end
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
-	@test ext_j1[:a].data.data isa Array{Missing,2}
+	@test ext_j1[:a].data.data isa Array{Float32,2}
 	@test ext_j2[:a].data.data isa Array{Float32,2}
 	@test ext_j3[:a].data.data isa Array{Float32,2}
 	@test ext_j4[:a].data.data isa Array{Float32,2}
@@ -420,7 +487,7 @@ end
 	@test a[:a][:e1].data[1] == 0.5
 	@test ismissing(a[:a][:e2].data[:a].data.s[1])
 	@test nobs(a[:a][:e3]) == 1
-	@test nobs(a[:a][:e3].data) == 4
+	@test nobs(a[:a][:e3].data) == 1
 end
 
 @testset "Mixed scalar extraction" begin
@@ -457,25 +524,25 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5, j6, j7])
 	ext = suggestextractor(sch)
 
-	@test buf_printtree(sch) ==
-    """
-    [Dict] (updated = 7)
-      └── a: [MultiEntry] (updated = 7)
-               ├── 1: [Scalar - String], 3 unique values, updated = 3
-               ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
-               ├── 3: [List] (updated = 1)
-               │        └── [Scalar - Int64], 5 unique values, updated = 5
-               └── 4: [Dict] (updated = 1)
-                        └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1"""
+	# @test_broken buf_printtree(sch) ==
+ #    """
+ #    [Dict] (updated = 7)
+ #      └── a: [MultiEntry] (updated = 7)
+ #               ├── 1: [Scalar - String], 3 unique values, updated = 3
+ #               ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
+ #               ├── 3: [List] (updated = 1)
+ #               │        └── [Scalar - Int64], 5 unique values, updated = 5
+ #               └── 4: [Dict] (updated = 1)
+ #                        └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1"""
 
-	@test buf_printtree(ext) ==
-    """
-	Dict
-	  └── a: MultiRepresentation
-	           ├── e1: FeatureVector with 5 items
-	           ├── e2: Dict
-	           │         └── Sylvanas is the worst warchief ever: String
-	           └── e3: Float32"""
+	# @test_broken buf_printtree(ext) ==
+ #    """
+	# Dict
+	#   └── a: MultiRepresentation
+	#            ├── e1: FeatureVector with 5 items
+	#            ├── e2: Dict
+	#            │         └── Sylvanas is the worst warchief ever: String
+	#            └── e3: Float32"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)

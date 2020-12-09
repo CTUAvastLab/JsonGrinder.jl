@@ -22,8 +22,8 @@ end
 
 @testset "testing pipeline with simple arrays and missing values" begin
 	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
-	j2 = JSON.parse("""{"a": 4, "c": { "a": {"a":[2,3],"b":[5,6]}}}""")
-	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
+	j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
+	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3], "b": 1}}""")
 	j4 = JSON.parse("""{"a": 4, "b": {}}""")
 	j5 = JSON.parse("""{"b": {}}""")
 	j6 = JSON.parse("""{}""")

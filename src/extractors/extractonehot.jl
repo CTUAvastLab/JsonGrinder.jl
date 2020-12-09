@@ -69,6 +69,7 @@ function (e::ExtractOneHot{K,I,V})(vs::Vector) where {K, I, V}
 end
 # todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 (e::ExtractOneHot)(::Nothing) = ArrayNode(spzeros(Float32, e.n, 1))
+(e::ExtractOneHot)(::ExtractEmpty) = ArrayNode(spzeros(Float32, e.n, 0))
 (e::ExtractOneHot)(v) = e(nothing)
 
 Base.hash(e::ExtractOneHot, h::UInt) = hash((e.k, e.v, e.key2id, e.n), h)

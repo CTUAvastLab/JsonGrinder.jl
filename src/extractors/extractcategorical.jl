@@ -42,6 +42,7 @@ end
 
 # todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 (s::ExtractCategorical)(::V) where {V<:Union{Missing, Nothing}} = ArrayNode(MaybeHotMatrix([missing], s.n))
+(s::ExtractCategorical)(::ExtractEmpty) = ArrayNode(MaybeHotMatrix(Vector{Int}(), s.n))
 (s::ExtractCategorical)(v) = s(missing)
 
 Base.reduce(::typeof(catobs), a::Vector{S}) where {S<:Flux.OneHotMatrix} = _catobs(a[:])

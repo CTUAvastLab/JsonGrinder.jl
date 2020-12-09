@@ -18,6 +18,10 @@ function (e::ExtractKeyAsField)(v::V) where {V<:Union{Missing,Nothing}}
 	BagNode(ProductNode((key = e.key(missing), item = e.item(missing)))[1:0], [0:-1])
 end
 
+function (e::ExtractKeyAsField)(v::ExtractEmpty)
+	BagNode(ProductNode((key = e.key(v), item = e.item(v))), Mill.AlignedBags(Array{UnitRange{Int64},1}()))
+end
+
 function (e::ExtractKeyAsField)(vs::Dict)
 	isempty(vs) && return(e(missing))
 	items = map(collect(vs)) do (k,v)

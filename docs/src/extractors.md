@@ -5,6 +5,7 @@ Extractors are responsible for converting json elements to Mill structures. Miss
 ## Scalar values
 Scalar values can be represented either as numbers, categorical variables (one-hot encoded), or String. Each of these have a special extractor.
 
+## Describe extractempty to signal that we need to extract empty variable
 ### Numbers
 ```julia
 struct ExtractScalar{T}

@@ -31,6 +31,7 @@ function extractscalar(::Type{T}, e::Entry) where {T<:Number}
 end
 # todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 (s::ExtractScalar{T})(v::W) where {T,W<:Union{Missing, Nothing}} = ArrayNode(fill(missing,(1,1)))
+(s::ExtractScalar{T})(v::W) where {T,W<:ExtractEmpty} = ArrayNode(fill(zero(T),(1,0)))
 (s::ExtractScalar{T})(v::Number) where {T} = ArrayNode(s.s .* (fill(T(v),1,1) .- s.c))
 (s::ExtractScalar{T})(v::AbstractString) where{T} = s((tryparse(T,v)))
 (s::ExtractScalar)(v)  = s(missing)

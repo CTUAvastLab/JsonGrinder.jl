@@ -32,6 +32,11 @@ function (s::ExtractDict{S})(v::Dict) where {S<:Dict}
 	ProductNode((; o...))
 end
 
+function (s::ExtractDict{S})(ee::ExtractEmpty) where {S<:Dict}
+	o = [Symbol(k) => f(ee) for (k,f) in s.dict]
+	ProductNode((; o...))
+end
+
 extractbatch(extractor, samples) = reduce(catobs, map(s-> extractor(s), samples))
 
 Base.hash(e::ExtractDict, h::UInt) = hash(e.dict, h)
