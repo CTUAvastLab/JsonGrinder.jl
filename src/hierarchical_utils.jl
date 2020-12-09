@@ -2,6 +2,7 @@ import HierarchicalUtils: NodeType, children, InnerNode, LeafNode, printtree, no
 
 # for schema structures
 NodeType(::Type{<:Union{Nothing, Entry}}) = LeafNode()  # because sometimes we have empty array extractor
+NodeType(::Type{Pair{Symbol,Any}}) = InnerNode()  # because sometimes we have empty array extractor
 NodeType(::Type{<:Union{ArrayEntry, DictEntry, MultiEntry}}) = InnerNode()
 
 noderepr(n::Nothing) = "Nothing"
@@ -33,6 +34,7 @@ noderepr(e::ExtractKeyAsField) = "KeyAsField"
 noderepr(n::AuxiliaryExtractor) = "Auxiliary extractor with"
 
 children(n::ExtractArray) = (n.item,)
+children(n::Pair) = (n.second,)
 children(n::MultipleRepresentation) = n.extractors
 children(e::ExtractKeyAsField) = (e.key, e.item)
 children(n::AuxiliaryExtractor) = (n.extractor,)

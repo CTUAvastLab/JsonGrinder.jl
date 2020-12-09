@@ -13,6 +13,13 @@ import HierarchicalUtils: printtree
 	@test size(e.data[2].data) == (2053, 1)
 	@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(206, 1), (272, 1), (624, 1), (738, 1), (1536, 1), (1676, 1)]
 
+	e = ex(extractempty)
+	@test nobs(e) == 0
+	@test nobs(e[:e1]) == 0
+	@test e[:e1].data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	@test nobs(e[:e2]) == 0
+	@test e[:e2].data isa NGramMatrix{String,Array{String,1},Int64}
+
 	@test !JsonGrinder.extractsmatrix(ex)
 
 	ex2 = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
