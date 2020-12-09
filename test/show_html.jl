@@ -85,7 +85,7 @@ end
 
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11])
 
-	JsonGrinder.generate_html(sch, "schema_test_maxvals=5.html", max_vals=5)
+	JsonGrinder.generate_html("schema_test_maxvals=5.html", sch, max_vals=5)
 	@test isfile("schema_test_maxvals=5.html")
 end
 
@@ -104,7 +104,7 @@ end
 
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11])
 
-	JsonGrinder.generate_html(sch, "schema_test_maxvals=5.html", max_vals=5)
+	JsonGrinder.generate_html("schema_test_maxvals=5.html", sch, max_vals=5)
 	@test isfile("schema_test_maxvals=5.html")
 end
 

@@ -142,7 +142,7 @@ end
 	generate_html(sch::DictEntry; max_vals=100, max_len=1_000)
 	generate_html(sch::DictEntry, file_name ; max_vals=100, max_len=1_000)
 
-	export schema to HTML including CSS style allowing to expand / hide 
+	export schema to HTML including CSS style allowing to expand / hide
 	sub-parts of schema, countmaps, and lengthmaps.
 
 	`max_vals` controls maximum number of exported values in countmap
@@ -236,7 +236,7 @@ document.getElementById("copy_clipboard").addEventListener("click", () => {
 	return(render(tpl, d))
 end
 
-function generate_html(sch::DictEntry, file_name ; max_vals=100, max_len=1_000)
+function generate_html(file_name, sch::DictEntry; max_vals=100, max_len=1_000)
 	s = generate_html(sch; max_vals=max_vals, max_len=max_len)
 	open(file_name, "w") do f
  		write(f, s)
