@@ -34,7 +34,7 @@ end
 (s::ExtractScalar{T})(v::W) where {T,W<:ExtractEmpty} = ArrayNode(fill(zero(T),(1,0)))
 (s::ExtractScalar{T})(v::Number) where {T} = ArrayNode(s.s .* (fill(T(v),1,1) .- s.c))
 (s::ExtractScalar{T})(v::AbstractString) where{T} = s((tryparse(T,v)))
-(s::ExtractScalar)(v)  = s(missing)
+(s::ExtractScalar)(v) = s(missing)
 
 Base.length(e::ExtractScalar) = 1
 # data type has different hashes for each patch version of julia

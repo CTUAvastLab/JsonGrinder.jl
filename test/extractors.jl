@@ -72,7 +72,7 @@ end
 	@test nobs(e([missing, nothing])) == 2
 	@test nobs(e([missing, nothing, "a"])) == 3
 
-	
+
 end
 
 
@@ -134,7 +134,7 @@ end
 
 @testset "Testing ExtractDict" begin
 	dict = Dict("a" => ExtractScalar(Float64,2,3),
-				"b" => ExtractScalar(Float64), 
+				"b" => ExtractScalar(Float64),
 				"c" => ExtractArray(ExtractScalar(Float64,2,3)))
 	br = ExtractDict(dict)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
@@ -575,7 +575,7 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5])
 	ext = suggestextractor(sch)
 
-	@test_broken buf_printtree(sch) ==
+	@test buf_printtree(sch) ==
 	"""
 	[Dict] (updated = 5)
 	  └── a: [MultiEntry] (updated = 5)
