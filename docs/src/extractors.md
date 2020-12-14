@@ -1,11 +1,16 @@
 # Extractors
 
-Extractors are responsible for converting json elements to Mill structures. Missing values are automatically handled by `Mill.jl`.
+Extractors are responsible for converting json elements to Mill structures. The main idea behind them is to compose them in a structure reflecting the structure of JSON, which means that parents do not need to know, how childs are represented, as they know that the extracted data will be of subtype of `Mill.AbstractDataNode`. This means that the output of any extractor has to be a subtype of `Mill.AbstractDataNode`, which ensures composability. Note that representation of missing data is handled by `Mill.jl`.
+
+Extractor can be any function which takes a JSON (or its part) as an input, and return a valid MILL datanode. Most extractors are implemented as functors, since most of them contain parameters. 
+
+Extractors can be created automatically by `suggestextractor`, which takes a schema and based on the statistics it suggests an extractor. It is highly recommended to check the proposed extractor manually, if the representation makes sense (for example if a `Float` / `String` is not by accident extracted as a `Categorical`).
+
+We will first describe extractors of values (i.e. lists of JSON tree), then proceed to description of extractors of `Array` and `Dict`, and finish with some specials.
 
 ## Scalar values
-Scalar values can be represented either as numbers, categorical variables (one-hot encoded), or String. Each of these have a special extractor.
+Extractors of scalar values are probably the most important, and fortunatelly the most undersood ones. The control, how the values are represented in a `Vector` form for the neural networks. For example, should the number be represented as a number, or as one-hot encoded categorical variable. And how `String` should be treated? In the explanation below, keep in mind that it is the `Extractor`s controlling how the variable will be represented. 
 
-## Describe extractempty to signal that we need to extract empty variable
 ### Numbers
 ```julia
 struct ExtractScalar{T}
@@ -53,6 +58,10 @@ e = ExtractCategorical(["A","B","C"])
 e(["A","B","C","D"]).data
 ```
 
+## Extract Array
+Describe extractempty to signal that we need to extract empty variable
+
+
 
 ## Specials
 
@@ -80,3 +89,9 @@ end
 ```
 where `k` / `v` is the name of an entry indetifying key / value, and `key2id` converts the value of the key to the the numeric index. A constructor `ExtractOneHot(ks, k, v)` assumes `k` and `v` as above and `ks` being list of key values. 
 
+
+
+
+
+
+#explain, how to customize conversion of schema to extractors extractors to 
