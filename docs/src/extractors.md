@@ -4,12 +4,12 @@ Extractors are responsible for converting json elements to Mill structures. The 
 
 Extractor can be any function which takes a JSON (or its part) as an input, and return a valid MILL datanode. Most extractors are implemented as functors, since most of them contain parameters. 
 
-Extractors can be created automatically by `suggestextractor`, which takes a schema and based on the statistics it suggests an extractor. It is highly recommended to check the proposed extractor manually, if the representation makes sense (for example if a `Float` / `String` is not by accident extracted as a `Categorical`).
+Extractors can be created automatically by calling a function `suggestextractor` on a schema, which implements our heuristics how to convert leaf variables to tensors. It is highly recommended to check the proposed extractor manually, if it makes sense. An error, especially if schema is created from a small number of samples, is that `Float` and `String` are represented as `Categorical` variables.
 
-We will first describe extractors of values (i.e. lists of JSON tree), then proceed to description of extractors of `Array` and `Dict`, and finish with some specials.
+Below, we first describe extractors of values (i.e. lists of JSON tree), then proceed to description of extractors of `Array` and `Dict`, and finish with some specials.
 
 ## Scalar values
-Extractors of scalar values are probably the most important, and fortunatelly the most undersood ones. The control, how the values are represented in a `Vector` form for the neural networks. For example, should the number be represented as a number, or as one-hot encoded categorical variable. And how `String` should be treated? In the explanation below, keep in mind that it is the `Extractor`s controlling how the variable will be represented. 
+Extractors of scalar values are arguably the most important, but also fortunatelly the most undersood ones. They control, how values are converted to a `Vector` (or generally tensor) for the neural networks. For example they control, if number should be represented as a number, or as one-hot encoded categorical variable. Similarly, it constrols how `String` should be treated, although we admit to natively support on ngrams. Recall 
 
 ### Numbers
 ```julia
@@ -18,14 +18,18 @@ struct ExtractScalar{T}
 	s::T
 end
 ```
-converts numerical values to type `T`, subtract `c` and multiplies it by `s`. Strings are converted to numbers.
-
-`ExtractScalar(e::Entry)` initializes a scalar extractor such that the extracted values are in interval `[0,1]`. Strings containing exclusively numerical values are treated as numbers.
+Extract a numerical value, centred by subtracting `c` and scaled by multiplying by `s`. 
+Strings are converted to numbers. The extractor returnes `ArrayNode{Matrix{T}}` 
+with a single row. 
 ```@example 1
-using JsonGrinder #hide
+using JsonGrinder, Mill #hide
 e = ExtractScalar(Float32, 0.5, 4.0)
-e(1)
-e(1).data
+e("1").data
+```
+
+`missing` value is extracted as a missing value, as it is automatically handled downstream by `Mill`.
+```@example 1
+e(missing)
 ```
 
 ### Strings
@@ -37,11 +41,17 @@ struct ExtractString{T}
 	m::Int
 end
 ```
-Represent `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) with base `b` and modulo `m`. `ExtractString(e::Entry)` / `ExtractScalar(e::Entry)` initializes the extractor with `n = 3, b = 256, m = 2053`.
+Represent `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) with base `b` and modulo `m`.
+
 
 ```@example 1
-e = ExtractString(String)
+e = ExtractString()
 e("Hello")
+```
+
+`missing` value is extracted as a missing value, as it is automatically handled downstream by `Mill`.
+```@example 1
+e(missing)
 ```
 
 ### Categorical
@@ -51,19 +61,93 @@ struct ExtractCategorical{V,I} <: AbstractExtractor
 	n::Int
 end
 ```
-Converts a single item to a one-hot encoded vector. There is always alocated an extra element for a unknown value. The constructor `ExtractCategorical(s::Entry)` take all keys of `e.counts` as values in the categorical arrays.
-
+Converts a single item to a one-hot encoded vector. For a safety, there is always an 
+extra item reserved for an unknown value. 
 ```@example 1
 e = ExtractCategorical(["A","B","C"])
 e(["A","B","C","D"]).data
 ```
 
-## Extract Array
+`missing` value is extracted as a missing value, as it is automatically handled downstream by `Mill`.
+```@example 1
+e(missing)
+```
+
+## Array
+```julia
+struct ExtractArray{T}
+	item::T
+end
+```
+Convert array of values to a `Mill.BagNode` with items converted by `item`. The entire array is assumed to be a single bag.
+
+```@example 1
+sc = ExtractArray(ExtractCategorical(["A","B","C"]))
+sc(["A","B","C","D"])
+```
+
+Empty arrays are represented as an empty bag.
+```@example 1
+sc([]).bags
+```
+The data of empty bag can be either `missing` or a empty sample, which is more convenient as it makes all samples of the same type, which is nicer to AD. This behavior is controlled by `Mill.emptyismissing`. The extractor of a `BagNode` can signal to child extractors to extract a sample with zero observations using a special singleton `JsonGrinder.extractempty`. For example
+
+```@example 1
+Mill.emptyismissing!(true)
+sc([]).data
+```
+```@example 1
+Mill.emptyismissing!(false)
+sc([]).data
+```
+
+
+## Dict
+```julia
+struct ExtractDict
+	dict::Dict{Symbol,Any}
+end
+
+```
+Extracts all items in `dict` and return them as a ProductNode. Key in dict corresponds to keys in JSON. 
+```@example 1
+ex = ExtractDict(Dict(:a => ExtractScalar(), 
+	:b => ExtractString(), 
+	:c => ExtractCategorical(["A","B"]),
+	:d => ExtractArray(ExtractString())))
+ex(Dict(:a => "1",
+	:b => "Hello",
+	:c => "A",
+	:d => ["Hello", "world"]))
+```
+
+Missing keys are replaced by `missing` and handled by child extractors.
+```@example 1
+ex(Dict(:a => "1",
+	:c => "A"))
+```
+
+
 Describe extractempty to signal that we need to extract empty variable
 
-
-
 ## Specials
+
+### ExtractKeyAsField
+```julia
+struct ExtractKeyAsField{S,V} <: AbstractExtractor
+	key::S
+	item::V
+end
+```
+Extracts all items in `vec` and in `other` and return them as a ProductNode.
+
+### MultipleRepresentation 
+```julia
+MultipleRepresentation(extractors::Tuple)
+```
+create a `ProductNode` where each item is the json part processed by all extractors in the order
+
+
 
 ### ExtractOneHot(ks, k, v) 
 

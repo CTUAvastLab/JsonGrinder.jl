@@ -13,12 +13,12 @@ struct ExtractString <: AbstractExtractor
 	b::Int
 	m::Int
 end
-# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
+
+
 ExtractString() = ExtractString(3, 256, 2053)
 (s::ExtractString)(v::String) = ArrayNode(Mill.NGramMatrix([v], s.n, s.b, s.m))
 (s::ExtractString)(v::AbstractString) = s(String(v))
 (s::ExtractString)(v::S) where {S<:Union{Missing, Nothing}} = ArrayNode(Mill.NGramMatrix(missing, s.n, s.b, s.m))
-extractsmatrix(s::ExtractString) = false
 (s::ExtractString)(v::ExtractEmpty) = ArrayNode(Mill.NGramMatrix(Vector{String}(), s.n, s.b, s.m))
 (s::ExtractString)(v) = s(missing)
 

@@ -119,8 +119,6 @@ end
 	@test nobs(sc(extractempty).data) == 0
 
 
-	@test !JsonGrinder.extractsmatrix(sc)
-
 	# feature vector longer than expected
 	sc = ExtractVector{Float32}(5)
 	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])

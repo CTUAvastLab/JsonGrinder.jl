@@ -20,8 +20,6 @@ import HierarchicalUtils: printtree
 	@test nobs(e[:e2]) == 0
 	@test e[:e2].data isa NGramMatrix{String,Array{String,1},Int64}
 
-	@test !JsonGrinder.extractsmatrix(ex)
-
 	ex2 = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
 		JsonGrinder.ExtractString()))
 	@test hash(ex) === hash(ex2)

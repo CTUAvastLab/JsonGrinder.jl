@@ -3,8 +3,8 @@
 		item::T
 	end
 
-	convert array of values to one bag of values converted with `item`. Note that in order the function to work properly,
-	calling `item` on a single item has to return Matrix.
+	Convert array of values to a `Mill.BagNode` with items converted 
+	by `item`. The entire array is assumed to be a single bag.
 
 ```juliadoctest
 julia> sc = ExtractArray(ExtractCategorical(Float32,2:4))
@@ -25,8 +25,6 @@ julia> sc([2,3,4]).data
 struct ExtractArray{T} <: AbstractExtractor
 	item::T
 end
-
-extractsmatrix(s::ExtractArray) = false
 
 function (s::ExtractArray)(v::V) where {V<:Union{Missing, Nothing}}
 	Mill._emptyismissing[] && return(BagNode(missing, [0:-1]))

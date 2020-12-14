@@ -12,8 +12,6 @@ struct ExtractKeyAsField{S,V} <: AbstractExtractor
 	item::V
 end
 
-extractsmatrix(s::ExtractKeyAsField) = false
-
 function (e::ExtractKeyAsField)(v::V) where {V<:Union{Missing,Nothing}}
 	BagNode(ProductNode((key = e.key(missing), item = e.item(missing)))[1:0], [0:-1])
 end

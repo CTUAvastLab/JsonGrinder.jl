@@ -1,16 +1,16 @@
 # JsonGrinder.jl
-`JsonGrinder.jl` is a companion to [Mill.jl](https://github.com/pevnak/Mill.jl) aimed to ease your pain when performing learning on real world data stored in JSON format.
+`JsonGrinder.jl` is a companion to [Mill.jl](https://github.com/pevnak/Mill.jl) aimed to ease your pain when performing learning on real world data stored in JSON format. As you know, most machine learning libraries assume that your data have a shape of a fixed dimension tensor, or a sequence. Contrary, `JsonGrider.jl` assume your data being stored in JSON format and it is sufficient to convert only leaf values to a tensor, the rest magically sorted out. The design objective of `JsonGrinder` is to provide reasonable defaults, but if you want, you can customize and tweak according to your imagination and desire. **Although JsonGrinder was designed for JSON files, you can easily adapt it to XML, ProtoBuffers, MessagePacks,...**
 
-Our imagined workflow consists to build classifier by Machine Learning over JSONs consists of following steps.
+There are three steps from data to classifier.
 
 1. Create a schema of JSON files (using `sch = JsonGrinder.schema`).
-2. Create an extractor converting JSONs to internal Mill structure (`extractor = suggestextractor(sch))`)
+2. Create an extractor converting JSONs to Mill structures (`extractor = suggestextractor(sch))`). In this step, schema `sch` is helpful, as it suggests types of internal nodes (`Dict`, `Array`) and leafs (`Float32`, `String`, `Categorical`).
 3. Create a model for your JSONs (using `model = reflectinmodel(sch, extractor,...)`)
+4. Use your favourite methods to train the model, it is 100% compatible with `Flux.jl` tooling.
 
-We see the biggest advantage in the `model` being hierarchical reflecting the JSON structure. Naturally, it can handle missing values at all levels. 
+Authors see the biggest advantage in the `model` being hierarchical and reflecting the JSON structure. Naturally, it can handle missing values at all levels. 
 
-
-Our idealized workflow (taken from `examples/recipes.jl`) would look as follows. The recipe dataset is utterly boring (and were recommend `deviceid`), but it is a good start. The code below relies heavily on defaults. We thrive to make everything as customization as possible and details about individual steps are listed in appropriate sections. Recall that from creation of the model onward, you might need to consult `Mill.jl`.
+Our idealized workflow (taken from `examples/recipes.jl`) look as follows. The recipe dataset is utterly boring (and were recommend `deviceid`), but it is a good start. The code below relies heavily on defaults. We thrive to make everything as customization as possible and details about individual steps are listed in appropriate sections. Recall that from creation of the model onward, you might need to consult `Mill.jl`.
 
 Include libraries and load the data.
 ```julia
@@ -24,10 +24,10 @@ end
 ```
 
 ```julia
-	labelkey = "cuisine"
-	minibatchsize = 100
-	iterations = 10_000
-	neurons = 20 		# neurons per layer
+labelkey = "cuisine"
+minibatchsize = 100
+iterations = 10_000
+neurons = 20 		# neurons per layer
 ```
 
 Create labels and remove them from data, such that we do not use them as features. We also remove `id` key, such that we do not predict it

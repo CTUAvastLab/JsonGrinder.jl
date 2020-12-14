@@ -4,7 +4,7 @@
 		dict::Dict{Symbol,Any}
 	end
 
-	extracts all items in `vec` and in `other` and return them as a ProductNode.
+	extracts all items in `dict` and return them as a ProductNode.
 """
 struct ExtractDict{S} <: AbstractExtractor
 	dict::S
@@ -14,15 +14,12 @@ struct ExtractDict{S} <: AbstractExtractor
 	end
 end
 
-
 function Base.getindex(m::ExtractDict, s::Symbol)
 	!isnothing(m.dict) && haskey(m.dict, s) && return m.dict[s]
 	nothing
 end
 
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
-# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
-extractsmatrix(s::ExtractDict) = false
 (s::ExtractDict)(v::V) where {V<:Nothing} = s(Dict{String,Any}())
 (s::ExtractDict)(v)  = s(nothing)
 

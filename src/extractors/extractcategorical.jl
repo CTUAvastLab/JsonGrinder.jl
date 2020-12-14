@@ -23,8 +23,6 @@ function ExtractCategorical(ks::Vector)
 	ExtractCategorical(Dict(zip(ks, 1:length(ks))), length(ks) +1)
 end
 
-extractsmatrix(s::ExtractCategorical) = false
-
 function (s::ExtractCategorical{V,I})(v::V) where {V,I}
     x = MaybeHotMatrix([get(s.keyvalemap, v, s.n)], s.n)
     ArrayNode(x)
