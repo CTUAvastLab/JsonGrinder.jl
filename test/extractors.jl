@@ -358,11 +358,11 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
 	ext = suggestextractor(sch)
 
-	@test ext[:a] isa ExtractScalar{Float32}
+	@test ext[:a] isa ExtractCategorical
 	@test ext[:b] isa ExtractString
-	@test ext[:c] isa ExtractScalar{Float32}
+	@test ext[:c] isa ExtractCategorical
 	@test ext[:d] isa ExtractScalar{Float32}
-	@test ext[:e] isa ExtractScalar{Float32}
+	@test ext[:e] isa ExtractCategorical
 	@test ext[:f] isa ExtractScalar{Float32}
 
 	ext_j1 = ext(j1)
@@ -370,32 +370,32 @@ end
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
-	@test eltype(ext_j1[:a].data) <: Float32
+	@test eltype(ext_j1[:a].data) <: Bool
 	@test eltype(ext_j1[:b].data) <: Int64
-	@test eltype(ext_j1[:c].data) <: Float32
+	@test eltype(ext_j1[:c].data) <: Bool
 	@test eltype(ext_j1[:d].data) <: Float32
-	@test eltype(ext_j1[:e].data) <: Float32
+	@test eltype(ext_j1[:e].data) <: Bool
 	@test eltype(ext_j1[:f].data) <: Float32
 
-	@test eltype(ext_j2[:a].data) <: Float32
+	@test eltype(ext_j2[:a].data) <: Bool
 	@test eltype(ext_j2[:b].data) <: Int64
-	@test eltype(ext_j2[:c].data) <: Float32
+	@test eltype(ext_j2[:c].data) <: Bool
 	@test eltype(ext_j2[:d].data) <: Float32
-	@test eltype(ext_j2[:e].data) <: Float32
+	@test eltype(ext_j2[:e].data) <: Bool
 	@test eltype(ext_j2[:f].data) <: Float32
 
-	@test eltype(ext_j3[:a].data) <: Float32
+	@test eltype(ext_j3[:a].data) <: Bool
 	@test eltype(ext_j3[:b].data) <: Int64
-	@test eltype(ext_j3[:c].data) <: Float32
+	@test eltype(ext_j3[:c].data) <: Bool
 	@test eltype(ext_j3[:d].data) <: Float32
-	@test eltype(ext_j3[:e].data) <: Float32
+	@test eltype(ext_j3[:e].data) <: Bool
 	@test eltype(ext_j3[:f].data) <: Float32
 
-	@test eltype(ext_j4[:a].data) <: Float32
+	@test eltype(ext_j4[:a].data) <: Bool
 	@test eltype(ext_j4[:b].data) <: Int64
-	@test eltype(ext_j4[:c].data) <: Float32
+	@test eltype(ext_j4[:c].data) <: Bool
 	@test eltype(ext_j4[:d].data) <: Float32
-	@test eltype(ext_j4[:e].data) <: Float32
+	@test eltype(ext_j4[:e].data) <: Bool
 	@test eltype(ext_j4[:f].data) <: Float32
 
 	@test ext_j1["U"].data ≈ [0]
@@ -404,6 +404,15 @@ end
 	@test ext_j4["U"].data ≈ [1]
 
 	# todo: add tests for Mill that it's correctly reflected in model
+	m = reflectinmodel(sch, ext)
+	@test buf_printtree(m) == """
+	ProductModel ↦ ArrayModel(Dense(42, 10))
+	  ├── a: ArrayModel(Dense(5, 10))
+	  ├── b: ArrayModel(Dense(2053, 10))
+	  ├── c: ArrayModel(Dense(5, 10))
+	  ├── d: ArrayModel(identity)
+	  ├── e: ArrayModel(Dense(4, 10))
+	  └── f: ArrayModel(identity)"""
 end
 
 @testset "Suggest feature vector extraction" begin
@@ -415,7 +424,7 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
 	ext = suggestextractor(sch)
 
-	@test ext[:a] isa ExtractScalar{Float32}
+	@test ext[:a] isa ExtractCategorical
 	@test ext[:b] isa ExtractVector
 	@test ext[:b].n == 3
 	@test ext[:c] isa ExtractArray{ExtractScalar{Float32}}

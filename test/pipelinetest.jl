@@ -72,14 +72,14 @@ end
 	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k, 10, relu))
 
-	@test NodeIterator(m, ds) |> collect == [
+	@test isequal(NodeIterator(m, ds) |> collect, [
 		(m[""], ds[""]),
 		(m["U"], ds["U"]),
 		(m["k"], ds["k"]),
 		(m["o"], ds["o"]),
 		(m["s"], ds["s"]),
 		(m["w"], ds["w"]),
-	]
+	])
 	@test NodeIterator(sch, ext) |> collect == [
 		(sch[""], ext[""]),
 		(sch["U"], ext["U"]),
@@ -104,14 +104,14 @@ end
 		(ext["s"], m["s"]),
 		(ext["w"], m["w"]),
 	]
-	@test NodeIterator(ext, ds) |> collect == [
+	@test isequal(NodeIterator(ext, ds) |> collect, [
 		(ext[""], ds[""]),
 		(ext["U"], ds["U"]),
 		(ext["k"], ds["k"]),
 		(ext["o"], ds["o"]),
 		(ext["s"], ds["s"]),
 		(ext["w"], ds["w"]),
-	]
+	])
 	@test buf_printtree(sch) == """
 	[Dict] (updated = 5)
 	  └── a: [List] (updated = 3)
