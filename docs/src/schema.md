@@ -66,6 +66,10 @@ While schema can be printed to REPL, it can contain quite a lot of information. 
 JsonGrinder.generate_html
 ```
 
+```@docs
+JsonGrinder.merge
+```
+
 Schema supports merging using `Base.merge`, which facilitates paralel computation of schemas. An example might be
 ```
 ThreadsX.mapreduce(schema, merge, Iterators.partition(jsons, div(length(jsons), Threads.nthreads())))
