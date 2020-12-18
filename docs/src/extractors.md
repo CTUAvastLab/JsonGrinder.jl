@@ -9,13 +9,11 @@ Extractor can be almost automatically created by calling a function `suggestextr
 JsonGrinder.suggestextractor(schema, settings::NamedTuple)
 
 ```
-allows to pass your own heuristic and rules for handling scalars. Extractors for `Dict` and `Array`s are not configurable, as we believe there is not much to do, but there are some *magic* described below.
+allows to pass your own heuristic and rules for handling scalars. By default,
+`settings = (scalar_extractors = default_scalar_extractor()).`
+Extractors for `Dict` and `Array`s are not configurable, as we do not feel the pressure to so, as there does not seems to be much to do, but of course there is some *dark magic* described below.
 
 ## Scalars
-By default,
-```
-settings = (scalar_extractors = default_scalar_extractor())
-```
 
 `scalar_extractors` is a list of tuples, where the first is a condition and the second is a function creating the extractor in case of a true. The default heuristic is following and 
 you can adjust according to your liking. 
