@@ -29,8 +29,8 @@ jobs:
           - 'nightly'
         os:
           - ubuntu-latest
-          - windows-latest
-          - macos-latest
+          # - windows-latest
+          # - macos-latest
         arch:
           - x86
           - x64
