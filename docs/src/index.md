@@ -14,53 +14,46 @@ Authors see the biggest advantage in the `model` being hierarchical and reflecti
 
 Our idealized workflow is demonstrated in `examples/identification.jl` solving [device identification challenge](https://www.kaggle.com/c/cybersecprague2019-challenge/data) looks as follows (for many datasets which fits in memory it suggest just to change the key with labels (`:device_class`) and names of files):
 ``` julia
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools
-using StatsBase
-using Serialization
-using JsonGrinder: suggestextractor, ExtractDict
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools, StatsBase
+using JsonGrinder: suggestextractor
 using Mill: reflectinmodel
 
-#####
-# start by loading all samples
-#####
-samples = map(readlines("train.json")) do s
-	JSON.parse(s)
-end;
-JSON.print(samples[3],2)
+samples = map(readlines("/Users/tomas.pevny/Work/Presentations/JuliaMeetup/dataset/train.json")) do s
+           JSON.parse(s)
+       end;
 
+labelkey = "device_class"
+minibatchsize = 100
+iterations = 10_000
+neurons = 20 		# neurons per layer
 
-#####
-# create schema of the JSON
-#####
-sch = JsonGrinder.schema(samples);
+targets = map(i -> i[labelkey], samples)
+foreach(i -> delete!(i, labelkey), samples)
+foreach(i -> delete!(i, "id"), samples)
+
+sch = JsonGrinder.schema(samples)
 extractor = suggestextractor(sch)
-extract_target = ExtractDict(nothing, Dict(:device_class => extractor.other[:device_class]));
 
-target = extractbatch(extract_target, samples).data
-delete!(extractor.other, :device_class);
-data = extractbatch(extractor, samples)
+data = tmap(extractor, samples)
+labelnames = unique(targets)
 
-ds = extractor(JsonGrinder.sample_synthetic(sch))
-model = reflectinmodel(ds, d -> Dense(d,20, relu), d -> SegmentedMeanMax(d), b = Dict("" => d -> Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
-model(ds)
+model = reflectinmodel(sch, extractor,
+	k -> Dense(k, neurons, relu),
+	d -> SegmentedMeanMax(d),
+	b = Dict("" => k -> Dense(k, length(labelnames))),
+)
 
-#####
-#  train
-#####
-function makebatch()
-	i = rand(1:nobs(data), 100)
-	data[i], target[:,i]
+function minibatch()
+	idx = sample(1:length(data), minibatchsize, replace = false)
+	reduce(catobs, data[idx]), Flux.onehotbatch(targets[idx], labelnames)
 end
-opt = ADAM()
-ps = params(model)
-loss = (x,y) -> Flux.logitcrossentropy(model(x).data,y)
 
-cb = () -> begin
-	o = model(data).data
-	println("crossentropy = ",Flux.logitcrossentropy(o,target) ," accuracy = ",mean(Flux.onecold(softmax(o)) .== Flux.onecold(target)))
-end
-Flux.Optimise.train!(loss, ps, repeatedly(makebatch,10000), opt, cb = Flux.throttle(cb, 60))
+accuracy(x,y) = mean(map(xy -> labelnames[argmax(model(xy[1]).data[:])] == xy[2], zip(x, y)))
 
+cb = () -> println("accuracy = ", accuracy(valdata...))
+ps = Flux.params(model)
+loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
+Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
 
 #####
 #  Classify test data
@@ -80,7 +73,7 @@ o = [ns[i] for i in o]
 
 Include libraries and load the data.
 ```julia
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools, StatsBase
 using JsonGrinder: suggestextractor
 using Mill: reflectinmodel
 
