@@ -1,51 +1,44 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · JsonGrinder</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">JsonGrinder</span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#A-walkthrough-of-the-example"><span>A walkthrough of the example</span></a></li></ul></li><li><a class="tocitem" href="schema/">Schema</a></li><li><a class="tocitem" href="extractors/">Creating extractors</a></li><li><a class="tocitem" href="exfunctions/">Extractor functions</a></li><li><a class="tocitem" href="developers/">Developers</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pevnak/JsonGrinder.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="JsonGrinder.jl"><a class="docs-heading-anchor" href="#JsonGrinder.jl">JsonGrinder.jl</a><a id="JsonGrinder.jl-1"></a><a class="docs-heading-anchor-permalink" href="#JsonGrinder.jl" title="Permalink"></a></h1><p><code>JsonGrinder.jl</code> is a companion to <a href="https://github.com/pevnak/Mill.jl">Mill.jl</a> aimed to ease your pain when performing learning on real world data stored in JSON format. As you know, most machine learning libraries assume that your data are stored as tensors of a fixed dimension, or a sequence. Contrary, <code>JsonGrider.jl</code> assumes your data are stored in JSON format, which is flexible, and it is sufficient to convert only leaf values to a tensor, which is typically trivial. The rest is magically sorted out. </p><p><code>JsonGrinder</code> tries to provide reasonable defaults, but if you want, you can customize and tweak almost anything according to your imagination and desire. Last but not least, <strong>although JsonGrinder was designed for JSON files, you can easily adapt it to XML, ProtoBuffers, MessagePacks,...</strong></p><p>There are four steps to create a classifier once you load the data.</p><ol><li>Create a schema of JSON files (using <code>sch = JsonGrinder.schema</code>).</li><li>Create an extractor converting JSONs to Mill structures (<code>extractor = suggestextractor(sch))</code>). Schema <code>sch</code>  from previous step is very helpful, as it helps to identify, how to convert nodes (<code>Dict</code>, <code>Array</code>) to (<code>Mill.ProductNode</code> and <code>Mill.BagNode</code>) and how to convert values in leafs to (<code>Float32</code>, <code>Vector{Float32}</code>, <code>String</code>, <code>Categorical</code>).</li><li>Create a model for your JSONs, which can be easily done by (using <code>model = reflectinmodel(sch, extractor,...)</code>)</li><li>Use your favourite methods to train the model, it is 100% compatible with <code>Flux.jl</code> tooling.</li></ol><p>Authors see the biggest advantage in the <code>model</code> being hierarchical and reflecting the JSON structure. Thanks to <code>Mill.jl</code>, it can handle missing values at all levels. </p><p>Our idealized workflow is demonstrated in <code>examples/identification.jl</code> solving <a href="https://www.kaggle.com/c/cybersecprague2019-challenge/data">device identification challenge</a> looks as follows (for many datasets which fits in memory it suggest just to change the key with labels (<code>:device_class</code>) and names of files):</p><pre><code class="language-julia">using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools
-using StatsBase
-using Serialization
-using JsonGrinder: suggestextractor, ExtractDict
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · JsonGrinder</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">JsonGrinder</span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#A-walkthrough-of-the-example"><span>A walkthrough of the example</span></a></li></ul></li><li><a class="tocitem" href="schema/">Schema</a></li><li><a class="tocitem" href="extractors/">Creating extractors</a></li><li><a class="tocitem" href="exfunctions/">Extractor functions</a></li><li><a class="tocitem" href="developers/">Developers</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pevnak/JsonGrinder.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="JsonGrinder.jl"><a class="docs-heading-anchor" href="#JsonGrinder.jl">JsonGrinder.jl</a><a id="JsonGrinder.jl-1"></a><a class="docs-heading-anchor-permalink" href="#JsonGrinder.jl" title="Permalink"></a></h1><p><code>JsonGrinder.jl</code> is a companion to <a href="https://github.com/pevnak/Mill.jl">Mill.jl</a> aimed to ease your pain when performing learning on real world data stored in JSON format. As you know, most machine learning libraries assume that your data are stored as tensors of a fixed dimension, or a sequence. Contrary, <code>JsonGrider.jl</code> assumes your data are stored in JSON format, which is flexible, and it is sufficient to convert only leaf values to a tensor, which is typically trivial. The rest is magically sorted out. </p><p><code>JsonGrinder</code> tries to provide reasonable defaults, but if you want, you can customize and tweak almost anything according to your imagination and desire. Last but not least, <strong>although JsonGrinder was designed for JSON files, you can easily adapt it to XML, ProtoBuffers, MessagePacks,...</strong></p><p>There are four steps to create a classifier once you load the data.</p><ol><li>Create a schema of JSON files (using <code>sch = JsonGrinder.schema</code>).</li><li>Create an extractor converting JSONs to Mill structures (<code>extractor = suggestextractor(sch))</code>). Schema <code>sch</code>  from previous step is very helpful, as it helps to identify, how to convert nodes (<code>Dict</code>, <code>Array</code>) to (<code>Mill.ProductNode</code> and <code>Mill.BagNode</code>) and how to convert values in leafs to (<code>Float32</code>, <code>Vector{Float32}</code>, <code>String</code>, <code>Categorical</code>).</li><li>Create a model for your JSONs, which can be easily done by (using <code>model = reflectinmodel(sch, extractor,...)</code>)</li><li>Use your favourite methods to train the model, it is 100% compatible with <code>Flux.jl</code> tooling.</li></ol><p>Authors see the biggest advantage in the <code>model</code> being hierarchical and reflecting the JSON structure. Thanks to <code>Mill.jl</code>, it can handle missing values at all levels. </p><p>Our idealized workflow is demonstrated in <code>examples/identification.jl</code> solving <a href="https://www.kaggle.com/c/cybersecprague2019-challenge/data">device identification challenge</a> looks as follows (for many datasets which fits in memory it suggest just to change the key with labels (<code>:device_class</code>) and names of files):</p><pre><code class="language-julia">using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools, StatsBase
+using JsonGrinder: suggestextractor
 using Mill: reflectinmodel
 
-#####
-# start by loading all samples
-#####
-samples = map(readlines(&quot;train.json&quot;)) do s
-	JSON.parse(s)
-end;
-JSON.print(samples[3],2)
+samples = map(readlines(&quot;/Users/tomas.pevny/Work/Presentations/JuliaMeetup/dataset/train.json&quot;)) do s
+           JSON.parse(s)
+       end;
 
+labelkey = &quot;device_class&quot;
+minibatchsize = 100
+iterations = 10_000
+neurons = 20 		# neurons per layer
 
-#####
-# create schema of the JSON
-#####
-sch = JsonGrinder.schema(samples);
+targets = map(i -&gt; i[labelkey], samples)
+foreach(i -&gt; delete!(i, labelkey), samples)
+foreach(i -&gt; delete!(i, &quot;id&quot;), samples)
+
+sch = JsonGrinder.schema(samples)
 extractor = suggestextractor(sch)
-extract_target = ExtractDict(nothing, Dict(:device_class =&gt; extractor.other[:device_class]));
 
-target = extractbatch(extract_target, samples).data
-delete!(extractor.other, :device_class);
-data = extractbatch(extractor, samples)
+data = tmap(extractor, samples)
+labelnames = unique(targets)
 
-ds = extractor(JsonGrinder.sample_synthetic(sch))
-model = reflectinmodel(ds, d -&gt; Dense(d,20, relu), d -&gt; SegmentedMeanMax(d), b = Dict(&quot;&quot; =&gt; d -&gt; Chain(Dense(d, 20, relu), Dense(20, size(target,1)))));
-model(ds)
+model = reflectinmodel(sch, extractor,
+	k -&gt; Dense(k, neurons, relu),
+	d -&gt; SegmentedMeanMax(d),
+	b = Dict(&quot;&quot; =&gt; k -&gt; Dense(k, length(labelnames))),
+)
 
-#####
-#  train
-#####
-function makebatch()
-	i = rand(1:nobs(data), 100)
-	data[i], target[:,i]
+function minibatch()
+	idx = sample(1:length(data), minibatchsize, replace = false)
+	reduce(catobs, data[idx]), Flux.onehotbatch(targets[idx], labelnames)
 end
-opt = ADAM()
-ps = params(model)
-loss = (x,y) -&gt; Flux.logitcrossentropy(model(x).data,y)
 
-cb = () -&gt; begin
-	o = model(data).data
-	println(&quot;crossentropy = &quot;,Flux.logitcrossentropy(o,target) ,&quot; accuracy = &quot;,mean(Flux.onecold(softmax(o)) .== Flux.onecold(target)))
-end
-Flux.Optimise.train!(loss, ps, repeatedly(makebatch,10000), opt, cb = Flux.throttle(cb, 60))
+accuracy(x,y) = mean(map(xy -&gt; labelnames[argmax(model(xy[1]).data[:])] == xy[2], zip(x, y)))
 
+cb = () -&gt; println(&quot;accuracy = &quot;, accuracy(valdata...))
+ps = Flux.params(model)
+loss = (x,y) -&gt; Flux.logitcrossentropy(model(x).data, y)
+Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
 
 #####
 #  Classify test data
@@ -57,7 +50,7 @@ o = Flux.onecold(model(reduce(catobs, test_samples)).data);
 ns = extract_target[:device_class].keyvalemap
 ns = Dict([ v =&gt; k for (k,v) in ns]...)
 o = [ns[i] for i in o]
-</code></pre><h2 id="A-walkthrough-of-the-example"><a class="docs-heading-anchor" href="#A-walkthrough-of-the-example">A walkthrough of the example</a><a id="A-walkthrough-of-the-example-1"></a><a class="docs-heading-anchor-permalink" href="#A-walkthrough-of-the-example" title="Permalink"></a></h2><p>Include libraries and load the data.</p><pre><code class="language-julia">using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools
+</code></pre><h2 id="A-walkthrough-of-the-example"><a class="docs-heading-anchor" href="#A-walkthrough-of-the-example">A walkthrough of the example</a><a id="A-walkthrough-of-the-example-1"></a><a class="docs-heading-anchor-permalink" href="#A-walkthrough-of-the-example" title="Permalink"></a></h2><p>Include libraries and load the data.</p><pre><code class="language-julia">using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools, StatsBase
 using JsonGrinder: suggestextractor
 using Mill: reflectinmodel
 
@@ -83,4 +76,4 @@ accuracy(x,y) = mean(map(xy -&gt; labelnames[argmax(model(xy[1]).data[:])] == xy
 cb = () -&gt; println(&quot;accuracy = &quot;, accuracy(valdata...))
 ps = Flux.params(model)
 loss = (x,y) -&gt; Flux.logitcrossentropy(model(x).data, y)
-Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 21 December 2020 13:52">Monday 21 December 2020</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 21 December 2020 20:57">Monday 21 December 2020</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
