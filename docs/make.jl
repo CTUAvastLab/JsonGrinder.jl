@@ -9,7 +9,7 @@ makedocs(
     modules = [JsonGrinder],
     pages = ["Home" => "index.md",
     "Schema" => "schema.md",
-    "Extractors" => "extractors.md",
+    "Creating extractors" => "extractors.md",
     "Extractor functions" => "exfunctions.md",
     "Developers" => "developers.md",
 	],

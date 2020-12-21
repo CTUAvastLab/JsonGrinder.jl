@@ -2,9 +2,44 @@
 
 Extractor is responsible for converting json to Mill structures. The main design idea is that the extractor for a whole json is created by composing (sub-)extractors while reflecting the JSON structure. This composability is achieved by the **commitment** of each extractor returning a subtype of `Mill.AbstractDataNode`. Extractor can be any function, but to ensure a composability, it is should be a subtype of `AbstractExtractor`, which means all of them being implemented as functors (also because they contain parameters). 
 
-Extractor can be almost automatically created by calling a function `suggestextractor` on a schema. While extractors for `Dict` and `Arrays` are relatively straightforward, extractors for leafs are tricky, as one needs to decide, if the leaf should be represented as a  `Float` and `String` are represented as `Categorical` variables. Calling `suggestextractor(schema)` uses a simple heuristic (described below), it is therefore highly recommended to check the proposed extractor manually, if it makes sense. A typical error, especially if schema is created from a small number of samples, is that some variable is treated as a categorical, while it should be `String` / `Float`.
+# Manual creation of extractors
+The simples way to create a custom extractor is the compose it from provided extractor functions. Imagine for example json file as follows.
+```json
+{"name" = "Karl",
+ "siblings" = ["Gertruda", "Heike", "Fritz"],
+ "hobby" = ["running", "pingpong"],
+ "age" = 21,
+}
+```
 
-# Default heuristics
+A corresponding extractor might look like
+```@example 1
+using JsonGrinder, Mill, JSON #hide
+ex = ExtractDict(Dict(
+	:name => ExtractString(),
+	:siblings => ExtractArray(ExtractString()),
+	:hobby => ExtractArray(ExtractCategorical(["running", "swimming","yoga"])),
+	:age => ExtractScalar(),
+	))
+```
+Notice, how the composability of extractors simplifies the desing and allow to reflect the same feature of JSON documents.
+
+Applying the extractor `ex` on the above json yield the corresponding `Mill` structure.
+```@example 1
+s = JSON.parse("{\"name\" : \"Karl\",
+ \"siblings\" : [\"Gertruda\", \"Heike\", \"Fritz\"],
+ \"hobby\" : [\"running\", \"pingpong\"],
+ \"age\" : 21
+}")
+ex(s)
+```
+
+
+The list of composable extractor function that we have found handy during our experiments are listed in *Extractor functions* section of the doc.
+
+# Semi-automatic creation of extractors
+Manually creating extractors is boring and error-prone process. Function `suggestextractor(schema)` tries to simplify this, since creation of most of the extractors is straightforward, once the the schema is known. This is especially true for `Dict` and `Arrays`, while extractors for leafs can be tricky, as one needs to decide, if the leaf should be represented as a  `Float` and `String` are represented as `Categorical` variables. `suggestextractor(schema)` uses a simple heuristic (described below) choosing reasonable extractors, but it can make errors. It is therefore highly recommended to check the proposed extractor manually, if it makes sense. A typical error, especially if schema is created from a small number of samples, is that some variable is treated as a categorical, while it should be `String` / `Float`.
+
 ```
 JsonGrinder.suggestextractor(schema, settings::NamedTuple)
 

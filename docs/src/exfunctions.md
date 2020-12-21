@@ -15,7 +15,7 @@ Extract a numerical value, centred by subtracting `c` and scaled by multiplying 
 Strings are converted to numbers. The extractor returnes `ArrayNode{Matrix{T}}` 
 with a single row. 
 ```@example 1
-using JsonGrinder, Mill #hide
+using JsonGrinder, Mill, JSON #hide
 e = ExtractScalar(Float32, 0.5, 4.0)
 e("1").data
 ```
@@ -66,7 +66,7 @@ e(["A","B","C","D"]).data
 e(missing)
 ```
 
-## Array
+## Array (Lists / Sets)
 ```julia
 struct ExtractArray{T}
 	item::T
@@ -125,37 +125,62 @@ Describe extractempty to signal that we need to extract empty variable
 
 # Specials
 
-##ExtractKeyAsField
-```julia
-struct ExtractKeyAsField{S,V} <: AbstractExtractor
-	key::S
-	item::V
-end
+## ExtractKeyAsField
+Some JSONs we have encountered uses structure to hold an array for named lists (or other types). Having computer security background a prototypical example is storing a list of DLLs with a corresponding list of imported function in a single structure. For example a JSON
+```json
+{ "foo.dll" : ["print","write", "open","close"],
+  "bar.dll" : ["send", "recv"]
+}
+``` 
+should be better written as 
+```json
+[{"key" = "foo.dll",
+  "item" = ["print","write", "open","close"]},
+  {"key = "bar.dll",
+  "item" = ["send", "recv"]}
+]
 ```
-Extracts all items in `vec` and in `other` and return them as a ProductNode.
+JsonGrinder tries to detect these cases, as they are typically manisfested by `Dicts` with excessively large number of keys in a schema. The detection logic of this case in `suggestextractor(e::DictEntry)` is simple, if the number of keys is greater than `settings.key_as_field = 500`.
+
+The extractor itself is simple as well. For the case above, it would look like 
+```@example 1
+s = JSON.parse("{ \"foo.dll\" : [\"print\",\"write\", \"open\",\"close\"],
+  \"bar.dll\" : [\"send\", \"recv\"]
+}")
+ex = ExtractKeyAsField(ExtractString(),ExtractArray(ExtractString()))
+ex(s)
+```
 
 ## MultipleRepresentation 
-```julia
-MultipleRepresentation(extractors::Tuple)
+Provides a dual representation for a single key. For example imagine that are extracting strings with some very freuquently occuring values and a lots of clutter, which might be important and you do not know about it. `MultipleRepresentation(extractors::Tuple)` contains a `Tuple` or `NamedTuple` of extractors and apply them to a single sub-tree in a json. The corresponding `Mill` structure will contain `ProductNode` of both representation.
+
+ For example `String` with *Categorical* and *NGram* representation will look like.
+```@example 1
+ex = MultipleRepresentation((c = ExtractCategorical(["Hello","world"]), s = ExtractString()))
+reduce(catobs,ex.(["Hello","world","from","Prague"]))
 ```
-create a `ProductNode` where each item is the json part processed by all extractors in the order
 
-
+`MultipleRepresentation` together with handling of `missing` values enables JsonGrinder to deal with JSONs with non-stable schema.
 
 ## ExtractOneHot(ks, k, v) 
-
-Many jsons encode a histograms as
+Some JSONs we have encountered encode histograms in a an array containing structures with a name of the bin and its count. In the example below, the name of the bin (further called `key`) and corresponding count in the bin is called `value`. In example below, `key` is equal to `name` and the `value` is equal to `count`.
 ```
 [{\"name\": \"a\", \"count\" : 1},
 {\"name\": \"b\", \"count\" : 2}]
 ```
-We represent them as SparseMatrices with one line per item for example as
+This histogram is extracted as a `BagNode` with a wrapped `SparseMatrix` containing the key-value pairs, each pair in a separate We represent them as SparseMatrices with one line per item for example as
 ```@example 1
+vs = JSON.parse("[{\"name\": \"a\", \"count\" : 1}, {\"name\": \"b\", \"count\" : 2}]")
 e = ExtractOneHot(["a","b"], "name", "count");
 e(vs).data
 ```
-and handle the array externally as a bag. The matrix has an extra dimension  reserved for unknown keys.
-The extractor is defined as
+Notice that the matrix has an extra dimension  reserved for unknown keys.
+The array is handled as a bag. For example for the above example
+```@example 1
+e(vs)
+```
+
+The extractor itself is a structure defined as
 ```
 struct ExtractOneHot{K,I,V} <: AbstractExtractor
 	k::K
@@ -164,7 +189,7 @@ struct ExtractOneHot{K,I,V} <: AbstractExtractor
 	n::Int
 end
 ```
-where `k` / `v` is the name of an entry indetifying key / value, and `key2id` converts the value of the key to the the numeric index. A constructor `ExtractOneHot(ks, k, v)` assumes `k` and `v` as above and `ks` being list of key values. 
+where `k` / `v` is the name of an entry indetifying key / value, and `key2id` converts the value of the key to the the index in the sparse array. A constructor `ExtractOneHot(ks, k, v)` assumes `k` and `v` as above and `ks` being list of key values. 
 
 
 
