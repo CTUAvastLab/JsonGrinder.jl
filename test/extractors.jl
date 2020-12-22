@@ -77,12 +77,19 @@ end
 
 
 @testset "Testing array conversion" begin
+	Mill.emptyismissing(false)
 	sc = ExtractArray(ExtractCategorical(2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
 	@test nobs(sc(nothing).data) == 0
 	@test sc(nothing).data.data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 	@test nobs(sc(nothing).data.data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
+
+
+	Mill.emptyismissing!(true)
+	@test sc(nothing).data isa Missing
+	@test all(sc(nothing).bags.bags .== [0:-1])
+	Mill.emptyismissing!(false)
 
 	@test nobs(sc(extractempty).data.data) == 0
 	@test nobs(sc(extractempty).data) == 0
