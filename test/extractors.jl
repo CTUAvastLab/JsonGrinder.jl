@@ -251,6 +251,16 @@ end
 	@test nobs(e(extractempty).data) == 0
 end
 
+@testset "ExtractString" begin
+	e = ExtractString()
+	@test e("Hello").data.s == ["Hello"]
+	@test e(["Hello", "world"]).data.s == ["Hello", "world"]
+	@test e("Hello") isa ArrayNode{NGramMatrix{String,Vector{String},Int64},Nothing}
+	@test e("Hello").data isa NGramMatrix{String,Vector{String},Int64}
+	@test all(e(missing).data.s .=== [missing])
+	@test e(missing).data isa NGramMatrix{Missing,Vector{Missing},Missing}
+end
+
 @testset "Extractor of keys as field" begin
 	JsonGrinder.updatemaxkeys!(1000)
 	js = [Dict(randstring(5) => rand()) for _ in 1:1000]

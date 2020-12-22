@@ -1,4 +1,3 @@
-
 """
 		newentry(v)
 
@@ -16,6 +15,7 @@ end
 """
 		function schema(a::Vector{T}) where {T<:Dict}
 		function schema(a::Vector{T}) where {T<:AbstractString}
+		function schema(map_fun::Function, samples::AbstractArray)
 
 		create schema from an array of parsed or unparsed JSONs
 """

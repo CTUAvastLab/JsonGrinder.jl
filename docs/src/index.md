@@ -1,7 +1,55 @@
 # JsonGrinder.jl
-`JsonGrinder.jl` is a companion to [Mill.jl](https://github.com/pevnak/Mill.jl) aimed to ease your pain when performing learning on real world data stored in JSON format. As you know, most machine learning libraries assume that your data are stored as tensors of a fixed dimension, or a sequence. Contrary, `JsonGrider.jl` assumes your data are stored in JSON format, which is flexible, and it is sufficient to convert only leaf values to a tensor, which is typically trivial. The rest is magically sorted out. 
 
-`JsonGrinder` tries to provide reasonable defaults, but if you want, you can customize and tweak almost anything according to your imagination and desire. Last but not least, **although JsonGrinder was designed for JSON files, you can easily adapt it to XML, ProtoBuffers, MessagePacks,...**
+Imagine that you want to train a classifier on data looking like
+```json
+{
+  "services": [
+    {
+      "protocol": "tcp",
+      "port": 80
+    },
+    {
+      "protocol": "tcp",
+      "port": 443
+    },
+  ],
+  "ip": "192.168.1.109",
+  "device_id": "2717684b-3937-4644-a33a-33f4226c43ec",
+  "upnp": [
+    {
+      "device_type": "urn:schemas-upnp-org:device:MediaServer:1",
+      "services": [
+        "urn:upnp-org:serviceId:ContentDirectory",
+        "urn:upnp-org:serviceId:ConnectionManager"
+      ],
+      "manufacturer": "ARRIS",
+      "model_name": "Verizon Media Server",
+      "model_description": "Media Server"
+    }
+  ],
+  "device_class": "MEDIA_BOX",
+  "ssdp": [
+    {
+      "st": "",
+      "location": "http://192.168.1.109:9098/device_description.xml",
+      "method": "",
+      "nt": "upnp:rootdevice",
+      "server": "ARRIS DIAL/1.7.2 UPnP/1.0 ARRIS Settop Box",
+      "user_agent": ""
+    },
+    {
+      "st": "",
+      "location": "http://192.168.1.109:8091/XD/21e13e66-1dd2-11b2-9b87-44e137a2ec6a",
+      "method": "",
+      "nt": "upnp:rootdevice",
+      "server": "Allegro-Software-RomPager/5.41 UPnP/1.0 ARRIS Settop Box",
+      "user_agent": ""
+    },
+   ],
+  "mac": "44:e1:37:a2:ec:c1"
+}
+```
+With most machine learning libraries assuming your data being stored as tensors of a fixed dimension, or a sequence, you will have a bad time. Contrary, `JsonGrider.jl` assumes your data to be stored in a flexible JSON format and tries to automatize most labor using reasonable default, but it still gives you an option to control and tweak almost everything. `JsonGrinder.jl` is built on top of [Mill.jl](https://github.com/pevnak/Mill.jl) which itself is built on top of Flux.jl (we do not reinvent the wheel). **Although JsonGrinder was designed for JSON files, you can easily adapt it to XML, ProtoBuffers, MessagePacks,...**
 
 There are four steps to create a classifier once you load the data.
 
@@ -10,8 +58,11 @@ There are four steps to create a classifier once you load the data.
 3. Create a model for your JSONs, which can be easily done by (using `model = reflectinmodel(sch, extractor,...)`)
 4. Use your favourite methods to train the model, it is 100% compatible with `Flux.jl` tooling.
 
+The first two steps are handled by `JsonGrinder.jl` the third step by `Mill.jl` and the fourth by a combination of `Mill.jl` and `Flux.jl`.
+
 Authors see the biggest advantage in the `model` being hierarchical and reflecting the JSON structure. Thanks to `Mill.jl`, it can handle missing values at all levels. 
 
+## Example
 Our idealized workflow is demonstrated in `examples/identification.jl` solving [device identification challenge](https://www.kaggle.com/c/cybersecprague2019-challenge/data) looks as follows (for many datasets which fits in memory it suggest just to change the key with labels (`:device_class`) and names of files):
 ``` julia
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools, StatsBase
@@ -31,18 +82,30 @@ targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)
 foreach(i -> delete!(i, "id"), samples)
 
+#####
+#  Create the schema and extractor
+#####
 sch = JsonGrinder.schema(samples)
 extractor = suggestextractor(sch)
 
+#####
+#  Convert samples to Mill structure and extract targets
+#####
 data = tmap(extractor, samples)
 labelnames = unique(targets)
 
+#####
+#  Create the model
+#####
 model = reflectinmodel(sch, extractor,
 	k -> Dense(k, neurons, relu),
 	d -> SegmentedMeanMax(d),
 	b = Dict("" => k -> Dense(k, length(labelnames))),
 )
 
+#####
+#  Train the model
+#####
 function minibatch()
 	idx = sample(1:length(data), minibatchsize, replace = false)
 	reduce(catobs, data[idx]), Flux.onehotbatch(targets[idx], labelnames)
@@ -50,7 +113,7 @@ end
 
 accuracy(x,y) = mean(map(xy -> labelnames[argmax(model(xy[1]).data[:])] == xy[2], zip(x, y)))
 
-cb = () -> println("accuracy = ", accuracy(valdata...))
+cb = () -> println("accuracy = ", accuracy(data, targets))
 ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
 Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
@@ -130,7 +193,7 @@ end
 
 accuracy(x,y) = mean(map(xy -> labelnames[argmax(model(xy[1]).data[:])] == xy[2], zip(x, y)))
 
-cb = () -> println("accuracy = ", accuracy(valdata...))
+cb = () -> println("accuracy = ", accuracy(data, targets))
 ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
 Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
