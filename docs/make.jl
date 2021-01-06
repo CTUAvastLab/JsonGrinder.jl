@@ -4,15 +4,17 @@ using JsonGrinder
 DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
 
 makedocs(
-    sitename = "JsonGrinder",
-    format = Documenter.HTML(),
-    modules = [JsonGrinder],
-    pages = ["Home" => "index.md",
-    "Schema" => "schema.md",
-    "Creating extractors" => "extractors.md",
-    "Extractor functions" => "exfunctions.md",
-    "Developers" => "developers.md",
-	],
+         sitename = "JsonGrinder.jl",
+         format = Documenter.HTML(sidebar_sitename=false,
+                                  prettyurls=get(ENV, "CI", nothing) == "true",
+                                  assets=["assets/favicon.ico", "assets/custom.css"]),
+         modules = [JsonGrinder],
+         pages = ["Home" => "index.md",
+                  "Schema" => "schema.md",
+                  "Creating extractors" => "extractors.md",
+                  "Extractor functions" => "exfunctions.md",
+                  "Developers" => "developers.md",
+                  ],
 
 )
 
