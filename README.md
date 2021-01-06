@@ -1,6 +1,11 @@
-# JsonGrinder
+<p align="center">
+ <img src="https://raw.githubusercontent.com/pevnak/JsonGrinder.jl/master/docs/src/assets/logo.svg" alt="JsonGrinder.jl logo"/>
+</p>
 
-[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://pevnak.github.io/JsonGrinder.jl/dev)
+---
+
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/pevnak/JsonGrinder.jl/blob/master/LICENSE.md)
+[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://pevnak.github.io/JsonGrinder.jl/stable)
 [![Build Status](https://github.com/pevnak/JsonGrinder.jl/workflows/CI/badge.svg)](https://github.com/pevnak/JsonGrinder.jl/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/github/pevnak/JsonGrinder.jl/badge.svg?branch=master)](https://coveralls.io/github/pevnak/JsonGrinder.jl?branch=master)
 [![codecov.io](http://codecov.io/github/Pevnak/JsonGrinder.jl/coverage.svg?branch=master)](http://codecov.io/github/Pevnak/JsonGrinder.jl?branch=master)
