@@ -77,7 +77,7 @@ end
 
 
 @testset "Testing array conversion" begin
-	Mill.emptyismissing(false)
+	Mill.emptyismissing!(false)
 	sc = ExtractArray(ExtractCategorical(2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
 	@test nobs(sc(nothing).data) == 0
