@@ -32,7 +32,7 @@ end
 	extractor = suggestextractor(sch)
 	dss = map(extractor, [j1,j2,j3,j4,j5,j6])
 	ds = reduce(catobs, dss)
-	m = reflectinmodel(ds, k -> Dense(k,10, relu));
+	m = reflectinmodel(ds, k -> Dense(k,10, relu))
 	o = m(ds).data
 
 	for i in 1:length(dss)

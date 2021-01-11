@@ -3,7 +3,7 @@
 		item::Int
 	end
 
-	represents an array of a fixed length, typically a feature vector
+	represents an array of a fixed length, typically a feature vector of numbers of type T
 
 ```juliadoctest
 julia> sc = ExtractVector(4)
