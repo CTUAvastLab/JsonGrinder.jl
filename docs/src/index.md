@@ -1,5 +1,10 @@
 # JsonGrinder.jl
 
+**JsonGrinder** is a collection of routines that facilitates conversion of JSON documents into structures used by
+[Mill.jl](https://github.com/pevnak/Mill.jl) project.
+
+## Motivation
+
 Imagine that you want to train a classifier on data looking like
 ```json
 {
@@ -49,18 +54,18 @@ Imagine that you want to train a classifier on data looking like
   "mac": "44:e1:37:a2:ec:c1"
 }
 ```
-With most machine learning libraries assuming your data being stored as tensors of a fixed dimension, or a sequence, you will have a bad time. Contrary, `JsonGrider.jl` assumes your data to be stored in a flexible JSON format and tries to automatize most labor using reasonable default, but it still gives you an option to control and tweak almost everything. `JsonGrinder.jl` is built on top of [Mill.jl](https://github.com/pevnak/Mill.jl) which itself is built on top of Flux.jl (we do not reinvent the wheel). **Although JsonGrinder was designed for JSON files, you can easily adapt it to XML, ProtoBuffers, MessagePacks,...**
+With most machine learning libraries assuming your data being stored as tensors of a fixed dimension, or a sequence, you will have a bad time. Contrary, `JsonGrider.jl` assumes your data to be stored in a flexible JSON format and tries to automate most labor using reasonable default, but it still gives you an option to control and tweak almost everything. `JsonGrinder.jl` is built on top of [Mill.jl](https://github.com/pevnak/Mill.jl) which itself is built on top of [Flux.jl](https://fluxml.ai/) (we do not reinvent the wheel). **Although JsonGrinder was designed for JSON files, you can easily adapt it to XML, [Protocol Buffers](https://developers.google.com/protocol-buffers), [MessagePack](https://msgpack.org/index.html), and other similar structures**
 
 There are four steps to create a classifier once you load the data.
 
 1. Create a schema of JSON files (using `sch = JsonGrinder.schema`).
-2. Create an extractor converting JSONs to Mill structures (`extractor = suggestextractor(sch))`). Schema `sch`  from previous step is very helpful, as it helps to identify, how to convert nodes (`Dict`, `Array`) to (`Mill.ProductNode` and `Mill.BagNode`) and how to convert values in leafs to (`Float32`, `Vector{Float32}`, `String`, `Categorical`).
+2. Create an extractor converting JSONs to Mill structures (`extractor = suggestextractor(sch))`). Schema `sch` from previous step is very helpful, as it helps to identify, how to convert nodes (`Dict`, `Array`) to (`Mill.ProductNode` and `Mill.BagNode`) and how to convert values in leaves to (`Float32`, `Vector{Float32}`, `String`, `Categorical`).
 3. Create a model for your JSONs, which can be easily done by (using `model = reflectinmodel(sch, extractor,...)`)
 4. Use your favourite methods to train the model, it is 100% compatible with `Flux.jl` tooling.
 
 The first two steps are handled by `JsonGrinder.jl` the third step by `Mill.jl` and the fourth by a combination of `Mill.jl` and `Flux.jl`.
 
-Authors see the biggest advantage in the `model` being hierarchical and reflecting the JSON structure. Thanks to `Mill.jl`, it can handle missing values at all levels. 
+Authors see the biggest advantage in the `model` being hierarchical and reflecting the JSON structure. Thanks to `Mill.jl`, it can handle missing values at all levels.
 
 ## Example
 Our idealized workflow is demonstrated in `examples/identification.jl` solving [device identification challenge](https://www.kaggle.com/c/cybersecprague2019-challenge/data) looks as follows (for many datasets which fits in memory it suggest just to change the key with labels (`:device_class`) and names of files):
@@ -198,4 +203,3 @@ ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
 Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
 ```
-
