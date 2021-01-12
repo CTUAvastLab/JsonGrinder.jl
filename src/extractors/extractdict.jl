@@ -8,8 +8,7 @@
 """
 struct ExtractDict{S} <: AbstractExtractor
 	dict::S
-	function ExtractDict(d::S) where {S<:Union{Dict,Nothing}}
-		d = (isnothing(d) || isempty(d)) ? nothing : d
+	function ExtractDict(d::S) where {S<:Dict}
 		new{typeof(d)}(d)
 	end
 end
