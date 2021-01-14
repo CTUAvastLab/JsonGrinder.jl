@@ -261,6 +261,7 @@ end
 @testset "ExtractString" begin
 	e = ExtractString()
 	@test e("Hello").data.s == ["Hello"]
+	@test e(Symbol("Hello")).data.s == ["Hello"]
 	@test e(["Hello", "world"]).data.s == ["Hello", "world"]
 	@test e("Hello") isa ArrayNode{NGramMatrix{String,Vector{String},Int64},Nothing}
 	@test e("Hello").data isa NGramMatrix{String,Vector{String},Int64}
