@@ -14,7 +14,7 @@ end
 
 `schema` function has following default behavior: If passed array of strings, it consideres them to be filenames and passes each element as an argument to `JSON.parse` function.
 
-A schema can be further updated by calling function `update!(sch, json).` Schemas can be merged using the overloaded `merge` function, which facilitates distributed creation of schema following map-reduct paradigm.
+A schema can be further updated by calling function `update!(sch, json).` Schemas can be merged using the overloaded `merge` function, which facilitates distributed creation of schema following map-reduce paradigm.
 
 Schema can be saved in html by `generate_html` allowing their interactive exploration.
 Calling `generate_html(filename, sch)` will generate self-contained file with HTML+CSS+JS.
@@ -30,10 +30,10 @@ Statistics are collected in a hierarchical structure reflecting the structured c
 {"a": "hello"}
 ```
 
-For such cases, we have introduced additional `Entry`, a `MultiEntry,` but we discourage to rely on this feature and recommend to adapt JSONs to have stable schema (if possible).
+For such cases, we have introduced additional `JSONEntry`, a `MultiEntry,` but we discourage to rely on this feature and recommend to adapt JSONs to have stable schema (if possible).
 This can be achieved by modifying each sample before it's passed into the schema.
 
-Each subtype of `JSONEntry` implements and `update!` function, which recursively update of the schema.
+Each subtype of `JSONEntry` implements the `update!` function, which recursively updates the schema.
 
 ### Entry
 ```julia
@@ -46,7 +46,7 @@ end
 * `updated` counts how many times the leaf in a given position in JSON was observed,
 * `counts` counts how many times a particular value of that leaf was observed.
 
-To keep `counts` dictionary from becoming too large, once its length exceeds `JsonGrinder.max_keys` (default is 10 000), then the new values will be dropped. This value can be changed by `JsonGrinder.updatemaxkeys!(some_higher_value)`, but of course the new limit will be applied to newly processed values.
+To keep `counts` dictionary from becoming too large, once its length exceeds `JsonGrinder.max_keys` (default is `10_000`), then the new values will be dropped. This value can be changed by `JsonGrinder.updatemaxkeys!(some_higher_value)`, but of course the new limit will be applied only to newly processed values, so it's advised to set it in the beginning of your scripts.
 
 ### ArrayEntry
 ```julia
@@ -56,7 +56,7 @@ mutable struct ArrayEntry <: JSONEntry
 	updated::Int
 end
 ```
-`ArrayEntry` keeps information about arrays (e.g. `"a": [1,2,3,4]`). Statistics about individual items of the array are deferred to `item`, which can be `<:JSONEntry`. `l` stores keeps histogram of lengths of arrays, and `updated` is keep number of times this array has been observed in particular place in JSON.
+`ArrayEntry` keeps information about arrays (e.g. `"a": [1,2,3,4]`). Statistics about individual items of the array are deferred to `item`, which can be `<:JSONEntry`. `l` keeps histogram of lengths of arrays, and `updated` is number of times an array has been observed in particular place in JSON.
 
 ### DictEntry
 ```julia
@@ -66,7 +66,7 @@ mutable struct DictEntry <: JSONEntry
 end
 ```
 
-defers all statistics about its children to them, and the only statistic is again a counter `updated,` about observation times.
+defers all statistics about its children to them, and the only statistic is again a counter `updated` about number of observations.
 Fields `childs` contains all keys which were observed in specific Dictionary and their corresponding `<:JSONEntry` values with statistics about values observed under given key.
 
 ### MultiEntry
@@ -90,8 +90,8 @@ Usefulness of such feature comes into play also when you don't know if your sche
 In that case, you can calculate the schema, and then search for `MultiEntry` nodes.
 
 ### Illustrative example
-todo: přidat příklad s HUtils a 2 jsony, hledáním MultiEntry podle TypeIteratoru
 
+Let's say we have following jsons. We take them and create a schema.
 ```julia
 using JSON, JsonGrinder
 jsons = [
@@ -117,7 +117,7 @@ julia> display(sch)
 ```
 which shows only reasonable part.
 
-To see whole schema, we can use `printtree(ds; htrunc=Inf, vtrunc=Inf, trav=true)` from [HierarchicalUtils.jl](@ref) that prints the schema together with identifiers of individual nodes:
+To see whole schema, we can use `printtree(ds; htrunc=Inf, vtrunc=Inf, trav=true)` from [HierarchicalUtils.jl](https://github.com/Sheemon7/HierarchicalUtils.jl) which prints the whole schema, together with identifiers of individual nodes:
 
 ```julia
 julia> printtree(sch; htrunc=Inf, vtrunc=Inf, trav=true)
@@ -134,9 +134,12 @@ julia> printtree(sch; htrunc=Inf, vtrunc=Inf, trav=true)
                              └── [Scalar - Int64], 3 unique values, updated = 3 ["eU"]
 ```
 
-the strings at the end of each row can be used as a key to access individual elements of the schema.
+Strings at the end of each row can be used as a key to access individual elements of the schema.
+For more about [HierarchicalUtils.jl](https://github.com/Sheemon7/HierarchicalUtils.jl) check their docs or [section about HierarchicalUtils.jl in Mill.jl documentation](https://pevnak.github.io/Mill.jl/dev/tools/hierarchical/)
+
 Here, we see that we have 2 `MultiEntry`, thus 2 type instabilities in our jsons.
-The first MultiEntry (key `E`) has 2 children: `Entry` and `ArrayEntry`.
+The first `MultiEntry` (key `"E"`) has 2 children: `Entry` and `ArrayEntry`.
+
 The `sch["E"].updated` is 3, because value under key `a` in json has been observed 3 times.
 The `sch["I"].updated` is 2, because string value was seen 2 times under `a`.
 As expected, we can see
@@ -156,12 +159,13 @@ Dict{Int64,Int64} with 1 entry:
 ```
 
 because we have observed one array of length 2.
-`sch["M"].items` is Entry.
+`sch["M"].items` is `Entry`.
 
-The Entry which can be accessed by `sch["M"].items` (or by `sch["O"]`) has fields with following values:
+The Entry (can be accessed by `sch["M"].items` or by `sch["O"]`) has fields with following values:
+
 `sch["O"].updated` is 2, because we have observed 2 elements in array under key `a`.  
 
-`counts` has following value
+`counts` is
 ```julia
 julia> sch["O"].counts
 Dict{String,Int64} with 2 entries:
@@ -195,15 +199,3 @@ JsonGrinder.updatemaxkeys!
 ```@docs
 JsonGrinder.updatemaxlen!
 ```
-
-
-todo: tohle dát do jiné sekce
-We can find them programmatically by running
-```julia
-julia> filter(e->sch[e] isa JsonGrinder.MultiEntry, list_traversal(sch))
-2-element Array{String,1}:
- "E"
- "c"
-```
-
-and we see that `sch["E"]` and `sch["c"]` are indeed MultiEntry.

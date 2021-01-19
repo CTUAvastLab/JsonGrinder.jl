@@ -188,7 +188,7 @@ model = reflectinmodel(sch, extractor,
 )
 ```
 
-individual arguments of `reflectinmodel` are explained in (Mill.jl documentation)[https://pevnak.github.io/Mill.jl/dev/manual/reflectin/#Model-Reflection]
+individual arguments of `reflectinmodel` are explained in [Mill.jl documentation](https://pevnak.github.io/Mill.jl/dev/manual/reflectin/#Model-Reflection)
 
 Lastly, we define few handy functions and then we start training.
 ```julia

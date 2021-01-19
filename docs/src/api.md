@@ -1,4 +1,6 @@
+# API Documentation
+
 ```@autodocs
-Modules = [Mill]
+Modules = [JsonGrinder]
 Order   = [:function, :type]
 ```
