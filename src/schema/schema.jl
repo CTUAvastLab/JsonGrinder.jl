@@ -55,9 +55,11 @@ updated(s::T) where {T<:JSONEntry} = s.updated
 merge(combine::typeof(merge), es::JSONEntry...) = merge(es...)
 merge(::Nothing, e::JSONEntry) = e
 
-Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, db=d->Flux.Dense(d, 10), da=d->SegmentedMean(d); b = Dict(), a = Dict(),
-			   single_key_identity=true, single_scalar_identity=true) =
-	reflectinmodel(ex(sample_synthetic(sch)), db, da, b=b, a=a, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
+function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, db=d->Flux.Dense(d, 10), da=d->SegmentedMean(d); fsm = Dict(), fsa = Dict(),
+			   single_key_identity=true, single_scalar_identity=true)
+	specimen = catobs(ex(JsonGrinder.sample_synthetic(sch)), ex(missing))
+	reflectinmodel(specimen, db, da, fsm=fsm, fsa=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
+end
 
 
 make_selector(s::Symbol) = s == Symbol("[]") ? d->d.items : d-> d.childs[s]
