@@ -13,6 +13,7 @@ makedocs(
                   "Schema" => "schema.md",
                   "Creating extractors" => "extractors.md",
                   "Extractor functions" => "exfunctions.md",
+                  "API Documentation" => "api.md",
                   "Developers" => "developers.md",
                   ],
 

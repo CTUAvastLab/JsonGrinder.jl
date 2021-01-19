@@ -1,7 +1,6 @@
 # JsonGrinder.jl
 
-**JsonGrinder** is a collection of routines that facilitates conversion of JSON documents into structures used by
-[Mill.jl](https://github.com/pevnak/Mill.jl) project.
+**JsonGrinder** is a collection of routines that facilitates conversion of JSON documents into structures used by [Mill.jl](https://github.com/pevnak/Mill.jl) project.
 
 ## Motivation
 
@@ -169,7 +168,7 @@ Create the schema of data
 sch = JsonGrinder.schema(samples)
 ```
 
-Create the extractor converting jsons to Mill structure. The `suggestextractor` is executed below with default setting, but it allows you heavy customizing.
+Create the extractor converting jsons to Mill structure. The `suggestextractor` is executed below with default setting, but it allows you heavy customization.
 ```julia
 extractor = suggestextractor(sch)
 ```
@@ -189,7 +188,9 @@ model = reflectinmodel(sch, extractor,
 )
 ```
 
-After definiting few usual function, we start training.
+individual arguments of `reflectinmodel` are explained in (Mill.jl documentation)[https://pevnak.github.io/Mill.jl/dev/manual/reflectin/#Model-Reflection]
+
+Lastly, we define few handy functions and then we start training.
 ```julia
 function minibatch()
 	idx = sample(1:length(data), minibatchsize, replace = false)
