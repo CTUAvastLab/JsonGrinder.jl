@@ -421,7 +421,6 @@ end
 	@test ext_j3["U"].data ≈ [4/13]
 	@test ext_j4["U"].data ≈ [1]
 
-	# todo: add tests for Mill that it's correctly reflected in model
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) == """
 	ProductModel ↦ ArrayModel(Dense(42, 10))
@@ -549,25 +548,25 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5, j6, j7])
 	ext = suggestextractor(sch)
 
-	# @test_broken buf_printtree(sch) ==
- #    """
- #    [Dict] (updated = 7)
- #      └── a: [MultiEntry] (updated = 7)
- #               ├── 1: [Scalar - String], 3 unique values, updated = 3
- #               ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
- #               ├── 3: [List] (updated = 1)
- #               │        └── [Scalar - Int64], 5 unique values, updated = 5
- #               └── 4: [Dict] (updated = 1)
- #                        └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1"""
+	@test buf_printtree(sch) ==
+    """
+    [Dict] (updated = 7)
+      └── a: [MultiEntry] (updated = 7)
+               ├── 1: [Scalar - String], 3 unique values, updated = 3
+               ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
+               ├── 3: [List] (updated = 1)
+               │        └── [Scalar - Int64], 5 unique values, updated = 5
+               └── 4: [Dict] (updated = 1)
+                        └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1"""
 
-	# @test_broken buf_printtree(ext) ==
- #    """
-	# Dict
-	#   └── a: MultiRepresentation
-	#            ├── e1: FeatureVector with 5 items
-	#            ├── e2: Dict
-	#            │         └── Sylvanas is the worst warchief ever: String
-	#            └── e3: Float32"""
+	@test buf_printtree(ext) ==
+    """
+	Dict
+	  └── a: MultiRepresentation
+	           ├── e1: FeatureVector with 5 items
+	           ├── e2: Dict
+	           │         └── Sylvanas is the worst warchief ever: String
+	           └── e3: Float32"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
@@ -580,13 +579,13 @@ end
 	@test e4["s"].data ≈ [1.0]
 	@test e5["s"].data ≈ [0.875]
 
-	@test_broken buf_printtree(e1) ==
+	@test buf_printtree(e1) ==
 	"""
 	ProductNode with 1 obs
 	  └── a: ProductNode with 1 obs
-	           ├── e1: ArrayNode(5×1 Array, Float32) with 1 obs
+	           ├── e1: ArrayNode(5×1 Array, Missing) with 1 obs
 	           ├── e2: ProductNode with 1 obs
-	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
+	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix, Missing) with 1 obs
 	           └── e3: ArrayNode(1×1 Array, Float32) with 1 obs"""
 end
 

@@ -171,7 +171,6 @@ Dict{String,Int64} with 2 entries:
 which corresponds to individual elements of an array we have observed.
 
 
-
 ## Extra functions
 
 While schema can be printed to REPL, it can contain quite a lot of information. Therefore `JsonGrinder.generate_html` exports it to HTML, where parts can be expanded at wish.
@@ -196,3 +195,15 @@ JsonGrinder.updatemaxkeys!
 ```@docs
 JsonGrinder.updatemaxlen!
 ```
+
+
+todo: tohle dát do jiné sekce
+We can find them programmatically by running
+```julia
+julia> filter(e->sch[e] isa JsonGrinder.MultiEntry, list_traversal(sch))
+2-element Array{String,1}:
+ "E"
+ "c"
+```
+
+and we see that `sch["E"]` and `sch["c"]` are indeed MultiEntry.
