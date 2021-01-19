@@ -1,3 +1,135 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>API Documentation · JsonGrinder.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img class="docs-light-only" src="../assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="../assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../schema/">Schema</a></li><li><a class="tocitem" href="../extractors/">Creating extractors</a></li><li><a class="tocitem" href="../exfunctions/">Extractor functions</a></li><li class="is-active"><a class="tocitem" href>API Documentation</a></li><li><a class="tocitem" href="../developers/">Developers</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>API Documentation</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>API Documentation</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pevnak/JsonGrinder.jl/blob/master/docs/src/api.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><pre><code class="language-">Modules = [Mill]
-Order   = [:function, :type]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../exfunctions/">« Extractor functions</a><a class="docs-footer-nextpage" href="../developers/">Developers »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 19 January 2021 10:41">Tuesday 19 January 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>API Documentation · JsonGrinder.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img class="docs-light-only" src="../assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="../assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../schema/">Schema</a></li><li><a class="tocitem" href="../extractors/">Creating extractors</a></li><li><a class="tocitem" href="../exfunctions/">Extractor functions</a></li><li class="is-active"><a class="tocitem" href>API Documentation</a></li><li><a class="tocitem" href="../developers/">Developers</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>API Documentation</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>API Documentation</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pevnak/JsonGrinder.jl/blob/master/docs/src/api.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="API-Documentation"><a class="docs-heading-anchor" href="#API-Documentation">API Documentation</a><a id="API-Documentation-1"></a><a class="docs-heading-anchor-permalink" href="#API-Documentation" title="Permalink"></a></h1><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.extractscalar-Union{Tuple{Type{T}}, Tuple{T}, Tuple{Type{T},Any}, Tuple{Type{T},Any,Any}, Tuple{Type{T},Any,Any,Any}} where T&lt;:AbstractString" href="#JsonGrinder.extractscalar-Union{Tuple{Type{T}}, Tuple{T}, Tuple{Type{T},Any}, Tuple{Type{T},Any,Any}, Tuple{Type{T},Any,Any,Any}} where T&lt;:AbstractString"><code>JsonGrinder.extractscalar</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">extractscalar(Type{String}, n = 3, b = 256, m = 2053)
+
+represents strings as ngrams with
+	--- `n` (the degree of ngram),
+	--- `b` base of string,
+	--- `m` modulo on index of the token to reduce dimension
+
+extractscalar(Type{Number}, m = 0, s = 1)
+extracts number subtracting `m` and multiplying by `s`</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/extractstring.jl#L27-L37">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.generate_html-Tuple{JsonGrinder.DictEntry}" href="#JsonGrinder.generate_html-Tuple{JsonGrinder.DictEntry}"><code>JsonGrinder.generate_html</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">generate_html(sch::DictEntry; max_vals=100, max_len=1_000)
+generate_html(sch::DictEntry, file_name ; max_vals=100, max_len=1_000)
+
+export schema to HTML including CSS style allowing to expand / hide
+sub-parts of schema, countmaps, and lengthmaps.
+
+`max_vals` controls maximum number of exported values in countmap
+`max_len` controls maximum number of exported lengts of arrays
+`file_name` a name of file to save HTML with schema</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/html_show_tools.jl#L141-L151">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.newentry-Tuple{Dict}" href="#JsonGrinder.newentry-Tuple{Dict}"><code>JsonGrinder.newentry</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">	newentry(v)
+
+	creates new entry describing json according to the type of v</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/makeschema.jl#L1-L5">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.prune_json-Tuple{Any,JsonGrinder.Entry}" href="#JsonGrinder.prune_json-Tuple{Any,JsonGrinder.Entry}"><code>JsonGrinder.prune_json</code></a> — <span class="docstring-category">Method</span></header><section><div><p>prune_json(json, schema)</p><p>remove keys from <code>json</code> which are not part of the <code>schema</code></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/schema.jl#L82-L86">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.schema-Tuple{AbstractArray,Function}" href="#JsonGrinder.schema-Tuple{AbstractArray,Function}"><code>JsonGrinder.schema</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">	function schema(a::Vector{T}) where {T&lt;:Dict}
+	function schema(a::Vector{T}) where {T&lt;:AbstractString}
+	function schema(map_fun::Function, samples::AbstractArray)
+
+	create schema from an array of parsed or unparsed JSONs</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/makeschema.jl#L15-L21">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.suggestextractor" href="#JsonGrinder.suggestextractor"><code>JsonGrinder.suggestextractor</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">	suggestextractor(e::DictEntry, settings = NamedTuple())
+
+	create convertor of json to tree-structure of `DataNode`
+
+	`e` top-level of json hierarchy, typically returned by invoking schema
+	`settings.mincount` contains minimum repetition of the key to be included into
+	the extractor (if missing it is equal to zero)
+	`settings.key_as_field` of the number of keys exceeds this value, it is assumed that
+	keys contains a value, which means that they will be treated as strings.
+	`settings` can be any container supporting `get` function</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/dict.jl#L42-L53">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.update!-Union{Tuple{T}, Tuple{JsonGrinder.Entry{T},Number}} where T&lt;:Number" href="#JsonGrinder.update!-Union{Tuple{T}, Tuple{JsonGrinder.Entry{T},Number}} where T&lt;:Number"><code>JsonGrinder.update!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">	function update!(a::Entry, v)
+
+	updates the entry when seeing value v</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/scalar.jl#L43-L47">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.updatemaxkeys!-Tuple{Int64}" href="#JsonGrinder.updatemaxkeys!-Tuple{Int64}"><code>JsonGrinder.updatemaxkeys!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">updatemaxkeys!(n::Int)
+
+limits the maximum number of keys in statistics of nodes in JSON. Default value is 10000.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/schema.jl#L9-L13">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.updatemaxlen!-Tuple{Int64}" href="#JsonGrinder.updatemaxlen!-Tuple{Int64}"><code>JsonGrinder.updatemaxlen!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">updatemaxlen!(n::Int)
+
+limits the maximum size of string values in statistics of nodes in JSON. Default value is 10000.
+Longer strings will be trimmed and their length and hash will be appended to retain the uniqueness.
+This is due to some strings being very long and causing the schema to be even order of magnitute larger than needed.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/schema.jl#L20-L26">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ArrayEntry" href="#JsonGrinder.ArrayEntry"><code>JsonGrinder.ArrayEntry</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">	mutable struct ArrayEntry &lt;: JSONEntry
+		items
+		l::Dict{Int,Int}
+		updated::Int
+	end
+
+	keeps statistics about an array entry in JSON.
+	`items` is typeof `Entry` or nothing and keeps statistics about the elements of the array
+	`l` keeps histogram of message length
+	`updated` counts how many times the struct was updated.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/array.jl#L1-L12">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.Entry" href="#JsonGrinder.Entry"><code>JsonGrinder.Entry</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">mutable struct Entry &lt;: JSONEntry
+	counts::Dict{Any,Int}
+	updated::Int
+end
+
+Keeps statistics about scalar values of a one key and also about items inside a key
+`counts` counts how many times given value appeared (at most max_keys is held)
+`updated` counts how many times the entry was updated</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/scalar.jl#L3-L12">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractArray" href="#JsonGrinder.ExtractArray"><code>JsonGrinder.ExtractArray</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct ExtractArray{T}
+	item::T
+end
+
+Convert array of values to a `Mill.BagNode` with items converted 
+by `item`. The entire array is assumed to be a single bag.</code></pre><pre><code class="language-juliadoctest">julia&gt; sc = ExtractArray(ExtractCategorical(Float32,2:4))
+julia&gt; sc([2,3,1,4]).data
+3×4 Array{Float32,2}:
+ 1.0  0.0  0.0  0.0
+ 0.0  1.0  0.0  0.0
+ 0.0  0.0  0.0  1.0
+</code></pre><pre><code class="language-juliadoctest">julia&gt; sc = ExtractArray(ExtractScalar())
+julia&gt; sc([2,3,4]).data
+ 2.0  3.0  4.0</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/extractarray.jl#L1-L24">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractCategorical" href="#JsonGrinder.ExtractCategorical"><code>JsonGrinder.ExtractCategorical</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">ExtractCategorical(s::Entry)
+ExtractCategorical(s::UnitRange)
+ExtractCategorical(s::Vector)
+
+Converts a single item to a one-hot encoded vector. There is always alocated an extra
+element for a unknown value</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/extractcategorical.jl#L2-L9">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractDict" href="#JsonGrinder.ExtractDict"><code>JsonGrinder.ExtractDict</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct ExtractDict
+	dict::Dict{Symbol,Any}
+end
+
+extracts all items in `dict` and return them as a ProductNode.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/extractdict.jl#L2-L8">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractKeyAsField" href="#JsonGrinder.ExtractKeyAsField"><code>JsonGrinder.ExtractKeyAsField</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct ExtractKeyAsField{S,V} &lt;: AbstractExtractor
+	key::S
+	item::V
+end
+
+extracts all items in `vec` and in `other` and return them as a ProductNode.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/extract_keyasfield.jl#L2-L9">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractOneHot" href="#JsonGrinder.ExtractOneHot"><code>JsonGrinder.ExtractOneHot</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">ExtractOneHot(ks, k, v)
+
+Converts a Vector of `Dict` items to one-hot encoding by using key
+`k` to identify a name of item out of `ks` and values
+of key `v` as values.</code></pre><pre><code class="language-juliadoctest">julia&gt; samples = [&quot;{&quot;name&quot;: &quot;a&quot;, &quot;count&quot; : 1}&quot;,
+		&quot;{&quot;name&quot;: &quot;b&quot;, &quot;count&quot; : 2}&quot;,];
+julia&gt; samples = JSON.parse.(samples);
+julia&gt; e = ExtractOneHot([&quot;a&quot;,&quot;b&quot;], &quot;name&quot;, &quot;count&quot;);
+julia&gt; e(samples).data
+3×1 SparseArrays.SparseMatrixCSC{Int64,Int64} with 2 stored entries:
+  [1, 1]  =  1
+  [2, 1]  =  2</code></pre><pre><code class="language-none">If `v` is equal to `nothing`, then it boils down to one-hot encoding</code></pre><pre><code class="language-juliadoctest">julia&gt; e = ExtractOneHot([&quot;a&quot;,&quot;b&quot;], &quot;name&quot;, nothing);
+julia&gt; e(samples).data
+3×1 SparseArrays.SparseMatrixCSC{Int64,Int64} with 2 stored entries:
+  [1, 1]  =  1
+  [2, 1]  =  1</code></pre><pre><code class="language-none">If there is key in the data which is not known (it was not part of `vs`),
+than it is assigned to an special designed key serving as &quot;unknown`</code></pre><pre><code class="language-juliadoctest">julia&gt; samples = JSON.parse.([&quot;{&quot;name&quot;: &quot;c&quot;, &quot;count&quot; : 1}&quot;]);
+julia&gt; e = ExtractOneHot([&quot;a&quot;,&quot;b&quot;], &quot;name&quot;, nothing);
+julia&gt; e(samples).data
+3×1 SparseArrays.SparseMatrixCSC{Bool,Int64} with 1 stored entry:
+  [3, 1]  =  1
+</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/extractonehot.jl#L3-L40">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractScalar" href="#JsonGrinder.ExtractScalar"><code>JsonGrinder.ExtractScalar</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct ExtractScalar{T}
+	c::T
+	s::T
+end
+
+Extract a numerical value, centred by subtracting `c` and scaled by multiplying by `s`. 
+Strings are converted to numbers. The extractor returnes `ArrayNode{Matrix{T}}` 
+with a single row.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/extractscalar.jl#L1-L10">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractString" href="#JsonGrinder.ExtractString"><code>JsonGrinder.ExtractString</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct ExtractString{T} &lt;: AbstractExtractor
+	n::Int
+	b::Int
+	m::Int
+end
+
+Represent `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) 
+with base `b` and modulo `m`.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/extractstring.jl#L1-L10">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractVector" href="#JsonGrinder.ExtractVector"><code>JsonGrinder.ExtractVector</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct ExtractVector{T}
+	item::Int
+end
+
+represents an array of a fixed length, typically a feature vector of numbers of type T</code></pre><pre><code class="language-juliadoctest">julia&gt; sc = ExtractVector(4)
+julia&gt; sc([2,3,1,4]).data
+3×1 Array{Float32,2}:
+ 2.0
+ 3.0
+ 1.0</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/extractvector.jl#L1-L16">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.MultiEntry" href="#JsonGrinder.MultiEntry"><code>JsonGrinder.MultiEntry</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">mutable struct MultiEntry &lt;: JSONEntry
+	childs::Vector{Any}
+end
+
+support for JSON which does not adhere to a fixed type.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/schema/multientry.jl#L1-L7">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.MultipleRepresentation" href="#JsonGrinder.MultipleRepresentation"><code>JsonGrinder.MultipleRepresentation</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">MultipleRepresentation(extractors::Tuple)
+
+crate a `ProductNode` where each item is the json part
+processed by all extractors in the order</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pevnak/JsonGrinder.jl/blob/c5d6ca8b193ee7dcd63c3e8b04f050e6d0dd9880/src/extractors/multirepresentation.jl#L1-L7">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../exfunctions/">« Extractor functions</a><a class="docs-footer-nextpage" href="../developers/">Developers »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 19 January 2021 11:26">Tuesday 19 January 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
