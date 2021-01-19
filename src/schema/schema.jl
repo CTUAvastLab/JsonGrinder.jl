@@ -58,9 +58,9 @@ merge(::Nothing, e::JSONEntry) = e
 function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.Dense(d, 10), fa=d->SegmentedMean(d); fsm = Dict(), fsa = Dict(),
 			   single_key_identity=true, single_scalar_identity=true)
 	specimen = catobs(ex(sample_synthetic(sch)), ex(missing))
-	# reflectinmodel(specimen, fm, fa, b=fsm, a=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
+	reflectinmodel(specimen, fm, fa, b=fsm, a=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
 	# uncomment this is you want to use the #master version
-	reflectinmodel(specimen, fm, fa, fsm=fsm, fsa=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
+	# reflectinmodel(specimen, fm, fa, fsm=fsm, fsa=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
 end
 
 
