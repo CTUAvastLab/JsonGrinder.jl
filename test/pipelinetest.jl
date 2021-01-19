@@ -146,3 +146,25 @@ end
 	@test nobs(dss[5]["s"].data) == 0
 	@test nobs(dss[5]) == 1
 end
+
+@testset "testing findin" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2,"c":"oh"}]}""")
+	j2 = JSON.parse("""{"a": [{"a":1,"b":3,"c":"hi"},{"b":2,"a":1,"c":"Mark"}]}""")
+	j3 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+	j4 = JSON.parse("""{"a": []}""")
+	j5 = JSON.parse("""{}""")
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4, j5])
+	ext = suggestextractor(sch)
+	dss = ext.([j1,j2,j3,j4,j5])
+	ds = reduce(catobs, dss)
+	m = reflectinmodel(ds, k -> Dense(k, 10, relu))
+
+	l_sch = findin(sch, sch["w"])
+	l_ext = findin(ext, ext["w"])
+	@test l_sch == (@lens _.childs[:a].items.childs[:c])
+	@test l_ext == (@lens _.dict[:a].item.dict[:c])
+
+	@test get(sch, l_sch) == sch["w"]
+	@test get(ext, l_ext) == ext["w"]
+end

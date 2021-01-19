@@ -4,7 +4,7 @@
 
 ## Motivation
 
-Imagine that you want to train a classifier on data looking like
+Imagine that you want to train a classifier on data looking like this
 ```json
 {
   "services": [
@@ -53,6 +53,8 @@ Imagine that you want to train a classifier on data looking like
   "mac": "44:e1:37:a2:ec:c1"
 }
 ```
+and the task is to predict the value in key `device_class` (in this sample it's `MEDIA_BOX`) from the rest of the JSON.
+
 With most machine learning libraries assuming your data being stored as tensors of a fixed dimension, or a sequence, you will have a bad time. Contrary, `JsonGrider.jl` assumes your data to be stored in a flexible JSON format and tries to automate most labor using reasonable default, but it still gives you an option to control and tweak almost everything. `JsonGrinder.jl` is built on top of [Mill.jl](https://github.com/pevnak/Mill.jl) which itself is built on top of [Flux.jl](https://fluxml.ai/) (we do not reinvent the wheel). **Although JsonGrinder was designed for JSON files, you can easily adapt it to XML, [Protocol Buffers](https://developers.google.com/protocol-buffers), [MessagePack](https://msgpack.org/index.html), and other similar structures**
 
 There are four steps to create a classifier once you load the data.
@@ -69,7 +71,7 @@ Authors see the biggest advantage in the `model` being hierarchical and reflecti
 ## Example
 Our idealized workflow is demonstrated in `examples/identification.jl` solving [device identification challenge](https://www.kaggle.com/c/cybersecprague2019-challenge/data) looks as follows (for many datasets which fits in memory it suggest just to change the key with labels (`:device_class`) and names of files):
 ``` julia
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools, StatsBase
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, ThreadTools, StatsBase
 using JsonGrinder: suggestextractor
 using Mill: reflectinmodel
 
@@ -84,12 +86,12 @@ neurons = 20 		# neurons per layer
 
 targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)
-foreach(i -> delete!(i, "id"), samples)
+foreach(i -> delete!(i, "device_id"), samples)
 
 #####
 #  Create the schema and extractor
 #####
-sch = JsonGrinder.schema(samples)
+sch = schema(samples)
 extractor = suggestextractor(sch)
 
 #####
@@ -104,7 +106,7 @@ labelnames = unique(targets)
 model = reflectinmodel(sch, extractor,
 	k -> Dense(k, neurons, relu),
 	d -> SegmentedMeanMax(d),
-	b = Dict("" => k -> Dense(k, length(labelnames))),
+	fsm = Dict("" => k -> Dense(k, length(labelnames))),
 )
 
 #####
@@ -156,11 +158,11 @@ iterations = 10_000
 neurons = 20 		# neurons per layer
 ```
 
-Create labels and remove them from data, such that we do not use them as features. We also remove `id` key, such that we do not predict it
+Create labels and remove them from data, such that we do not use them as features. We also remove `device_id` key, such that we do not predict it
 ```julia
 targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)
-foreach(i -> delete!(i, "id"), samples)
+foreach(i -> delete!(i, "device_id"), samples)
 ```
 
 Create the schema of data
@@ -184,7 +186,7 @@ Create the model according to the data
 model = reflectinmodel(sch, extractor,
 	k -> Dense(k, neurons, relu),
 	d -> SegmentedMeanMax(d),
-	b = Dict("" => k -> Dense(k, length(labelnames))),
+	fsm = Dict("" => k -> Dense(k, length(labelnames))),
 )
 ```
 

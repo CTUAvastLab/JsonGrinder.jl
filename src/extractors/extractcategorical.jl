@@ -17,9 +17,9 @@ ExtractCategorical(s::UnitRange) = ExtractCategorical(collect(s))
 function ExtractCategorical(ks::Vector)
 	if isempty(ks)
 		@warn "Skipping initializing empty categorical variable does not make much sense to me"
-		return(nothing)
+		return nothing
 	end
-	ks = sort(unique(ks));
+	ks = sort(unique(ks))
 	ExtractCategorical(Dict(zip(ks, 1:length(ks))), length(ks) +1)
 end
 
@@ -29,6 +29,17 @@ function (s::ExtractCategorical{V,I})(v::V) where {V,I}
 end
 
 function (s::ExtractCategorical{V,I})(vs::Vector{V}) where {V,I}
+	x = MaybeHotMatrix([get(s.keyvalemap, v, s.n) for v in vs], s.n)
+	ArrayNode(x)
+end
+
+# following 2 methods are to let us extract float from int extractor and vice versa
+function (s::ExtractCategorical{U,I})(v::V) where {U<:Number,V<:Number,I}
+    x = MaybeHotMatrix([get(s.keyvalemap, v, s.n)], s.n)
+    ArrayNode(x)
+end
+
+function (s::ExtractCategorical{U,I})(vs::Vector{V}) where {U<:Number,V<:Number,I}
 	x = MaybeHotMatrix([get(s.keyvalemap, v, s.n) for v in vs], s.n)
 	ArrayNode(x)
 end

@@ -15,6 +15,7 @@ makedocs(
                   "Extractor functions" => "exfunctions.md",
                   "API Documentation" => "api.md",
                   "Developers" => "developers.md",
+                  "Citation" => "citation.md"
                   ],
 
 )

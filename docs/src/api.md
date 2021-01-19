@@ -2,5 +2,5 @@
 
 ```@autodocs
 Modules = [JsonGrinder]
-Order   = [:function, :type]
+Order   = [:function, :type, :constant]
 ```

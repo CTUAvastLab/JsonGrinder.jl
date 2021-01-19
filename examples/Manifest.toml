@@ -335,6 +335,12 @@ git-tree-sha1 = "a3f24677c21f5bbe9d2a714f95dcd58337fb2856"
 uuid = "82899510-4779-5014-852e-03e436cf321d"
 version = "1.0.0"
 
+[[JLD2]]
+deps = ["CodecZlib", "DataStructures", "MacroTools", "Mmap", "Pkg", "Printf", "Requires", "UUIDs"]
+git-tree-sha1 = "0fd0b0043cae454eed05bccd6dcfcdddc3f21f7e"
+uuid = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
+version = "0.3.1"
+
 [[JLLWrappers]]
 git-tree-sha1 = "04b49c556240b62d5a799e94c63d5fc14d3c07cd"
 uuid = "692b3bcd-3c85-4b1f-b108-f13ce0eb3210"
@@ -347,10 +353,10 @@ uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 version = "0.21.1"
 
 [[JsonGrinder]]
-deps = ["BSON", "DataStructures", "FillArrays", "Flux", "HierarchicalUtils", "HttpCommon", "JSON", "LearnBase", "LinearAlgebra", "MLDataPattern", "Mill", "Mustache", "Printf", "SHA", "SparseArrays", "Statistics", "StatsBase", "ThreadTools", "Zygote"]
+deps = ["BSON", "DataStructures", "FillArrays", "Flux", "HierarchicalUtils", "HttpCommon", "JSON", "LearnBase", "LinearAlgebra", "MLDataPattern", "Mill", "Mustache", "Printf", "SHA", "Setfield", "SparseArrays", "Statistics", "StatsBase", "ThreadTools", "Zygote"]
 path = ".."
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
-version = "2.0.3"
+version = "2.1.0"
 
 [[Juno]]
 deps = ["Base64", "Logging", "Media", "Profile"]
@@ -425,9 +431,11 @@ version = "0.5.0"
 
 [[Mill]]
 deps = ["ChainRulesCore", "Combinatorics", "DataFrames", "DataStructures", "Flux", "HierarchicalUtils", "LearnBase", "LinearAlgebra", "MLDataPattern", "Setfield", "SparseArrays", "Statistics", "StatsBase", "Zygote"]
-git-tree-sha1 = "a3ba0a9829e91b74c9546abb87d2f08907faf19c"
+git-tree-sha1 = "f0c7f02ca588d2446ea002444533bc8cb9bb2d4d"
+repo-rev = "master"
+repo-url = "https://github.com/pevnak/Mill.jl.git"
 uuid = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
-version = "2.1.2"
+version = "2.1.3"
 
 [[Missings]]
 deps = ["DataAPI"]
@@ -503,6 +511,11 @@ deps = ["Crayons", "Formatting", "Markdown", "Reexport", "Tables"]
 git-tree-sha1 = "237170206bf38a66fee4d845f4ae57f63788eeb0"
 uuid = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
 version = "0.10.1"
+
+[[PrintTypesTersely]]
+git-tree-sha1 = "32e06c0e67f1670f90b3c7bb40548cd3cd84ae93"
+uuid = "41b232b1-0de0-4a65-aab4-126884588aaf"
+version = "0.1.0"
 
 [[Printf]]
 deps = ["Unicode"]

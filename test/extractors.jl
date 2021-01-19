@@ -37,8 +37,8 @@ end
 	@test e("a").data ≈ [1, 0, 0]
 	@test e("b").data ≈ [0, 1, 0]
 	@test e("z").data ≈ [0, 0, 1]
-	@test all(e(nothing).data |> collect .=== [missing, missing, missing])
-	@test all(e(missing).data |> collect .=== [missing, missing, missing])
+	@test isequal(e(nothing).data, [missing missing missing]')
+	@test isequal(e(missing).data, [missing missing missing]')
 	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
 	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
@@ -46,8 +46,8 @@ end
 	@test nobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
-	@test all(e(["a", missing]).data |> collect .=== [true missing; false missing; false missing])
-	@test all(e(["a", missing, "x"]).data |> collect .=== [true missing false; false missing false; false missing true])
+	@test isequal(e(["a", missing]).data, [true missing; false missing; false missing])
+	@test isequal(e(["a", missing, "x"]).data, [true missing false; false missing false; false missing true])
 	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Array{Union{Missing, Int64},1},Int64,Union{Missing, Bool}}
 
@@ -56,12 +56,12 @@ end
 	@test e2("a").data ≈ [1, 0, 0]
 	@test e2("c").data ≈ [0, 1, 0]
 	@test e2("b").data ≈ [0, 0, 1]
-	@test all(e2(nothing).data |> collect .=== [missing, missing, missing])
-	@test all(e2(missing).data |> collect .=== [missing, missing, missing])
+	@test isequal(e2(nothing).data, [missing missing missing]')
+	@test isequal(e2(missing).data, [missing missing missing]')
 
 	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
 	@test catobs(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
-	@test all(e(Dict(1=>2)).data |> collect .=== [missing, missing, missing])
+	@test isequal(e(Dict(1=>2)).data |> collect, [missing missing missing]')
 
 	@test nobs(e("a")) == 1
 	@test nobs(e("b")) == 1
@@ -72,7 +72,23 @@ end
 	@test nobs(e([missing, nothing])) == 2
 	@test nobs(e([missing, nothing, "a"])) == 3
 
+	e3 = ExtractCategorical(JsonGrinder.Entry(Dict(1=>1,2=>1), 2))
+	@test e3(1).data ≈ [1, 0, 0]
+	@test e3(2).data ≈ [0, 1, 0]
+	@test e3(4).data ≈ [0, 0, 1]
+	@test e3(1.).data ≈ [1, 0, 0]
+	@test e3(2.).data ≈ [0, 1, 0]
+	@test e3(4.).data ≈ [0, 0, 1]
+	@test isequal(e3([]).data, [missing missing missing]')
 
+	e4 = ExtractCategorical(JsonGrinder.Entry(Dict(1.0=>1,2.0=>1), 2))
+	@test e4(1).data ≈ [1, 0, 0]
+	@test e4(2).data ≈ [0, 1, 0]
+	@test e4(4).data ≈ [0, 0, 1]
+	@test e4(1.).data ≈ [1, 0, 0]
+	@test e4(2.).data ≈ [0, 1, 0]
+	@test e4(4.).data ≈ [0, 0, 1]
+	@test isequal(e4([]).data, [missing missing missing]')
 end
 
 
@@ -423,13 +439,13 @@ end
 
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) == """
-	ProductModel ↦ ArrayModel(Dense(42, 10))
-	  ├── a: ArrayModel(Dense(5, 10))
-	  ├── b: ArrayModel(Dense(2053, 10))
-	  ├── c: ArrayModel(Dense(5, 10))
-	  ├── d: ArrayModel(identity)
-	  ├── e: ArrayModel(Dense(4, 10))
-	  └── f: ArrayModel(identity)"""
+	ProductModel … ↦ ArrayModel(Dense(42, 10))
+	  ├── a: ArrayModel([post_imputing]Dense(5, 10))
+	  ├── b: ArrayModel([post_imputing]Dense(2053, 10))
+	  ├── c: ArrayModel([post_imputing]Dense(5, 10))
+	  ├── d: ArrayModel([pre_imputing]Dense(1, 1))
+	  ├── e: ArrayModel([post_imputing]Dense(4, 10))
+	  └── f: ArrayModel([pre_imputing]Dense(1, 1))"""
 end
 
 @testset "Suggest feature vector extraction" begin
