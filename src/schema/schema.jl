@@ -57,10 +57,16 @@ merge(::Nothing, e::JSONEntry) = e
 
 function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.Dense(d, 10), fa=d->SegmentedMean(d); fsm = Dict(), fsa = Dict(),
 			   single_key_identity=true, single_scalar_identity=true)
-	specimen = catobs(ex(sample_synthetic(sch)), ex(missing))
-	reflectinmodel(specimen, fm, fa, b=fsm, a=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
+	# we do catobs of 3 samples here, because we want full representative sample to build whole "supersample" from which some samples are just subset
+	# we also want sample with leaves missing in places where leaves can be actually missing in order to have imputation in all correct places
+	# and missing sample is to cover other various edgecases
+	full_sample = ex(sample_synthetic(sch, empty_dict_vals=false))
+	leaves_empty_sample = ex(sample_synthetic(sch, empty_dict_vals=true))
+	missing_sample = ex(missing)
+	specimen = catobs(full_sample, leaves_empty_sample, missing_sample)
+	# reflectinmodel(specimen, fm, fa, b=fsm, a=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
 	# uncomment this is you want to use the #master version
-	# reflectinmodel(specimen, fm, fa, fsm=fsm, fsa=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
+	reflectinmodel(specimen, fm, fa, fsm=fsm, fsa=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
 end
 
 

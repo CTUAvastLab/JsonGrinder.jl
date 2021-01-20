@@ -90,6 +90,6 @@ function merge(es::JSONEntry...)
 end
 
 childs(s::T) where {T<:MultiEntry} = s.childs
-sample_synthetic(e::MultiEntry) = [sample_synthetic(v) for v in e.childs]
 Base.hash(e::MultiEntry, h::UInt) = hash((e.childs, e.updated), h)
 Base.:(==)(e1::MultiEntry, e2::MultiEntry) = e1.updated === e2.updated && e1.childs == e2.childs
+sample_synthetic(e::MultiEntry; empty_dict_vals=false) = [sample_synthetic(v, empty_dict_vals=empty_dict_vals) for v in e.childs]

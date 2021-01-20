@@ -1,5 +1,4 @@
-using Mill, JSON, BSON, Flux, JsonGrinder, Test
-using HierarchicalUtils
+using Mill, JSON, BSON, Flux, JsonGrinder, Test, HierarchicalUtils
 using JsonGrinder: suggestextractor, schema
 using JsonGrinder: DictEntry, Entry, MultiEntry, ArrayEntry
 using Mill: reflectinmodel
@@ -228,6 +227,30 @@ end
 
 	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
 	@test JsonGrinder.sample_synthetic(sch1) == Dict(:a=>[Dict(:a=>2,:b=>2), Dict(:a=>2,:b=>2)])
+
+end
+
+@testset "Sample synthetic with missing keys in dict" begin
+	j1 = JSON.parse("""{"a": []}""")
+	j2 = JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}""")
+	j3 = JSON.parse("""{"a": [{"a":"b","b":3,"c":1},{"b":2,"a":"d","c":1}]}""")
+	j4 = JSON.parse("""{"a": [{"a":"c","c":1}]}""")
+
+	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
+	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
+		:a=>[Dict(:a=>"c",:b=>2,:c=>1), Dict(:a=>"c",:b=>2,:c=>1)]
+	)
+	@test isequal(JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true), Dict(
+		:a=>[Dict(:a=>missing,:b=>missing,:c=>1), Dict(:a=>missing,:b=>missing,:c=>1)]
+	))
+
+	ext1 = suggestextractor(sch1)
+	m = reflectinmodel(sch1, ext1)
+	# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+	@test m(ext1(j1)).data isa Matrix{Float32}
+	@test m(ext1(j2)).data isa Matrix{Float32}
+	@test m(ext1(j3)).data isa Matrix{Float32}
+	@test m(ext1(j4)).data isa Matrix{Float32}
 end
 
 @testset "Merge empty lists" begin

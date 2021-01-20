@@ -85,6 +85,11 @@ function merge(es::DictEntry...)
 end
 
 childs(s::T) where {T<:DictEntry} = s.childs
-sample_synthetic(e::DictEntry) = Dict(k => sample_synthetic(v) for (k, v) in e.childs)
 Base.hash(e::DictEntry, h::UInt) = hash((e.childs, e.updated), h)
 Base.:(==)(e1::DictEntry, e2::DictEntry) = e1.updated === e2.updated && e1.childs == e2.childs
+
+_extract_missing(empty_dict_vals, parent_updated, child) =
+	empty_dict_vals && (parent_updated > child.updated) && child isa Entry
+sample_synthetic(e::DictEntry; empty_dict_vals=false) = Dict(
+	k => _extract_missing(empty_dict_vals, e.updated, v) ? missing : sample_synthetic(v, empty_dict_vals=empty_dict_vals)
+	for (k, v) in e.childs)
