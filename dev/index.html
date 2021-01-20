@@ -100,13 +100,10 @@ Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = F
 #####
 #  Classify test data
 #####
-test_samples = map(readlines(&quot;test.json&quot;)) do s
-	extractor(JSON.parse(s))
-end
-o = Flux.onecold(model(reduce(catobs, test_samples)).data);
-ns = extract_target[:device_class].keyvalemap
-ns = Dict([ v =&gt; k for (k,v) in ns]...)
-o = [ns[i] for i in o]
+test_samples = map(JSON.parse, readlines(&quot;data/dataset/test.json&quot;))
+test_data = tmap(extractor, test_samples)
+o = Flux.onecold(model(reduce(catobs, test_data)).data)
+predicted_classes = labelnames[o]
 </code></pre><h2 id="A-walkthrough-of-the-example"><a class="docs-heading-anchor" href="#A-walkthrough-of-the-example">A walkthrough of the example</a><a id="A-walkthrough-of-the-example-1"></a><a class="docs-heading-anchor-permalink" href="#A-walkthrough-of-the-example" title="Permalink"></a></h2><p>Include libraries and load the data.</p><pre><code class="language-julia">using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools, StatsBase
 using JsonGrinder: suggestextractor
 using Mill: reflectinmodel
@@ -133,4 +130,47 @@ accuracy(x,y) = mean(map(xy -&gt; labelnames[argmax(model(xy[1]).data[:])] == xy
 cb = () -&gt; println(&quot;accuracy = &quot;, accuracy(data, targets))
 ps = Flux.params(model)
 loss = (x,y) -&gt; Flux.logitcrossentropy(model(x).data, y)
-Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 20 January 2021 14:22">Wednesday 20 January 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))</code></pre><p>We should see something like</p><pre><code class="language-none">accuracy = 0.09138949331675474
+accuracy = 0.19093012813870755
+accuracy = 0.24213380306013194
+accuracy = 0.28872655683348875
+accuracy = 0.32968949677062825
+accuracy = 0.7267295271647153
+accuracy = 0.8373916347183367
+accuracy = 0.8743480813732601
+accuracy = 0.8886298483749525
+accuracy = 0.9020999550996442
+accuracy = 0.9089213552999689
+accuracy = 0.9155182537215487
+accuracy = 0.920940835146617
+accuracy = 0.926518840880047
+accuracy = 0.9258971436465997
+accuracy = 0.9276931578765586
+accuracy = 0.9289883604462404
+accuracy = 0.9305080647946672
+accuracy = 0.9309225296169654
+accuracy = 0.931526957482817
+accuracy = 0.9333057023451801
+accuracy = 0.9349808310019687
+accuracy = 0.9332884329775843
+accuracy = 0.9330812005664353
+accuracy = 0.9359997236901184
+accuracy = 0.9372431181570131
+accuracy = 0.9357924912789694
+accuracy = 0.9347390598556281
+accuracy = 0.9369840776430767
+accuracy = 0.9368286533347149</code></pre><p>accuracy rising and obtaining over 93% on training set quite quickly.</p><p>Last part is inference on test data</p><pre><code class="language-julia">test_samples = map(JSON.parse, readlines(&quot;data/dataset/test.json&quot;))
+test_data = tmap(extractor, test_samples)
+o = Flux.onecold(model(reduce(catobs, test_data)).data)
+predicted_classes = labelnames[o]</code></pre><p><code>predicted_classes</code> contains the predictions for our test set.</p><p>We can look at individual samples. For instance, <code>test_samples[2]</code> is</p><pre><code class="language-json">{
+    &quot;mac&quot;:&quot;64:b5:c6:66:2b:ab&quot;,
+    &quot;ip&quot;:&quot;192.168.1.46&quot;,
+    &quot;dhcp&quot;:[
+        {
+            &quot;paramlist&quot;:&quot;1,3,6,15,28,33&quot;,
+            &quot;classid&quot;:&quot;&quot;
+        }
+    ],
+    &quot;device_id&quot;:&quot;addb3142-6b4a-4aef-9d00-ce7ab250c05c&quot;
+}</code></pre><p>and the corresponding classification is</p><pre><code class="language-julia">julia&gt; predicted_classes[2]
+&quot;GENERIC_IOT&quot;</code></pre><p>That is for a simple classifier for JSON data, but the framework is general and for its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, or other ML tasks.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 20 January 2021 15:32">Wednesday 20 January 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
