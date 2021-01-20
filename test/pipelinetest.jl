@@ -1,4 +1,4 @@
-using Mill, JSON, Flux, JsonGrinder, Test, HierarchicalUtils
+using Mill, JSON, Flux, JsonGrinder, Test, HierarchicalUtils, Setfield
 
 using JsonGrinder: DictEntry, suggestextractor, schema
 using Mill: reflectinmodel
