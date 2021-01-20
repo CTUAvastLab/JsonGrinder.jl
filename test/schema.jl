@@ -551,4 +551,24 @@ end
 
 	@test JsonGrinder.prune_json(j2, sch) == Dict(
 		"a" => 4)
+
+	j1 = JSON.parse("""{"a": 4, "b": {"a":1, "b": 1}}""")
+	j2 = JSON.parse("""{"a": 4, "b": {"a":1}}""")
+	sch = JsonGrinder.schema([j1,j2])
+
+	j3 = Dict(
+		"a" => 4,
+		"b" => Dict("a"=>1),
+		"c" => 1,
+		"d" => 2,
+	)
+
+	@test JsonGrinder.prune_json(j1, sch) == j1
+	@test JsonGrinder.prune_json(j2, sch) == j2
+	@test JsonGrinder.prune_json(j3, sch) == Dict(
+		"a"=>4,
+		"b"=>Dict(
+			"a" => 1
+		)
+	)
 end

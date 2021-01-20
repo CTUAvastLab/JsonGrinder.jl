@@ -438,23 +438,23 @@ end
 	@test ext_j4["U"].data ≈ [1]
 
 	m = reflectinmodel(sch, ext)
-	@test buf_printtree(m) == """
-	ProductModel ↦ ArrayModel(Dense(42, 10))
-	  ├── a: ArrayModel(PostImputingDense(5, 10))
-	  ├── b: ArrayModel(PostImputingDense(2053, 10))
-	  ├── c: ArrayModel(PostImputingDense(5, 10))
-	  ├── d: ArrayModel(PreImputingDense(1, 1))
-	  ├── e: ArrayModel(PostImputingDense(4, 10))
-	  └── f: ArrayModel(PreImputingDense(1, 1))"""
-	  # this is test for master
 	# @test buf_printtree(m) == """
-	# ProductModel … ↦ ArrayModel(Dense(42, 10))
-	#   ├── a: ArrayModel([post_imputing]Dense(5, 10))
-	#   ├── b: ArrayModel([post_imputing]Dense(2053, 10))
-	#   ├── c: ArrayModel([post_imputing]Dense(5, 10))
-	#   ├── d: ArrayModel([pre_imputing]Dense(1, 1))
-	#   ├── e: ArrayModel([post_imputing]Dense(4, 10))
-	#   └── f: ArrayModel([pre_imputing]Dense(1, 1))"""
+	# ProductModel ↦ ArrayModel(Dense(42, 10))
+	#   ├── a: ArrayModel(PostImputingDense(5, 10))
+	#   ├── b: ArrayModel(PostImputingDense(2053, 10))
+	#   ├── c: ArrayModel(PostImputingDense(5, 10))
+	#   ├── d: ArrayModel(PreImputingDense(1, 1))
+	#   ├── e: ArrayModel(PostImputingDense(4, 10))
+	#   └── f: ArrayModel(PreImputingDense(1, 1))"""
+	  # this is test for master
+	@test buf_printtree(m) == """
+	ProductModel … ↦ ArrayModel(Dense(42, 10))
+	  ├── a: ArrayModel([post_imputing]Dense(5, 10))
+	  ├── b: ArrayModel([post_imputing]Dense(2053, 10))
+	  ├── c: ArrayModel([post_imputing]Dense(5, 10))
+	  ├── d: ArrayModel([pre_imputing]Dense(1, 1))
+	  ├── e: ArrayModel([post_imputing]Dense(4, 10))
+	  └── f: ArrayModel([pre_imputing]Dense(1, 1))"""
 end
 
 @testset "Suggest feature vector extraction" begin

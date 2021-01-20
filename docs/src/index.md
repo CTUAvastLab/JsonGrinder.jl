@@ -271,4 +271,27 @@ julia> predicted_classes[2]
 "GENERIC_IOT"
 ```
 
-That is for a simple classifier for JSON data, but the framework is general and for its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, or other ML tasks.
+if you want to see the probability distribution, it can be obtained by applying `softmax` to the output of the network.
+```julia
+julia> softmax(model(test_data[2]).data)
+13×1 Array{Float32,2}:
+ 0.0015072504
+ 0.009823966
+ 0.00017151577
+ 0.00082577823
+ 0.86119044
+ 0.017357541
+ 0.0006594112
+ 0.0073490166
+ 0.020295186
+ 0.006199604
+ 0.010532198
+ 0.06407002
+ 1.791575f-5
+```
+
+so we can see that the probability that given sample is `GENERIC_IOT` is ~86% (in 5th element of array).
+
+This concludes a simple classifier for JSON data.
+
+But keep in mind the framework is general and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.

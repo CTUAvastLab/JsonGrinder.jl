@@ -9,7 +9,7 @@ max_keys = 10_000
 """
 	updatemaxkeys!(n::Int)
 
-	limits the maximum number of keys in statistics of nodes in JSON. Default value is 10000.
+limits the maximum number of keys in statistics of leaves in JSON. Default value is `10_000`.
 """
 function updatemaxkeys!(n::Int)
 	global max_keys = n
@@ -20,9 +20,9 @@ max_len = 10_000
 """
 	updatemaxlen!(n::Int)
 
-	limits the maximum size of string values in statistics of nodes in JSON. Default value is 10000.
-	Longer strings will be trimmed and their length and hash will be appended to retain the uniqueness.
-	This is due to some strings being very long and causing the schema to be even order of magnitute larger than needed.
+limits the maximum length of string values in statistics of nodes in JSON. Default value is `10_000`.
+Longer strings will be trimmed and their length and hash will be appended to retain the uniqueness.
+This is due to some strings being very long and causing the schema to be even order of magnitute larger than needed.
 """
 function updatemaxlen!(n::Int)
 	global max_len = n
@@ -88,9 +88,29 @@ function Base.delete!(sch::JSONEntry, path::AbstractString, field::AbstractStrin
 end
 
 """
- 	prune_json(json, schema)
+	prune_json(json, schema)
 
- 	remove keys from `json` which are not part of the `schema`
+Removes keys from `json` which are not part of the `schema`.
+
+# Example
+```jldoctest
+julia> j1 = JSON.parse("""{"a": 4, "b": {"a":1, "b": 1}}""")
+julia> j2 = JSON.parse("""{"a": 4, "b": {"a":1}}""")
+julia> sch = JsonGrinder.schema([j1,j2])
+julia> j3 = Dict(
+	"a" => 4,
+	"b" => Dict("a"=>1),
+	"c" => 1,
+	"d" => 2,
+)
+julia> JsonGrinder.prune_json(j3, sch) == Dict(
+	"a"=>4,
+	"b"=>Dict(
+		"a" => 1
+	)
+)
+```
+so the `JsonGrinder.prune_json` removes keys `c` and `d`.
 """
 prune_json(json, sch::Entry) = json
 

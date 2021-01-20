@@ -140,14 +140,30 @@ end
 
 """
 	generate_html(sch::DictEntry; max_vals=100, max_len=1_000)
-	generate_html(sch::DictEntry, file_name ; max_vals=100, max_len=1_000)
+	generate_html(file_name, sch::DictEntry; max_vals=100, max_len=1_000)
 
-	export schema to HTML including CSS style allowing to expand / hide
-	sub-parts of schema, countmaps, and lengthmaps.
+exports schema to HTML including CSS style and JS allowing to expand / hide
+sub-parts of schema, countmaps, and lengthmaps.
 
-	`max_vals` controls maximum number of exported values in countmap
-	`max_len` controls maximum number of exported lengts of arrays
-	`file_name` a name of file to save HTML with schema
+# Arguments
+- `max_vals` controls maximum number of exported values in countmap
+- `max_len` controls maximum number of exported lengts of arrays
+- `file_name` a name of file to save HTML with schema
+
+# Return
+If provided filename, it does not return anything.
+If not, it returns the generated HTML+CSS+JS as a String.
+
+# Example
+You can either open the html file in any browser, or open it directly using ElectronDisplay
+
+```julia
+	using ElectronDisplay
+	using ElectronDisplay: newdisplay
+	generated_html = generate_html(sch, max_vals = 100)
+	# this hangs the CI
+	display(newdisplay(), MIME{Symbol("text/html")}(), generated_html)
+```
 """
 function generate_html(sch::DictEntry; max_vals=100, max_len=1_000)
 	tpl = mt"""
@@ -233,7 +249,7 @@ document.getElementById("copy_clipboard").addEventListener("click", () => {
 	d = Dict(
 		"list_dump" => schema2html(sch, max_vals=max_vals, max_len=max_len),
 	)
-	return(render(tpl, d))
+	return render(tpl, d)
 end
 
 function generate_html(file_name, sch::DictEntry; max_vals=100, max_len=1_000)

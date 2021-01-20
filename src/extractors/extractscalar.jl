@@ -4,9 +4,24 @@
 		s::T
 	end
 
-	Extract a numerical value, centred by subtracting `c` and scaled by multiplying by `s`. 
-	Strings are converted to numbers. The extractor returnes `ArrayNode{Matrix{T}}` 
-	with a single row. 
+Extracts a numerical value, centred by subtracting `c` and scaled by multiplying by `s`.
+Strings are converted to numbers.
+
+The extractor returns `ArrayNode{Matrix{Union{Missing, Int64}},Nothing}` or it subtypes.
+If passed `missing`, it extracts missing values which Mill understands and can work with.
+
+It can be created also using extractscalar(Float32, 5, 2)
+
+# Example
+```jldoctest
+julia> ExtractScalar(Float32, 2, 3)(1)
+1×1 ArrayNode{Array{Float32,2},Nothing}:
+ -3.0
+
+julia> ExtractScalar(Float32, 2, 3)(missing)
+1×1 ArrayNode{Array{Missing,2},Nothing}:
+ missing
+```
 """
 struct ExtractScalar{T} <: AbstractExtractor
 	c::T

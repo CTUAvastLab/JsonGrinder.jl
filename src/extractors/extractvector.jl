@@ -3,9 +3,9 @@
 		item::Int
 	end
 
-	represents an array of a fixed length, typically a feature vector of numbers of type T
+represents an array of a fixed length, typically a feature vector of numbers of type T
 
-```juliadoctest
+```jloctest
 julia> sc = ExtractVector(4)
 julia> sc([2,3,1,4]).data
 3×1 Array{Float32,2}:

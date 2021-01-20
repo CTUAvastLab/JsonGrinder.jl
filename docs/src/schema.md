@@ -135,7 +135,7 @@ julia> printtree(sch; htrunc=Inf, vtrunc=Inf, trav=true)
 ```
 
 Strings at the end of each row can be used as a key to access individual elements of the schema.
-For more about [HierarchicalUtils.jl](https://github.com/Sheemon7/HierarchicalUtils.jl) check their docs or [section about HierarchicalUtils.jl in Mill.jl documentation](https://pevnak.github.io/Mill.jl/dev/tools/hierarchical/)
+To learn more about [HierarchicalUtils.jl](https://github.com/Sheemon7/HierarchicalUtils.jl) check their docs or [section about HierarchicalUtils.jl in Mill.jl documentation](https://pevnak.github.io/Mill.jl/dev/tools/hierarchical/)
 
 Here, we see that we have 2 `MultiEntry`, thus 2 type instabilities in our jsons.
 The first `MultiEntry` (key `"E"`) has 2 children: `Entry` and `ArrayEntry`.
@@ -183,7 +183,7 @@ While schema can be printed to REPL, it can contain quite a lot of information. 
 JsonGrinder.generate_html
 ```
 
-Schema supports merging using `Base.merge`, which facilitates paralel computation of schemas. An example might be
+Schema supports merging using `Base.merge`, which facilitates parallel computation of schemas. An example might be
 ```
 ThreadsX.mapreduce(schema, merge, Iterators.partition(jsons, div(length(jsons), Threads.nthreads())))
 ```

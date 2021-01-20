@@ -42,12 +42,9 @@ end
 	  ├── e1: Categorical d = 4 ["E"]
 	  └── e2: String ["U"]"""
 
-	buf = IOBuffer()
-	printtree(buf, e, trav=true)
-	str_repr = String(take!(buf))
-	@test_broken buf_printtree(e, trav=true) ==
+	@test buf_printtree(e, trav=true) ==
 	"""
 	ProductNode with 1 obs [""]
-	  ├── e1: ArrayNode(4×1 OneHotMatrix, Bool) with 1 obs ["E"]
+	  ├── e1: ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs ["E"]
 	  └── e2: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs ["U"]"""
 end

@@ -5,8 +5,7 @@
 		m::Int
 	end
 
-	Represent `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) 
-	with base `b` and modulo `m`.
+Represents `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) with base `b` and modulo `m`.
 """
 struct ExtractString <: AbstractExtractor
 	n::Int
@@ -27,13 +26,14 @@ ExtractString() = ExtractString(3, 256, 2053)
 """
 	extractscalar(Type{String}, n = 3, b = 256, m = 2053)
 
-	represents strings as ngrams with
-		--- `n` (the degree of ngram),
-		--- `b` base of string,
-		--- `m` modulo on index of the token to reduce dimension
+represents strings as ngrams with
+- `n` (the degree of ngram),
+- `b` base of string,
+- `m` modulo on index of the token to reduce dimension
 
 	extractscalar(Type{Number}, m = 0, s = 1)
-	extracts number subtracting `m` and multiplying by `s`
+
+extracts number subtracting `m` and multiplying by `s`
 """
 extractscalar(::Type{T}, n = 3, b = 256, m = 2053) where {T<:AbstractString} = ExtractString(n, b, m)
 
