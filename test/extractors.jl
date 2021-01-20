@@ -439,7 +439,7 @@ end
 
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) == """
-	ProductModel … ↦ ArrayModel(Dense(42, 10))
+	ProductModel ↦ ArrayModel(Dense(42, 10))
 	  ├── a: ArrayModel(PostImputingDense(5, 10))
 	  ├── b: ArrayModel(PostImputingDense(2053, 10))
 	  ├── c: ArrayModel(PostImputingDense(5, 10))
