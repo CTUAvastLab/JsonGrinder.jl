@@ -22,7 +22,7 @@ ExtractString() = ExtractString(3, 256, 2053)
 (s::ExtractString)(v::ExtractEmpty) = ArrayNode(Mill.NGramMatrix(Vector{String}(), s.n, s.b, s.m))
 (s::ExtractString)(v) = s(missing)
 (s::ExtractString)(v::Symbol) = s(String(v))
-
+# todo: add jldoctest here so it's better
 """
 	extractscalar(Type{String}, n = 3, b = 256, m = 2053)
 
