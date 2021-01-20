@@ -127,13 +127,10 @@ Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = F
 #####
 #  Classify test data
 #####
-test_samples = map(readlines("test.json")) do s
-	extractor(JSON.parse(s))
-end
-o = Flux.onecold(model(reduce(catobs, test_samples)).data);
-ns = extract_target[:device_class].keyvalemap
-ns = Dict([ v => k for (k,v) in ns]...)
-o = [ns[i] for i in o]
+test_samples = map(JSON.parse, readlines("data/dataset/test.json"))
+test_data = tmap(extractor, test_samples)
+o = Flux.onecold(model(reduce(catobs, test_data)).data)
+predicted_classes = labelnames[o]
 
 ```
 
@@ -206,3 +203,72 @@ ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
 Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
 ```
+
+We should see something like
+```
+accuracy = 0.09138949331675474
+accuracy = 0.19093012813870755
+accuracy = 0.24213380306013194
+accuracy = 0.28872655683348875
+accuracy = 0.32968949677062825
+accuracy = 0.7267295271647153
+accuracy = 0.8373916347183367
+accuracy = 0.8743480813732601
+accuracy = 0.8886298483749525
+accuracy = 0.9020999550996442
+accuracy = 0.9089213552999689
+accuracy = 0.9155182537215487
+accuracy = 0.920940835146617
+accuracy = 0.926518840880047
+accuracy = 0.9258971436465997
+accuracy = 0.9276931578765586
+accuracy = 0.9289883604462404
+accuracy = 0.9305080647946672
+accuracy = 0.9309225296169654
+accuracy = 0.931526957482817
+accuracy = 0.9333057023451801
+accuracy = 0.9349808310019687
+accuracy = 0.9332884329775843
+accuracy = 0.9330812005664353
+accuracy = 0.9359997236901184
+accuracy = 0.9372431181570131
+accuracy = 0.9357924912789694
+accuracy = 0.9347390598556281
+accuracy = 0.9369840776430767
+accuracy = 0.9368286533347149
+```
+
+accuracy rising and obtaining over 93% on training set quite quickly.
+
+Last part is inference on test data
+```julia
+test_samples = map(JSON.parse, readlines("data/dataset/test.json"))
+test_data = tmap(extractor, test_samples)
+o = Flux.onecold(model(reduce(catobs, test_data)).data)
+predicted_classes = labelnames[o]
+```
+
+`predicted_classes` contains the predictions for our test set.
+
+We can look at individual samples. For instance, `test_samples[2]` is
+```json
+{
+    "mac":"64:b5:c6:66:2b:ab",
+    "ip":"192.168.1.46",
+    "dhcp":[
+        {
+            "paramlist":"1,3,6,15,28,33",
+            "classid":""
+        }
+    ],
+    "device_id":"addb3142-6b4a-4aef-9d00-ce7ab250c05c"
+}
+```
+
+and the corresponding classification is
+```julia
+julia> predicted_classes[2]
+"GENERIC_IOT"
+```
+
+That is for a simple classifier for JSON data, but the framework is general and for its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, or other ML tasks.
