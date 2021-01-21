@@ -94,9 +94,11 @@ Removes keys from `json` which are not part of the `schema`.
 
 # Example
 ```jldoctest
-julia> j1 = JSON.parse("{\"a\": 4, \"b\": {\"a\":1, \"b\": 1}}");
+julia> using JSON
 
-julia> j2 = JSON.parse("{\"a\": 4, \"b\": {\"a\":1}}");
+julia> j1 = JSON.parse("{\\"a\\": 4, \\"b\\": {\\"a\\":1, \\"b\\": 1}}");
+
+julia> j2 = JSON.parse("{\\"a\\": 4, \\"b\\": {\\"a\\":1}}");
 
 julia> sch = JsonGrinder.schema([j1,j2])
 [Dict] (updated = 2)
@@ -104,16 +106,18 @@ julia> sch = JsonGrinder.schema([j1,j2])
   └── b: [Dict] (updated = 2)
            ├── a: [Scalar - Int64], 1 unique values, updated = 2
            └── b: [Scalar - Int64], 1 unique values, updated = 1
+
 julia> j3 = Dict("a" => 4, "b" => Dict("a"=>1), "c" => 1, "d" => 2)
 Dict{String,Any} with 4 entries:
   "c" => 1
   "b" => Dict("a"=>1)
   "a" => 4
   "d" => 2
+
 julia> JsonGrinder.prune_json(j3, sch)
 Dict{Any,Any} with 2 entries:
-    "b" => Dict{Any,Any}("a"=>1)
-    "a" => 4
+  "b" => Dict{Any,Any}("a"=>1)
+  "a" => 4
 ```
 so the `JsonGrinder.prune_json` removes keys `c` and `d`.
 """
