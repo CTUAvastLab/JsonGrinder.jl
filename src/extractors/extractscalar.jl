@@ -15,11 +15,11 @@ It can be created also using extractscalar(Float32, 5, 2)
 # Example
 ```jldoctest
 julia> ExtractScalar(Float32, 2, 3)(1)
-1×1 ArrayNode{Array{Float32,2},Nothing}:
- -3.0
+Mill.ArrayNode{Array{Float32,2},Nothing}:
+ -3.0f0
 
 julia> ExtractScalar(Float32, 2, 3)(missing)
-1×1 ArrayNode{Array{Missing,2},Nothing}:
+Mill.ArrayNode{Array{Missing,2},Nothing}:
  missing
 ```
 """

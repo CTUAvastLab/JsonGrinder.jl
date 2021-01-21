@@ -70,7 +70,7 @@ Authors see the biggest advantage in the `model` being hierarchical and reflecti
 
 ## Example
 Our idealized workflow is demonstrated in `examples/identification.jl` solving [device identification challenge](https://www.kaggle.com/c/cybersecprague2019-challenge/data) looks as follows (for many datasets which fits in memory it suggest just to change the key with labels (`:device_class`) and names of files):
-``` julia
+```julia
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, ThreadTools, StatsBase
 using JsonGrinder: suggestextractor
 using Mill: reflectinmodel
@@ -117,7 +117,7 @@ function minibatch()
 	reduce(catobs, data[idx]), Flux.onehotbatch(targets[idx], labelnames)
 end
 
-accuracy(x,y) = mean(map(xy -> labelnames[argmax(model(xy[1]).data[:])] == xy[2], zip(x, y)))
+accuracy(x,y) = map(xy -> labelnames[argmax(model(xy[1]).data[:])] == xy[2], x, y) |> mean
 
 cb = () -> println("accuracy = ", accuracy(data, targets))
 ps = Flux.params(model)
@@ -196,7 +196,7 @@ function minibatch()
 	reduce(catobs, data[idx]), Flux.onehotbatch(targets[idx], labelnames)
 end
 
-accuracy(x,y) = mean(map(xy -> labelnames[argmax(model(xy[1]).data[:])] == xy[2], zip(x, y)))
+accuracy(x,y) = map(xy -> labelnames[argmax(model(xy[1]).data[:])] == xy[2], x, y) |> mean
 
 cb = () -> println("accuracy = ", accuracy(data, targets))
 ps = Flux.params(model)
