@@ -36,6 +36,22 @@ using Mill: reflectinmodel
 	@test keys(sch[:a]) == [4]
 end
 
+@testset "Empty string vs missing key testing" begin
+	j1 = JSON.parse("""{"a": "b", "b": ""}""")
+	j2 = JSON.parse("""{"a": "a", "b": "c"}""")
+	sch = JsonGrinder.schema([j1,j2])
+	@test sch[:a].updated == 2
+	@test sch[:b].updated == 2
+	@test sch.updated == 2
+
+	j1 = JSON.parse("""{"a": "b", "b": ""}""")
+	j2 = JSON.parse("""{"b": "c"}""")
+	sch2 = JsonGrinder.schema([j1,j2])
+	@test sch2[:a].updated == 1
+	@test sch2[:b].updated == 2
+	@test sch2.updated == 2
+end
+
 @testset "Irregular schema" begin
 	j1 = JSON.parse("""{"a": 4}""")
 	j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}}""")

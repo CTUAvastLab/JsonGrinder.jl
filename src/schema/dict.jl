@@ -26,7 +26,8 @@ function update!(s::DictEntry, d::Dict; path = "")
 	for (k,v) in d
 		kc = Symbol(k)
 		v == nothing && continue
-		isempty(v) && continue
+		# because we want to count observations of empty strings
+		(isempty(v) && v !== "") && continue
 		if haskey(s.childs, kc)
 			s.childs[kc] = safe_update!(s.childs[kc], v, path="$path[$k]")
 		else
