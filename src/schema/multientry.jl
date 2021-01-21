@@ -3,7 +3,8 @@
 		childs::Vector{Any}
 	end
 
-	support for JSON which does not adhere to a fixed type.
+support for JSON which does not adhere to a fixed type.
+Container for multiple types of entry which are observed on the same place in JSON.
 """
 mutable struct MultiEntry <: JSONEntry
 	childs::Vector{JSONEntry}

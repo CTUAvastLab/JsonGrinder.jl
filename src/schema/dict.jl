@@ -5,8 +5,8 @@
 	end
 
 keeps statistics about an object in json
-`childs` maintains key-value statistics of childrens. All values should be JSONEntries
-`updated` counts how many times the struct was updated.
+- `childs` maintains key-value statistics of childrens. All values should be JSONEntries
+- `updated` counts how many times the struct was updated.
 """
 
 mutable struct DictEntry <: JSONEntry
@@ -88,25 +88,25 @@ Allows to merge multiple schemas to single one.
 	merge(es::MultiEntry...)
 	merge(es::JsonGrinder.JSONEntry...)
 
-it can be used to distribute calculation of schema.
+it can be used to distribute calculation of schema across multiple workers to merge their partial results into bigger one.
 
 # Example
 
 If we want to calculate schema from e.g. array of jsons in a distributed manner, if we have `jsons` array and ,
 we can do it using
 ```julia
-	using ThreadsX
-	ThreadsX.mapreduce(schema, merge, Iterators.partition(jsons, length(jsons) ÷ Threads.nthreads()))
+using ThreadsX
+ThreadsX.mapreduce(schema, merge, Iterators.partition(jsons, length(jsons) ÷ Threads.nthreads()))
 ```
 or
 ```julia
-	using ThreadTools
-	merge(tmap(schema, Threads.nthreads(), Iterators.partition(jsons, length(jsons) ÷ Threads.nthreads()))
+using ThreadTools
+merge(tmap(schema, Threads.nthreads(), Iterators.partition(jsons, length(jsons) ÷ Threads.nthreads()))
 ```
 or, if you like to split it into multiple jobs and having them processed by multiple threads, it can look like
 ```julia
-	using ThreadTools
-	merge(tmap(schema, Threads.nthreads(), Iterators.partition(jsons, 1_000))
+using ThreadTools
+merge(tmap(schema, Threads.nthreads(), Iterators.partition(jsons, 1_000))
 ```
 where we split array to smaller array of size 1k and let all available threads create partial schemas.
 

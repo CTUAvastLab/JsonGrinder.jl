@@ -1,7 +1,7 @@
 """
-		newentry(v)
+	newentry(v)
 
-		creates new entry describing json according to the type of v
+creates new entry describing json according to the type of v
 """
 newentry(v::Dict) = DictEntry()
 newentry(v::A) where {A<:StringOrNumber} = Entry(v)
@@ -13,11 +13,12 @@ function newentry!(v)
 end
 
 """
-		function schema(a::Vector{T}) where {T<:Dict}
-		function schema(a::Vector{T}) where {T<:AbstractString}
-		function schema(map_fun::Function, samples::AbstractArray)
+	schema(samples::AbstractArray{<:Dict})
+	schema(samples::AbstractArray{<:AbstractString})
+	schema(samples::AbstractArray, map_fun::Function)
+	schema(map_fun::Function, samples::AbstractArray)
 
-		create schema from an array of parsed or unparsed JSONs
+creates schema from an array of parsed or unparsed JSONs.
 """
 function schema(samples::AbstractArray, map_fun::Function)
 	schema = DictEntry()
@@ -38,5 +39,5 @@ function schema(samples::AbstractArray, map_fun::Function)
 end
 
 schema(map_fun::Function, samples::AbstractArray) = schema(samples, map_fun)
-schema(samples::AbstractArray{T}) where {T<:Dict} = schema(samples, identity)
-schema(samples::AbstractArray{T}) where {T<:AbstractString} = schema(samples, JSON.parse)
+schema(samples::AbstractArray{<:Dict}) = schema(samples, identity)
+schema(samples::AbstractArray{<:AbstractString}) = schema(samples, JSON.parse)

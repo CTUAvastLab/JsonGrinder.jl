@@ -8,7 +8,7 @@ The simplest way to create a custom extractor is the compose it from provided ex
 {"name": "Karl",
  "siblings": ["Gertruda", "Heike", "Fritz"],
  "hobby": ["running", "pingpong"],
- "age": 21,
+ "age": 21
 }
 ```
 

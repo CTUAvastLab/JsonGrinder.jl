@@ -1,14 +1,14 @@
 """
-		mutable struct ArrayEntry <: JSONEntry
-			items
-			l::Dict{Int,Int}
-			updated::Int
-		end
+	mutable struct ArrayEntry <: JSONEntry
+		items
+		l::Dict{Int,Int}
+		updated::Int
+	end
 
-		keeps statistics about an array entry in JSON.
-		`items` is typeof `Entry` or nothing and keeps statistics about the elements of the array
-		`l` keeps histogram of message length
-		`updated` counts how many times the struct was updated.
+keeps statistics about an array entry in JSON.
+- `items` is typeof `Entry` or nothing and keeps statistics about the elements of the array
+- `l` keeps histogram of message length
+- `updated` counts how many times the struct was updated.
 """
 mutable struct ArrayEntry <: JSONEntry
 	items

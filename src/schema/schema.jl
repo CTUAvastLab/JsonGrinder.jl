@@ -75,7 +75,7 @@ make_selector(s::Symbol) = s == Symbol("[]") ? d->d.items : d-> d.childs[s]
 """
 Deletes `field` at the specified `path` from the schema `sch`.
 For instance, the following:
-	`delete!(schema, ".field.subfield.[]", "x")``
+	`delete!(schema, ".field.subfield.[]", "x")`
 deletes the field `x` from `schema` at:
 	`schema.childs[:field].childs[:subfield].items.childs`
 """

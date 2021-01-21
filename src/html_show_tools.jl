@@ -158,11 +158,10 @@ If not, it returns the generated HTML+CSS+JS as a String.
 You can either open the html file in any browser, or open it directly using ElectronDisplay
 
 ```julia
-	using ElectronDisplay
-	using ElectronDisplay: newdisplay
-	generated_html = generate_html(sch, max_vals = 100)
-	# this hangs the CI
-	display(newdisplay(), MIME{Symbol("text/html")}(), generated_html)
+using ElectronDisplay
+using ElectronDisplay: newdisplay
+generated_html = generate_html(sch, max_vals = 100)
+display(newdisplay(), MIME{Symbol("text/html")}(), generated_html)
 ```
 """
 function generate_html(sch::DictEntry; max_vals=100, max_len=1_000)

@@ -3,22 +3,27 @@
 		item::T
 	end
 
-	Convert array of values to a `Mill.BagNode` with items converted 
-	by `item`. The entire array is assumed to be a single bag.
+Convert array of values to a `Mill.BagNode` with items converted
+by `item`. The entire array is assumed to be a single bag.
 
-```juliadoctest
-julia> sc = ExtractArray(ExtractCategorical(Float32,2:4))
+# Examples
+
+```jldoctest
+julia> sc = ExtractArray(ExtractCategorical(2:4));
 julia> sc([2,3,1,4]).data
-3×4 Array{Float32,2}:
- 1.0  0.0  0.0  0.0
- 0.0  1.0  0.0  0.0
- 0.0  0.0  0.0  1.0
+4×4 ArrayNode{MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
+ 1  0  0  0
+ 0  1  0  0
+ 0  0  0  1
+ 0  0  1  0
 
-```
+julia> sc = ExtractArray(ExtractScalar());
+julia> sc([2,3,4])
+BagNode with 1 obs
+  └── ArrayNode(1×3 Array, Float32) with 3 obs
 
-```juliadoctest
-julia> sc = ExtractArray(ExtractScalar())
 julia> sc([2,3,4]).data
+1×3 ArrayNode{Array{Float32,2},Nothing}:
  2.0  3.0  4.0
 ```
 """
