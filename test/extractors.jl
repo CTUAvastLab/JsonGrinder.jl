@@ -439,14 +439,24 @@ end
 	@test ext_j4["U"].data ≈ [1]
 
 	m = reflectinmodel(sch, ext)
+	# this is for stable version
 	@test buf_printtree(m) == """
-	ProductModel … ↦ ArrayModel(Dense(42, 10))
+	ProductModel ↦ ArrayModel(Dense(42, 10))
 	  ├── a: ArrayModel(Dense(5, 10))
 	  ├── b: ArrayModel(Dense(2053, 10))
 	  ├── c: ArrayModel(Dense(5, 10))
 	  ├── d: ArrayModel(identity)
 	  ├── e: ArrayModel(Dense(4, 10))
 	  └── f: ArrayModel(identity)"""
+	  # this is test for master
+	# @test buf_printtree(m) == """
+	# ProductModel … ↦ ArrayModel(Dense(42, 10))
+	#   ├── a: ArrayModel(Dense(5, 10))
+	#   ├── b: ArrayModel(Dense(2053, 10))
+	#   ├── c: ArrayModel(Dense(5, 10))
+	#   ├── d: ArrayModel(identity)
+	#   ├── e: ArrayModel(Dense(4, 10))
+	#   └── f: ArrayModel(identity)"""
 end
 # todo: add separate tests for reflectinmodel(sch, ext) to test behavior with various missing and non-missing stuff in schema
 # e.g. empty string, missing keys, irregular schema and MultiRepresentation
