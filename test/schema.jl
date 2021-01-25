@@ -58,7 +58,13 @@ end
 	m2 = reflectinmodel(sch2, ext2)
 
 	@test m1[:b].m isa Dense
-	@test m2[:b].m isa PostImputingDense
+	@test m1[:b].m.W isa Matrix
+	# this is for stable
+	@test m2[:b].m isa Dense
+	@test m2[:b].m.W isa PostImputingMatrix
+	# this is for master
+	# @test m2[:b].m isa PostImputingDense
+	# @test m2[:b].m.W isa PostImputingMatrix
 	@test buf_printtree(m1) != buf_printtree(m2)
 end
 
