@@ -366,7 +366,8 @@ end
 	@test br11 != br2
 	@test br1 == br2
 end
-
+# todo: add tests for settings of suggestextractor!!!
+# todo: add tests for single keyed dict, that model generated from such jsons behaves as we want
 @testset "Extractor skip empty lists" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b": [], "c": [[], []], "d": 1, "e": {"a": 1}, "f": {"a": []}}""")
 	j2 = JSON.parse("""{"a": [{"a":3},{"b":4}], "b": [], "c": [[]], "d": 1, "e": {"a": 2}, "f": {"a": []}}""")
@@ -449,13 +450,15 @@ end
 	  # this is test for master
 	@test buf_printtree(m) == """
 	ProductModel … ↦ ArrayModel(Dense(42, 10))
-	  ├── a: ArrayModel([post_imputing]Dense(5, 10))
-	  ├── b: ArrayModel([post_imputing]Dense(2053, 10))
-	  ├── c: ArrayModel([post_imputing]Dense(5, 10))
-	  ├── d: ArrayModel([pre_imputing]Dense(1, 1))
-	  ├── e: ArrayModel([post_imputing]Dense(4, 10))
-	  └── f: ArrayModel([pre_imputing]Dense(1, 1))"""
+	  ├── a: ArrayModel(Dense(5, 10))
+	  ├── b: ArrayModel(Dense(2053, 10))
+	  ├── c: ArrayModel(Dense(5, 10))
+	  ├── d: ArrayModel(identity)
+	  ├── e: ArrayModel(Dense(4, 10))
+	  └── f: ArrayModel(identity)"""
 end
+# todo: add separate tests for reflectinmodel(sch, ext) to test behavior with various missing and non-missing stuff in schema
+# e.g. empty string, missing keys, irregular schema and MultiRepresentation
 
 @testset "Suggest feature vector extraction" begin
 	j1 = JSON.parse("""{"a": "1", "b": [1, 2, 3], "c": [1, 2, 3]}""")

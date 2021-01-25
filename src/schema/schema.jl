@@ -59,18 +59,19 @@ function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.D
 			   single_key_identity=true, single_scalar_identity=true)
 	# we do catobs of 3 samples here, because we want full representative sample to build whole "supersample" from which some samples are just subset
 	# we also want sample with leaves missing in places where leaves can be actually missing in order to have imputation in all correct places
-	# and missing sample is to cover other various edgecases
 	full_sample = ex(sample_synthetic(sch, empty_dict_vals=false))
 	leaves_empty_sample = ex(sample_synthetic(sch, empty_dict_vals=true))
-	missing_sample = ex(missing)
-	specimen = catobs(full_sample, leaves_empty_sample, missing_sample)
+	specimen = catobs(full_sample, leaves_empty_sample)
 	# reflectinmodel(specimen, fm, fa, b=fsm, a=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
 	# uncomment this is you want to use the #master version
 	reflectinmodel(specimen, fm, fa, fsm=fsm, fsa=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
 end
 
-
-make_selector(s::Symbol) = s == Symbol("[]") ? d->d.items : d-> d.childs[s]
+# this can probably be
+make_selector(s) = e->select_by_string(s, e)
+select_by_string(s::AbstractString, e::DictEntry) = e.childs[Symbol(s)]
+select_by_string(s::AbstractString, e::ArrayEntry) = s == "[]" ? e.items : @error "wrong selector"
+select_by_string(s::AbstractString, e::MultiEntry) = e.childs[parse(Int, s)]
 
 """
 Deletes `field` at the specified `path` from the schema `sch`.
@@ -81,8 +82,8 @@ deletes the field `x` from `schema` at:
 """
 function Base.delete!(sch::JSONEntry, path::AbstractString, field::AbstractString)
 	@assert field != "[]"
-	selectors = map(Symbol, split(path, ".")[2:end])
-	item = reduce((s, f) -> f(s), map(make_selector, selectors), init=sch)
+	selectors = split(path, ".")[2:end]
+	item = reduce((s, f) -> f(s), make_selector.(selectors), init=sch)
 	delete!(item.childs, Symbol(field))
 end
 

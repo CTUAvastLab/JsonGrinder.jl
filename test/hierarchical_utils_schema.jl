@@ -18,7 +18,7 @@ sch = schema([j1,j2,j3,j4,j5,j6])
     """
     [Dict] (updated = 6) [""]
       ├── a: [Scalar - Int64], 1 unique values, updated = 4 ["E"]
-      ├── b: [Dict] (updated = 2) ["U"]
+      ├── b: [Dict] (updated = 4) ["U"]
       │        ├── a: [List] (updated = 2) ["Y"]
       │        │        └── [Scalar - Int64], 3 unique values, updated = 6 ["a"]
       │        └── b: [Scalar - Int64], 1 unique values, updated = 2 ["c"]
@@ -107,12 +107,14 @@ end
     """
     [Dict] (updated = 6) [""]
       ├── a: [Scalar - Int64], 1 unique values, updated = 4 ["E"]
-      └── c: [Dict] (updated = 2) ["U"]
-               └── a: [Dict] (updated = 2) ["c"]
-                        ├── a: [List] (updated = 2) ["e"]
-                        │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["f"]
-                        └── b: [List] (updated = 2) ["g"]
-                                 └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["h"]"""
+      ├── c: [Dict] (updated = 2) ["U"]
+      │        └── a: [Dict] (updated = 2) ["c"]
+      │                 ├── a: [List] (updated = 2) ["e"]
+      │                 │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["f"]
+      │                 └── b: [List] (updated = 2) ["g"]
+      │                          └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["h"]
+      └── d: [Empty List] (updated = 5) ["k"]
+               └── Nothing ["s"]"""
 end
 
 @testset "print with multi entry" begin
@@ -129,16 +131,18 @@ end
     """
     [Dict] (updated = 6) [""]
       ├── a: [Scalar - Int64], 1 unique values, updated = 4 ["E"]
-      └── c: [MultiEntry] (updated = 5) ["U"]
-               ├── 1: [Dict] (updated = 2) ["Y"]
-               │        └── a: [Dict] (updated = 2) ["a"]
-               │                 ├── a: [List] (updated = 2) ["aU"]
-               │                 │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["ak"]
-               │                 └── b: [List] (updated = 2) ["b*"]
-               │                          └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["bE"]
-               ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2 ["c"]
-               └── 3: [List] (updated = 1) ["g"]
-                        └── [Scalar - String], 3 unique values, updated = 3 ["i"]"""
+      ├── c: [MultiEntry] (updated = 5) ["U"]
+      │        ├── 1: [Dict] (updated = 2) ["Y"]
+      │        │        └── a: [Dict] (updated = 2) ["a"]
+      │        │                 ├── a: [List] (updated = 2) ["aU"]
+      │        │                 │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["ak"]
+      │        │                 └── b: [List] (updated = 2) ["b*"]
+      │        │                          └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["bE"]
+      │        ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2 ["c"]
+      │        └── 3: [List] (updated = 1) ["g"]
+      │                 └── [Scalar - String], 3 unique values, updated = 3 ["i"]
+      └── d: [Empty List] (updated = 5) ["k"]
+               └── Nothing ["s"]"""
 end
 
 @testset "print with multi entry 2" begin
@@ -174,17 +178,6 @@ end
 
     sch = schema([j1,j2,j3,j4,j5,j6])
 
-    buf = IOBuffer()
-    Base.show(buf, sch)
-    str_repr = String(take!(buf))
-    @test str_repr == "DictEntry"
-
-    buf = IOBuffer()
-    Base.show(buf, "text/plain", sch)
-    str_repr = String(take!(buf))
-
-    buf = IOBuffer()
-    HierarchicalUtils.printtree(buf, sch; trav=false, htrunc=3)
-    str_repr2 = String(take!(buf))
-    @test str_repr == str_repr2
+    @test repr(sch) == "DictEntry"
+    @test repr("text/plain", sch) == buf_printtree(sch; trav=false, htrunc=3)
 end

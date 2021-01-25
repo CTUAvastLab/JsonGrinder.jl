@@ -18,16 +18,15 @@ DictEntry() = DictEntry(Dict{Symbol,Any}(),0)
 Base.getindex(s::DictEntry, k::Symbol) = s.childs[k]
 Base.setindex!(s::DictEntry, i, k::Symbol) = s.childs[k] = i
 Base.get(s::Dict{Symbol, <:Any}, key::String, default) = get(s, Symbol(key), default)
-Base.isempty(e::DictEntry) = false
 Base.keys(e::DictEntry) = keys(e.childs)
+Base.isempty(e::DictEntry) = isempty(e.childs)
 
 function update!(s::DictEntry, d::Dict; path = "")
-	s.updated +=1
+	s.updated += 1
 	for (k,v) in d
 		kc = Symbol(k)
-		v == nothing && continue
-		# because we want to count observations of empty strings
-		(isempty(v) && v !== "") && continue
+		isnothing(v) && continue
+		# isempty(v) && continue
 		if haskey(s.childs, kc)
 			s.childs[kc] = safe_update!(s.childs[kc], v, path="$path[$k]")
 		else
@@ -43,25 +42,26 @@ end
 """
 		suggestextractor(e::DictEntry, settings = NamedTuple())
 
-		create convertor of json to tree-structure of `DataNode`
+create convertor of json to tree-structure of `DataNode`
 
-		`e` top-level of json hierarchy, typically returned by invoking schema
-		`settings.mincount` contains minimum repetition of the key to be included into
-		the extractor (if missing it is equal to zero)
-		`settings.key_as_field` of the number of keys exceeds this value, it is assumed that
-		keys contains a value, which means that they will be treated as strings.
-		`settings` can be any container supporting `get` function
+- `e` top-level of json hierarchy, typically returned by invoking schema
+- `settings` can be any container supporting `get` function
+- `settings.mincountkey` contains minimum repetition of the key to be included into the extractor (if missing it is equal to zero)
+- `settings.key_as_field` of the number of keys exceeds this value, it is assumed that
+keys contains a value, which means that they will be treated as strings.
+- `settings.scalar_extractors` contains rules for determining which extractor to use for leaves.
+	Default value is return value of `default_scalar_extractor()`,
+	it's array of pairs where first element is predicate and if it matches, second element, function which maps schema to specific extractor, is called.
 """
 function suggestextractor(e::DictEntry, settings = NamedTuple(); path = "")
 	length(e.childs) >= get(settings, :key_as_field, 500) && return(key_as_field(e, settings; path = path))
 
-	mincount = get(settings, :mincount, 0)
-	ks = filter(k -> updated(e.childs[k]) > mincount, keys(e.childs))
-	# to omit empty lists by default
-	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
-	for k in filter(k->isempty(e.childs[k]), keys(e.childs))
+	for k in filter(k->!isnothing(e.childs[k]) && isempty(e.childs[k]), keys(e.childs))
 		@warn "$(path): key $k contains empty array, skipping"
 	end
+	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
+	mincount = get(settings, :mincountkey, 0)
+	ks = filter(k -> updated(e.childs[k]) > mincount, ks)
 	isempty(ks) && return nothing
 	c = [(k,suggestextractor(e.childs[k], settings, path = path*"[:$(k)]")) for k in ks]
 	c = filter(s -> s[2] != nothing, c)

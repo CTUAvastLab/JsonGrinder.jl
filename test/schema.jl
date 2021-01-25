@@ -15,7 +15,7 @@ using Mill: reflectinmodel
 
 	@test sch[:a].counts == Dict(4 => 4)
 	@test sch[:a].updated == 4
-	@test sch[:b].updated == 2
+	@test sch[:b].updated == 4
 	@test sch[:b][:a].updated == 2
 	@test sch[:b][:a].l == Dict(3 => 2)
 	@test sch[:b][:a].items.counts == Dict(1 => 2, 2 => 2, 3 => 2)
@@ -39,23 +39,41 @@ end
 @testset "Empty string vs missing key testing" begin
 	j1 = JSON.parse("""{"a": "b", "b": ""}""")
 	j2 = JSON.parse("""{"a": "a", "b": "c"}""")
-	sch = JsonGrinder.schema([j1,j2])
-	@test sch[:a].updated == 2
-	@test sch[:b].updated == 2
-	@test sch.updated == 2
+	sch1 = JsonGrinder.schema([j1,j2])
+	@test sch1[:a].updated == 2
+	@test sch1[:b].updated == 2
+	@test sch1.updated == 2
 
-	j1 = JSON.parse("""{"a": "b", "b": ""}""")
-	j2 = JSON.parse("""{"b": "c"}""")
+	j1 = JSON.parse("""{"a": "b"}""")
+	j2 = JSON.parse("""{"a": "a", "b": "c"}""")
 	sch2 = JsonGrinder.schema([j1,j2])
-	@test sch2[:a].updated == 1
-	@test sch2[:b].updated == 2
+	@test sch2[:a].updated == 2
+	@test sch2[:b].updated == 1
 	@test sch2.updated == 2
+
+	ext1 = suggestextractor(sch1)
+	ext2 = suggestextractor(sch2)
+
+	m1 = reflectinmodel(sch1, ext1)
+	m2 = reflectinmodel(sch2, ext2)
+
+	@test m1[:b].m isa Dense
+	@test m2[:b].m isa PostImputingDense
+	@test buf_printtree(m1) != buf_printtree(m2)
 end
 
 @testset "Irregular schema" begin
 	j1 = JSON.parse("""{"a": 4}""")
 	j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}}""")
 	j3 = JSON.parse("""{"a": [1, 2, 3 , 4]}""")
+	# todo: add tests for array and empty dict, and which extractors it generates
+	# basically test sth. like this
+	# j1 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}],"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
+	# j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
+	# j3 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}]}""")
+	# j4 = JSON.parse("""{"a": 4, "b": [{}]}""")
+	# j5 = JSON.parse("""{"b": {}}""")
+	# j6 = JSON.parse("""{}""")
 
 	sch = JsonGrinder.DictEntry()
 	JsonGrinder.update!(sch, j1)
@@ -115,13 +133,49 @@ end
 	sch3 = JsonGrinder.schema([j2,j3,j1])
 
 	@test sch1.updated == 1
-	@test isempty(keys(sch1))
+	@test keys(sch1) == Set([:a])
+	ext1 = suggestextractor(sch1)
+	@test isnothing(ext1)
 
 	@test sch2.updated == sch3.updated
 	@test sch2[:a].l == sch3[:a].l
 	@test sch2[:a].updated == sch3[:a].updated
 	@test sch2[:a].items[:a].updated == sch3[:a].items[:a].updated
 	@test sch2[:a].items[:a].counts == sch3[:a].items[:a].counts
+
+	ext2 = suggestextractor(sch2)
+	ext3 = suggestextractor(sch3)
+	@test ext2 == ext3
+end
+
+@testset "More empty arrays" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b":[]}""")
+	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}], "b":[]}""")
+
+	sch1 = JsonGrinder.schema([j1,j2])
+	ext1 = suggestextractor(sch1)
+	m = reflectinmodel(sch1, ext1)
+	# todo: add tests that b is not there
+	@test sch1.updated == 2
+	@test sch1[:a].updated == 2
+	@test :b ∈ keys(sch1)
+	@test :b ∉ keys(ext1)
+	@test :b ∉ keys(m)
+end
+
+@testset "Empty Arrays with multientry" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b":[]}""")
+	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}], "b":{}}""")
+	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}], "b":1}""")
+	j4 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}], "b":"string"}""")
+
+	sch1 = JsonGrinder.schema([j1,j2,j3,j4])
+	ext1 = suggestextractor(sch1)
+	m = reflectinmodel(sch1, ext1)
+	# todo: add tests that b is not there
+	@test [1,2,3,4] == keys(sch1[:b])
+	@test (:e1, :e2) == keys(ext1[:b])
+	@test (:e1, :e2) == keys(m[:b])
 end
 
 @testset "Schema merging" begin
@@ -168,7 +222,7 @@ end
 
 	@test sch[:a].counts == Dict(4 => 4)
 	@test sch[:a].updated == 4
-	@test sch[:b].updated == 2
+	@test sch[:b].updated == 4
 	@test sch[:b][:a].updated == 2
 	@test sch[:b][:a].l == Dict(3 => 2)
 	@test sch[:b][:a].items.counts == Dict(1 => 2, 2 => 2, 3 => 2)
@@ -317,9 +371,13 @@ end
 	@test children(sch[:c][:a]) == [:a=>sch[:c][:a][:a], :b=>sch[:c][:a][:b]]
 	delete!(sch, ".c.a", "a")
 	@test children(sch[:c][:a]) == [:b=>sch[:c][:a][:b]]
-	@test children(sch[:b].items) == [:a=>sch[:b].items[:a], :b=>sch[:b].items[:b]]
-	delete!(sch, ".b.[]", "a")
-	@test children(sch[:b].items) == [:b=>sch[:b].items[:b]]
+	@test children(sch[:b][1].items) == [:a=>sch[:b][1].items[:a], :b=>sch[:b][1].items[:b]]
+	delete!(sch, ".b.1.[]", "a")
+	@test children(sch[:b][1].items) == [:b=>sch[:b][1].items[:b]]
+
+	suggestextractor(sch)
+	# todo: add tests for this is identity is used for single-keyed multi-entry
+	# todo: test indentity for multiple nested single-keyed dicts
 end
 
 @testset "Extractor from schema" begin

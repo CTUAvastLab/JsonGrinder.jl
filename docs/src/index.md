@@ -151,7 +151,7 @@ end;
 ```julia
 labelkey = "device_class"
 minibatchsize = 100
-iterations = 10_000
+iterations = 5_000
 neurons = 20 		# neurons per layer
 ```
 
@@ -206,39 +206,33 @@ Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = F
 
 We should see something like
 ```
-accuracy = 0.09138949331675474
-accuracy = 0.19093012813870755
-accuracy = 0.24213380306013194
-accuracy = 0.28872655683348875
-accuracy = 0.32968949677062825
-accuracy = 0.7267295271647153
-accuracy = 0.8373916347183367
-accuracy = 0.8743480813732601
-accuracy = 0.8886298483749525
-accuracy = 0.9020999550996442
-accuracy = 0.9089213552999689
-accuracy = 0.9155182537215487
-accuracy = 0.920940835146617
-accuracy = 0.926518840880047
-accuracy = 0.9258971436465997
-accuracy = 0.9276931578765586
-accuracy = 0.9289883604462404
-accuracy = 0.9305080647946672
-accuracy = 0.9309225296169654
-accuracy = 0.931526957482817
-accuracy = 0.9333057023451801
-accuracy = 0.9349808310019687
-accuracy = 0.9332884329775843
-accuracy = 0.9330812005664353
-accuracy = 0.9359997236901184
-accuracy = 0.9372431181570131
-accuracy = 0.9357924912789694
-accuracy = 0.9347390598556281
-accuracy = 0.9369840776430767
-accuracy = 0.9368286533347149
+accuracy = 0.09133768521396747
+accuracy = 0.19322695402894347
+accuracy = 0.21312126549925742
+accuracy = 0.2340517390253169
+accuracy = 0.7071287949435292
+accuracy = 0.8694953890788519
+accuracy = 0.9103029047076296
+accuracy = 0.9395917521500363
+accuracy = 0.9577763962283701
+accuracy = 0.9608158049252237
+accuracy = 0.9663074638206749
+accuracy = 0.9692950644147411
+accuracy = 0.9733360964321487
+accuracy = 0.9745794908990433
+accuracy = 0.9746312990018305
+accuracy = 0.9782405968293441
+accuracy = 0.9786896003868338
+accuracy = 0.9810727731150485
+accuracy = 0.9829378648153905
+accuracy = 0.983611370151625
+accuracy = 0.9843194142230511
+accuracy = 0.9836631782544123
+accuracy = 0.9868062031568404
+accuracy = 0.986478085172521
 ```
 
-accuracy rising and obtaining over 93% on training set quite quickly.
+accuracy rising and obtaining over 98% on training set quite quickly.
 
 Last part is inference on test data
 ```julia

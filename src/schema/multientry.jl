@@ -53,7 +53,9 @@ function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "")
 	# trying to unify types and create new child entries for them. Merging string + numbers
 	e = merge_entries_with_cast(e, Int32, Integer)
 	e = merge_entries_with_cast(e, FloatType, AbstractFloat)
-	MultipleRepresentation(map(i -> suggestextractor(i, settings; path = path),e.childs))
+	# we need to filter out empty things in multientry too, same manner as dict
+	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
+	MultipleRepresentation(map(k -> suggestextractor(e.childs[k], settings; path = path),ks))
 end
 
 function merge(es::MultiEntry...)

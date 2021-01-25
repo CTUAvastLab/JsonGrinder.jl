@@ -114,7 +114,7 @@ end
 	])
 	@test buf_printtree(sch) == """
 	[Dict] (updated = 5)
-	  └── a: [List] (updated = 3)
+	  └── a: [List] (updated = 4)
 	           └── [Dict] (updated = 5)
 	                 ├── a: [Scalar - Int64], 2 unique values, updated = 4
 	                 ├── b: [Scalar - Int64], 2 unique values, updated = 4

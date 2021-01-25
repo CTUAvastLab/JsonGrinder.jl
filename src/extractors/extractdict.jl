@@ -64,6 +64,8 @@ function Base.getindex(m::ExtractDict, s::Symbol)
 	nothing
 end
 
+Base.keys(e::ExtractDict) = keys(e.dict)
+
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
 (s::ExtractDict)(v::V) where {V<:Nothing} = s(Dict{String,Any}())
 (s::ExtractDict)(v)  = s(nothing)
