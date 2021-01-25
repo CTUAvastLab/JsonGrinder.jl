@@ -3,9 +3,10 @@ using JsonGrinder
 
 DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
 # for running only doctests
-doctest(JsonGrinder)
+# doctest(JsonGrinder)
 makedocs(
          sitename = "JsonGrinder.jl",
+         doctest = false,
          format = Documenter.HTML(sidebar_sitename=false,
                                   prettyurls=get(ENV, "CI", nothing) == "true",
                                   assets=["assets/favicon.ico", "assets/custom.css"]),
@@ -14,6 +15,7 @@ makedocs(
                   "Schema" => "schema.md",
                   "Creating extractors" => "extractors.md",
                   "Extractor functions" => "exfunctions.md",
+                  "AutoML" => "automl.md",
                   "API Documentation" => "api.md",
                   "Developers" => "developers.md",
                   "Citation" => "citation.md"
