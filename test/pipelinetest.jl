@@ -127,21 +127,21 @@ end
 	                 ├── b: Float32
 	                 └── c: String"""
 	# this is for stable version
-	# @test buf_printtree(m) == """
-	# ProductModel ↦ ArrayModel(identity)
-	#   └── a: BagModel ↦ ⟨SegmentedMean(10)⟩ ↦ ArrayModel(Dense(11, 10, relu))
-	#            └── ProductModel ↦ ArrayModel(Dense(12, 10, relu))
-	#                  ├── a: ArrayModel(PreImputingDense(1, 1))
-	#                  ├── b: ArrayModel(PreImputingDense(1, 1))
-	#                  └── c: ArrayModel(PostImputingDense(2053, 10, relu))"""
-	# this is for master
 	@test buf_printtree(m) == """
-	ProductModel … ↦ ArrayModel(identity)
-	  └── a: BagModel … ↦ ⟨SegmentedMean(10)⟩ ↦ ArrayModel(Dense(11, 10, relu))
-	           └── ProductModel … ↦ ArrayModel(Dense(12, 10, relu))
-	                 ├── a: ArrayModel([pre_imputing]Dense(1, 1))
-	                 ├── b: ArrayModel([pre_imputing]Dense(1, 1))
-	                 └── c: ArrayModel([post_imputing]Dense(2053, 10, relu))"""
+	ProductModel ↦ ArrayModel(identity)
+	  └── a: BagModel ↦ ⟨SegmentedMean(10)⟩ ↦ ArrayModel(Dense(11, 10, relu))
+	           └── ProductModel ↦ ArrayModel(Dense(12, 10, relu))
+	                 ├── a: ArrayModel(PreImputingDense(1, 1))
+	                 ├── b: ArrayModel(PreImputingDense(1, 1))
+	                 └── c: ArrayModel(PostImputingDense(2053, 10, relu))"""
+	# this is for master
+	# @test buf_printtree(m) == """
+	# ProductModel … ↦ ArrayModel(identity)
+	#   └── a: BagModel … ↦ ⟨SegmentedMean(10)⟩ ↦ ArrayModel(Dense(11, 10, relu))
+	#            └── ProductModel … ↦ ArrayModel(Dense(12, 10, relu))
+	#                  ├── a: ArrayModel([pre_imputing]Dense(1, 1))
+	#                  ├── b: ArrayModel([pre_imputing]Dense(1, 1))
+	#                  └── c: ArrayModel([post_imputing]Dense(2053, 10, relu))"""
 	@test buf_printtree(ds) == """
 	ProductNode with 5 obs
 	  └── a: BagNode with 5 obs

@@ -62,9 +62,9 @@ function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.D
 	full_sample = ex(sample_synthetic(sch, empty_dict_vals=false))
 	leaves_empty_sample = ex(sample_synthetic(sch, empty_dict_vals=true))
 	specimen = catobs(full_sample, leaves_empty_sample)
-	# reflectinmodel(specimen, fm, fa, b=fsm, a=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
+	reflectinmodel(specimen, fm, fa, b=fsm, a=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
 	# uncomment this is you want to use the #master version
-	reflectinmodel(specimen, fm, fa, fsm=fsm, fsa=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
+	# reflectinmodel(specimen, fm, fa, fsm=fsm, fsa=fsa, single_key_identity=single_key_identity, single_scalar_identity=single_scalar_identity)
 end
 
 # this can probably be

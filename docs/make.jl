@@ -6,7 +6,7 @@ DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=
 # doctest(JsonGrinder)
 makedocs(
          sitename = "JsonGrinder.jl",
-         doctest = false,
+         # doctest = false,
          format = Documenter.HTML(sidebar_sitename=false,
                                   prettyurls=get(ENV, "CI", nothing) == "true",
                                   assets=["assets/favicon.ico", "assets/custom.css"]),
