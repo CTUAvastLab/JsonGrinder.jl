@@ -16,25 +16,25 @@ for previously unseen inputs.
 julia> e = MultipleRepresentation((ExtractString(), ExtractCategorical(["tcp", "udp", "dhcp"])));
 
 julia> s1 = e("tcp")
-ProductNode with 1 obs
+Mill.ProductNode with 1 obs
   ├── e1: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
   └── e2: ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs
 
 julia> s1[:e1]
-ArrayNode{NGramMatrix{String,Array{String,1},Int64},Nothing}:
+Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
  "tcp"
 
 julia> s1[:e2]
-ArrayNode{MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
+Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
  false
   true
  false
  false
 
 julia> s2 = e("http")
-ProductNode with 1 obs
-  ├── e1: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
-  └── e2: ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs
+Mill.ProductNode with 1 obs
+  ├── e1: Mill.ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
+  └── e2: Mill.ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs
 
 julia> s2[:e1]
 ArrayNode{NGramMatrix{String,Array{String,1},Int64},Nothing}:
@@ -58,29 +58,29 @@ while other are extracting leaves etc.
 julia> e = MultipleRepresentation((ExtractString(), ExtractScalar(Float32, 2, 3)));
 
 julia> s1 = e(5)
-ProductNode with 1 obs
-  ├── e1: ArrayNode(2053×1 NGramMatrix, Missing) with 1 obs
-  └── e2: ArrayNode(1×1 Array, Float32) with 1 obs
+Mill.ProductNode with 1 obs
+  ├── e1: Mill.ArrayNode(2053×1 NGramMatrix, Missing) with 1 obs
+  └── e2: Mill.ArrayNode(1×1 Array, Float32) with 1 obs
 
 julia> s1[:e1]
-ArrayNode{NGramMatrix{Missing,Array{Missing,1},Missing},Nothing}:
+Mill.ArrayNode{Mill.NGramMatrix{Missing,Array{Missing,1},Missing},Nothing}:
  missing
 
 julia> s1[:e2]
-ArrayNode{Array{Float32,2},Nothing}:
+Mill.ArrayNode{Array{Float32,2},Nothing}:
  9.0f0
 
 julia> s2 = e("hi")
-ProductNode with 1 obs
-  ├── e1: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
-  └── e2: ArrayNode(1×1 Array, Missing) with 1 obs
+Mill.ProductNode with 1 obs
+  ├── e1: Mill.ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
+  └── e2: Mill.ArrayNode(1×1 Array, Missing) with 1 obs
 
 julia> s2[:e1]
-ArrayNode{NGramMatrix{String,Array{String,1},Int64},Nothing}:
+Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
  "hi"
 
 julia> s2[:e2]
-ArrayNode{Array{Missing,2},Nothing}:
+Mill.ArrayNode{Array{Missing,2},Nothing}:
  missing
 
 ```
