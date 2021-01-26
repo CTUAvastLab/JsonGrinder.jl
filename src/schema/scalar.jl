@@ -41,9 +41,9 @@ shorten_if_str(v) = v
 shorten_if_str(v::AbstractString) = length(v) > max_len ? "$(first(v, max_len))_$(length(v))_$(bytes2hex(sha1(v)))" : v
 
 """
-		function update!(a::Entry, v)
+	function update!(a::Entry, v)
 
-		updates the entry when seeing value v
+updates the entry when seeing value v
 """
 update!(a::Entry{T}, v::Number; path = "") where {T<:Number} = _update!(a, v)
 update!(a::Entry{T}, v::AbstractString; path = "") where {T<:AbstractString} = _update!(a, v)
