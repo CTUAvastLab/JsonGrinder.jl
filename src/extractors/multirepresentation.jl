@@ -16,7 +16,7 @@ for previously unseen inputs.
 julia> e = MultipleRepresentation((ExtractString(), ExtractCategorical(["tcp", "udp", "dhcp"])));
 
 julia> s1 = e("tcp")
-Mill.ProductNode with 1 obs
+ProductNode with 1 obs
   ├── e1: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
   └── e2: ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs
 
@@ -32,16 +32,16 @@ Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
  false
 
 julia> s2 = e("http")
-Mill.ProductNode with 1 obs
-  ├── e1: Mill.ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
-  └── e2: Mill.ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs
+ProductNode with 1 obs
+  ├── e1: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
+  └── e2: ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs
 
 julia> s2[:e1]
-ArrayNode{NGramMatrix{String,Array{String,1},Int64},Nothing}:
+Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
  "http"
 
 julia> s2[:e2]
-ArrayNode{MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
+Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
  false
  false
  false
@@ -58,9 +58,9 @@ while other are extracting leaves etc.
 julia> e = MultipleRepresentation((ExtractString(), ExtractScalar(Float32, 2, 3)));
 
 julia> s1 = e(5)
-Mill.ProductNode with 1 obs
-  ├── e1: Mill.ArrayNode(2053×1 NGramMatrix, Missing) with 1 obs
-  └── e2: Mill.ArrayNode(1×1 Array, Float32) with 1 obs
+ProductNode with 1 obs
+  ├── e1: ArrayNode(2053×1 NGramMatrix, Missing) with 1 obs
+  └── e2: ArrayNode(1×1 Array, Float32) with 1 obs
 
 julia> s1[:e1]
 Mill.ArrayNode{Mill.NGramMatrix{Missing,Array{Missing,1},Missing},Nothing}:
@@ -71,9 +71,9 @@ Mill.ArrayNode{Array{Float32,2},Nothing}:
  9.0f0
 
 julia> s2 = e("hi")
-Mill.ProductNode with 1 obs
-  ├── e1: Mill.ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
-  └── e2: Mill.ArrayNode(1×1 Array, Missing) with 1 obs
+ProductNode with 1 obs
+  ├── e1: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
+  └── e2: ArrayNode(1×1 Array, Missing) with 1 obs
 
 julia> s2[:e1]
 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
