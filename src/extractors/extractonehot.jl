@@ -3,9 +3,9 @@ using SparseArrays, FillArrays, Mill
 """
 	ExtractOneHot(ks, k, v)
 
-	Converts a Vector of `Dict` items to one-hot encoding by using key
-	`k` to identify a name of item out of `ks` and values
-	of key `v` as values.
+Converts a Vector of `Dict` items to one-hot encoding by using key
+`k` to identify a name of item out of `ks` and values
+of key `v` as values.
 
 ```juliadoctest
 julia> samples = ["{\"name\": \"a\", \"count\" : 1}",
@@ -18,7 +18,7 @@ julia> e(samples).data
   [2, 1]  =  2
 ```
 
-	If `v` is equal to `nothing`, then it boils down to one-hot encoding
+If `v` is equal to `nothing`, then it boils down to one-hot encoding
 ```juliadoctest
 julia> e = ExtractOneHot(["a","b"], "name", nothing);
 julia> e(samples).data
@@ -27,8 +27,8 @@ julia> e(samples).data
   [2, 1]  =  1
 ```
 
-	If there is key in the data which is not known (it was not part of `vs`),
-	than it is assigned to an special designed key serving as "unknown`
+If there is key in the data which is not known (it was not part of `vs`),
+than it is assigned to an special designed key serving as "unknown`
 ```juliadoctest
 julia> samples = JSON.parse.(["{\"name\": \"c\", \"count\" : 1}"]);
 julia> e = ExtractOneHot(["a","b"], "name", nothing);

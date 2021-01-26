@@ -5,7 +5,7 @@
 		item::V
 	end
 
-	extracts all items in `vec` and in `other` and return them as a ProductNode.
+extracts all items in `vec` and in `other` and return them as a ProductNode.
 """
 struct ExtractKeyAsField{S,V} <: AbstractExtractor
 	key::S

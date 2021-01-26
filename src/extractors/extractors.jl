@@ -2,8 +2,9 @@ struct ExtractEmpty end
 
 """
     extractempty
-	A singleton of type [`ExtractEmpty`](@ref) is used to signal 
-	downstream extractors that they should extract an Empty Array
+
+A singleton of type [`ExtractEmpty`](@ref) is used to signal
+downstream extractors that they should extract an Empty Array
 """
 const extractempty = ExtractEmpty()
 

@@ -10,7 +10,7 @@ Strings are converted to numbers.
 The extractor returns `ArrayNode{Matrix{Union{Missing, Int64}},Nothing}` or it subtypes.
 If passed `missing`, it extracts missing values which Mill understands and can work with.
 
-It can be created also using extractscalar(Float32, 5, 2)
+It can be created also using `extractscalar(Float32, 5, 2)`
 
 # Example
 ```jldoctest

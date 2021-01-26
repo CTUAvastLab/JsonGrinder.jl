@@ -40,18 +40,17 @@ function update!(s::DictEntry, d::Dict; path = "")
 end
 
 """
-		suggestextractor(e::DictEntry, settings = NamedTuple())
+	suggestextractor(e::DictEntry, settings = NamedTuple())
 
 create convertor of json to tree-structure of `DataNode`
 
 - `e` top-level of json hierarchy, typically returned by invoking schema
 - `settings` can be any container supporting `get` function
-- `settings.mincountkey` contains minimum repetition of the key to be included into the extractor (if missing it is equal to zero)
-- `settings.key_as_field` of the number of keys exceeds this value, it is assumed that
-keys contains a value, which means that they will be treated as strings.
-- `settings.scalar_extractors` contains rules for determining which extractor to use for leaves.
-	Default value is return value of `default_scalar_extractor()`,
-	it's array of pairs where first element is predicate and if it matches, second element, function which maps schema to specific extractor, is called.
+- `settings.mincountkey` contains minimum repetition of the key to be included into the extractor
+  (if missing it is equal to zero)
+- `settings.key_as_field` of the number of keys exceeds this value, it is assumed that keys contains a value,
+  which means that they will be treated as strings.
+- `settings.scalar_extractors` contains rules for determining which extractor to use for leaves. Default value is return value of `default_scalar_extractor()`, it's array of pairs where first element is predicate and if it matches, second element, function which maps schema to specific extractor, is called.
 """
 function suggestextractor(e::DictEntry, settings = NamedTuple(); path = "")
 	length(e.childs) >= get(settings, :key_as_field, 500) && return(key_as_field(e, settings; path = path))
