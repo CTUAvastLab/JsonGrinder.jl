@@ -206,30 +206,30 @@ Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = F
 
 We should see something like
 ```
-accuracy = 0.09133768521396747
-accuracy = 0.19322695402894347
-accuracy = 0.21312126549925742
-accuracy = 0.2340517390253169
-accuracy = 0.7071287949435292
-accuracy = 0.8694953890788519
-accuracy = 0.9103029047076296
-accuracy = 0.9395917521500363
-accuracy = 0.9577763962283701
-accuracy = 0.9608158049252237
-accuracy = 0.9663074638206749
-accuracy = 0.9692950644147411
-accuracy = 0.9733360964321487
-accuracy = 0.9745794908990433
-accuracy = 0.9746312990018305
-accuracy = 0.9782405968293441
-accuracy = 0.9786896003868338
-accuracy = 0.9810727731150485
-accuracy = 0.9829378648153905
-accuracy = 0.983611370151625
-accuracy = 0.9843194142230511
-accuracy = 0.9836631782544123
-accuracy = 0.9868062031568404
-accuracy = 0.986478085172521
+accuracy = 0.1104894138776638
+accuracy = 0.45656754049666703
+accuracy = 0.8238869892584534
+accuracy = 0.893102614582254
+accuracy = 0.9316651124235831
+accuracy = 0.9554795703381342
+accuracy = 0.9693468725175284
+accuracy = 0.975166649397299
+accuracy = 0.9758056159983421
+accuracy = 0.978465098608089
+accuracy = 0.9825752080958795
+accuracy = 0.9840949124443062
+accuracy = 0.9837495250923911
+accuracy = 0.9853037681760094
+accuracy = 0.9850965357648603
+accuracy = 0.9861499671882016
+accuracy = 0.9881359444617138
+accuracy = 0.9886540254895866
+accuracy = 0.9903118847787794
+accuracy = 0.9901219217352261
+accuracy = 0.9905363865575243
+accuracy = 0.9911408144233759
+accuracy = 0.9913135080993334
+accuracy = 0.9903809622491624
 ```
 
 accuracy rising and obtaining over 98% on training set quite quickly.
@@ -262,29 +262,29 @@ We can look at individual samples. For instance, `test_samples[2]` is
 and the corresponding classification is
 ```julia
 julia> predicted_classes[2]
-"GENERIC_IOT"
+"GAME_CONSOLE"
 ```
 
 if you want to see the probability distribution, it can be obtained by applying `softmax` to the output of the network.
 ```julia
 julia> softmax(model(test_data[2]).data)
 13×1 Array{Float32,2}:
- 0.0015072504
- 0.009823966
- 0.00017151577
- 0.00082577823
- 0.86119044
- 0.017357541
- 0.0006594112
- 0.0073490166
- 0.020295186
- 0.006199604
- 0.010532198
- 0.06407002
- 1.791575f-5
+2.2447991f-6
+0.0006994973
+7.356086f-5
+0.9131056
+0.00015438742
+2.277255f-6
+1.2209773f-5
+0.07608723
+0.0024369168
+0.0012505687
+0.006140974
+3.3941535f-5
+3.9533225f-7
 ```
 
-so we can see that the probability that given sample is `GENERIC_IOT` is ~86% (in 5th element of array).
+so we can see that the probability that given sample is `GAME_CONSOLE` is ~91% (in 4th element of array).
 
 This concludes a simple classifier for JSON data.
 
