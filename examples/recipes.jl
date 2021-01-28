@@ -48,8 +48,22 @@ e = sch[:cuisine]
 m = reflectinmodel(sch, extract_data,
 	k -> Dense(k,20,relu),
 	d -> SegmentedMeanMax(d),
-	b = Dict("" => k -> Dense(k, size(target, 1))),
+	# b = Dict("" => k -> Dense(k, size(target, 1))),
+	fsm = Dict("" => k -> Dense(k, size(target, 1))),
 )
+
+ex = extract_data
+full_sample = ex(JsonGrinder.sample_synthetic(sch, empty_dict_vals=false))
+leaves_empty_sample = ex(JsonGrinder.sample_synthetic(sch, empty_dict_vals=true))
+specimen = catobs(full_sample, leaves_empty_sample)
+m2 = reflectinmodel(specimen,
+	k -> Dense(k,20,relu),
+	d -> SegmentedMeanMax(d),
+	fsm = Dict("" => k -> Dense(k, 21)),
+	fsa = Dict(),
+	single_key_identity=true, single_scalar_identity=true
+)
+printtree(m2, trav=true)
 
 ###############################################################
 #  train
@@ -71,7 +85,7 @@ mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 @info "testing the gradient"
 gs = gradient(() -> loss(data, target), ps)
 Flux.Optimise.update!(opt, ps, gs)
-
+loss(m(data).data, target)
 Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 20), opt, cb = Flux.throttle(cb, 2))
 # feel free to train for longer period of time, this example is learns only 20 iterations, so it runs fast
 # Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 500), opt, cb = Flux.throttle(cb, 10))
