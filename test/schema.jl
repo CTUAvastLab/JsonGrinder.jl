@@ -60,11 +60,11 @@ end
 	@test m1[:b].m isa Dense
 	@test m1[:b].m.W isa Matrix
 	# this is for stable
-	@test m2[:b].m isa Dense
-	@test m2[:b].m.W isa PostImputingMatrix
-	# this is for master
-	# @test m2[:b].m isa PostImputingDense
+	# @test m2[:b].m isa Dense
 	# @test m2[:b].m.W isa PostImputingMatrix
+	# this is for master
+	@test m2[:b].m isa PostImputingDense
+	@test m2[:b].m.W isa PostImputingMatrix
 	@test buf_printtree(m1) != buf_printtree(m2)
 end
 
@@ -192,7 +192,7 @@ end
 	j5 = JSON.parse("""{}""")
 	j6 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}], "b": 1}""")
 
-	# todo: otestovat jak funguje newentry s víceprvkovám polem
+	# todo: test how newentry works with array with multiple elements
 	sch1 = JsonGrinder.schema([j1,j2,j3])
 	sch2 = JsonGrinder.schema([j4,j5,j6])
 
@@ -284,7 +284,7 @@ end
 
 	prev_keys = JsonGrinder.max_keys
 	JsonGrinder.updatemaxkeys!(6)
-	# todo: otestovat jak funguje newentry s víceprvkovám polem
+	# todo: test how newentry works with array with multiple elements
 	sch1 = JsonGrinder.schema([j1,j2,j3,j4,j5,j11])
 	sch2 = JsonGrinder.schema([j6,j7,j8,j9,j10])
 

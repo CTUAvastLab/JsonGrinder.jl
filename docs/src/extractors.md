@@ -94,3 +94,5 @@ in the case, keys `["a.dll","b.dll","c.dll"]` are actually values (names of libr
 field = ["x", "y", "z"]}]
 ```
 `ExtractKeyAsField` extractor convert it to `Mill.BagNode(Mill.ProductNode((key=..., field=...)))`
+
+<!-- todo: add example of setting categorical+string extractor on single specified place. And example for setting it everywhere instead of string -->

@@ -17,35 +17,35 @@ julia> e = MultipleRepresentation((ExtractString(), ExtractCategorical(["tcp", "
 
 julia> s1 = e("tcp")
 ProductNode with 1 obs
-  ├── e1: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
-  └── e2: ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs
+  └── e2: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs
 
 julia> s1[:e1]
-Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
  "tcp"
 
 julia> s1[:e2]
-Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
- false
-  true
- false
- false
+4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
+ 0
+ 1
+ 0
+ 0
 
 julia> s2 = e("http")
 ProductNode with 1 obs
-  ├── e1: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
-  └── e2: ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs
+  └── e2: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs
 
 julia> s2[:e1]
-Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
  "http"
 
 julia> s2[:e2]
-Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
- false
- false
- false
-  true
+4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
+ 0
+ 0
+ 0
+ 1
 ```
 
 ## Example of irregular schema representation
@@ -59,28 +59,28 @@ julia> e = MultipleRepresentation((ExtractString(), ExtractScalar(Float32, 2, 3)
 
 julia> s1 = e(5)
 ProductNode with 1 obs
-  ├── e1: ArrayNode(2053×1 NGramMatrix, Missing) with 1 obs
-  └── e2: ArrayNode(1×1 Array, Float32) with 1 obs
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Missing elements) with 1 obs
+  └── e2: ArrayNode(1×1 Array with Float32 elements) with 1 obs
 
 julia> s1[:e1]
-Mill.ArrayNode{Mill.NGramMatrix{Missing,Array{Missing,1},Missing},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Missing,Array{Missing,1},Missing},Nothing}:
  missing
 
 julia> s1[:e2]
-Mill.ArrayNode{Array{Float32,2},Nothing}:
- 9.0f0
+1×1 Mill.ArrayNode{Array{Float32,2},Nothing}:
+ 9.0
 
 julia> s2 = e("hi")
 ProductNode with 1 obs
-  ├── e1: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs
-  └── e2: ArrayNode(1×1 Array, Missing) with 1 obs
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs
+  └── e2: ArrayNode(1×1 Array with Missing elements) with 1 obs
 
 julia> s2[:e1]
-Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
  "hi"
 
 julia> s2[:e2]
-Mill.ArrayNode{Array{Missing,2},Nothing}:
+1×1 Mill.ArrayNode{Array{Missing,2},Nothing}:
  missing
 
 ```

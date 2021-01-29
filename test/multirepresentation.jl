@@ -47,10 +47,4 @@ end
 	ProductNode with 1 obs [""]
 	  ├── e1: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs ["E"]
 	  └── e2: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs ["U"]"""
-	# this is for stable
-	# @test buf_printtree(e, trav=true) ==
-	# """
-	# ProductNode with 1 obs [""]
-	#   ├── e1: ArrayNode(4×1 MaybeHotMatrix, Bool) with 1 obs ["E"]
-	#   └── e2: ArrayNode(2053×1 NGramMatrix, Int64) with 1 obs ["U"]"""
 end

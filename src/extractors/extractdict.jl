@@ -17,8 +17,8 @@ Dict
 
 julia> res1 = e(Dict("a"=>1, "b"=>1))
 ProductNode with 1 obs
-  ├── a: ArrayNode(1×1 Array, Float32) with 1 obs
-  └── b: ArrayNode(6×1 MaybeHotMatrix, Bool) with 1 obs
+  ├── a: ArrayNode(1×1 Array with Float32 elements) with 1 obs
+  └── b: ArrayNode(6×1 MaybeHotMatrix with Bool elements) with 1 obs
 
 julia> res1[:a].data
 1×1 Array{Float32,2}:
@@ -35,8 +35,8 @@ julia> res1[:b].data
 
 julia> res2 = e(Dict("a"=>0))
 ProductNode with 1 obs
-  ├── a: ArrayNode(1×1 Array, Float32) with 1 obs
-  └── b: ArrayNode(6×1 MaybeHotMatrix, Missing) with 1 obs
+  ├── a: ArrayNode(1×1 Array with Float32 elements) with 1 obs
+  └── b: ArrayNode(6×1 MaybeHotMatrix with Missing elements) with 1 obs
 
 julia> res2[:a].data
 1×1 Array{Float32,2}:
