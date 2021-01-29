@@ -11,7 +11,7 @@ include("schema/schema.jl")
 include("extractors/extractors.jl")
 include("html_show_tools.jl")
 include("hierarchical_utils.jl")
-include("findin.jl")
+include("util.jl")
 
 export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString, AuxiliaryExtractor, ExtractKeyAsField
 export suggestextractor, schema, extractbatch, generate_html
