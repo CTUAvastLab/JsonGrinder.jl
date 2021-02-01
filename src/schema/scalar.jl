@@ -113,13 +113,13 @@ function default_scalar_extractor()
 	# all floatable keys are also intable AFAIK
 	(e -> length(keys(e)) <= 100 && is_floatable(e),
 		e -> ExtractCategorical(keys(e))),
-	# it's important that condition here would be lower than maxkeys
-	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000),
-		e -> ExtractCategorical(keys(e))),
 	(e -> is_intable(e),
 		e -> extractscalar(Int32, e)),
 	(e -> is_floatable(e),
 	 	e -> extractscalar(FloatType, e)),
+	# it's important that condition here would be lower than maxkeys
+	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000),
+		e -> ExtractCategorical(keys(e))),
 	(e -> true,
 		e -> extractscalar(unify_types(e), e)),]
 end
