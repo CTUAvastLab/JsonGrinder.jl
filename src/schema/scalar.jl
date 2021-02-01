@@ -30,7 +30,7 @@ Base.isempty(e::Entry) = false
 types(e::Entry) = e.counts |> keys .|> (typeof) |> unique
 unify_types(e::Entry) = promote_type(types(e)...)
 
-is_castable(e, T::Type{<:Number}) = unify_types(e) <: AbstractString && e.counts |> keys .|> (x->is_numeric(x, T)) |> all
+is_castable(e, T::Type{<:Number}) = unify_types(e) <: T || unify_types(e) <: AbstractString && e.counts |> keys .|> (x->is_numeric(x, T)) |> all
 is_intable(e) = is_castable(e, Int32)
 is_floatable(e) = is_castable(e, FloatType)
 is_numeric_entry(e, T::Type{<:Number}) = unify_types(e) <: T
@@ -111,14 +111,14 @@ end
 function default_scalar_extractor()
 	[
 	# all floatable keys are also intable AFAIK
-	(e -> length(keys(e)) <= 100 && is_floatable(e),
+	(e -> length(keys(e)) <= 100 && (is_intable(e) || is_floatable(e)),
 		e -> ExtractCategorical(keys(e))),
 	(e -> is_intable(e),
 		e -> extractscalar(Int32, e)),
 	(e -> is_floatable(e),
 	 	e -> extractscalar(FloatType, e)),
 	# it's important that condition here would be lower than maxkeys
-	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000),
+	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !(is_intable(e) || is_floatable(e))),
 		e -> ExtractCategorical(keys(e))),
 	(e -> true,
 		e -> extractscalar(unify_types(e), e)),]

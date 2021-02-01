@@ -387,12 +387,12 @@ end
 end
 
 @testset "Extractor of numbers as strings" begin
-	j1 = JSON.parse("""{"a": "1", "b": "a", "c": "1.1", "d": 1.1, "e": "1.2", "f": 1}""")
-	j2 = JSON.parse("""{"a": "2", "b": "b", "c": "2", "d": 2, "e": "1.3", "f": 2}""")
-	j3 = JSON.parse("""{"a": "3", "b": "c", "c": "2.3", "d": 2.3, "e": "1.4", "f": 3}""")
-	j4 = JSON.parse("""{"a": "4", "b": "c", "c": "5", "d": 5, "e": "1.4", "f": 3}""")
-
-	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	j1 = JSON.parse("""{"a": "1", "b": "a", "c": "1.1", "d": 1.1, "e": "1.2", "f": 1, "g": "1"}""")
+	j2 = JSON.parse("""{"a": "2", "b": "b", "c": "2",   "d": 2, "e": "1.3", "f": 2, "g": "2"}""")
+	j3 = JSON.parse("""{"a": "3", "b": "c", "c": "2.3", "d": 2.3, "e": "1.4", "f": 3, "g": "3"}""")
+	j4 = JSON.parse("""{"a": "4", "b": "c", "c": "5",   "d": 5, "e": "1.4", "f": 3, "g": "4"}""")
+	j5_200 = [JSON.parse("""{"a": "5", "b": "$("c"^i)", "c": "5", "d": $(5+i/10), "e": "1.4", "f": 3, "g": "$i"}""") for i in 5:200]
+	sch = JsonGrinder.schema([j1, j2, j3, j4, j5_200...])
 	ext = suggestextractor(sch)
 
 	@test ext[:a] isa ExtractCategorical
@@ -400,7 +400,8 @@ end
 	@test ext[:c] isa ExtractCategorical
 	@test ext[:d] isa ExtractScalar{Float32}
 	@test ext[:e] isa ExtractCategorical
-	@test ext[:f] isa ExtractScalar{Float32}
+	@test ext[:f] isa ExtractCategorical
+	@test ext[:g] isa ExtractScalar{Float32}
 
 	ext_j1 = ext(j1)
 	ext_j2 = ext(j2)
@@ -412,53 +413,48 @@ end
 	@test eltype(ext_j1[:c].data) <: Bool
 	@test eltype(ext_j1[:d].data) <: Float32
 	@test eltype(ext_j1[:e].data) <: Bool
-	@test eltype(ext_j1[:f].data) <: Float32
+	@test eltype(ext_j1[:f].data) <: Bool
+	@test eltype(ext_j1[:g].data) <: Float32
 
 	@test eltype(ext_j2[:a].data) <: Bool
 	@test eltype(ext_j2[:b].data) <: Int64
 	@test eltype(ext_j2[:c].data) <: Bool
 	@test eltype(ext_j2[:d].data) <: Float32
 	@test eltype(ext_j2[:e].data) <: Bool
-	@test eltype(ext_j2[:f].data) <: Float32
+	@test eltype(ext_j2[:f].data) <: Bool
+	@test eltype(ext_j2[:g].data) <: Float32
 
 	@test eltype(ext_j3[:a].data) <: Bool
 	@test eltype(ext_j3[:b].data) <: Int64
 	@test eltype(ext_j3[:c].data) <: Bool
 	@test eltype(ext_j3[:d].data) <: Float32
 	@test eltype(ext_j3[:e].data) <: Bool
-	@test eltype(ext_j3[:f].data) <: Float32
+	@test eltype(ext_j3[:f].data) <: Bool
+	@test eltype(ext_j3[:g].data) <: Float32
 
 	@test eltype(ext_j4[:a].data) <: Bool
 	@test eltype(ext_j4[:b].data) <: Int64
 	@test eltype(ext_j4[:c].data) <: Bool
 	@test eltype(ext_j4[:d].data) <: Float32
 	@test eltype(ext_j4[:e].data) <: Bool
-	@test eltype(ext_j4[:f].data) <: Float32
+	@test eltype(ext_j4[:f].data) <: Bool
+	@test eltype(ext_j4[:g].data) <: Float32
 
 	@test ext_j1["U"].data ≈ [0]
-	@test ext_j2["U"].data ≈ [3/13]
-	@test ext_j3["U"].data ≈ [4/13]
-	@test ext_j4["U"].data ≈ [1]
+	@test ext_j2["U"].data ≈ [(2-1.1)/23.9]
+	@test ext_j3["U"].data ≈ [(2.3-1.1)/23.9]
+	@test ext_j4["U"].data ≈ [(5-1.1)/23.9]
 
 	m = reflectinmodel(sch, ext)
-	# this is for stable version
-	# @test buf_printtree(m) == """
-	# ProductModel ↦ ArrayModel(Dense(42, 10))
-	#   ├── a: ArrayModel(Dense(5, 10))
-	#   ├── b: ArrayModel(Dense(2053, 10))
-	#   ├── c: ArrayModel(Dense(5, 10))
-	#   ├── d: ArrayModel(identity)
-	#   ├── e: ArrayModel(Dense(4, 10))
-	#   └── f: ArrayModel(identity)"""
-	  # this is test for master
 	@test buf_printtree(m) == """
-	ProductModel … ↦ ArrayModel(Dense(42, 10))
-	  ├── a: ArrayModel(Dense(5, 10))
+	ProductModel … ↦ ArrayModel(Dense(52, 10))
+	  ├── a: ArrayModel(Dense(6, 10))
 	  ├── b: ArrayModel(Dense(2053, 10))
 	  ├── c: ArrayModel(Dense(5, 10))
 	  ├── d: ArrayModel(identity)
 	  ├── e: ArrayModel(Dense(4, 10))
-	  └── f: ArrayModel(identity)"""
+	  ├── f: ArrayModel(Dense(4, 10))
+	  └── g: ArrayModel(identity)"""
 end
 # todo: add separate tests for reflectinmodel(sch, ext) to test behavior with various missing and non-missing stuff in schema
 # e.g. empty string, missing keys, irregular schema and MultiRepresentation
@@ -730,4 +726,8 @@ end
 	  └── a: BagNode with 1 obs
 	           └── ArrayNode(1×2 Array with Float32 elements) with 2 obs"""
 		   # todo: add more tests for integration with Mill to make sure it's propagated well
+end
+
+@testset "default_scalar_extractor" begin
+
 end
