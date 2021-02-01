@@ -81,7 +81,7 @@ function (s::ExtractDict{S})(ee::ExtractEmpty) where {S<:Dict}
 	ProductNode((; o...))
 end
 
-extractbatch(extractor, samples) = reduce(catobs, map(s-> extractor(s), samples))
+extractbatch(extractor, samples) = reduce(catobs, extractor.(samples))
 
 Base.hash(e::ExtractDict, h::UInt) = hash(e.dict, h)
 Base.:(==)(e1::ExtractDict, e2::ExtractDict) = e1.dict == e2.dict
