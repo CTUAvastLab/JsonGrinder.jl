@@ -17,18 +17,37 @@ ext = suggestextractor(sch)
 @testset "printtree" begin
     @test buf_printtree(ext, trav=true) ==
     """
-    Dict [""]
-      ├── a: Float32 ["E"]
-      ├── b: Dict ["U"]
-      │        ├── a: Array of ["Y"]
-      │        │        └── Float32 ["a"]
-      │        └── b: Float32 ["c"]
-      └── c: Dict ["k"]
-               └── a: Dict ["s"]
-                        ├── a: Array of ["u"]
-                        │        └── Float32 ["v"]
-                        └── b: Array of ["w"]
-                                 └── Float32 ["x"]"""
+	Dict [""]
+	  ├── a: Float32 ["E"]
+	  ├── b: Dict ["U"]
+	  │        ├── a: Array of ["Y"]
+	  │        │        └── Float32 ["a"]
+	  │        └── b: Float32 ["c"]
+	  └── c: Dict ["k"]
+	           └── a: Dict ["s"]
+	                    ├── a: Array of ["u"]
+	                    │        └── Float32 ["v"]
+	                    └── b: Array of ["w"]
+	                             └── Float32 ["x"]"""
+    e = JsonGrinder.key_as_field(sch[:b], NamedTuple(), path = "b")
+	ext2 = deepcopy(ext)
+	ext2.dict[:b] = e
+	@test buf_printtree(ext2, trav=true) ==
+    """
+	Dict [""]
+	  ├── a: Float32 ["E"]
+	  ├── b: KeyAsField ["U"]
+	  │        ├── String ["Y"]
+	  │        └── MultiRepresentation ["c"]
+	  │              ├── e1: Array of ["d"]
+	  │              │         └── Float32 ["dU"]
+	  │              └── e2: Float32 ["e"]
+	  └── c: Dict ["k"]
+	           └── a: Dict ["s"]
+	                    ├── a: Array of ["u"]
+	                    │        └── Float32 ["v"]
+	                    └── b: Array of ["w"]
+	                             └── Float32 ["x"]"""
 end
 
 @testset "nnodes" begin
