@@ -123,6 +123,7 @@ end
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
 	@test nobs(sc(nothing).data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
+	@test nobs(sc(Dict(1=>1)).data) == 0
 
 	@test nobs(sc(extractempty).data.data) == 0
 	@test nobs(sc(extractempty).data) == 0
@@ -279,6 +280,7 @@ end
 	@test e(extractempty).data isa SparseMatrixCSC{Float32,Int64}
 	@test nobs(e(extractempty)) == 0
 	@test nobs(e(extractempty).data) == 0
+	@test e(Dict("name"=>"a")).data[:] ≈ [1, 0, 0]
 end
 
 @testset "ExtractString" begin

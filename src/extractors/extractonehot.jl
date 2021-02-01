@@ -50,8 +50,8 @@ function ExtractOneHot(ks::V, k, v = nothing) where {V<:Union{Vector, Set}}
 	ExtractOneHot(k, v, key2id, length(key2id) + 1)
 end
 
-(e::ExtractOneHot{K,V})(v::Dict) where {K, V <:Nothing} = ArrayNode(sparse([e.key2id[v[e.k]]], [1f0], true, e.n))
-(e::ExtractOneHot{K,V})(v::Dict) where {K, V} = ArrayNode(sparse([e.key2id[v[e.k]]],  [1f0], [get(v, e.v, 0)], e.n))
+(e::ExtractOneHot{K,I,V})(v::Dict) where {K, I, V <:Nothing} = ArrayNode(sparse([e.key2id[v[e.k]]], [1f0], true, e.n, 1))
+(e::ExtractOneHot{K,I,V})(v::Dict) where {K, I, V} = ArrayNode(sparse([e.key2id[v[e.k]]],  [1f0], [get(v, e.v, 0)], e.n, 1))
 
 function (e::ExtractOneHot{K,I,V})(vs::Vector) where {K, I, V<:Nothing}
 	isempty(vs) && return(ArrayNode(spzeros(Float32, e.n, 1)))
