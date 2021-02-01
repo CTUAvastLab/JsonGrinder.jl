@@ -29,6 +29,11 @@ end
 	sc = ExtractScalar(Float32, 0.5, 4.0)
 	@test sc(1).data isa Matrix{Float32}
 	@test sc(extractempty).data isa Matrix{Float32}
+
+	sc = JsonGrinder.extractscalar(Float32)
+	@test sc(1).data isa Matrix{Float32}
+	@test sc(Dict(1=>1)).data isa Matrix{Missing}
+	@test length(sc) == 1
 end
 
 
