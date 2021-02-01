@@ -593,14 +593,14 @@ end
                └── 4: [Dict] (updated = 1)
                         └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1"""
 
-	@test buf_printtree(ext) ==
+	@test buf_printtree(ext, trav=true) ==
     """
-	Dict
-	  └── a: MultiRepresentation
-	           ├── e1: FeatureVector with 5 items
-	           ├── e2: Dict
-	           │         └── Sylvanas is the worst warchief ever: String
-	           └── e3: Float32"""
+	Dict [""]
+	  └── a: MultiRepresentation ["U"]
+	           ├── e1: FeatureVector with 5 items ["c"]
+	           ├── e2: Dict ["k"]
+	           │         └── Sylvanas is the worst warchief ever: String ["o"]
+	           └── e3: Float32 ["s"]"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
@@ -620,6 +620,8 @@ end
 	           ├── e2: ProductNode with 1 obs
 	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Missing elements) with 1 obs
 	           └── e3: ArrayNode(1×1 Array with Float32 elements) with 1 obs"""
+
+	@test ext[:a][1] == ext["c"]
 end
 
 @testset "mixing numeric and non-numeric strings" begin
