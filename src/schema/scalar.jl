@@ -110,7 +110,6 @@ end
 
 function default_scalar_extractor()
 	[
-	# all floatable keys are also intable AFAIK
 	(e -> length(keys(e)) <= 100 && (is_intable(e) || is_floatable(e)),
 		e -> ExtractCategorical(keys(e))),
 	(e -> is_intable(e),
@@ -127,4 +126,4 @@ end
 counts(s::T) where {T<:Entry} = s.counts
 Base.hash(e::Entry, h::UInt) = hash((e.counts, e.updated), h)
 Base.:(==)(e1::Entry, e2::Entry) = e1.updated === e2.updated && e1.counts == e2.counts
-sample_synthetic(e::Entry; empty_dict_vals=false) = first(keys(e.counts))
+sample_synthetic(e::Entry; empty_dict_vals=false, child_less_than_parent=false) = first(keys(e.counts))

@@ -1,10 +1,15 @@
+"""
+    struct ExtractEmpty end
+
+Concrete type to dispatch on for extraction of empty samples.
+"""
 struct ExtractEmpty end
 
 """
     extractempty
 
 A singleton of type [`ExtractEmpty`](@ref) is used to signal
-downstream extractors that they should extract an Empty Array
+downstream extractors that they should extract an empty sample.
 """
 const extractempty = ExtractEmpty()
 

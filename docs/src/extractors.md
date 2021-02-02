@@ -21,7 +21,7 @@ ex = ExtractDict(Dict(
 	:siblings => ExtractArray(ExtractString()),
 	:hobby => ExtractArray(ExtractCategorical(["running", "swimming","yoga"])),
 	:age => ExtractScalar(),
-	))
+))
 ```
 Notice, how the composability of extractors simplifies the desing and allow to reflect the same feature of JSON documents.
 
@@ -40,35 +40,40 @@ ex(s)
 The list of composable extractor function that we have found handy during our experiments are listed in *Extractor functions* section of the doc.
 
 # Semi-automatic creation of extractors
-Manually creating extractors is boring and error-prone process. Function `suggestextractor(schema)` tries to simplify this, since creation of most of the extractors is straightforward, once the the schema is known. This is especially true for `Dict` and `Arrays`, while extractors for leafs can be tricky, as one needs to decide, if the leaf should be represented as a  `Float` and `String` are represented as `Categorical` variables. `suggestextractor(schema)` uses a simple heuristic (described below) choosing reasonable extractors, but it can make errors. It is therefore highly recommended to check the proposed extractor manually, if it makes sense. A typical error, especially if schema is created from a small number of samples, is that some variable is treated as a categorical, while it should be `String` / `Float`.
+Manually creating extractors is boring and error-prone process. Function `suggestextractor(schema)` tries to simplify this, since creation of most of the extractors is straightforward, once the the schema is known. This is especially true for `Dict` and `Arrays`, while extractors for leaves can be tricky, as one needs to decide, if the leaf should be represented as a  `Float` and `String` are represented as `Categorical` variables. `suggestextractor(schema)` uses a simple heuristic (described below) choosing reasonable extractors, but it can make errors. It is therefore highly recommended to check the proposed extractor manually, if it makes sense. A typical error, especially if schema is created from a small number of samples, is that some variable is treated as a categorical, while it should be `String` / `Float`.
 
 ```julia
 JsonGrinder.suggestextractor(schema, settings::NamedTuple)
 ```
 
-allows to pass your own heuristic and rules for handling scalars. By default,
+allows to pass your own heuristic and rules for handling scalars. By default, it's
 `settings = (scalar_extractors = default_scalar_extractor()).`
 Extractors for `Dict` and `Array`s are not configurable, as we do not feel the pressure to so, as there does not seems to be much to do, but of course there is some *dark magic* described below.
 
 ## Scalars
 
-`scalar_extractors` is a list of tuples, where the first is a condition and the second is a function creating the extractor in case of a true. The default heuristic is following and
-you can adjust according to your liking.
+`scalar_extractors` is a list of tuples, where the first is a condition and the second is a function creating the extractor in case of a true. The default heuristic is following and you can adjust according to your liking.
 ```julia
 function default_scalar_extractor()
 	[
-	# all floatable keys are also intable AFAIK
-	(e -> length(keys(e)) <= 100 && is_floatable(e),
-		e -> ExtractCategorical(keys(e))),
-	# it's important that condition here would be lower than maxkeys
-	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000),
+	(e -> length(keys(e)) <= 100 && (is_intable(e) || is_floatable(e)),
 		e -> ExtractCategorical(keys(e))),
 	(e -> is_intable(e),
 		e -> extractscalar(Int32, e)),
 	(e -> is_floatable(e),
 	 	e -> extractscalar(FloatType, e)),
+	# it's important that condition here would be lower than maxkeys
+	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !(is_intable(e) || is_floatable(e))),
+		e -> ExtractCategorical(keys(e))),
 	(e -> true,
 		e -> extractscalar(unify_types(e), e)),]
+end
+```
+
+Note that order matters here, as the extractors are suggested using following logic
+```julia
+for (c, ex) in get(settings, :scalar_extractors, default_scalar_extractor())
+	c(e) && return ex(e)
 end
 ```
 
@@ -83,7 +88,7 @@ For example consider following two jsons
  "b.dll": ["a", "b", "c"]}
 {"c.dll": ["x", "y", "z"]}
 ```
-in the case, keys `["a.dll","b.dll","c.dll"]` are actually values (names of libraries), and arrays are values as well. The dictionary therefore contain an array. If this case is detected, it is suggested to use `ExtractKeyAsField`, which interprests the above JSON as
+in the case, keys `["a.dll","b.dll","c.dll"]` are actually values (names of libraries), and arrays are values as well. The dictionary therefore contain an array. If this case is detected, it is suggested to use `ExtractKeyAsField`, which interprets the above JSON as
 ```
 [{key = "a.dll",
   field = ["f", "g", "h"]},
@@ -94,5 +99,15 @@ in the case, keys `["a.dll","b.dll","c.dll"]` are actually values (names of libr
 field = ["x", "y", "z"]}]
 ```
 `ExtractKeyAsField` extractor convert it to `Mill.BagNode(Mill.ProductNode((key=..., field=...)))`
+
+<!-- ## Modifying extractor
+
+Because the extractor can be quite big, by default the `Base.show` shows only structure to depth of 3 and 20 children for each element.
+
+The full extractor can by seen by `printtree(extractor)`.
+The example of modifying extractor will be done on data from `examples/documents`, because documents there are complex so the troubles with representation can better be seen here.
+Full example can be seen in [examples/schema_examination.jl](https://github.com/pevnak/JsonGrinder.jl/blob/master/examples/schema_examination.jl).
+
+todo: dodělat -->
 
 <!-- todo: add example of setting categorical+string extractor on single specified place. And example for setting it everywhere instead of string -->

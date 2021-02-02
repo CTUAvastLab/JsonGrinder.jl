@@ -329,6 +329,29 @@ end
 	@test m(ext1(j4)).data isa Matrix{Float32}
 end
 
+@testset "Sample synthetic with missing nested dicts" begin
+	j1 = JSON.parse("""{"b":1}""")
+	j2 = JSON.parse("""{"a": {"a":"a","c":1}, "b":1}""")
+	j3 = JSON.parse("""{"a": {"a":"b","b":3,"c":1}, "b":1}""")
+	j4 = JSON.parse("""{"a": {"a":"c","c":1}}""")
+
+	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
+	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
+		:a=>Dict(:a=>"c",:b=>3,:c=>1), :b=>1
+	)
+	@test isequal(JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true), Dict(
+		:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
+	))
+
+	ext1 = suggestextractor(sch1)
+	m = reflectinmodel(sch1, ext1)
+	# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+	@test m(ext1(j1)).data isa Matrix{Float32}
+	@test m(ext1(j2)).data isa Matrix{Float32}
+	@test m(ext1(j3)).data isa Matrix{Float32}
+	@test m(ext1(j4)).data isa Matrix{Float32}
+end
+
 @testset "Merge empty lists" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b": []}""")
 	j2 = JSON.parse("""{"a": [{"a":3},{"b":4}], "b": []}""")

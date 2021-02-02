@@ -570,6 +570,28 @@ end
 	@test e4["k"].data ≈ [0.5]
 end
 
+# @testset "Missing extraction type stability" begin
+# 	j1 = JSON.parse("""{"a": "1", "b":1}""")
+# 	j2 = JSON.parse("""{"a": 4, "b":2}""")
+# 	j3 = JSON.parse("""{"a": "3.1", "b":3}""")
+# 	j4 = JSON.parse("""{"b":4}""")
+#
+# 	sch = JsonGrinder.schema([j1, j2, j3, j4])
+# 	ext = suggestextractor(sch)
+# 	@test nchildren(ext[:a]) == 1
+# 	ext[:a][1].keyvalemap
+#
+# 	ext[:a][1]()
+# 	e1 = ext(j1)
+# 	e2 = ext(j2)
+# 	e3 = ext(j3)
+# 	e4 = ext(j4)
+# 	@test e1["k"].data ≈ [0]
+# 	@test e2["k"].data ≈ [1]
+# 	@test e3["k"].data ≈ [0.7]
+# 	@test e4["k"].data ≈ [0.5]
+# end
+
 @testset "Mixed scalar extraction with other types" begin
 	j1 = JSON.parse("""{"a": "1"}""")
 	j2 = JSON.parse("""{"a": 2.5}""")

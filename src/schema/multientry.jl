@@ -53,6 +53,8 @@ function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "")
 	# trying to unify types and create new child entries for them. Merging string + numbers
 	e = merge_entries_with_cast(e, Int32, Integer)
 	e = merge_entries_with_cast(e, FloatType, AbstractFloat)
+	# e = merge_entries_with_cast(e, Int32, Real)
+	# e = merge_entries_with_cast(e, FloatType, Real)
 	# we need to filter out empty things in multientry too, same manner as dict
 	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
 	MultipleRepresentation(map(k -> suggestextractor(e.childs[k], settings; path = path),ks))
@@ -95,4 +97,5 @@ end
 childs(s::T) where {T<:MultiEntry} = s.childs
 Base.hash(e::MultiEntry, h::UInt) = hash((e.childs, e.updated), h)
 Base.:(==)(e1::MultiEntry, e2::MultiEntry) = e1.updated === e2.updated && e1.childs == e2.childs
-sample_synthetic(e::MultiEntry; empty_dict_vals=false) = [sample_synthetic(v, empty_dict_vals=empty_dict_vals) for v in e.childs]
+sample_synthetic(e::MultiEntry; empty_dict_vals=false, child_less_than_parent=false) =
+	[sample_synthetic(v, empty_dict_vals=empty_dict_vals, child_less_than_parent=child_less_than_parent) for v in e.childs]

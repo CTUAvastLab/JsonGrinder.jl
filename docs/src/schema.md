@@ -12,7 +12,7 @@ schema(readdir("jsons", join = true)) do s
 end
 ```
 
-`schema` function has following default behavior: If passed array of strings, it consideres them to be filenames and passes each element as an argument to `JSON.parse` function.
+`schema` function has following default behavior: If passed array of strings, it consideres them to be json documents as strings passes each element as an argument to `JSON.parse` function.
 
 A schema can be further updated by calling function `update!(sch, json).` Schemas can be merged using the overloaded `merge` function, which facilitates distributed creation of schema following map-reduce paradigm.
 

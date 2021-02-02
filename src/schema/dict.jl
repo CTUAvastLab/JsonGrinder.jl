@@ -124,8 +124,11 @@ childs(s::T) where {T<:DictEntry} = s.childs
 Base.hash(e::DictEntry, h::UInt) = hash((e.childs, e.updated), h)
 Base.:(==)(e1::DictEntry, e2::DictEntry) = e1.updated === e2.updated && e1.childs == e2.childs
 
-_extract_missing(empty_dict_vals, parent_updated, child) =
-	empty_dict_vals && (parent_updated > child.updated) && child isa Entry
-sample_synthetic(e::DictEntry; empty_dict_vals=false) = Dict(
-	k => _extract_missing(empty_dict_vals, e.updated, v) ? missing : sample_synthetic(v, empty_dict_vals=empty_dict_vals)
+_extract_missing(empty_dict_vals, child_less_than_parent, child) =
+	empty_dict_vals && child_less_than_parent && child isa Entry
+sample_synthetic(e::DictEntry; empty_dict_vals=false, child_less_than_parent=false) = Dict(
+	k => _extract_missing(empty_dict_vals, child_less_than_parent || e.updated > v.updated, v) ?
+		missing :
+		sample_synthetic(v, empty_dict_vals=empty_dict_vals,
+			child_less_than_parent=child_less_than_parent || e.updated > v.updated)
 	for (k, v) in e.childs)
