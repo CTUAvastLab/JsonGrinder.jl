@@ -711,41 +711,41 @@ end
 	)
 end
 
-# @testset "suggestextractor with ints and floats numeric and stringy" begin
-# 	j1 = JSON.parse("""{"a": "4"}""")
-# 	j2 = JSON.parse("""{"a": "11.5"}""")
-# 	j3 = JSON.parse("""{"a": 7}""")
-# 	j4 = JSON.parse("""{"a": 4.5}""")
-#
-# 	sch1234 = JsonGrinder.schema([j1,j2,j3,j4])
-# 	sch123 = JsonGrinder.schema([j1,j2,j3])
-# 	sch12 = JsonGrinder.schema([j1,j2])
-# 	sch23 = JsonGrinder.schema([j2,j3])
-# 	sch14 = JsonGrinder.schema([j1,j4])
-# 	sch34 = JsonGrinder.schema([j3,j4])
-#
-# 	suggestextractor(sch1234)
-# 	suggestextractor(sch123)
-# 	suggestextractor(sch12)
-# 	suggestextractor(sch23)
-# 	suggestextractor(sch34)
-#
-# 	# todo: fix this. There should have same extractor
-# 	sch11 = JsonGrinder.schema([j1,j2])
-# 	sch12 = JsonGrinder.schema([j3,j4])
-# 	sch13 = JsonGrinder.schema([j5,j6])
-# 	sch21 = JsonGrinder.schema([j1,j2,j3])
-# 	sch22 = JsonGrinder.schema([j4,j5,j6])
-#
-# 	sch1 = merge(sch11, sch12, sch13)
-# 	sch2 = merge(sch21, sch22)
-#
-# 	@test sch == sch1
-# 	@test sch == sch2
-#
-# 	@test hash(sch) === hash(sch1)
-# 	@test hash(sch) === hash(sch2)
-# end
+@testset "suggestextractor with ints and floats numeric and stringy" begin
+	j1 = JSON.parse("""{"a": "4"}""")
+	j2 = JSON.parse("""{"a": "11.5"}""")
+	j3 = JSON.parse("""{"a": 7}""")
+	j4 = JSON.parse("""{"a": 4.5}""")
+
+	sch1234 = JsonGrinder.schema([j1,j2,j3,j4])
+	sch123 = JsonGrinder.schema([j1,j2,j3])
+	sch12 = JsonGrinder.schema([j1,j2])
+	sch23 = JsonGrinder.schema([j2,j3])
+	sch14 = JsonGrinder.schema([j1,j4])
+	sch34 = JsonGrinder.schema([j3,j4])
+
+	suggestextractor(sch1234)
+	suggestextractor(sch123)
+	suggestextractor(sch12)
+	suggestextractor(sch23)
+	suggestextractor(sch34)
+
+	# todo: fix this. There should have same extractor
+	sch11 = JsonGrinder.schema([j1,j2])
+	sch12 = JsonGrinder.schema([j3,j4])
+	sch13 = JsonGrinder.schema([j5,j6])
+	sch21 = JsonGrinder.schema([j1,j2,j3])
+	sch22 = JsonGrinder.schema([j4,j5,j6])
+
+	sch1 = merge(sch11, sch12, sch13)
+	sch2 = merge(sch21, sch22)
+
+	@test sch == sch1
+	@test sch == sch2
+
+	@test hash(sch) === hash(sch1)
+	@test hash(sch) === hash(sch2)
+end
 
 @testset "is_numeric is_floatable is_intable" begin
 	j1 = JSON.parse("""{"a": "4"}""")
