@@ -5,14 +5,22 @@ using Mill
 using Mill: catobs, nobs, MaybeHotMatrix
 using LinearAlgebra
 
-function misequals(a, b)
-	for i in 1:length(a)
-		ismissing(b[i]) && !ismissing(a[i]) && return(false)
-		ismissing(a[i]) && !ismissing(b[i]) && return(false)
-		!ismissing(a[i]) && a[i] != b[i] && return(false)
-	end
-	return(true)
+function less_categorical_scalar_extractor()
+	[
+	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.5 && length(keys(e)) <= 10 && JsonGrinder.is_numeric_or_numeric_string(e)),
+		e -> ExtractCategorical(keys(e))),
+	(e -> JsonGrinder.is_intable(e),
+		e -> JsonGrinder.extractscalar(Int32, e)),
+	(e -> JsonGrinder.is_floatable(e),
+	 	e -> JsonGrinder.extractscalar(JsonGrinder.FloatType, e)),
+	# it's important that condition here would be lower than maxkeys
+	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !JsonGrinder.is_numeric_or_numeric_string(e)),
+		e -> ExtractCategorical(keys(e))),
+	(e -> true,
+		e -> JsonGrinder.extractscalar(JsonGrinder.unify_types(e), e)),]
 end
+
+testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 
 @testset "Testing ExtractScalar" begin
 	sc = ExtractScalar(Float64,2,3)
@@ -44,17 +52,27 @@ end
 	@test e("z").data ≈ [0, 0, 1]
 	@test isequal(e(nothing).data, [missing missing missing]')
 	@test isequal(e(missing).data, [missing missing missing]')
-	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
-	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
-	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
-	@test e(extractempty).data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	# for master
+	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Int64,Bool}
+	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Int64,Missing}
+	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Int64,Missing}
+	@test e(extractempty).data isa MaybeHotMatrix{Int64,Int64,Bool}
+	# for stable
+	# @test typeof(e("a").data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	# @test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
+	# @test typeof(e(missing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
+	# @test e(extractempty).data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 	@test nobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test isequal(e(["a", missing]).data, [true missing; false missing; false missing])
 	@test isequal(e(["a", missing, "x"]).data, [true missing false; false missing false; false missing true])
-	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
-	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Array{Union{Missing, Int64},1},Int64,Union{Missing, Bool}}
+	# for master
+	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Int64,Bool}
+	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+	#for stable
+	# @test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	# @test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Array{Union{Missing, Int64},1},Int64,Union{Missing, Bool}}
 
 	@test isnothing(ExtractCategorical([]))
 	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
@@ -66,8 +84,7 @@ end
 
 	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
 	@test reduce(catobs, [e("a").data, e("b").data]) ≈ [1 0; 0 1; 0 0]
-	# this is not working now, due to type stability issues
-	# @test catobs(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
+	@test hcat(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
 	@test isequal(e(Dict(1=>2)).data |> collect, [missing missing missing]')
 
 	@test nobs(e("a")) == 1
@@ -104,7 +121,10 @@ end
 	sc = ExtractArray(ExtractCategorical(2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
 	@test nobs(sc(nothing).data) == 0
-	@test sc(nothing).data.data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	# for master
+	@test sc(nothing).data.data isa MaybeHotMatrix{Int64,Int64,Bool}
+	# for stable
+	# @test sc(nothing).data.data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 	@test nobs(sc(nothing).data.data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
 
@@ -117,7 +137,10 @@ end
 	@test nobs(sc(extractempty).data.data) == 0
 	@test nobs(sc(extractempty).data) == 0
 	@test isempty(sc(extractempty).bags.bags)
-	@test sc(extractempty).data.data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	# for master
+	@test sc(extractempty).data.data isa MaybeHotMatrix{Int64,Int64,Bool}
+	# for stable
+	# @test sc(extractempty).data.data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 
 	sc = ExtractArray(ExtractScalar(Float32))
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
@@ -181,12 +204,12 @@ end
 	@test all(catobs(a1,a2)[:c].bags .== [1:4,0:-1])
 
 	@test catobs(a2,a3)[:a].data ≈ [9 9]
-	@test misequals(catobs(a2,a3)[:b].data, [7.0 missing])
+	@test isequal(catobs(a2,a3)[:b].data, [7.0 missing])
 	@test catobs(a2,a3)[:c].data.data ≈ [-3 0 3 6]
 	@test all(catobs(a2,a3)[:c].bags .== [0:-1,1:4])
 
 	@test catobs(a1,a3)[:a].data ≈ [9 9]
-	@test misequals(catobs(a1,a3)[:b].data, [7.0 missing])
+	@test isequal(catobs(a1,a3)[:b].data, [7.0 missing])
 	@test catobs(a1,a3)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
 	@test all(catobs(a1,a3)[:c].bags .== [1:4,5:8])
 
@@ -195,8 +218,7 @@ end
 	@test a2[:a].data ≈ [9]
 	@test a2[:b].data ≈ [7]
 	@test a3[:a].data ≈ [9]
-	@test misequals(a3[:b].data, [missing])
-
+	@test isequal(a3[:b].data, hcat(missing))
 	@test a1[:c].data.data ≈ [-3 0 3 6]
 	@test all(a1[:c].bags .== [1:4])
 
@@ -288,10 +310,15 @@ end
 	@test e("Hello").data.s == ["Hello"]
 	@test e(Symbol("Hello")).data.s == ["Hello"]
 	@test e(["Hello", "world"]).data.s == ["Hello", "world"]
-	@test e("Hello") isa ArrayNode{NGramMatrix{String,Vector{String},Int64},Nothing}
-	@test e("Hello").data isa NGramMatrix{String,Vector{String},Int64}
 	@test all(e(missing).data.s .=== [missing])
-	@test e(missing).data isa NGramMatrix{Missing,Vector{Missing},Missing}
+	# for master
+	@test e("Hello") isa ArrayNode{NGramMatrix{String,Int64},Nothing}
+	@test e("Hello").data isa NGramMatrix{String,Int64}
+	@test e(missing).data isa NGramMatrix{Missing,Missing}
+	# for stable
+	# @test e("Hello") isa ArrayNode{NGramMatrix{String,Vector{String},Int64},Nothing}
+	# @test e("Hello").data isa NGramMatrix{String,Vector{String},Int64}
+	# @test e(missing).data isa NGramMatrix{Missing,Vector{Missing},Missing}
 end
 
 @testset "Extractor of keys as field" begin
@@ -318,7 +345,10 @@ end
 	@test nobs(b.data[:item]) == 0
 	@test b.data[:item].data isa Matrix{Float32}
 	@test nobs(b.data[:key]) == 0
-	@test b.data[:key].data isa Mill.NGramMatrix{String,Array{String,1},Int64}
+	# for master
+	@test b.data[:key].data isa Mill.NGramMatrix{String,Int64}
+	# for stable
+	# @test b.data[:key].data isa Mill.NGramMatrix{String,Array{String,1},Int64}
 
 
 	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000]
@@ -388,7 +418,7 @@ end
 	@test ext[:a] isa ExtractArray
 	@test isnothing(ext[:b])
 	@test isnothing(ext[:c])
-	@test ext[:d] isa ExtractScalar
+	@test ext[:d] isa ExtractCategorical
 	@test ext[:e] isa ExtractDict
 	@test isnothing(ext[:f])
 end
@@ -473,27 +503,67 @@ end
 	j4 = JSON.parse("""{"a": "4", "b": [2, 3, 4], "c": [1, 2, 3]}""")
 
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
-	ext = suggestextractor(sch)
+	ext = suggestextractor(sch, testing_settings)
 
-	@test ext[:a] isa ExtractCategorical
+	@test ext[:a] isa ExtractScalar{Float32}
 	@test ext[:b] isa ExtractVector
 	@test ext[:b].n == 3
-	@test ext[:c] isa ExtractArray{ExtractScalar{Float32}}
+	@test ext[:c] isa ExtractArray{ExtractCategorical{Number,Int64}}
+
+	@test buf_printtree(ext, trav=true) ==
+	"""
+	Dict [""]
+	  ├── a: Float32 ["E"]
+	  ├── b: FeatureVector with 3 items ["U"]
+	  └── c: Array of ["k"]
+	           └── Categorical d = 6 ["s"]"""
 
 	ext_j1 = ext(j1)
 	ext_j2 = ext(j2)
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
+	@test ext_j1["E"].data ≈ [0]
+	@test ext_j2["E"].data ≈ [1/3]
+	@test ext_j3["E"].data ≈ [2/3]
+	@test ext_j4["E"].data ≈ [1]
+
 	@test ext_j1["U"].data ≈ [1, 2, 3]
 	@test ext_j2["U"].data ≈ [2, 2, 3]
 	@test ext_j3["U"].data ≈ [3, 2, 3]
 	@test ext_j4["U"].data ≈ [2, 3, 4]
 
-	@test ext_j1["s"].data ≈ [0 .25 .5]
-	@test ext_j2["s"].data ≈ [0 .25 .5 .75]
-	@test ext_j3["s"].data ≈ [0 .25 .5 .75 1.]
-	@test ext_j4["s"].data ≈ [0 .25 .5]
+	@test ext_j1["s"].data ≈ [
+	1  0  0
+ 	0  1  0
+ 	0  0  1
+ 	0  0  0
+ 	0  0  0
+ 	0  0  0]
+	@test ext_j2["s"].data ≈ [
+	1  0  0  0
+ 	0  1  0  0
+ 	0  0  1  0
+ 	0  0  0  1
+ 	0  0  0  0
+ 	0  0  0  0
+	]
+	@test ext_j3["s"].data ≈ [
+	1  0  0  0  0
+	0  1  0  0  0
+	0  0  1  0  0
+	0  0  0  1  0
+	0  0  0  0  1
+	0  0  0  0  0
+	]
+	@test ext_j4["s"].data ≈ [
+	1  0  0
+ 	0  1  0
+ 	0  0  1
+ 	0  0  0
+ 	0  0  0
+ 	0  0  0
+	]
 end
 
 @testset "Suggest complex" begin
@@ -515,21 +585,20 @@ end
 	j1 = JSON.parse("""{"a": []}""")
 	j2 = JSON.parse("""{"a": [1, 2]}""")
 	j3 = JSON.parse("""{"a": [1, 2, 3]}""")
-	j4 = JSON.parse("""{"a": [1, 2, 3, 4]}""")
-	j5 = JSON.parse("""{"a": [1, 2, 3, 4, 5]}""")
+	j4 = JSON.parse("""{"a": [1, 2, 4, 5]}""")
 
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
-	ext = suggestextractor(sch)
+	ext = suggestextractor(sch, testing_settings)
 
 	ext_j1 = ext(j1)
 	ext_j2 = ext(j2)
 	ext_j3 = ext(j3)
 	ext_j4 = ext(j4)
 
-	@test ext_j1[:a].data.data isa Array{Float32,2}
-	@test ext_j2[:a].data.data isa Array{Float32,2}
-	@test ext_j3[:a].data.data isa Array{Float32,2}
-	@test ext_j4[:a].data.data isa Array{Float32,2}
+	@test ext_j1[:a].data.data isa Matrix{Float32}
+	@test ext_j2[:a].data.data isa Matrix{Float32}
+	@test ext_j3[:a].data.data isa Matrix{Float32}
+	@test ext_j4[:a].data.data isa Matrix{Float32}
 end
 
 @testset "testing irregular extractor" begin
@@ -540,7 +609,7 @@ end
 	j5 = JSON.parse("""{"a": 3}""")
 
 	sch = schema([j1,j2,j3,j4,j5])
-	ext = suggestextractor(sch)
+	ext = suggestextractor(sch, testing_settings)
 	a = ext(j1)
 	@test a[:a][:e1].data[1] == 0.5
 	@test ismissing(a[:a][:e2].data[:a].data.s[1])
@@ -556,7 +625,7 @@ end
 
 	sch = JsonGrinder.schema([j1, j2, j3, j4])
 	sch_hash = hash(sch)
-	ext = suggestextractor(sch)
+	ext = suggestextractor(sch, testing_settings)
 	@test sch_hash == hash(sch)	# testing that my entry parkour does not modify schema
 	@test nchildren(ext[:a]) == 1
 
@@ -570,27 +639,29 @@ end
 	@test e4["k"].data ≈ [0.5]
 end
 
-# @testset "Missing extraction type stability" begin
-# 	j1 = JSON.parse("""{"a": "1", "b":1}""")
-# 	j2 = JSON.parse("""{"a": 4, "b":2}""")
-# 	j3 = JSON.parse("""{"a": "3.1", "b":3}""")
-# 	j4 = JSON.parse("""{"b":4}""")
-#
-# 	sch = JsonGrinder.schema([j1, j2, j3, j4])
-# 	ext = suggestextractor(sch)
-# 	@test nchildren(ext[:a]) == 1
-# 	ext[:a][1].keyvalemap
-#
-# 	ext[:a][1]()
-# 	e1 = ext(j1)
-# 	e2 = ext(j2)
-# 	e3 = ext(j3)
-# 	e4 = ext(j4)
-# 	@test e1["k"].data ≈ [0]
-# 	@test e2["k"].data ≈ [1]
-# 	@test e3["k"].data ≈ [0.7]
-# 	@test e4["k"].data ≈ [0.5]
-# end
+@testset "Missing extraction type stability" begin
+	j1 = JSON.parse("""{"a": "1", "b":1}""")
+	j2 = JSON.parse("""{"a": 4, "b":2}""")
+	j3 = JSON.parse("""{"a": "3.1", "b":3}""")
+	j4 = JSON.parse("""{"b":4}""")
+
+	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	ext = suggestextractor(sch, testing_settings)
+	@test nchildren(ext[:a]) == 1
+
+	e1 = ext(j1)
+	e2 = ext(j2)
+	e3 = ext(j3)
+	e4 = ext(j4)
+	@test e1["M"].data ≈ [0]
+	@test e2["M"].data ≈ [1]
+	@test e3["M"].data ≈ [0.7]
+	@test isequal(e4["M"].data, hcat(missing))
+	@test e1["U"].data ≈ [0]
+	@test e2["U"].data ≈ [1/3]
+	@test e3["U"].data ≈ [2/3]
+	@test e4["U"].data ≈ [1]
+end
 
 @testset "Mixed scalar extraction with other types" begin
 	j1 = JSON.parse("""{"a": "1"}""")
@@ -602,7 +673,7 @@ end
 	j7 = JSON.parse("""{"a": {"Sylvanas is the worst warchief ever": "yes"}}""")
 
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5, j6, j7])
-	ext = suggestextractor(sch)
+	ext = suggestextractor(sch, testing_settings)
 
 	@test buf_printtree(sch) ==
     """
@@ -654,7 +725,7 @@ end
 	j5 = JSON.parse("""{"a": [1, 2, 3, 4, 5]}""")
 
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5])
-	ext = suggestextractor(sch)
+	ext = suggestextractor(sch, testing_settings)
 
 	@test buf_printtree(sch) ==
 	"""
@@ -738,11 +809,11 @@ end
 	j1 = JSON.parse("""{"a": []}""")
 	j2 = JSON.parse("""{"a": [1, 2]}""")
 	j3 = JSON.parse("""{"a": [1, 2, 3]}""")
-	j4 = JSON.parse("""{"a": [1, 2, 3, 4]}""")
-	j5 = JSON.parse("""{"a": [1, 2, 3, 4, 5]}""")
+	j4 = JSON.parse("""{"a": [1, 2, 4, 5]}""")
+	j5 = JSON.parse("""{"a": [1, 2, 3, 6, 7]}""")
 
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5])
-	ext = suggestextractor(sch)
+	ext = suggestextractor(sch, testing_settings)
 
 	@test buf_printtree(ext) ==
 	"""
@@ -756,7 +827,13 @@ end
 	ProductNode with 1 obs
 	  └── a: BagNode with 1 obs
 	           └── ArrayNode(1×2 Array with Float32 elements) with 2 obs"""
-		   # todo: add more tests for integration with Mill to make sure it's propagated well
+
+	m = reflectinmodel(sch, ext)
+	@test buf_printtree(m) ==
+    """
+	ProductModel … ↦ ArrayModel(identity)
+	  └── a: BagModel … ↦ ⟨SegmentedMean(1)⟩ ↦ ArrayModel(Dense(2, 10))
+	           └── ArrayModel(identity)"""
 end
 
 @testset "default_scalar_extractor" begin

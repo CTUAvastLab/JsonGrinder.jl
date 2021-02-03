@@ -16,6 +16,7 @@ mutable struct Entry{T} <: JSONEntry
 end
 
 is_numeric(s::AbstractString, T::Type{<:Number}) = tryparse(T, s) isa Number
+is_real_numeric(s::AbstractString, T::Type{<:Real}) = tryparse(T, s) isa Real
 isfloat(s::AbstractString) = is_numeric(s, Float64)
 isint(s::AbstractString) = is_numeric(s, Int64)
 
@@ -39,6 +40,9 @@ is_float_entry(e) = is_numeric_entry(e, AbstractFloat)
 
 shorten_if_str(v) = v
 shorten_if_str(v::AbstractString) = length(v) > max_len ? "$(first(v, max_len))_$(length(v))_$(bytes2hex(sha1(v)))" : v
+
+# Real is the closest supertype of AbstractFloat and Integer
+is_numeric_or_numeric_string(e) = is_intable(e) || is_floatable(e) || is_numeric_entry(e, Real)
 
 """
 	function update!(a::Entry, v)
@@ -110,14 +114,14 @@ end
 
 function default_scalar_extractor()
 	[
-	(e -> length(keys(e)) <= 100 && (is_intable(e) || is_floatable(e)),
+	(e -> length(keys(e)) <= 100 && is_numeric_or_numeric_string(e),
 		e -> ExtractCategorical(keys(e))),
 	(e -> is_intable(e),
 		e -> extractscalar(Int32, e)),
 	(e -> is_floatable(e),
 	 	e -> extractscalar(FloatType, e)),
 	# it's important that condition here would be lower than maxkeys
-	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !(is_intable(e) || is_floatable(e))),
+	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !is_numeric_or_numeric_string(e)),
 		e -> ExtractCategorical(keys(e))),
 	(e -> true,
 		e -> extractscalar(unify_types(e), e)),]

@@ -5,14 +5,14 @@ using JsonGrinder: DictEntry, suggestextractor, schema
 using Mill: reflectinmodel
 
 j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],    "b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
-j2 = JSON.parse("""{"a": 4, "c": {"a":{"a":[2,3], "b":[5,6]}}}""")
-j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3,4],  "b": 1}}""")
+j2 = JSON.parse("""{"a": 3, "c": {"a":{"a":[2,3], "b":[5,6]}}}""")
+j3 = JSON.parse("""{"a": 2, "b": {"a":[1,2,3,4],  "b": 1}}""")
 j4 = JSON.parse("""{"a": 4, "b": {}}""")
 j5 = JSON.parse("""{"b": {}}""")
 j6 = JSON.parse("""{}""")
 
 sch = schema([j1,j2,j3,j4,j5,j6])
-ext = suggestextractor(sch)
+ext = suggestextractor(sch, testing_settings)
 
 @testset "printtree" begin
     @test buf_printtree(ext, trav=true) ==
@@ -29,7 +29,7 @@ ext = suggestextractor(sch)
 	                    │        └── Float32 ["v"]
 	                    └── b: Array of ["w"]
 	                             └── Float32 ["x"]"""
-    e = JsonGrinder.key_as_field(sch[:b], NamedTuple(), path = "b")
+    e = JsonGrinder.key_as_field(sch[:b], testing_settings, path = "b")
 	ext2 = deepcopy(ext)
 	ext2.dict[:b] = e
 	@test buf_printtree(ext2, trav=true) ==

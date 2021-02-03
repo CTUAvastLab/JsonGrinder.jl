@@ -210,6 +210,41 @@ end
 	@test sch[:b].counts == sch_merged[:b].counts
 end
 
+@testset "Schema merging with numbers" begin
+	j1 = JSON.parse("""{"a": 1}""")
+	j2 = JSON.parse("""{"a": 2}""")
+	j3 = JSON.parse("""{"a": 3.3}""")
+	j4 = JSON.parse("""{"a": 4.4}""")
+	j5 = JSON.parse("""{"a": "5"}""")
+	j6 = JSON.parse("""{"a": "6"}""")
+	j7 = JSON.parse("""{"a": "7.7"}""")
+	j8 = JSON.parse("""{"a": "8.8"}""")
+
+	# todo: test how newentry works with array with multiple elements
+	sch12 = JsonGrinder.schema([j1,j2])
+	sch34 = JsonGrinder.schema([j3,j4])
+	sch56 = JsonGrinder.schema([j5,j6])
+	sch78 = JsonGrinder.schema([j7,j8])
+
+	sch1234 = JsonGrinder.schema([j1,j2,j3,j4])
+	sch5678 = JsonGrinder.schema([j5,j6,j7,j8])
+	sch1256 = JsonGrinder.schema([j1,j2,j5,j6])
+	sch3478 = JsonGrinder.schema([j3,j4,j7,j8])
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6,j7,j8])
+	sch_merged1234 = merge(sch12, sch34)
+	sch_merged5678 = merge(sch56, sch78)
+	sch_merged1256 = merge(sch12, sch56)
+	sch_merged3478 = merge(sch34, sch78)
+	sch_merged = merge(sch_merged1234, sch_merged5678)
+	@test sch1234 == sch_merged1234
+	@test sch1234 != sch_merged5678
+	@test sch5678 == sch_merged5678
+	@test sch1256 == sch_merged1256
+	@test sch3478 == sch_merged3478
+	@test sch == sch_merged
+end
+
 @testset "Bson and symbol keys testing" begin
 	b1 = IOBuffer()
 	j1 = BSON.bson(b1, Dict(:a=>4, :b=>Dict(:a=>[1,2,3], :b=>1), :c=>Dict(:a=>Dict(:a=>[1,2,3],:b=>[4,5,6]))))
@@ -418,16 +453,16 @@ end
 	j6 = JSON.parse("""{}""")
 
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
-	ext = suggestextractor(sch)
+	ext = suggestextractor(sch, testing_settings)
 
-	@test ext[:a] isa ExtractScalar{Float32}
+	@test ext[:a] isa ExtractCategorical
 	@test ext[:b][:a] isa ExtractVector{Float32}
 	@test ext[:b][:b] isa ExtractScalar{Float32}
 	@test ext[:c][:a][:a] isa ExtractArray{ExtractScalar{Float32}}
 	@test ext[:c][:a][:b] isa ExtractArray{ExtractScalar{Float32}}
 
 	e1 = ext(j1)
-	@test e1[:a].data ≈ [0]
+	@test e1[:a].data ≈ [1, 0]
 	@test e1[:b][:a].data ≈ [1, 2, 3]
 	@test e1[:b][:b].data ≈ [0]
 	@test e1[:c][:a][:a].data.data ≈ [0. 0.5 1.]
@@ -674,4 +709,109 @@ end
 			"a" => 1
 		)
 	)
+end
+
+# @testset "suggestextractor with ints and floats numeric and stringy" begin
+# 	j1 = JSON.parse("""{"a": "4"}""")
+# 	j2 = JSON.parse("""{"a": "11.5"}""")
+# 	j3 = JSON.parse("""{"a": 7}""")
+# 	j4 = JSON.parse("""{"a": 4.5}""")
+#
+# 	sch1234 = JsonGrinder.schema([j1,j2,j3,j4])
+# 	sch123 = JsonGrinder.schema([j1,j2,j3])
+# 	sch12 = JsonGrinder.schema([j1,j2])
+# 	sch23 = JsonGrinder.schema([j2,j3])
+# 	sch14 = JsonGrinder.schema([j1,j4])
+# 	sch34 = JsonGrinder.schema([j3,j4])
+#
+# 	suggestextractor(sch1234)
+# 	suggestextractor(sch123)
+# 	suggestextractor(sch12)
+# 	suggestextractor(sch23)
+# 	suggestextractor(sch34)
+#
+# 	# todo: fix this. There should have same extractor
+# 	sch11 = JsonGrinder.schema([j1,j2])
+# 	sch12 = JsonGrinder.schema([j3,j4])
+# 	sch13 = JsonGrinder.schema([j5,j6])
+# 	sch21 = JsonGrinder.schema([j1,j2,j3])
+# 	sch22 = JsonGrinder.schema([j4,j5,j6])
+#
+# 	sch1 = merge(sch11, sch12, sch13)
+# 	sch2 = merge(sch21, sch22)
+#
+# 	@test sch == sch1
+# 	@test sch == sch2
+#
+# 	@test hash(sch) === hash(sch1)
+# 	@test hash(sch) === hash(sch2)
+# end
+
+@testset "is_numeric is_floatable is_intable" begin
+	j1 = JSON.parse("""{"a": "4"}""")
+	j2 = JSON.parse("""{"a": "11.5"}""")
+	j3 = JSON.parse("""{"a": 7}""")
+	j4 = JSON.parse("""{"a": 4.5}""")
+
+	sch1234 = JsonGrinder.schema([j1,j2,j3,j4])
+	sch12 = JsonGrinder.schema([j1,j2])
+	sch34 = JsonGrinder.schema([j3,j4])
+	sch13 = JsonGrinder.schema([j1,j3])
+	sch3 = JsonGrinder.schema([j3])
+	sch1 = JsonGrinder.schema([j1])
+	e = sch1234[:a]
+
+	expected_multientry = JsonGrinder.MultiEntry([
+		JsonGrinder.Entry(Dict("4"=>1,"11.5"=>1),2),
+		JsonGrinder.Entry(Dict(7=>1,4.5=>1),2)
+	], 4)
+	@test e == expected_multientry
+
+	e_hash = hash(e)
+	@test JsonGrinder.merge_entries_with_cast(e, Int32, Real) == expected_multientry
+	# checking that merge_entries_with_cast is not mutating the argument
+	@test e_hash == hash(e)
+
+	expected_merged = JsonGrinder.MultiEntry([
+		JsonGrinder.Entry(Dict(7=>1,4.0=>1,11.5=>1,4.5=>1),4)
+	], 4)
+	@test JsonGrinder.merge_entries_with_cast(e, JsonGrinder.FloatType, Real) == expected_merged
+	# checking that merge_entries_with_cast is not mutating the argument
+	@test e_hash == hash(e)
+	@test JsonGrinder.merge_entries_with_cast(e, Int32, Real) != expected_merged
+
+	e1234 = JsonGrinder.merge_entries_with_cast(e, JsonGrinder.FloatType, Real)[1]
+
+	@test sch12[:a] == JsonGrinder.Entry(Dict("4" => 1, "11.5"=> 1),2)
+
+	@test !JsonGrinder.is_intable(e1234)
+	@test !JsonGrinder.is_floatable(e1234)
+	@test JsonGrinder.is_numeric_entry(e1234, Real)
+
+	@test !JsonGrinder.is_intable(sch12[:a])
+	@test JsonGrinder.is_floatable(sch12[:a])
+	@test !JsonGrinder.is_numeric_entry(sch12[:a], Real)
+	# todo: fix it and make some predicates with true for both e1 and sch12[:a]
+	@test !JsonGrinder.is_intable(sch34[:a])
+	@test !JsonGrinder.is_floatable(sch34[:a])
+	@test JsonGrinder.is_numeric_entry(sch34[:a], Real)
+
+	expected_merged = JsonGrinder.MultiEntry([
+		JsonGrinder.Entry(Dict(7=>1,4=>1),2)
+	], 2)
+	@test JsonGrinder.merge_entries_with_cast(sch13[:a], Int32, Real) == expected_merged
+
+	e13 = JsonGrinder.merge_entries_with_cast(sch13[:a], Int32, Real)[1]
+
+	@test !JsonGrinder.is_intable(e13)
+	@test !JsonGrinder.is_floatable(e13)
+	@test JsonGrinder.is_numeric_entry(e13, Real)
+
+	@test !JsonGrinder.is_intable(sch3[:a])
+	@test !JsonGrinder.is_floatable(sch3[:a])
+	@test JsonGrinder.is_numeric_entry(sch3[:a], Real)
+
+	@test JsonGrinder.is_intable(sch1[:a])
+	@test JsonGrinder.is_floatable(sch1[:a])
+	@test !JsonGrinder.is_numeric_entry(sch1[:a], Real)
 end

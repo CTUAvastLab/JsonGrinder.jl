@@ -51,10 +51,8 @@ end
 function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "")
 	# consolidation of types, type wrangling of numeric strings takes place here
 	# trying to unify types and create new child entries for them. Merging string + numbers
-	e = merge_entries_with_cast(e, Int32, Integer)
-	e = merge_entries_with_cast(e, FloatType, AbstractFloat)
-	# e = merge_entries_with_cast(e, Int32, Real)
-	# e = merge_entries_with_cast(e, FloatType, Real)
+	e = merge_entries_with_cast(e, Int32, Real)
+	e = merge_entries_with_cast(e, FloatType, Real)
 	# we need to filter out empty things in multientry too, same manner as dict
 	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
 	MultipleRepresentation(map(k -> suggestextractor(e.childs[k], settings; path = path),ks))

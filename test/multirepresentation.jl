@@ -16,9 +16,15 @@ import HierarchicalUtils: printtree
 	e = ex(extractempty)
 	@test nobs(e) == 0
 	@test nobs(e[:e1]) == 0
-	@test e[:e1].data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
+	# for master
+	@test e[:e1].data isa MaybeHotMatrix{Int64,Int64,Bool}
+	# for stable
+	# @test e[:e1].data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 	@test nobs(e[:e2]) == 0
-	@test e[:e2].data isa NGramMatrix{String,Array{String,1},Int64}
+	# for master
+	@test e[:e2].data isa NGramMatrix{String,Int64}
+	# for stable
+	# @test e[:e2].data isa NGramMatrix{String,Array{String,1},Int64}
 
 	ex2 = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
 		JsonGrinder.ExtractString()))

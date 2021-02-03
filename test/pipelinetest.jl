@@ -58,7 +58,7 @@ end
 		@test o[:,i] ≈ m(dss[i]).data
 	end
 	@test m.m.m == identity
-	@test size(dss[4][:a].data[:a].data) == (1, 0)
+	@test size(dss[4][:a].data[:a].data) == (3, 0)
 end
 
 @testset "testing pipeline with single-keyed dicts and merging scalars" begin
@@ -125,22 +125,22 @@ end
 	Dict
 	  └── a: Array of
 	           └── Dict
-	                 ├── a: Float32
-	                 ├── b: Float32
+	                 ├── a: Categorical d = 3
+	                 ├── b: Categorical d = 3
 	                 └── c: String"""
 	@test buf_printtree(m) == """
 	ProductModel … ↦ ArrayModel(identity)
 	  └── a: BagModel … ↦ ⟨SegmentedMean(10)⟩ ↦ ArrayModel(Dense(11, 10, relu))
-	           └── ProductModel … ↦ ArrayModel(Dense(12, 10, relu))
-	                 ├── a: ArrayModel([pre_imputing]Dense(1, 1))
-	                 ├── b: ArrayModel([pre_imputing]Dense(1, 1))
+	           └── ProductModel … ↦ ArrayModel(Dense(30, 10, relu))
+	                 ├── a: ArrayModel([post_imputing]Dense(3, 10, relu))
+	                 ├── b: ArrayModel([post_imputing]Dense(3, 10, relu))
 	                 └── c: ArrayModel([post_imputing]Dense(2053, 10, relu))"""
 	@test buf_printtree(ds) == """
 	ProductNode with 5 obs
 	  └── a: BagNode with 5 obs
 	           └── ProductNode with 5 obs
-	                 ├── a: ArrayNode(1×5 Array with Union{Missing, Float32} elements) with 5 obs
-	                 ├── b: ArrayNode(1×5 Array with Union{Missing, Float32} elements) with 5 obs
+	                 ├── a: ArrayNode(3×5 MaybeHotMatrix with Union{Missing, Bool} elements) with 5 obs
+	                 ├── b: ArrayNode(3×5 MaybeHotMatrix with Union{Missing, Bool} elements) with 5 obs
 	                 └── c: ArrayNode(2053×5 NGramMatrix with Union{Missing, Int64} elements) with 5 obs"""
 
 	@test m[""].m.m == identity
