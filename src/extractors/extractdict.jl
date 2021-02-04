@@ -25,7 +25,7 @@ julia> res1[:a].data
  -3.0
 
 julia> res1[:b].data
-6×1 Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}:
+6×1 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
  1
  0
  0
@@ -43,7 +43,7 @@ julia> res2[:a].data
  -6.0
 
 julia> res2[:b].data
-6×1 Mill.MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}:
+6×1 Mill.MaybeHotMatrix{Missing,Int64,Missing}:
  missing
  missing
  missing

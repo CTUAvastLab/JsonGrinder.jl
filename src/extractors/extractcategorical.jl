@@ -15,28 +15,28 @@ If passed `missing`, returns column of missing values.
 julia> e = ExtractCategorical(2:4);
 
 julia> e([2,3,1,4]).data
-4×4 Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}:
+4×4 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
  1  0  0  0
  0  1  0  0
  0  0  0  1
  0  0  1  0
 
 julia> e([1,missing,5]).data
-4×3 Mill.MaybeHotMatrix{Union{Missing, Int64},Array{Union{Missing, Int64},1},Int64,Union{Missing, Bool}}:
+4×3 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
  false  missing  false
  false  missing  false
  false  missing  false
   true  missing   true
 
 julia> e(4).data
-4×1 Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}:
+4×1 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
  0
  0
  1
  0
 
 julia> e(missing).data
-4×1 Mill.MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}:
+4×1 Mill.MaybeHotMatrix{Missing,Int64,Missing}:
  missing
  missing
  missing

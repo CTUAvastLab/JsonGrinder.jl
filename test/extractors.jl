@@ -52,27 +52,17 @@ end
 	@test e("z").data ≈ [0, 0, 1]
 	@test isequal(e(nothing).data, [missing missing missing]')
 	@test isequal(e(missing).data, [missing missing missing]')
-	# for master
 	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Int64,Bool}
 	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Int64,Missing}
 	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Int64,Missing}
 	@test e(extractempty).data isa MaybeHotMatrix{Int64,Int64,Bool}
-	# for stable
-	# @test typeof(e("a").data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
-	# @test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
-	# @test typeof(e(missing).data) == MaybeHotMatrix{Missing,Array{Missing,1},Int64,Missing}
-	# @test e(extractempty).data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 	@test nobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test isequal(e(["a", missing]).data, [true missing; false missing; false missing])
 	@test isequal(e(["a", missing, "x"]).data, [true missing false; false missing false; false missing true])
-	# for master
 	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Int64,Bool}
 	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
-	#for stable
-	# @test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
-	# @test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Array{Union{Missing, Int64},1},Int64,Union{Missing, Bool}}
 
 	@test isnothing(ExtractCategorical([]))
 	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
@@ -136,10 +126,7 @@ end
 	sc = ExtractArray(ExtractCategorical(2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
 	@test nobs(sc(nothing).data) == 0
-	# for master
 	@test sc(nothing).data.data isa MaybeHotMatrix{Int64,Int64,Bool}
-	# for stable
-	# @test sc(nothing).data.data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 	@test nobs(sc(nothing).data.data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
 
@@ -152,10 +139,7 @@ end
 	@test nobs(sc(extractempty).data.data) == 0
 	@test nobs(sc(extractempty).data) == 0
 	@test isempty(sc(extractempty).bags.bags)
-	# for master
 	@test sc(extractempty).data.data isa MaybeHotMatrix{Int64,Int64,Bool}
-	# for stable
-	# @test sc(extractempty).data.data isa MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool}
 
 	sc = ExtractArray(ExtractScalar(Float32))
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
@@ -326,14 +310,9 @@ end
 	@test e(Symbol("Hello")).data.s == ["Hello"]
 	@test e(["Hello", "world"]).data.s == ["Hello", "world"]
 	@test all(e(missing).data.s .=== [missing])
-	# for master
 	@test e("Hello") isa ArrayNode{NGramMatrix{String,Int64},Nothing}
 	@test e("Hello").data isa NGramMatrix{String,Int64}
 	@test e(missing).data isa NGramMatrix{Missing,Missing}
-	# for stable
-	# @test e("Hello") isa ArrayNode{NGramMatrix{String,Vector{String},Int64},Nothing}
-	# @test e("Hello").data isa NGramMatrix{String,Vector{String},Int64}
-	# @test e(missing).data isa NGramMatrix{Missing,Vector{Missing},Missing}
 end
 
 @testset "Extractor of keys as field" begin
@@ -360,10 +339,7 @@ end
 	@test nobs(b.data[:item]) == 0
 	@test b.data[:item].data isa Matrix{Float32}
 	@test nobs(b.data[:key]) == 0
-	# for master
 	@test b.data[:key].data isa Mill.NGramMatrix{String,Int64}
-	# for stable
-	# @test b.data[:key].data isa Mill.NGramMatrix{String,Array{String,1},Int64}
 
 
 	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000]

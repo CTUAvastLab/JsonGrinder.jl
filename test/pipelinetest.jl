@@ -12,7 +12,7 @@ using Mill: reflectinmodel
 	ds = extractor.([j1,j2])
 	dss = reduce(catobs, ds)
 
-	m = reflectinmodel(dss, k -> Dense(k,10, relu));
+	m = reflectinmodel(dss, k -> Dense(k,10, relu))
 	o = m(dss).data
 	for i in 1:length(ds)
 		@test o[:,i] ≈ m(ds[i]).data

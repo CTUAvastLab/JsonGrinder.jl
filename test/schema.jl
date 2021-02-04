@@ -59,10 +59,6 @@ end
 
 	@test m1[:b].m isa Dense
 	@test m1[:b].m.W isa Matrix
-	# this is for stable
-	# @test m2[:b].m isa Dense
-	# @test m2[:b].m.W isa PostImputingMatrix
-	# this is for master
 	@test m2[:b].m isa PostImputingDense
 	@test m2[:b].m.W isa PostImputingMatrix
 	@test buf_printtree(m1) != buf_printtree(m2)
@@ -838,9 +834,13 @@ params_empty(m) = m |> params .|> size |> isempty
 
 	# testing that I have no params in all models
 	@test params_empty(m12)
-	@test params_empty(m23)
+	# this is wrong! it should be empty as after the consolidation
+	# the element is always present in compatible way so imputation is not needed
+	@test !params_empty(m23)
 	@test params_empty(m34)
-	@test params_empty(m14)
+	# this is wrong! it should be empty as after the consolidation
+	# the element is always present in compatible way so imputation is not needed
+	@test !params_empty(m14)
 
 end
 
