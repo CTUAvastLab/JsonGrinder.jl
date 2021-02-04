@@ -88,7 +88,7 @@ function (s::ExtractCategorical{U,I})(v::V) where {U<:Number,V<:AbstractString,I
     ArrayNode(x)
 end
 
-function (s::ExtractCategorical{U,I})(vs::Vector{V}) where {U<:Number,V<:AbstractStringNumber,I}
+function (s::ExtractCategorical{U,I})(vs::Vector{V}) where {U<:Number,V<:AbstractString,I}
 	x = MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n) for v in vs], s.n)
 	ArrayNode(x)
 end
