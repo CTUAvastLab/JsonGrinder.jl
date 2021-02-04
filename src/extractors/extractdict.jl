@@ -1,3 +1,8 @@
+add_metadata2dicts = true
+
+function add_metadata2dicts!(n::Bool)
+	global add_metadata2dicts = n
+end
 
 """
 	struct ExtractDict
@@ -35,7 +40,7 @@ function (s::ExtractDict{S,V})(v::Dict) where {S<:Dict,V<:Dict}
 	x = vcat([f(get(v,String(k),nothing)) for (k,f) in s.vec]...)
 	o = [Symbol(k) => f(get(v,String(k),nothing)) for (k,f) in s.other]
 	data = (; :scalars => x,o...)
-	ProductNode(data, [collect(keys(s.vec))])
+	add_metadata2dicts ? ProductNode(data, [collect(keys(s.vec))]) : ProductNode(data)
 end
 
 (s::ExtractDict{S,V})(v::Dict) where {S<:Dict,V<:Nothing} = vcat([f(get(v,k,nothing)) for (k,f) in s.vec]...)
