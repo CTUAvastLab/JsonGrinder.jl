@@ -25,7 +25,7 @@ julia> s1[:e1]
  "tcp"
 
 julia> s1[:e2]
-4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Array{Int64,1},Int64,Bool},Nothing}:
+4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Int64,Bool},Nothing}:
  0
  1
  0

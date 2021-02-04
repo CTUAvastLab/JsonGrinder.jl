@@ -12,7 +12,7 @@ by `item`. The entire array is assumed to be a single bag.
 julia> ec = ExtractArray(ExtractCategorical(2:4));
 
 julia> ec([2,3,1,4]).data
-4×4 Mill.ArrayNode{Array{Bool,2},Nothing}:
+4×4 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Int64,Bool},Nothing}:
  1  0  0  0
  0  1  0  0
  0  0  0  1
