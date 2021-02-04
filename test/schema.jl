@@ -387,6 +387,33 @@ end
 	@test m(ext1(j4)).data isa Matrix{Float32}
 end
 
+@testset "Sample synthetic with missing nested dicts" begin
+	j1 = JSON.parse("""{"a":5}""")
+	j2 = JSON.parse("""{"a":"4"}""")
+	j3 = JSON.parse("""{"a":2}""")
+	j4 = JSON.parse("""{"a":"3"}""")
+
+	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
+	# todo: there is bug with multiple representation and sample synthetic, fix it!
+	# fix this so extracting synthetic data makes and is similar to real samples
+	# I must not extract array, but instead extract multiple samples, each with different type, but single value
+	# multireprestations showld be somewat compatible with magic I perform in suggestextractor
+	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
+		:a=>[2, "4"]	# this is wrong I need to fix it
+	)
+	# @test isequal(JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true), Dict(
+	# 	:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
+	# ))
+	#
+	# ext1 = suggestextractor(sch1)
+	# m = reflectinmodel(sch1, ext1)
+	# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+	# @test m(ext1(j1)).data isa Matrix{Float32}
+	# @test m(ext1(j2)).data isa Matrix{Float32}
+	# @test m(ext1(j3)).data isa Matrix{Float32}
+	# @test m(ext1(j4)).data isa Matrix{Float32}
+end
+
 @testset "Merge empty lists" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b": []}""")
 	j2 = JSON.parse("""{"a": [{"a":3},{"b":4}], "b": []}""")
@@ -711,6 +738,9 @@ end
 	)
 end
 
+num_params(m) = m |> params .|> size .|> prod |> sum
+params_empty(m) = m |> params .|> size |> isempty
+
 @testset "suggestextractor with ints and floats numeric and stringy" begin
 	j1 = JSON.parse("""{"a": "4"}""")
 	j2 = JSON.parse("""{"a": "11.5"}""")
@@ -724,27 +754,94 @@ end
 	sch14 = JsonGrinder.schema([j1,j4])
 	sch34 = JsonGrinder.schema([j3,j4])
 
-	suggestextractor(sch1234)
-	suggestextractor(sch123)
-	suggestextractor(sch12)
-	suggestextractor(sch23)
-	suggestextractor(sch34)
+	ext1234 = suggestextractor(sch1234)
+	ext123 = suggestextractor(sch123)
+	ext12 = suggestextractor(sch12)
+	ext23 = suggestextractor(sch23)
+	ext34 = suggestextractor(sch34)
+	ext14 = suggestextractor(sch14)
 
-	# todo: fix this. There should have same extractor
-	sch11 = JsonGrinder.schema([j1,j2])
-	sch12 = JsonGrinder.schema([j3,j4])
-	sch13 = JsonGrinder.schema([j5,j6])
-	sch21 = JsonGrinder.schema([j1,j2,j3])
-	sch22 = JsonGrinder.schema([j4,j5,j6])
+	# as expected, sometimes there is multirepresentation
+	@test buf_printtree(ext12, trav=true) ==
+	"""
+	Dict [""]
+	  └── a: Categorical d = 3 ["U"]"""
 
-	sch1 = merge(sch11, sch12, sch13)
-	sch2 = merge(sch21, sch22)
+	@test buf_printtree(ext23, trav=true) ==
+  	"""
+	Dict [""]
+	  └── a: MultiRepresentation ["U"]
+	           └── e1: Categorical d = 3 ["k"]"""
 
-	@test sch == sch1
-	@test sch == sch2
+  	@test buf_printtree(ext34, trav=true) ==
+	"""
+	Dict [""]
+	  └── a: Categorical d = 3 ["U"]"""
 
-	@test hash(sch) === hash(sch1)
-	@test hash(sch) === hash(sch2)
+  	@test buf_printtree(ext14, trav=true) ==
+	"""
+	Dict [""]
+	  └── a: MultiRepresentation ["U"]
+	           └── e1: Categorical d = 3 ["k"]"""
+
+	# but that's not problem, there are identity layers, so number of parameters is same
+
+	m12 = reflectinmodel(sch12, ext12)
+	m23 = reflectinmodel(sch23, ext23)
+	m34 = reflectinmodel(sch34, ext34)
+	m14 = reflectinmodel(sch14, ext14)
+
+	# testing that I have same numer of params
+	@test num_params(m12) == 40
+	@test num_params(m12) == num_params(m23)
+	@test num_params(m12) == num_params(m34)
+	@test num_params(m12) == num_params(m14)
+
+	# now now with scalars
+	ext1234 = suggestextractor(sch1234, testing_settings)
+	ext123 = suggestextractor(sch123, testing_settings)
+	ext12 = suggestextractor(sch12, testing_settings)
+	ext23 = suggestextractor(sch23, testing_settings)
+	ext34 = suggestextractor(sch34, testing_settings)
+	ext14 = suggestextractor(sch14, testing_settings)
+
+	# as expected, sometimes there is multirepresentation
+	@test buf_printtree(ext12, trav=true) ==
+	"""
+	Dict [""]
+	  └── a: Float32 ["U"]"""
+
+	@test buf_printtree(ext23, trav=true) ==
+  	"""
+	Dict [""]
+	  └── a: MultiRepresentation ["U"]
+	           └── e1: Float32 ["k"]"""
+
+  	@test buf_printtree(ext34, trav=true) ==
+	"""
+	Dict [""]
+	  └── a: Float32 ["U"]"""
+
+  	@test buf_printtree(ext14, trav=true) ==
+	"""
+	Dict [""]
+	  └── a: MultiRepresentation ["U"]
+	           └── e1: Float32 ["k"]"""
+
+	# but that's not problem, there are identity layers, so number of parameters is same
+
+	# by default there is only 1 scalar and indentities, so they have not params
+	m12 = reflectinmodel(sch12, ext12)
+	m23 = reflectinmodel(sch23, ext23)
+	m34 = reflectinmodel(sch34, ext34)
+	m14 = reflectinmodel(sch14, ext14)
+
+	# testing that I have no params in all models
+	@test params_empty(m12)
+	@test params_empty(m23)
+	@test params_empty(m34)
+	@test params_empty(m14)
+
 end
 
 @testset "is_numeric is_floatable is_intable" begin

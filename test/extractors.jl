@@ -115,6 +115,21 @@ end
 	@test isequal(e4([]).data, [missing missing missing]')
 end
 
+@testset "ExtractCategorical type conversions" begin
+	j1 = JSON.parse("""{"a": "4"}""")
+	j2 = JSON.parse("""{"a": "11.5"}""")
+	j3 = JSON.parse("""{"a": 7}""")
+	j4 = JSON.parse("""{"a": 4.5}""")
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4])
+
+	ext = suggestextractor(sch)
+
+	@test ext(Dict("a"=>4)) == ext(Dict("a"=>4.0))
+	@test ext(Dict("a"=>4)) == ext(Dict("a"=>4f0))
+	@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4"))
+	@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4.0"))
+end
 
 @testset "Testing array conversion" begin
 	Mill.emptyismissing!(false)

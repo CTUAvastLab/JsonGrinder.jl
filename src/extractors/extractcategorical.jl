@@ -80,12 +80,24 @@ function (s::ExtractCategorical{U,I})(vs::Vector{V}) where {U<:Number,V<:Number,
 	ArrayNode(x)
 end
 
+# following 2 methods are to let us extract numeric string from float or int extractor
+# I'm trying to parse as float because integer can be parsed as float so I assume all numbers we care about
+# are "floatable". Yes, this does not work for
+function (s::ExtractCategorical{U,I})(v::V) where {U<:Number,V<:AbstractString,I}
+    x = MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n)], s.n)
+    ArrayNode(x)
+end
+
+function (s::ExtractCategorical{U,I})(vs::Vector{V}) where {U<:Number,V<:AbstractStringNumber,I}
+	x = MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n) for v in vs], s.n)
+	ArrayNode(x)
+end
+
 function (s::ExtractCategorical{V,I})(vs::Vector{<:Union{V, Missing, Nothing}}) where {V,I}
 	x = MaybeHotMatrix([ismissing(v) || isnothing(v) ? missing : get(s.keyvalemap, v, s.n) for v in vs], s.n)
 	ArrayNode(x)
 end
 
-# todo: dodělat missingy, všchny nothing předělat na missing a pořádně to otestovat
 (s::ExtractCategorical)(::V) where {V<:Union{Missing, Nothing}} = ArrayNode(MaybeHotMatrix([missing], s.n))
 (s::ExtractCategorical)(::ExtractEmpty) = ArrayNode(MaybeHotMatrix(Vector{Int}(), s.n))
 (s::ExtractCategorical)(v) = s(missing)
