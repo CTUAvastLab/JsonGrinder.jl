@@ -46,8 +46,7 @@ target = reduce(catobs, target)[:cuisine].data
 m = reflectinmodel(sch, extract_data,
 	k -> Dense(k,20,relu),
 	d -> SegmentedMeanMax(d),
-	b = Dict("" => k -> Dense(k, size(target, 1))),
-	# fsm = Dict("" => k -> Dense(k, size(target, 1))),
+	fsm = Dict("" => k -> Dense(k, size(target, 1))),
 )
 
 ###############################################################
