@@ -7,18 +7,18 @@ using Flux, MLDataPattern, Mill, JsonGrinder, JSON, StatsBase, HierarchicalUtils
 # downloaded from https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge
 # document_parses/pdf_json
 
-samples = [open(JSON.parse, x) for x in readdir("examples/documents", join=true)]
+# samples = [open(JSON.parse, x) for x in readdir("examples/documents", join=true)]
 # samples = [open(JSON.parse, x) for x in readdir("examples2/documents_100", join=true)]
-# samples = [open(JSON.parse, x) for x in readdir("examples2/documents", join=true)]
+samples = [open(JSON.parse, x) for x in readdir("examples2/documents", join=true)]
 # samples = samples[1:800]
-# sch = JsonGrinder.schema(samples)
+sch = JsonGrinder.schema(samples)
 
 # generate_html("documents_schema.html", sch)
-# delete!(sch.childs,:paper_id)
+delete!(sch.childs,:paper_id)
 # extractor = suggestextractor(sch, (; key_as_field=13))	# for small dataset
-# extractor = suggestextractor(sch, (; key_as_field=300))
-JLD2.@load "model_etc.jld2" model sch extractor
-
+extractor = suggestextractor(sch, (; key_as_field=300))
+# JLD2.@load "model_etc.jld2" model sch extractor
+# JLD2.@load "mb.jld2" mbx mby
 s = samples[1]
 
 function author_cite_themself(s)
@@ -32,11 +32,13 @@ targets = author_cite_themself.(samples)
 countmap(targets)
 labelnames = unique(targets)
 
-# model = reflectinmodel(sch, extractor,
-# 	k -> Dense(k,20,relu),
-# 	d -> SegmentedMeanMax(d),
-# 	fsm = Dict("" => k -> Dense(k, 2)),
-# )
+extractor(JsonGrinder.sample_synthetic(sch, empty_dict_vals=true))
+
+model = reflectinmodel(sch, extractor,
+	k -> Dense(k,20,relu),
+	d -> SegmentedMeanMax(d),
+	fsm = Dict("" => k -> Dense(k, 2)),
+)
 
 opt = Flux.Optimise.ADAM()
 loss(x,y) = Flux.logitcrossentropy(model(x).data, y)
@@ -63,6 +65,7 @@ ps = Flux.params(model)
 # JLD2.@save "model_etc.jld2" model sch extractor
 @info "testing the gradient and catobsing"
 mbx, mby = minibatch()
+# JLD2.@save "mb.jld2" mbx mby
 @btime minibatch()
 # 178.186 ms (87016 allocations: 4.67 MiB)
 # 50.702 ms (48667 allocations: 20.73 MiB)
@@ -71,7 +74,7 @@ mbx = reduce(catobs, mbx_vec)
 @btime reduce(catobs, mbx_vec)
 # 5.835 ms (24124 allocations: 1.51 MiB)
 loss(mbx, mby)
-
+@info "testing gradient"
 gs = gradient(() -> loss(mbx, mby), ps)
 @btime gradient(() -> loss(mbx, mby), ps)
 Flux.Optimise.update!(opt, ps, gs)

@@ -34,7 +34,7 @@ struct ExtractArray{T} <: AbstractExtractor
 end
 
 function (s::ExtractArray)(v::V) where {V<:Union{Missing, Nothing}}
-	Mill._emptyismissing[] && return(BagNode(missing, [0:-1]))
+	Mill._emptyismissing[] && return BagNode(missing, [0:-1])
 	BagNode(s.item(extractempty), [0:-1])
 end
 

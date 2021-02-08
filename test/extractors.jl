@@ -320,18 +320,34 @@ end
 	js = [Dict(randstring(5) => rand()) for _ in 1:1000]
 	sch = JsonGrinder.schema(js)
 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
+	@test ext isa JsonGrinder.ExtractKeyAsField
 
 	b = ext(js[1])
 	k = only(keys(js[1]))
 	@test b.data[:item].data[1] ≈ (js[1][k] - ext.item.c) * ext.item.s
 	@test b.data[:key].data.s[1] == k
 
+	orig_emptyismissing = Mill.emptyismissing()
+
+	Mill.emptyismissing!(true)
+	b = ext(nothing)
+	@test nobs(b) == 1
+	@test ismissing(b.data)
+	b = ext(Dict())
+	@test nobs(b) == 1
+	@test ismissing(b.data)
+
+	Mill.emptyismissing!(false)
 	b = ext(nothing)
 	@test nobs(b) == 1
 	@test nobs(b.data) == 0
+	@test b.data[:key].data isa Mill.NGramMatrix{String,Int64}
 	b = ext(Dict())
 	@test nobs(b) == 1
 	@test nobs(b.data) == 0
+	@test b.data[:key].data isa Mill.NGramMatrix{String,Int64}
+
+	Mill.emptyismissing!(orig_emptyismissing)
 
 	b = ext(extractempty)
 	@test nobs(b) == 0
@@ -830,3 +846,33 @@ end
 @testset "default_scalar_extractor" begin
 
 end
+
+# @testset "type stability of extraction missings" begin
+# 	j1 = JSON.parse("""{"a": 1}""")
+# 	j2 = JSON.parse("""{"b": "a"}""")
+# 	j3 = JSON.parse("""{"a": 3, "b": "b"}""")
+# 	j4 = JSON.parse("""{"a": 4, "b": "c"}""")
+# 	j5 = JSON.parse("""{"a": 5, "b": "d"}""")
+#
+# 	sch = schema([j1,j2,j3,j4,j5])
+# 	ext = suggestextractor(sch, testing_settings)
+# 	m = reflectinmodel(sch, ext)
+#
+# 	e1 = ext(j1)
+# 	e2 = ext(j2)
+# 	e3 = ext(j3)
+# 	e12 = catobs(e1, e2)
+# 	e23 = catobs(e2, e3)
+# 	e13 = catobs(e1, e3)
+# 	typeof(e1)
+# 	typeof(e2)
+# 	typeof(e3)
+# 	typeof(e12)
+# 	typeof(e23)
+# 	typeof(e13)
+# 	@test typeof(e1) == typeof(e2)
+# 	@test typeof(e1) == typeof(e3)
+# 	@test typeof(e1) == typeof(e12)
+# 	@test typeof(e1) == typeof(e23)
+# 	@test typeof(e1) == typeof(e13)
+# end
