@@ -61,7 +61,6 @@ data, target = data[1_001:5_000], target[:,1001:5_000]
 # data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
 
 cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata[1]).data) .== Flux.onecold(valdata[2])))
-batch_size = 100
 #iterations = 1000
 iterations = 100
 ps = Flux.params(m)

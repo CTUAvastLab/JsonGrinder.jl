@@ -334,6 +334,7 @@ end
 
 	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
 	@test JsonGrinder.sample_synthetic(sch1) == Dict(:a=>[Dict(:a=>2,:b=>2), Dict(:a=>2,:b=>2)])
+	# todo: add test that  empty_dict_vals=true does not return missing if samples were always full
 
 end
 

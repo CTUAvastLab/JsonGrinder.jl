@@ -40,7 +40,7 @@ end
 
 (s::ExtractArray)(v::V) where {V<:Vector} = isempty(v) ? s(missing) : BagNode(reduce(catobs, map(s.item, v)),[1:length(v)])
 (s::ExtractArray)(v) = s(missing)
-(s::ExtractArray)(v::ExtractEmpty) = BagNode(s.item(extractempty), Mill.AlignedBags(Array{UnitRange{Int64},1}()))
+(s::ExtractArray)(v::ExtractEmpty) = BagNode(s.item(extractempty), Mill.AlignedBags(Vector{UnitRange{Int64}}()))
 
 Base.hash(e::ExtractArray, h::UInt) = hash(e.item, h)
 Base.:(==)(e1::ExtractArray, e2::ExtractArray) = e1.item == e2.item
