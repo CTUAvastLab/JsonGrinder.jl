@@ -1,5 +1,6 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, StatsBase, HierarchicalUtils, BenchmarkTools, JLD2
-
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, StatsBase, HierarchicalUtils, BenchmarkTools, JLD2, Random
+using Pkg
+pkg"precompile"
 ###############################################################
 # start by loading all samples
 ###############################################################
@@ -9,7 +10,7 @@ using Flux, MLDataPattern, Mill, JsonGrinder, JSON, StatsBase, HierarchicalUtils
 
 # samples = [open(JSON.parse, x) for x in readdir("examples/documents", join=true)]
 # samples = [open(JSON.parse, x) for x in readdir("examples2/documents_100", join=true)]
-samples = [open(JSON.parse, x) for x in readdir("examples2/documents", join=true)]
+samples = [open(JSON.parse, x) for x in readdir(joinpath(@__DIR__, "..", "..", "examples2", "documents"), join=true)]
 # samples = samples[1:800]
 sch = JsonGrinder.schema(samples)
 
@@ -44,8 +45,9 @@ opt = Flux.Optimise.ADAM()
 loss(x,y) = Flux.logitcrossentropy(model(x).data, y)
 
 data = extractor.(samples)
+batch_size = 200
 # batch_size = 20
-batch_size = 10
+# batch_size = 10
 
 function minibatch()
 	idx = sample(1:length(data), batch_size, replace = false)
@@ -63,20 +65,27 @@ cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata[1]).data) .== Flux.
 iterations = 100
 ps = Flux.params(model)
 # JLD2.@save "model_etc.jld2" model sch extractor
+Random.seed!(42)
 @info "testing the gradient and catobsing"
 mbx, mby = minibatch()
 # JLD2.@save "mb.jld2" mbx mby
+Random.seed!(42)
+@info "minibatch"
 @btime minibatch()
-# 178.186 ms (87016 allocations: 4.67 MiB)
-# 50.702 ms (48667 allocations: 20.73 MiB)
+Random.seed!(42)
 mbx_vec, mby = minibatch_vec()
 mbx = reduce(catobs, mbx_vec)
+@info "catobs"
 @btime reduce(catobs, mbx_vec)
 # 5.835 ms (24124 allocations: 1.51 MiB)
+# 10.912 ms (22649 allocations: 1.43 MiB)
 loss(mbx, mby)
 @info "testing gradient"
 gs = gradient(() -> loss(mbx, mby), ps)
+@info "gradient"
 @btime gradient(() -> loss(mbx, mby), ps)
+# 67.214 ms (58575 allocations: 29.60 MiB)
+# 93.755 ms (59645 allocations: 42.19 MiB)
 Flux.Optimise.update!(opt, ps, gs)
 
 
