@@ -54,8 +54,9 @@ create convertor of json to tree-structure of `DataNode`
   Default value is return value of `default_scalar_extractor()`, it's array of pairs where first element is predicate
   and if it matches, second element, function which maps schema to specific extractor, is called.
 """
-function suggestextractor(e::DictEntry, settings = NamedTuple(); path = "")
-	length(e.childs) >= get(settings, :key_as_field, 500) && return(key_as_field(e, settings; path = path))
+function suggestextractor(e::DictEntry, settings = NamedTuple(); path = "", child_less_than_parent = false)
+	length(e.childs) >= get(settings, :key_as_field, 500) && return key_as_field(e, settings;
+		path = path, child_less_than_parent = child_less_than_parent)
 
 	for k in filter(k->!isnothing(e.childs[k]) && isempty(e.childs[k]), keys(e.childs))
 		@warn "$(path): key $k contains empty array, skipping"
@@ -64,13 +65,16 @@ function suggestextractor(e::DictEntry, settings = NamedTuple(); path = "")
 	mincount = get(settings, :mincountkey, 0)
 	ks = filter(k -> updated(e.childs[k]) > mincount, ks)
 	isempty(ks) && return nothing
-	c = [(k,suggestextractor(e.childs[k], settings, path = path*"[:$(k)]")) for k in ks]
+	c = [(k,suggestextractor(e.childs[k], settings,
+			path = path*"[:$(k)]",
+			child_less_than_parent = child_less_than_parent || e.updated > e.childs[k].updated)
+		) for k in ks]
 	c = filter(s -> s[2] != nothing, c)
 	isempty(c) && return nothing
 	ExtractDict(Dict(c))
 end
 
-function key_as_field(e::DictEntry, settings; path = "")
+function key_as_field(e::DictEntry, settings; path = "", child_less_than_parent = false)
 	@info "$(path) seems to store values in keys, therefore node is treated as bag with keys as extra values."
 	child_schema = reduce(merge, collect(values(e.childs)), init = nothing)
 	key_schema = Entry(String(first(keys(e))))

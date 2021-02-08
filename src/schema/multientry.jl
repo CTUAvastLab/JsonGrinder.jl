@@ -48,14 +48,17 @@ function merge_entries_with_cast(e::MultiEntry, concrete_type, abstract_type)
 end
 
 # todo: benchmark on large cuckoo schemas, and optimize if needed
-function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "")
+function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "", child_less_than_parent = false)
 	# consolidation of types, type wrangling of numeric strings takes place here
 	# trying to unify types and create new child entries for them. Merging string + numbers
 	e = merge_entries_with_cast(e, Int32, Real)
 	e = merge_entries_with_cast(e, FloatType, Real)
 	# we need to filter out empty things in multientry too, same manner as dict
 	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
-	MultipleRepresentation(map(k -> suggestextractor(e.childs[k], settings; path = path),ks))
+	MultipleRepresentation(map(k -> suggestextractor(e.childs[k], settings,
+			path = path,
+			child_less_than_parent = child_less_than_parent
+		),ks))
 end
 
 function merge(es::MultiEntry...)

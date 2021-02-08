@@ -2,6 +2,7 @@
 	struct ExtractScalar{T}
 		c::T
 		s::T
+		full::Bool
 	end
 
 Extracts a numerical value, centred by subtracting `c` and scaled by multiplying by `s`.
@@ -9,6 +10,10 @@ Strings are converted to numbers.
 
 The extractor returns `ArrayNode{Matrix{Union{Missing, Int64}},Nothing}` or it subtypes.
 If passed `missing`, it extracts missing values which Mill understands and can work with.
+
+The `full` field determines whether extractor may or may not accept `missing`. If `full` is true, it does not accept
+missing values. If `full` is false, it accepts missing values, and always returns Mill structure of type
+Union{Missing, T} due to type stability reasons.
 
 It can be created also using `extractscalar(Float32, 5, 2)`
 
@@ -26,13 +31,14 @@ julia> ExtractScalar(Float32, 2, 3)(missing)
 struct ExtractScalar{T} <: AbstractExtractor
 	c::T
 	s::T
+	full::Bool
 end
 
 
-ExtractScalar(T = Float32) = ExtractScalar(zero(T), one(T))
-ExtractScalar(T, c, s) = ExtractScalar(T(c), T(s))
+ExtractScalar(T = Float32) = ExtractScalar(zero(T), one(T), true)
+ExtractScalar(T, c, s, full = true) = ExtractScalar(T(c), T(s), full)
 
-extractscalar(::Type{T}, m = zero(T), s = one(T)) where {T<:Number} = ExtractScalar(T, m, s)
+extractscalar(::Type{T}, m = zero(T), s = one(T), full = true) where {T<:Number} = ExtractScalar(T, m, s, full)
 function extractscalar(::Type{T}, e::Entry) where {T<:Number}
 	if unify_types(e) <: AbstractString
 		values = parse.(T, keys(e.counts))
@@ -56,5 +62,5 @@ Base.length(e::ExtractScalar) = 1
 
 # data type has different hashes for each patch version of julia
 # see https://discourse.julialang.org/t/datatype-hash-differs-per-patch-version/48827
-Base.hash(e::ExtractScalar{T}, h::UInt) where {T} = hash((e.c, e.s), h)
-Base.:(==)(e1::ExtractScalar{T}, e2::ExtractScalar{T}) where {T} = e1.c === e2.c && e1.s === e2.s
+Base.hash(e::ExtractScalar{T}, h::UInt) where {T} = hash((e.c, e.s, e.full), h)
+Base.:(==)(e1::ExtractScalar{T}, e2::ExtractScalar{T}) where {T} = e1.c === e2.c && e1.s === e2.s && e1.full === e2.full

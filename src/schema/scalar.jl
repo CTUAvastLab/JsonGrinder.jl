@@ -103,15 +103,16 @@ function merge_inplace!(e::Entry, es::Entry...)
 	e.updated = updates_merged
 end
 
-function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "")
+function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "", child_less_than_parent = false)
 	t = unify_types(e::Entry)
 	t == Any && @error "$(path): JSON does not have a fixed type scheme, quitting"
 
 	for (c, ex) in get(settings, :scalar_extractors, default_scalar_extractor())
-		c(e) && return ex(e)
+		c(e) && return ex(e, child_less_than_parent)
 	end
 end
 
+# todo: here add argument and decide if it should be full or not
 function default_scalar_extractor()
 	[
 	(e -> length(keys(e)) <= 100 && is_numeric_or_numeric_string(e),

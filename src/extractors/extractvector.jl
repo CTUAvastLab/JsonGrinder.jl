@@ -16,6 +16,7 @@ julia> sc([2,3,1,4]).data
 """
 struct ExtractVector{T} <: AbstractExtractor
 	n::Int
+	full::Bool
 end
 ExtractVector(n::Int) = ExtractVector{FloatType}(n)
 

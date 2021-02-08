@@ -36,7 +36,7 @@ end
 # todo:
 # logiku jestli to je missing nebo ne přesunout z sample_synthetic do suggestextractor
 # pokud vrátím správné typy u full samplu, ověřit, jestli potřebuju empty sample nebo se to odvodí z plného
-function suggestextractor(node::ArrayEntry, settings = NamedTuple(); path = "", child_less_than_parent=false)
+function suggestextractor(node::ArrayEntry, settings = NamedTuple(); path = "", child_less_than_parent = false)
 	if isempty(node)
 		@warn "$(path) is an empty array, therefore I can not suggest extractor."
 		return nothing
@@ -46,7 +46,7 @@ function suggestextractor(node::ArrayEntry, settings = NamedTuple(); path = "", 
 		@info "$(path) is an array of numbers with of same length, therefore it will be treated as a vector."
 		return ExtractVector(only(collect(keys(node.l))))
 	end
-	e = suggestextractor(node.items, settings, path = path)
+	e = suggestextractor(node.items, settings, path = path, child_less_than_parent = child_less_than_parent)
 	isnothing(e) ? e : ExtractArray(e)
 end
 

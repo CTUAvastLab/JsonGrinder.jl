@@ -43,6 +43,7 @@ struct ExtractOneHot{K,I,V} <: AbstractExtractor
 	v::V
 	key2id::Dict{I,Int}
 	n::Int
+	full::Bool
 end
 
 function ExtractOneHot(ks::V, k, v = nothing) where {V<:Union{Vector, Set}}

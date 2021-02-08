@@ -46,8 +46,9 @@ julia> e(missing).data
 struct ExtractCategorical{V,I} <: AbstractExtractor
 	keyvalemap::Dict{V,I}
 	n::Int
+	full::Bool
 end
-
+# todo: upravit konstruktory
 ExtractCategorical(s::Entry) = ExtractCategorical(collect(keys(s.counts)))
 ExtractCategorical(s::UnitRange) = ExtractCategorical(collect(s))
 function ExtractCategorical(ks::Vector)

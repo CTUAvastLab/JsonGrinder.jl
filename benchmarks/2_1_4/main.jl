@@ -72,20 +72,19 @@ mbx, mby = minibatch()
 Random.seed!(42)
 @info "minibatch"
 @btime minibatch()
+# 228.592 ms (448596 allocations: 27.35 MiB)
 Random.seed!(42)
 mbx_vec, mby = minibatch_vec()
 mbx = reduce(catobs, mbx_vec)
 @info "catobs"
 @btime reduce(catobs, mbx_vec)
-# 5.835 ms (24124 allocations: 1.51 MiB)
-# 10.912 ms (22649 allocations: 1.43 MiB)
+# 60.783 ms (370516 allocations: 22.23 MiB)
 loss(mbx, mby)
 @info "testing gradient"
 gs = gradient(() -> loss(mbx, mby), ps)
 @info "gradient"
 @btime gradient(() -> loss(mbx, mby), ps)
-# 67.214 ms (58575 allocations: 29.60 MiB)
-# 93.755 ms (59645 allocations: 42.19 MiB)
+# 726.753 ms (82068 allocations: 370.75 MiB)
 Flux.Optimise.update!(opt, ps, gs)
 
 
