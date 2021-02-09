@@ -3,7 +3,7 @@
 For citing, please use the following entry:
 
 ```
-@misc{Mill2018,
+@misc{JsonGrinder2019,
     author = {Tomáš Pevný and Matěj Račinský},
     title = {{JsonGrinder.jl}},
     year = 2019,

@@ -116,16 +116,16 @@ end
 function default_scalar_extractor()
 	[
 	(e -> length(keys(e)) <= 100 && is_numeric_or_numeric_string(e),
-		e -> ExtractCategorical(keys(e))),
+		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),
 	(e -> is_intable(e),
-		e -> extractscalar(Int32, e)),
+		(e, uniontypes) -> extractscalar(Int32, e, uniontypes)),
 	(e -> is_floatable(e),
-	 	e -> extractscalar(FloatType, e)),
+	 	(e, uniontypes) -> extractscalar(FloatType, e, uniontypes)),
 	# it's important that condition here would be lower than maxkeys
 	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !is_numeric_or_numeric_string(e)),
-		e -> ExtractCategorical(keys(e))),
+		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),
 	(e -> true,
-		e -> extractscalar(unify_types(e), e)),]
+		(e, uniontypes) -> extractscalar(unify_types(e), e, uniontypes)),]
 end
 
 counts(s::T) where {T<:Entry} = s.counts

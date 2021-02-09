@@ -1,25 +1,28 @@
-import Mill: catobs, MaybeHotMatrix
+using Mill: ArrayNode, MaybeHotMatrix
+
 """
-	ExtractCategorical(s::Entry)
-	ExtractCategorical(s::UnitRange)
-	ExtractCategorical(s::Vector)
+	ExtractCategorical(s::Entry, uniontypes = true)
+	ExtractCategorical(s::UnitRange, uniontypes = true)
+	ExtractCategorical(s::Vector, uniontypes = true)
 
 Converts a single item to a one-hot encoded vector.
 Converts array of items into matrix of one-hot encoded columns.
 There is always alocated an extra element for a unknown value.
-If passed `missing`, returns column of missing values.
+If passed `missing`, if `uniontypes` is true, returns column of missing values, otherwise raises error.
+If `uniontypes` is true, it allows extracting `missing` values and all extracted values will be of type
+`Union{Missing, <other type>}` due to type stability reasons. Otherwise missings extraction is not allowed.
 
 # Examples
 
 ```jldoctest
-julia> e = ExtractCategorical(2:4);
+julia> e = ExtractCategorical(2:4, true);
 
 julia> e([2,3,1,4]).data
-4×4 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
- 1  0  0  0
- 0  1  0  0
- 0  0  0  1
- 0  0  1  0
+4×4 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+  true  false  false  false
+ false   true  false  false
+ false  false  false   true
+ false  false   true  false
 
 julia> e([1,missing,5]).data
 4×3 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
@@ -29,83 +32,87 @@ julia> e([1,missing,5]).data
   true  missing   true
 
 julia> e(4).data
+4×1 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+ false
+ false
+  true
+ false
+
+julia> e(missing).data
+4×1 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+ missing
+ missing
+ missing
+ missing
+
+julia> e = ExtractCategorical(2:4, false);
+
+julia> e([2,3,1,4]).data
+4×4 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
+ 1  0  0  0
+ 0  1  0  0
+ 0  0  0  1
+ 0  0  1  0
+
+julia> e(4).data
 4×1 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
  0
  0
  1
  0
-
-julia> e(missing).data
-4×1 Mill.MaybeHotMatrix{Missing,Int64,Missing}:
- missing
- missing
- missing
- missing
 ```
 """
 struct ExtractCategorical{V,I} <: AbstractExtractor
 	keyvalemap::Dict{V,I}
 	n::Int
-	full::Bool
+	uniontypes::Bool
 end
 # todo: upravit konstruktory
-ExtractCategorical(s::Entry) = ExtractCategorical(collect(keys(s.counts)))
-ExtractCategorical(s::UnitRange) = ExtractCategorical(collect(s))
-function ExtractCategorical(ks::Vector)
+ExtractCategorical(s::Entry, uniontypes = true) = ExtractCategorical(collect(keys(s.counts)), uniontypes)
+ExtractCategorical(s::UnitRange, uniontypes = true) = ExtractCategorical(collect(s), uniontypes)
+function ExtractCategorical(ks::Vector, uniontypes = true)
 	if isempty(ks)
 		@warn "Skipping initializing empty categorical variable does not make much sense to me"
 		return nothing
 	end
 	ks = sort(unique(ks))
-	ExtractCategorical(Dict(zip(ks, 1:length(ks))), length(ks) +1)
+	ExtractCategorical(Dict(zip(ks, 1:length(ks))), length(ks) +1, uniontypes)
 end
 
-function (s::ExtractCategorical{V,I})(v::V) where {V,I}
-    x = MaybeHotMatrix([get(s.keyvalemap, v, s.n)], s.n)
-    ArrayNode(x)
-end
+map_val(s, v::MissingOrNothing) = s.uniontypes ? missing : error("This extractor does not support missing values")
+map_val(s, v) = get(s.keyvalemap, v, s.n)
+val2idx(s::ExtractCategorical{V,I}, v::V) where {V,I} =
+	s.uniontypes ? Union{Missing, I}[map_val(s, v)] : [map_val(s, v)]
+val2idx(s::ExtractCategorical{V,I}, vs::Vector{V}) where {V,I} =
+	s.uniontypes ? Union{Missing, I}[map_val(s, v) for v in vs] : [map_val(s, v) for v in vs]
+val2idx(s::ExtractCategorical{V,I}, vs::Vector{<:Union{V, Missing, Nothing}}) where {V,I} =
+	s.uniontypes ? Union{Missing, I}[map_val(s, v) for v in vs] : [map_val(s, v) for v in vs]
+val2idx(s::ExtractCategorical{<:Number,I}, v::Number) where {V,I} =
+	s.uniontypes ? Union{Missing, I}[map_val(s, v)] : [map_val(s, v)]
+val2idx(s::ExtractCategorical{<:Number,I}, vs::Vector{<:Number}) where {V,I} =
+	s.uniontypes ? Union{Missing, I}[map_val(s, v) for v in vs] : [map_val(s, v) for v in vs]
 
-function (s::ExtractCategorical{V,I})(vs::Vector{V}) where {V,I}
-	x = MaybeHotMatrix([get(s.keyvalemap, v, s.n) for v in vs], s.n)
-	ArrayNode(x)
-end
+(s::ExtractCategorical{V,I})(v::V) where {V,I} = ArrayNode(MaybeHotMatrix(val2idx(s, v), s.n))
+(s::ExtractCategorical{V,I})(vs::Vector{V}) where {V,I} = ArrayNode(MaybeHotMatrix(val2idx(s, vs), s.n))
 
 # following 2 methods are to let us extract float from int extractor and vice versa
-function (s::ExtractCategorical{U,I})(v::V) where {U<:Number,V<:Number,I}
-    x = MaybeHotMatrix([get(s.keyvalemap, v, s.n)], s.n)
-    ArrayNode(x)
-end
-
-function (s::ExtractCategorical{U,I})(vs::Vector{V}) where {U<:Number,V<:Number,I}
-	x = MaybeHotMatrix([get(s.keyvalemap, v, s.n) for v in vs], s.n)
-	ArrayNode(x)
-end
+(s::ExtractCategorical{<:Number,I})(v::Number) where {I} = ArrayNode(MaybeHotMatrix(val2idx(s, v), s.n))
+(s::ExtractCategorical{<:Number,I})(vs::Vector{<:Number}) where {I} = ArrayNode(MaybeHotMatrix(val2idx(s, vs), s.n))
 
 # following 2 methods are to let us extract numeric string from float or int extractor
 # I'm trying to parse as float because integer can be parsed as float so I assume all numbers we care about
 # are "floatable". Yes, this does not work for
-function (s::ExtractCategorical{U,I})(v::V) where {U<:Number,V<:AbstractString,I}
-    x = MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n)], s.n)
-    ArrayNode(x)
-end
-
-function (s::ExtractCategorical{U,I})(vs::Vector{V}) where {U<:Number,V<:AbstractString,I}
-	x = MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n) for v in vs], s.n)
-	ArrayNode(x)
-end
-
-function (s::ExtractCategorical{V,I})(vs::Vector{<:Union{V, Missing, Nothing}}) where {V,I}
-	x = MaybeHotMatrix([ismissing(v) || isnothing(v) ? missing : get(s.keyvalemap, v, s.n) for v in vs], s.n)
-	ArrayNode(x)
-end
-
-(s::ExtractCategorical)(::V) where {V<:Union{Missing, Nothing}} = ArrayNode(MaybeHotMatrix([missing], s.n))
-(s::ExtractCategorical)(::ExtractEmpty) = ArrayNode(MaybeHotMatrix(Vector{Int}(), s.n))
+(s::ExtractCategorical{<:Number,I})(v::AbstractString) where {I} =
+	ArrayNode(MaybeHotMatrix(val2idx(s, tryparse(FloatType, v)), s.n))
+(s::ExtractCategorical{<:Number,I})(vs::Vector{<:AbstractString}) where {I} =
+	ArrayNode(MaybeHotMatrix(val2idx(s, tryparse.(FloatType, vs)), s.n))
+(s::ExtractCategorical{V,I})(vs::Vector{<:Union{V, Missing, Nothing}}) where {V,I} =
+	ArrayNode(MaybeHotMatrix(val2idx(s, vs), s.n))
+(s::ExtractCategorical{V,I})(::MissingOrNothing) where {V,I} =
+	s.uniontypes ? ArrayNode(MaybeHotMatrix(Union{Missing, I}[missing], s.n)) : error("This extractor does not support missing values")
+(s::ExtractCategorical{V,I})(::ExtractEmpty) where {V,I} = ArrayNode(MaybeHotMatrix(s.uniontypes ? Vector{Union{Missing, I}}() : Vector{I}(), s.n))
 (s::ExtractCategorical)(v) = s(missing)
 
-Base.reduce(::typeof(catobs), a::Vector{S}) where {S<:Flux.OneHotMatrix} = _catobs(a[:])
-catobs(a::Flux.OneHotMatrix...) = _catobs(collect(a))
-_catobs(a::AbstractArray{<:Flux.OneHotMatrix}) = Flux.OneHotMatrix(a[1].height,reduce(vcat, [i.data for i in a]))
-
-Base.hash(e::ExtractCategorical, h::UInt) = hash((e.keyvalemap, e.n), h)
-Base.:(==)(e1::ExtractCategorical, e2::ExtractCategorical) = e1.keyvalemap == e2.keyvalemap && e1.n === e2.n
+Base.hash(e::ExtractCategorical, h::UInt) = hash((e.keyvalemap, e.n, e.uniontypes), h)
+Base.:(==)(e1::ExtractCategorical, e2::ExtractCategorical) =
+	e1.keyvalemap == e2.keyvalemap && e1.n === e2.n && e1.uniontypes === e2.uniontypes

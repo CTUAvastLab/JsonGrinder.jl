@@ -23,49 +23,74 @@ end
 testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 
 @testset "Testing ExtractScalar" begin
-	sc = ExtractScalar(Float64,2,3)
+	sc = ExtractScalar(Float64,2,3,true)
+	@test sc.uniontypes == true
 	@test all(sc("5").data .== [9])
 	@test all(sc(5).data .== [9])
 	@test all(sc(nothing).data .=== [missing])
 	@test all(sc(missing).data .=== [missing])
 	@test nobs(sc(missing)) == 1
 	@test nobs(sc(nothing)) == 1
+	@test sc(extractempty).data isa Matrix{Union{Missing, Float64}}
+	@test nobs(sc(extractempty)) == 0
+	@test nobs(sc(5)) == 1
+
+	sc = ExtractScalar(Float32, 0.5, 4.0, true)
+	@test sc.uniontypes == true
+	@test sc(1).data isa Matrix{Union{Missing, Float32}}
+	@test sc(extractempty).data isa Matrix{Union{Missing, Float32}}
+
+	sc = JsonGrinder.extractscalar(Float32, true)
+	@test sc.uniontypes == true
+	@test sc(1).data isa Matrix{Union{Missing, Float32}}
+	@test sc(Dict(1=>1)).data isa Matrix{Union{Missing, Float32}}
+	@test length(sc) == 1
+
+	sc = ExtractScalar(Float64,2,3,false)
+	@test sc.uniontypes == false
+	@test all(sc("5").data .== [9])
+	@test all(sc(5).data .== [9])
+	@test_throws ErrorException sc(nothing)
+	@test_throws ErrorException sc(missing)
 	@test sc(extractempty).data isa Matrix{Float64}
 	@test nobs(sc(extractempty)) == 0
 	@test nobs(sc(5)) == 1
 
-	sc = ExtractScalar(Float32, 0.5, 4.0)
+	sc = ExtractScalar(Float32, 0.5, 4.0, false)
+	@test sc.uniontypes == false
 	@test sc(1).data isa Matrix{Float32}
 	@test sc(extractempty).data isa Matrix{Float32}
 
-	sc = JsonGrinder.extractscalar(Float32)
+	sc = JsonGrinder.extractscalar(Float32,false)
+	@test sc.uniontypes == false
 	@test sc(1).data isa Matrix{Float32}
-	@test sc(Dict(1=>1)).data isa Matrix{Missing}
+	@test_throws ErrorException sc(Dict(1=>1))
 	@test length(sc) == 1
 end
 
-
 @testset "ExtractCategorical" begin
-	e = ExtractCategorical(["a","b"])
+	e = ExtractCategorical(["a","b"], true)
+	@test e.uniontypes == true
 	@test e("a").data ≈ [1, 0, 0]
 	@test e("b").data ≈ [0, 1, 0]
 	@test e("z").data ≈ [0, 0, 1]
 	@test isequal(e(nothing).data, [missing missing missing]')
 	@test isequal(e(missing).data, [missing missing missing]')
-	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Int64,Bool}
-	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Int64,Missing}
-	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Int64,Missing}
-	@test e(extractempty).data isa MaybeHotMatrix{Int64,Int64,Bool}
+	@test typeof(e("a").data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+	@test typeof(e(nothing).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+	@test typeof(e(missing).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+	@test e(extractempty).data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
 	@test nobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test isequal(e(["a", missing]).data, [true missing; false missing; false missing])
 	@test isequal(e(["a", missing, "x"]).data, [true missing false; false missing false; false missing true])
-	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Int64,Bool}
+	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
 	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
 
-	@test isnothing(ExtractCategorical([]))
-	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
+	@test isnothing(ExtractCategorical([], true))
+	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2), true)
+	@test e2.uniontypes == true
 	@test e2("a").data ≈ [1, 0, 0]
 	@test e2("c").data ≈ [0, 1, 0]
 	@test e2("b").data ≈ [0, 0, 1]
@@ -86,7 +111,8 @@ end
 	@test nobs(e([missing, nothing])) == 2
 	@test nobs(e([missing, nothing, "a"])) == 3
 
-	e3 = ExtractCategorical(JsonGrinder.Entry(Dict(1=>1,2=>1), 2))
+	e3 = ExtractCategorical(JsonGrinder.Entry(Dict(1=>1,2=>1), 2), true)
+	@test e3.uniontypes == true
 	@test e3(1).data ≈ [1, 0, 0]
 	@test e3(2).data ≈ [0, 1, 0]
 	@test e3(4).data ≈ [0, 0, 1]
@@ -95,7 +121,8 @@ end
 	@test e3(4.).data ≈ [0, 0, 1]
 	@test isequal(e3([]).data, [missing missing missing]')
 
-	e4 = ExtractCategorical(JsonGrinder.Entry(Dict(1.0=>1,2.0=>1), 2))
+	e4 = ExtractCategorical(JsonGrinder.Entry(Dict(1.0=>1,2.0=>1), 2), true)
+	@test e4.uniontypes == true
 	@test e4(1).data ≈ [1, 0, 0]
 	@test e4(2).data ≈ [0, 1, 0]
 	@test e4(4).data ≈ [0, 0, 1]
@@ -103,6 +130,65 @@ end
 	@test e4(2.).data ≈ [0, 1, 0]
 	@test e4(4.).data ≈ [0, 0, 1]
 	@test isequal(e4([]).data, [missing missing missing]')
+
+	e = ExtractCategorical(["a","b"], false)
+	@test e.uniontypes == false
+	@test e("a").data ≈ [1, 0, 0]
+	@test e("b").data ≈ [0, 1, 0]
+	@test e("z").data ≈ [0, 0, 1]
+	@test_throws ErrorException e(nothing)
+	@test_throws ErrorException e(missing)
+	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Int64,Bool}
+	@test e(extractempty).data isa MaybeHotMatrix{Int64,Int64,Bool}
+	@test nobs(e(extractempty)) == 0
+
+	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
+	@test_throws ErrorException e(["a", missing])
+	@test_throws ErrorException e(["a", missing, "x"])
+	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Int64,Bool}
+	@test_throws ErrorException e(["a", "b", nothing])
+
+	@test isnothing(ExtractCategorical([], false))
+	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2), false)
+	@test e2.uniontypes == false
+	@test e2("a").data ≈ [1, 0, 0]
+	@test e2("c").data ≈ [0, 1, 0]
+	@test e2("b").data ≈ [0, 0, 1]
+	@test_throws ErrorException e2(nothing)
+	@test_throws ErrorException e2(missing)
+
+	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
+	@test reduce(catobs, [e("a").data, e("b").data]) ≈ [1 0; 0 1; 0 0]
+	@test hcat(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
+	@test_throws ErrorException e(Dict(1=>2))
+
+	@test nobs(e("a")) == 1
+	@test nobs(e("b")) == 1
+	@test nobs(e("z")) == 1
+	@test_throws ErrorException nobs(e(nothing))
+	@test_throws ErrorException nobs(e(missing))
+	@test_throws ErrorException nobs(e([missing, nothing]))
+	@test_throws ErrorException nobs(e([missing, nothing, "a"]))
+
+	e3 = ExtractCategorical(JsonGrinder.Entry(Dict(1=>1,2=>1), 2), false)
+	@test e3.uniontypes == false
+	@test e3(1).data ≈ [1, 0, 0]
+	@test e3(2).data ≈ [0, 1, 0]
+	@test e3(4).data ≈ [0, 0, 1]
+	@test e3(1.).data ≈ [1, 0, 0]
+	@test e3(2.).data ≈ [0, 1, 0]
+	@test e3(4.).data ≈ [0, 0, 1]
+	@test_throws ErrorException isequal(e3([]).data, [missing missing missing]')
+
+	e4 = ExtractCategorical(JsonGrinder.Entry(Dict(1.0=>1,2.0=>1), 2), false)
+	@test e4.uniontypes == false
+	@test e4(1).data ≈ [1, 0, 0]
+	@test e4(2).data ≈ [0, 1, 0]
+	@test e4(4).data ≈ [0, 0, 1]
+	@test e4(1.).data ≈ [1, 0, 0]
+	@test e4(2.).data ≈ [0, 1, 0]
+	@test e4(4.).data ≈ [0, 0, 1]
+	@test_throws ErrorException isequal(e4([]).data, [missing missing missing]')
 end
 
 @testset "ExtractCategorical type conversions" begin
@@ -126,10 +212,9 @@ end
 	sc = ExtractArray(ExtractCategorical(2:4))
 	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
 	@test nobs(sc(nothing).data) == 0
-	@test sc(nothing).data.data isa MaybeHotMatrix{Int64,Int64,Bool}
+	@test sc(nothing).data.data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
 	@test nobs(sc(nothing).data.data) == 0
 	@test all(sc(nothing).bags.bags .== [0:-1])
-
 
 	Mill.emptyismissing!(true)
 	@test sc(nothing).data isa Missing
@@ -139,7 +224,7 @@ end
 	@test nobs(sc(extractempty).data.data) == 0
 	@test nobs(sc(extractempty).data) == 0
 	@test isempty(sc(extractempty).bags.bags)
-	@test sc(extractempty).data.data isa MaybeHotMatrix{Int64,Int64,Bool}
+	@test sc(extractempty).data.data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
 
 	sc = ExtractArray(ExtractScalar(Float32))
 	@test all(sc([2,3,4]).data.data .== [2 3 4])
@@ -150,37 +235,65 @@ end
 	@test nobs(sc(extractempty).data.data) == 0
 	@test nobs(sc(extractempty).data) == 0
 	@test isempty(sc(extractempty).bags.bags)
-	@test sc(extractempty).data.data isa Matrix{Float32}
+	@test sc(extractempty).data.data isa Matrix{Union{Missing, Float32}}
 
-	@test sc(nothing).data.data isa Matrix{Float32}
+	@test sc(nothing).data.data isa Matrix{Union{Missing, Float32}}
 end
 
 @testset "Testing feature vector conversion" begin
-	sc = ExtractVector(5)
+	sc = ExtractVector(5, true)
+	@test sc.uniontypes == true
 	@test sc([1, 2, 2, 3, 4]).data isa Matrix
 	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
-	@test sc([1, 2, 2, 3, 4]).data isa Array{Float32, 2}
+	@test sc([1, 2, 2, 3, 4]).data isa Matrix{Union{Missing, Float32}}
+	@test sc(extractempty).data isa Matrix{Union{Missing, Float32}}
+	@test nobs(sc(extractempty).data) == 0
+
+	sc = ExtractVector{Int64}(5, true)
+	@test sc.uniontypes == true
+	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
+	@test sc([1, 2, 2, 3, 4]).data isa Matrix{Union{Missing, Int64}}
+	@test sc(nothing).data isa Matrix{Union{Missing, Int64}}
+	@test all(sc(nothing).data .=== missing)
+	@test sc(extractempty).data isa Matrix{Union{Missing, Int64}}
+	@test nobs(sc(extractempty).data) == 0
+
+	# feature vector longer than expected
+	sc = ExtractVector{Float32}(5, true)
+	@test sc.uniontypes == true
+	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
+	@test typeof(sc([1, 2, 3, 4, 5]).data) == Matrix{Union{Missing, Float32}}
+	@test sc([5, 6]).data[1:2] ≈ [5, 6]
+	@test typeof(sc([1, 2]).data) == Matrix{Union{Missing, Float32}}
+	@test sc([1, 2]).data isa Matrix{Union{Missing, Float32}}
+	@test all(sc([5, 6]).data[3:5] .=== missing)
+	@test all(sc(Dict(1=>2)).data .=== missing)
+
+	sc = ExtractVector(5, false)
+	@test sc.uniontypes == false
+	@test sc([1, 2, 2, 3, 4]).data isa Matrix
+	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
+	@test sc([1, 2, 2, 3, 4]).data isa Matrix{Float32}
 	@test sc(extractempty).data isa Matrix{Float32}
 	@test nobs(sc(extractempty).data) == 0
 
-	sc = ExtractVector{Int64}(5)
+	sc = ExtractVector{Int64}(5, false)
+	@test sc.uniontypes == false
 	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
 	@test sc([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
-	@test sc(nothing).data isa Matrix
-	@test all(sc(nothing).data .=== missing)
+	@test_throws ErrorException sc(nothing)
+	@test_throws ErrorException sc(missing)
 	@test sc(extractempty).data isa Matrix{Int64}
 	@test nobs(sc(extractempty).data) == 0
 
-
 	# feature vector longer than expected
-	sc = ExtractVector{Float32}(5)
+	sc = ExtractVector{Float32}(5, false)
+	@test sc.uniontypes == false
 	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
 	@test typeof(sc([1, 2, 3, 4, 5]).data) == Array{Float32,2}
-	@test sc([5, 6]).data[1:2] ≈ [5, 6]
-	@test typeof(sc([1, 2]).data) == Array{Union{Missing,Float32},2}
-	@test sc([1, 2]).data isa Matrix
-	@test all(sc([5, 6]).data[3:5] .=== missing)
-	@test all(sc(Dict(1=>2)).data .=== missing)
+	@test_throws ErrorException sc([5, 6])
+	@test_throws ErrorException sc([1, 2])
+	@test_throws ErrorException sc(Dict(1=>2))
 end
 
 @testset "Testing ExtractDict" begin
@@ -270,38 +383,6 @@ end
 	@test nobs(a4[:b]) == 0
 	@test nobs(a4[:b].data) == 0
 	@test a4[:b].data.data isa Matrix{Float32}
-end
-
-@testset "ExtractOneHot" begin
-	samples = ["{\"name\": \"a\", \"count\" : 1}",
-		"{\"name\": \"b\", \"count\" : 2}",]
-	vs = JSON.parse.(samples)
-
-	e = ExtractOneHot(["a","b"], "name", "count")
-	@test e(vs).data[:] ≈ [1, 2, 0]
-	@test e(nothing).data[:] ≈ [0, 0, 0]
-	@test e(missing).data[:] ≈ [0, 0, 0]
-	@test e(vs).data isa SparseMatrixCSC{Float32,Int64}
-	@test e(nothing).data isa SparseMatrixCSC{Float32,Int64}
-	@test e(missing).data isa SparseMatrixCSC{Float32,Int64}
-	@test e(extractempty).data isa SparseMatrixCSC{Float32,Int64}
-	@test nobs(e(extractempty)) == 0
-	@test nobs(e(extractempty).data) == 0
-
-	e = ExtractOneHot(["a","b"], "name", nothing)
-	@test e(vs).data[:] ≈ [1, 1, 0]
-	@test e(nothing).data[:] ≈ [0, 0, 0]
-	@test e(missing).data[:] ≈ [0, 0, 0]
-	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
-	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
-	@test typeof(e(missing).data) == SparseMatrixCSC{Float32,Int64}
-	vs = JSON.parse.(["{\"name\": \"c\", \"count\" : 1}"])
-	@test e(vs).data[:] ≈ [0, 0, 1]
-	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
-	@test e(extractempty).data isa SparseMatrixCSC{Float32,Int64}
-	@test nobs(e(extractempty)) == 0
-	@test nobs(e(extractempty).data) == 0
-	@test e(Dict("name"=>"a")).data[:] ≈ [1, 0, 0]
 end
 
 @testset "ExtractString" begin
@@ -847,32 +928,33 @@ end
 
 end
 
-# @testset "type stability of extraction missings" begin
-# 	j1 = JSON.parse("""{"a": 1}""")
-# 	j2 = JSON.parse("""{"b": "a"}""")
-# 	j3 = JSON.parse("""{"a": 3, "b": "b"}""")
-# 	j4 = JSON.parse("""{"a": 4, "b": "c"}""")
-# 	j5 = JSON.parse("""{"a": 5, "b": "d"}""")
-#
-# 	sch = schema([j1,j2,j3,j4,j5])
-# 	ext = suggestextractor(sch, testing_settings)
-# 	m = reflectinmodel(sch, ext)
-#
-# 	e1 = ext(j1)
-# 	e2 = ext(j2)
-# 	e3 = ext(j3)
-# 	e12 = catobs(e1, e2)
-# 	e23 = catobs(e2, e3)
-# 	e13 = catobs(e1, e3)
-# 	typeof(e1)
-# 	typeof(e2)
-# 	typeof(e3)
-# 	typeof(e12)
-# 	typeof(e23)
-# 	typeof(e13)
-# 	@test typeof(e1) == typeof(e2)
-# 	@test typeof(e1) == typeof(e3)
-# 	@test typeof(e1) == typeof(e12)
-# 	@test typeof(e1) == typeof(e23)
-# 	@test typeof(e1) == typeof(e13)
-# end
+@testset "type stability of extraction missings" begin
+	# todo: make tests for categorical, scalar, string, vector
+	j1 = JSON.parse("""{"a": 1}""")
+	j2 = JSON.parse("""{"b": "a"}""")
+	j3 = JSON.parse("""{"a": 3, "b": "b"}""")
+	j4 = JSON.parse("""{"a": 4, "b": "c"}""")
+	j5 = JSON.parse("""{"a": 5, "b": "d"}""")
+
+	sch = schema([j1,j2,j3,j4,j5])
+	ext = suggestextractor(sch, testing_settings)
+	m = reflectinmodel(sch, ext)
+
+	e1 = ext(j1)
+	e2 = ext(j2)
+	e3 = ext(j3)
+	e12 = catobs(e1, e2)
+	e23 = catobs(e2, e3)
+	e13 = catobs(e1, e3)
+	typeof(e1)
+	typeof(e2)
+	typeof(e3)
+	typeof(e12)
+	typeof(e23)
+	typeof(e13)
+	@test typeof(e1) == typeof(e2)
+	@test typeof(e1) == typeof(e3)
+	@test typeof(e1) == typeof(e12)
+	@test typeof(e1) == typeof(e23)
+	@test typeof(e1) == typeof(e13)
+end

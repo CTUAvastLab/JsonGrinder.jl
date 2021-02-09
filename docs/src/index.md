@@ -61,10 +61,11 @@ There are four steps to create a classifier once you load the data.
 
 1. Create a schema of JSON files (using `sch = JsonGrinder.schema`).
 2. Create an extractor converting JSONs to Mill structures (`extractor = suggestextractor(sch))`). Schema `sch` from previous step is very helpful, as it helps to identify, how to convert nodes (`Dict`, `Array`) to (`Mill.ProductNode` and `Mill.BagNode`) and how to convert values in leaves to (`Float32`, `Vector{Float32}`, `String`, `Categorical`).
-3. Create a model for your JSONs, which can be easily done by (using `model = reflectinmodel(sch, extractor,...)`)
-4. Use your favourite methods to train the model, it is 100% compatible with `Flux.jl` tooling.
+3. Extract your JSON files into Mill structures using extractor `extractbatch(extractor, samples)`
+4. Create a model for your JSONs, which can be easily done by (using `model = reflectinmodel(sch, extractor,...)`)
+5. Use your favourite methods to train the model, it is 100% compatible with `Flux.jl` tooling.
 
-The first two steps are handled by `JsonGrinder.jl` the third step by `Mill.jl` and the fourth by a combination of `Mill.jl` and `Flux.jl`.
+The first three steps are handled by `JsonGrinder.jl`, the fourth step by `Mill.jl` and the fourth by a combination of `Mill.jl` and `Flux.jl`.
 
 Authors see the biggest advantage in the `model` being hierarchical and reflecting the JSON structure. Thanks to `Mill.jl`, it can handle missing values at all levels.
 

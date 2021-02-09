@@ -13,7 +13,7 @@ This allows model to more easily learn frequent or somehow else significant valu
 for previously unseen inputs.
 
 ```jldoctest
-julia> e = MultipleRepresentation((ExtractString(), ExtractCategorical(["tcp", "udp", "dhcp"])));
+julia> e = MultipleRepresentation((ExtractString(false), ExtractCategorical(["tcp", "udp", "dhcp"], false)));
 
 julia> s1 = e("tcp")
 ProductNode with 1 obs
@@ -59,28 +59,28 @@ julia> e = MultipleRepresentation((ExtractString(), ExtractScalar(Float32, 2, 3)
 
 julia> s1 = e(5)
 ProductNode with 1 obs
-  ├── e1: ArrayNode(2053×1 NGramMatrix with Missing elements) with 1 obs
-  └── e2: ArrayNode(1×1 Array with Float32 elements) with 1 obs
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) with 1 obs
+  └── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs
 
 julia> s1[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Missing,Missing},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
  missing
 
 julia> s1[:e2]
-1×1 Mill.ArrayNode{Array{Float32,2},Nothing}:
- 9.0
+1×1 Mill.ArrayNode{Array{Union{Missing, Float32},2},Nothing}:
+ 9.0f0
 
 julia> s2 = e("hi")
 ProductNode with 1 obs
-  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs
-  └── e2: ArrayNode(1×1 Array with Missing elements) with 1 obs
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) with 1 obs
+  └── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs
 
 julia> s2[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
  "hi"
 
 julia> s2[:e2]
-1×1 Mill.ArrayNode{Array{Missing,2},Nothing}:
+1×1 Mill.ArrayNode{Array{Union{Missing, Float32},2},Nothing}:
  missing
 
 ```

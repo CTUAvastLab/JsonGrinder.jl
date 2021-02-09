@@ -81,7 +81,7 @@ function key_as_field(e::DictEntry, settings; path = "", child_less_than_parent 
 	for k in keys(e)
 		update!(key_schema, k, path=path)
 	end
-	ExtractKeyAsField(ExtractString(3, 256, 2053), suggestextractor(child_schema, settings, path = path*"[:childs]"))
+	ExtractKeyAsField(ExtractString(3, 256, 2053, true), suggestextractor(child_schema, settings, path = path*"[:childs]"))
 end
 
 """

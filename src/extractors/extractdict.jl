@@ -17,33 +17,33 @@ Dict
 
 julia> res1 = e(Dict("a"=>1, "b"=>1))
 ProductNode with 1 obs
-  ├── a: ArrayNode(1×1 Array with Float32 elements) with 1 obs
-  └── b: ArrayNode(6×1 MaybeHotMatrix with Bool elements) with 1 obs
+  ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs
+  └── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements) with 1 obs
 
 julia> res1[:a].data
-1×1 Array{Float32,2}:
- -3.0
+1×1 Array{Union{Missing, Float32},2}:
+ -3.0f0
 
 julia> res1[:b].data
-6×1 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
- 1
- 0
- 0
- 0
- 0
- 0
+6×1 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+  true
+ false
+ false
+ false
+ false
+ false
 
 julia> res2 = e(Dict("a"=>0))
 ProductNode with 1 obs
-  ├── a: ArrayNode(1×1 Array with Float32 elements) with 1 obs
-  └── b: ArrayNode(6×1 MaybeHotMatrix with Missing elements) with 1 obs
+  ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs
+  └── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements) with 1 obs
 
 julia> res2[:a].data
-1×1 Array{Float32,2}:
- -6.0
+1×1 Array{Union{Missing, Float32},2}:
+ -6.0f0
 
 julia> res2[:b].data
-6×1 Mill.MaybeHotMatrix{Missing,Int64,Missing}:
+6×1 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
  missing
  missing
  missing

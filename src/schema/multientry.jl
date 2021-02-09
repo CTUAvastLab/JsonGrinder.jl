@@ -55,9 +55,12 @@ function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "", chi
 	e = merge_entries_with_cast(e, FloatType, Real)
 	# we need to filter out empty things in multientry too, same manner as dict
 	ks = filter(k->!isempty(e.childs[k]), keys(e.childs))
+	# child extractors of multi representation will always gene incompatible type which is treated as missing
+	# otherwise there would not be the need for MultiRepresentation at all
+	# that's why we enforce true here
 	MultipleRepresentation(map(k -> suggestextractor(e.childs[k], settings,
 			path = path,
-			child_less_than_parent = child_less_than_parent
+			child_less_than_parent = true
 		),ks))
 end
 

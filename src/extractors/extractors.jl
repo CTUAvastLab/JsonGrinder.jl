@@ -13,6 +13,8 @@ downstream extractors that they should extract an empty sample.
 """
 const extractempty = ExtractEmpty()
 
+const MissingOrNothing = Union{Missing, Nothing}
+
 include("auxiliary.jl")
 include("extractarray.jl")
 include("extractdict.jl")
@@ -20,6 +22,5 @@ include("extractcategorical.jl")
 include("extractscalar.jl")
 include("extractstring.jl")
 include("extractvector.jl")
-include("extractonehot.jl")
 include("extract_keyasfield.jl")
 include("multirepresentation.jl")

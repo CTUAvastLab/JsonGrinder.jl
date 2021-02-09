@@ -3,7 +3,7 @@ using Mill, JSON, Printf, Flux
 using HierarchicalUtils
 import HierarchicalUtils: NodeType, children, InnerNode, LeafNode, printtree, noderepr
 
-using Mill: ArrayNode, BagNode, ProductNode, catobs
+using Mill: ArrayNode, BagNode, ProductNode, catobs, NGramMatrix
 
 const FloatType = Float32
 
