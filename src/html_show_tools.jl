@@ -1,4 +1,4 @@
-using Mustache: @mt_str
+using Mustache: @mt_str, render
 using Printf: @sprintf
 using HttpCommon: escapeHTML
 using ThreadTools: tmap

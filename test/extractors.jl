@@ -8,16 +8,16 @@ using LinearAlgebra
 function less_categorical_scalar_extractor()
 	[
 	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.5 && length(keys(e)) <= 10 && JsonGrinder.is_numeric_or_numeric_string(e)),
-		e -> ExtractCategorical(keys(e))),
+		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),
 	(e -> JsonGrinder.is_intable(e),
-		e -> JsonGrinder.extractscalar(Int32, e)),
+		(e, uniontypes) -> JsonGrinder.extractscalar(Int32, e, uniontypes)),
 	(e -> JsonGrinder.is_floatable(e),
-	 	e -> JsonGrinder.extractscalar(JsonGrinder.FloatType, e)),
+	 	(e, uniontypes) -> JsonGrinder.extractscalar(JsonGrinder.FloatType, e, uniontypes)),
 	# it's important that condition here would be lower than maxkeys
 	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !JsonGrinder.is_numeric_or_numeric_string(e)),
-		e -> ExtractCategorical(keys(e))),
+		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),
 	(e -> true,
-		e -> JsonGrinder.extractscalar(JsonGrinder.unify_types(e), e)),]
+		(e, uniontypes) -> JsonGrinder.extractscalar(JsonGrinder.unify_types(e), e, uniontypes)),]
 end
 
 testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
@@ -341,12 +341,12 @@ end
 
 	a4 = br(extractempty)
 	@test nobs(a4[:a]) == 0
-	@test a4[:a].data isa Matrix{Float64}
+	@test a4[:a].data isa Matrix{Union{Missing, Float64}}
 	@test nobs(a4[:b]) == 0
-	@test a4[:b].data isa Matrix{Float64}
+	@test a4[:b].data isa Matrix{Union{Missing, Float64}}
 	@test nobs(a4[:c]) == 0
 	@test nobs(a4[:c].data) == 0
-	@test a4[:c].data.data isa Matrix{Float64}
+	@test a4[:c].data.data isa Matrix{Union{Missing, Float64}}
 end
 
 @testset "Testing Nested Missing Arrays" begin
@@ -375,25 +375,38 @@ end
 	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
 	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
 
-	@test all(a4.data[2].data.data isa Array{Float32,2})
+	@test all(a4.data[2].data.data isa Matrix{Union{Missing, Float32}})
 	a4 = br(extractempty)
 	@test nobs(a4[:a]) == 0
 	@test nobs(a4[:a].data) == 0
-	@test a4[:a].data.data isa Matrix{Float32}
+	@test a4[:a].data.data isa Matrix{Union{Missing, Float32}}
 	@test nobs(a4[:b]) == 0
 	@test nobs(a4[:b].data) == 0
-	@test a4[:b].data.data isa Matrix{Float32}
+	@test a4[:b].data.data isa Matrix{Union{Missing, Float32}}
 end
 
 @testset "ExtractString" begin
-	e = ExtractString()
+	e = ExtractString(true)
 	@test e("Hello").data.s == ["Hello"]
 	@test e(Symbol("Hello")).data.s == ["Hello"]
 	@test e(["Hello", "world"]).data.s == ["Hello", "world"]
 	@test all(e(missing).data.s .=== [missing])
+	@test all(e(nothing).data.s .=== [missing])
+	@test isequal(e(Dict(1=>2)), e(missing))
+	@test e("Hello") isa ArrayNode{NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}
+	@test e("Hello").data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+	@test e(missing).data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+	@test e(nothing).data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+
+	e = ExtractString(false)
+	@test e("Hello").data.s == ["Hello"]
+	@test e(Symbol("Hello")).data.s == ["Hello"]
+	@test e(["Hello", "world"]).data.s == ["Hello", "world"]
+	@test_throws ErrorException e(missing)
+	@test_throws ErrorException e(nothing)
+	@test_throws ErrorException e(Dict(1=>2))
 	@test e("Hello") isa ArrayNode{NGramMatrix{String,Int64},Nothing}
 	@test e("Hello").data isa NGramMatrix{String,Int64}
-	@test e(missing).data isa NGramMatrix{Missing,Missing}
 end
 
 @testset "Extractor of keys as field" begin
@@ -422,11 +435,11 @@ end
 	b = ext(nothing)
 	@test nobs(b) == 1
 	@test nobs(b.data) == 0
-	@test b.data[:key].data isa Mill.NGramMatrix{String,Int64}
+	@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
 	b = ext(Dict())
 	@test nobs(b) == 1
 	@test nobs(b.data) == 0
-	@test b.data[:key].data isa Mill.NGramMatrix{String,Int64}
+	@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
 
 	Mill.emptyismissing!(orig_emptyismissing)
 
@@ -436,8 +449,7 @@ end
 	@test nobs(b.data[:item]) == 0
 	@test b.data[:item].data isa Matrix{Float32}
 	@test nobs(b.data[:key]) == 0
-	@test b.data[:key].data isa Mill.NGramMatrix{String,Int64}
-
+	@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
 
 	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000]
 	sch = JsonGrinder.schema(js)
@@ -797,11 +809,10 @@ end
 	"""
 	ProductNode with 1 obs
 	  └── a: ProductNode with 1 obs
-	           ├── e1: ArrayNode(5×1 Array with Missing elements) with 1 obs
+	           ├── e1: ArrayNode(5×1 Array with Union{Missing, Float32} elements) with 1 obs
 	           ├── e2: ProductNode with 1 obs
-	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Missing elements) with 1 obs
-	           └── e3: ArrayNode(1×1 Array with Float32 elements) with 1 obs"""
-
+	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) with 1 obs
+	           └── e3: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs"""
 	@test ext[:a][1] == ext["c"]
 end
 

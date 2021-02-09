@@ -64,7 +64,6 @@ ExtractString() = ExtractString(3, 256, 2053, true)
 (s::ExtractString)(v) = s(missing)
 (s::ExtractString)(v::Symbol) = s(String(v))
 
-# todo: add jldoctest here so it's better
 """
 	extractscalar(Type{String}, n = 3, b = 256, m = 2053)
 
@@ -77,11 +76,11 @@ represents strings as ngrams with
 
 extracts number subtracting `m` and multiplying by `s`
 """
-extractscalar(::Type{<:AbstractString}, n = 3, b = 256, m = 2053, uniontypes = false) = ExtractString(n, b, m, uniontypes)
+extractscalar(::Type{<:AbstractString}, n = 3, b = 256, m = 2053, uniontypes = true) = ExtractString(n, b, m, uniontypes)
 
 Base.hash(e::ExtractString, h::UInt) = hash((e.n, e.b, e.m, e.uniontypes), h)
 Base.:(==)(e1::ExtractString, e2::ExtractString) =
 	e1.n === e2.n && e1.b === e2.b && e1.m === e2.m && e1.uniontypes === e2.uniontypes
 
 # to be compatible with the number version
-extractscalar(::Type{<:AbstractString}, e::Entry) = ExtractString()
+extractscalar(::Type{<:AbstractString}, e::Entry, uniontypes::Bool = true) = ExtractString(uniontypes)
