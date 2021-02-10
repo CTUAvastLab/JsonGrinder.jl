@@ -1,6 +1,5 @@
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, StatsBase, HierarchicalUtils, BenchmarkTools, JLD2, Random
 using Pkg
-include(joinpath(@__DIR__, "..", "utils.jl"))
 pkg"precompile"
 
 make_model(sch, extractor, n_classes) = reflectinmodel(sch, extractor,
@@ -18,7 +17,8 @@ make_model(sch, extractor, n_classes) = reflectinmodel(sch, extractor,
 
 # samples = [open(JSON.parse, x) for x in readdir("examples/documents", join=true)]
 # samples = [open(JSON.parse, x) for x in readdir("examples2/documents_100", join=true)]
-samples = load_documents_1k()
+samples = collect(Iterators.take(load_documents_1k(), 500))
+# samples = samples[1:800]
 sch = JsonGrinder.schema(samples)
 delete!(sch.childs,:paper_id)
 # extractor = suggestextractor(sch, (; key_as_field=13))	# for small dataset
@@ -33,7 +33,7 @@ benchmark_stuff("documents", data, targets, labelnames, batch_size, model)
 ###############################################################
 # deviceid
 ###############################################################
-samples = load_deviceid()
+samples = collect(Iterators.take(load_deviceid(), 500))
 labelkey = "device_class"
 targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)

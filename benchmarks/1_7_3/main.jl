@@ -6,9 +6,10 @@ pkg"precompile"
 make_model(sch, extractor, n_classes) = reflectinmodel(sch, extractor,
 	k -> Dense(k,20,relu),
 	d -> SegmentedMeanMax(d),
-	fsm = Dict("" => k -> Dense(k, n_classes)),
+	b = Dict("" => k -> Dense(k, n_classes)),
 )
 
+JsonGrinder.add_metadata2dicts!(false)
 ###############################################################
 # documents
 ###############################################################
@@ -25,7 +26,7 @@ delete!(sch.childs,:paper_id)
 extractor = suggestextractor(sch, (; key_as_field=300))
 targets = author_cite_themself.(samples)
 labelnames = unique(targets)
-extractor(JsonGrinder.sample_synthetic(sch, empty_dict_vals=true))
+extractor(JsonGrinder.sample_synthetic(sch))
 data = extractor.(samples)
 batch_size = 300
 model = make_model(sch, extractor, 2)
