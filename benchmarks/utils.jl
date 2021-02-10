@@ -19,6 +19,7 @@ minibatch_vec(data, targets, labelnames, batch_size=200, idx=sample(1:length(dat
 loss(x,y) = Flux.logitcrossentropy(model(x).data, y)
 
 function benchmark_stuff(name, data, targets, labenames, batch_size, model)
+	opt = ADAM()
 	ps = Flux.params(model)
 	Random.seed!(42)
 	@info "$name - testing the gradient and catobsing"
@@ -30,11 +31,11 @@ function benchmark_stuff(name, data, targets, labenames, batch_size, model)
 	mbx_vec, mby = minibatch_vec(data, targets, labelnames, batch_size, collect(1:batch_size))
 	mbx = reduce(catobs, mbx_vec)
 	@info "$name - catobs"
-	@btime reduce(catobs, mbx_vec)
+	@btime reduce(catobs, $mbx_vec)
 	loss(mbx, mby)
 	@info "$name - testing gradient"
 	gs = gradient(() -> loss(mbx, mby), ps)
 	@info "$name - gradient"
-	@btime gradient(() -> loss(mbx, mby), ps)
+	@btime gradient(() -> loss($mbx, $mby), $ps)
 	Flux.Optimise.update!(opt, ps, gs)
 end

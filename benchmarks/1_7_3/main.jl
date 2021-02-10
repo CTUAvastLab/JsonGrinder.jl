@@ -28,7 +28,7 @@ targets = author_cite_themself.(samples)
 labelnames = unique(targets)
 extractor(JsonGrinder.sample_synthetic(sch))
 data = extractor.(samples)
-batch_size = 300
+batch_size = 500
 model = make_model(sch, extractor, 2)
 benchmark_stuff("documents", data, targets, labelnames, batch_size, model)
 ###############################################################
@@ -50,15 +50,11 @@ benchmark_stuff("deviceid", data, targets, labelnames, batch_size, model)
 ###############################################################
 samples = collect(Iterators.take(load_recipes(), 500))
 sch = JsonGrinder.schema(samples)
+targets = map(i -> i["cuisine"], samples)
 delete!(sch.childs,:id)
+delete!(sch.childs,:cuisine)
 extractor = suggestextractor(sch)
-extract_data = ExtractDict(nothing, deepcopy(extractor.other))
-extract_target = ExtractDict(nothing, deepcopy(extractor.other))
-delete!(extract_target.other, :ingredients)
-delete!(extract_data.other, :cuisine)
-labelnames = unique(keys(sch[:cuisine]))
-extract_target.other[:cuisine] = JsonGrinder.ExtractCategorical(labelnames)
+labelnames = unique(targets)
 data = extract_data.(samples)
-target = mapreduce(extract_target, catobs, samples).data
-model = make_model(sch, extract_data, size(target, 1))
+model = make_model(sch, extract_data, length(labelnames))
 benchmark_stuff("recipes", data, targets, labelnames, batch_size, model)
