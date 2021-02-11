@@ -135,7 +135,7 @@ julia> printtree(sch; htrunc=Inf, vtrunc=Inf, trav=true)
 ```
 
 Strings at the end of each row can be used as a key to access individual elements of the schema.
-To learn more about [HierarchicalUtils.jl](https://github.com/Sheemon7/HierarchicalUtils.jl) check their docs or [section about HierarchicalUtils.jl in Mill.jl documentation](https://pevnak.github.io/Mill.jl/dev/tools/hierarchical/)
+To learn more about [HierarchicalUtils.jl](https://github.com/Sheemon7/HierarchicalUtils.jl) check their docs or [section about HierarchicalUtils.jl in Mill.jl documentation](https://CTUAvastLab.github.io/Mill.jl/dev/tools/hierarchical/)
 
 Here, we see that we have 2 `MultiEntry`, thus 2 type instabilities in our jsons.
 The first `MultiEntry` (key `"E"`) has 2 children: `Entry` and `ArrayEntry`.

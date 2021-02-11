@@ -24,5 +24,5 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/pevnak/JsonGrinder.jl.git",
+    repo = "github.com/CTUAvastLab/JsonGrinder.jl.git",
 )

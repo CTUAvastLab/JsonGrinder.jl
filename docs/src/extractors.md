@@ -106,7 +106,7 @@ Because the extractor can be quite big, by default the `Base.show` shows only st
 
 The full extractor can by seen by `printtree(extractor)`.
 The example of modifying extractor will be done on data from `examples/documents`, because documents there are complex so the troubles with representation can better be seen here.
-Full example can be seen in [examples/schema_examination.jl](https://github.com/pevnak/JsonGrinder.jl/blob/master/examples/schema_examination.jl).
+Full example can be seen in [examples/schema_examination.jl](https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/examples/schema_examination.jl).
 
 todo: dodělat -->
 
