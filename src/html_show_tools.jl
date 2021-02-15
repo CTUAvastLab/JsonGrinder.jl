@@ -1,7 +1,9 @@
-using Mustache, HttpCommon, ThreadTools
+using Mustache: @mt_str, render
+using Printf: @sprintf
+using HttpCommon: escapeHTML
+using ThreadTools: tmap
 using DataStructures: OrderedDict
 using StatsBase: RealVector, fweights
-using Printf
 import Statistics: quantile, mean
 
 # used tableau 10 colormap

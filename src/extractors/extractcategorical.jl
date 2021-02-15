@@ -1,4 +1,4 @@
-import Mill: catobs, MaybeHotMatrix
+import Mill: ArrayNode, MaybeHotMatrix
 """
 	ExtractCategorical(s::Entry)
 	ExtractCategorical(s::UnitRange)
@@ -98,13 +98,9 @@ function (s::ExtractCategorical{V,I})(vs::Vector{<:Union{V, Missing, Nothing}}) 
 	ArrayNode(x)
 end
 
-(s::ExtractCategorical)(::V) where {V<:Union{Missing, Nothing}} = ArrayNode(MaybeHotMatrix([missing], s.n))
+(s::ExtractCategorical)(::MissingOrNothing) = ArrayNode(MaybeHotMatrix([missing], s.n))
 (s::ExtractCategorical)(::ExtractEmpty) = ArrayNode(MaybeHotMatrix(Vector{Int}(), s.n))
 (s::ExtractCategorical)(v) = s(missing)
-
-Base.reduce(::typeof(catobs), a::Vector{S}) where {S<:Flux.OneHotMatrix} = _catobs(a[:])
-catobs(a::Flux.OneHotMatrix...) = _catobs(collect(a))
-_catobs(a::AbstractArray{<:Flux.OneHotMatrix}) = Flux.OneHotMatrix(a[1].height,reduce(vcat, [i.data for i in a]))
 
 Base.hash(e::ExtractCategorical, h::UInt) = hash((e.keyvalemap, e.n), h)
 Base.:(==)(e1::ExtractCategorical, e2::ExtractCategorical) = e1.keyvalemap == e2.keyvalemap && e1.n === e2.n

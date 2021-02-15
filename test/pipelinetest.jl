@@ -28,9 +28,9 @@ end
 	j5 = JSON.parse("""{"b": {}}""")
 	j6 = JSON.parse("""{}""")
 
-	sch = JsonGrinder.schema([j1,j2,j3])
+	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
 	extractor = suggestextractor(sch)
-	dss = map(extractor, [j1,j2,j3,j4,j5,j6])
+	dss = extractor.([j1,j2,j3,j4,j5,j6])
 	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k,10, relu))
 	o = m(ds).data

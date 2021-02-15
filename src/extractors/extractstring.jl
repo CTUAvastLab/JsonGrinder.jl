@@ -1,3 +1,5 @@
+using Mill: NGramMatrix
+
 """
 	struct ExtractString{T} <: AbstractExtractor
 		n::Int
@@ -15,11 +17,11 @@ end
 
 
 ExtractString() = ExtractString(3, 256, 2053)
-(s::ExtractString)(v::String) = ArrayNode(Mill.NGramMatrix([v], s.n, s.b, s.m))
-(s::ExtractString)(v::Vector{String}) = ArrayNode(Mill.NGramMatrix(v, s.n, s.b, s.m))
+(s::ExtractString)(v::String) = ArrayNode(NGramMatrix([v], s.n, s.b, s.m))
+(s::ExtractString)(v::Vector{String}) = ArrayNode(NGramMatrix(v, s.n, s.b, s.m))
 (s::ExtractString)(v::AbstractString) = s(String(v))
-(s::ExtractString)(v::Union{Missing, Nothing}) = ArrayNode(Mill.NGramMatrix(missing, s.n, s.b, s.m))
-(s::ExtractString)(v::ExtractEmpty) = ArrayNode(Mill.NGramMatrix(Vector{String}(), s.n, s.b, s.m))
+(s::ExtractString)(v::MissingOrNothing) = ArrayNode(NGramMatrix(missing, s.n, s.b, s.m))
+(s::ExtractString)(v::ExtractEmpty) = ArrayNode(NGramMatrix(Vector{String}(), s.n, s.b, s.m))
 (s::ExtractString)(v) = s(missing)
 (s::ExtractString)(v::Symbol) = s(String(v))
 # todo: add jldoctest here so it's better

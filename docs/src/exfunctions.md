@@ -1,19 +1,22 @@
 # Extractor functions
 
-Below, we first describe extractors of values (i.e. lists of JSON tree), then proceed to description of extractors of `Array` and `Dict`, and finish with some specials.
+Below, we first describe extractors of values (i.e. leaves of JSON tree), then proceed to description of extractors of `Array` and `Dict`, and finish with some specials.
 
-Extractors of scalar values are arguably the most important, but also fortunatelly the most undersood ones. They control, how values are converted to a `Vector` (or generally tensor) for the neural networks. For example they control, if number should be represented as a number, or as one-hot encoded categorical variable. Similarly, it constrols how `String` should be treated, although we admit to natively support on ngrams. Recall
+Extractors of scalar values are arguably the most important, but also fortunately the most understood ones. They control, how values are converted to a `Vector` (or generally tensor) for the neural networks. For example they control, if number should be represented as a number, or as one-hot encoded categorical variable. Similarly, it controls how `String` should be treated, although we admit to natively support only n-grams. Because JsonGrinder supports working with missing values, each leaf extractor has `uniontypes` field which determines if it can return missing values or not, and based on this field, extractor returns appropriate data type.
+By default, `uniontypes` is false but we advice to set it during extractor construction according to your data.
+
+Recall
 
 ## Numbers
 ```julia
-struct ExtractScalar{T}
+struct ExtractScalar{T} <: AbstractExtractor
 	c::T
 	s::T
+	uniontypes::Bool
 end
 ```
-Extract a numerical value, centred by subtracting `c` and scaled by multiplying by `s`.
-Strings are converted to numbers. The extractor returnes `ArrayNode{Matrix{T}}`
-with a single row.
+Extracts a numerical value, centered by subtracting `c` and scaled by multiplying by `s`.
+Strings are converted to numbers. The extractor returns `ArrayNode{Matrix{T}}` with a single row if `uniontypes` if `false`, and `ArrayNode{Matrix{Union{Missing, T}}}` with a single row if `uniontypes` if `true`.
 ```@example 1
 using JsonGrinder, Mill, JSON #hide
 e = ExtractScalar(Float32, 0.5, 4.0)
@@ -161,39 +164,6 @@ reduce(catobs,ex.(["Hello","world","from","Prague"]))
 ```
 
 `MultipleRepresentation` together with handling of `missing` values enables JsonGrinder to deal with JSONs with non-stable schema.
-
-## ExtractOneHot(ks, k, v)
-Some JSONs we have encountered encode histograms in a an array containing structures with a name of the bin and its count. In the example below, the name of the bin (further called `key`) and corresponding count in the bin is called `value`. In example below, `key` is equal to `name` and the `value` is equal to `count`.
-```
-[{\"name\": \"a\", \"count\" : 1},
-{\"name\": \"b\", \"count\" : 2}]
-```
-This histogram is extracted as a `BagNode` with a wrapped `SparseMatrix` containing the key-value pairs, each pair in a separate We represent them as SparseMatrices with one line per item for example as
-```@example 1
-vs = JSON.parse("[{\"name\": \"a\", \"count\" : 1}, {\"name\": \"b\", \"count\" : 2}]")
-e = ExtractOneHot(["a","b"], "name", "count");
-e(vs).data
-```
-Notice that the matrix has an extra dimension  reserved for unknown keys.
-The array is handled as a bag. For example for the above example
-```@example 1
-e(vs)
-```
-
-The extractor itself is a structure defined as
-```
-struct ExtractOneHot{K,I,V} <: AbstractExtractor
-	k::K
-	v::V
-	key2id::Dict{I,Int}
-	n::Int
-end
-```
-where `k` / `v` is the name of an entry indetifying key / value, and `key2id` converts the value of the key to the the index in the sparse array. A constructor `ExtractOneHot(ks, k, v)` assumes `k` and `v` as above and `ks` being list of key values.
-
-
-
-
 
 
 #explain, how to customize conversion of schema to extractors extractors to

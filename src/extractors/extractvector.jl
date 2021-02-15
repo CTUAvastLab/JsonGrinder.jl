@@ -19,7 +19,7 @@ struct ExtractVector{T} <: AbstractExtractor
 end
 ExtractVector(n::Int) = ExtractVector{FloatType}(n)
 
-(s::ExtractVector{T})(::V) where {T,V<:Union{Missing, Nothing}} = ArrayNode(fill(missing, s.n, 1))
+(s::ExtractVector{T})(::V) where {T,V<:MissingOrNothing} = ArrayNode(fill(missing, s.n, 1))
 (s::ExtractVector{T})(::ExtractEmpty) where {T}= ArrayNode(Matrix{T}(undef, s.n, 0))
 (s::ExtractVector)(v) = s(missing)
 function (s::ExtractVector{T})(v::V) where {T,V<:Vector}
