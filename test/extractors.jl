@@ -272,38 +272,6 @@ end
 	@test a4[:b].data.data isa Matrix{Float32}
 end
 
-@testset "ExtractOneHot" begin
-	samples = ["{\"name\": \"a\", \"count\" : 1}",
-		"{\"name\": \"b\", \"count\" : 2}",]
-	vs = JSON.parse.(samples)
-
-	e = ExtractOneHot(["a","b"], "name", "count")
-	@test e(vs).data[:] ≈ [1, 2, 0]
-	@test e(nothing).data[:] ≈ [0, 0, 0]
-	@test e(missing).data[:] ≈ [0, 0, 0]
-	@test e(vs).data isa SparseMatrixCSC{Float32,Int64}
-	@test e(nothing).data isa SparseMatrixCSC{Float32,Int64}
-	@test e(missing).data isa SparseMatrixCSC{Float32,Int64}
-	@test e(extractempty).data isa SparseMatrixCSC{Float32,Int64}
-	@test nobs(e(extractempty)) == 0
-	@test nobs(e(extractempty).data) == 0
-
-	e = ExtractOneHot(["a","b"], "name", nothing)
-	@test e(vs).data[:] ≈ [1, 1, 0]
-	@test e(nothing).data[:] ≈ [0, 0, 0]
-	@test e(missing).data[:] ≈ [0, 0, 0]
-	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
-	@test typeof(e(nothing).data) == SparseMatrixCSC{Float32,Int64}
-	@test typeof(e(missing).data) == SparseMatrixCSC{Float32,Int64}
-	vs = JSON.parse.(["{\"name\": \"c\", \"count\" : 1}"])
-	@test e(vs).data[:] ≈ [0, 0, 1]
-	@test typeof(e(vs).data) == SparseMatrixCSC{Float32,Int64}
-	@test e(extractempty).data isa SparseMatrixCSC{Float32,Int64}
-	@test nobs(e(extractempty)) == 0
-	@test nobs(e(extractempty).data) == 0
-	@test e(Dict("name"=>"a")).data[:] ≈ [1, 0, 0]
-end
-
 @testset "ExtractString" begin
 	e = ExtractString()
 	@test e("Hello").data.s == ["Hello"]
