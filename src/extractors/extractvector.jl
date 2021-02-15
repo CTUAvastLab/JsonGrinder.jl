@@ -21,9 +21,18 @@ ExtractVector(n::Int) = ExtractVector{FloatType}(n)
 
 extractsmatrix(s::ExtractVector) = false
 
-(s::ExtractVector{T})(::Nothing) where {T} = ArrayNode(zeros(T, s.n,1))
-(s::ExtractVector)(v) = s(nothing)
-function (s::ExtractVector{T})(v::V) where {T,V<:AbstractArray}
+function (s::ExtractVector{T})(v::Nothing; store_input=false) where {T}
+	x = zeros(T, s.n,1)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+end
+
+function (s::ExtractVector{T})(v; store_input=false) where {T}
+	# we default to nothing. So this is hardcoded to nothing. Todo: dedupliate it
+	x = zeros(T, s.n,1)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+end
+
+function (s::ExtractVector{T})(v::V; store_input=false) where {T,V<:AbstractArray}
 	isempty(v) && return s(nothing)
 	x = zeros(T, s.n, 1)
 	if length(v) > s.n
@@ -34,7 +43,7 @@ function (s::ExtractVector{T})(v::V) where {T,V<:AbstractArray}
 	else
 		x .= v
 	end
-	ArrayNode(x)
+	store_input ? ArrayNode(x, v) : ArrayNode(x)
 end
 
 Base.length(e::ExtractVector) = e.n

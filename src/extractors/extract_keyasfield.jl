@@ -14,14 +14,14 @@ end
 
 extractsmatrix(s::ExtractKeyAsField) = false
 
-function (e::ExtractKeyAsField)(v::V) where {V<:Union{Missing,Nothing}}
-	BagNode(ProductNode((key = e.key(nothing), item = e.item(nothing)))[1:0], [0:-1])
+function (e::ExtractKeyAsField)(v::V; store_input=false) where {V<:Union{Missing,Nothing}}
+	BagNode(ProductNode((key = e.key(nothing, store_input=store_input), item = e.item(nothing, store_input=store_input)))[1:0], [0:-1])
 end
 
-function (e::ExtractKeyAsField)(vs::Dict)
-	isempty(vs) && return(e(nothing))
+function (e::ExtractKeyAsField)(vs::Dict; store_input=false)
+	isempty(vs) && return(e(nothing, store_input=store_input))
 	items = map(collect(vs)) do (k,v)
-		ProductNode((key = e.key(k), item = e.item(v)))
+		ProductNode((key = e.key(k; store_input), item = e.item(v; store_input)))
 	end
 	BagNode(reduce(catobs, items), [1:length(vs)])
 end

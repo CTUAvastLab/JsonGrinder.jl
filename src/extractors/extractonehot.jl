@@ -52,24 +52,43 @@ function ExtractOneHot(ks::V, k, v = nothing) where {V<:Union{Vector, Set}}
 	ExtractOneHot(k, v, key2id, length(key2id) + 1)
 end
 
-(e::ExtractOneHot{K,V})(v::Dict) where {K, V <:Nothing} = ArrayNode(sparse([e.key2id[v[e.k]]], [1f0], true, e.n))
-(e::ExtractOneHot{K,V})(v::Dict) where {K, V} = ArrayNode(sparse([e.key2id[v[e.k]]],  [1f0], [get(v, e.v, 0)], e.n))
-
-function (e::ExtractOneHot{K,I,V})(vs::Vector) where {K, I, V<:Nothing}
-	isempty(vs) && return(ArrayNode(spzeros(Float32, e.n, 1)))
-	ids = [get(e.key2id, v[e.k], e.n) for v in vs]
-	ArrayNode(sparse(ids, Ones(length(ids)), 1f0, e.n, 1))
+function (e::ExtractOneHot{K,V})(v::Dict; store_input=false) where {K, V <:Nothing}
+	x = sparse([e.key2id[v[e.k]]], [1f0], true, e.n)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
 end
 
-function (e::ExtractOneHot{K,I,V})(vs::Vector) where {K, I, V}
+function (e::ExtractOneHot{K,V})(v::Dict; store_input=false) where {K, V}
+	x = sparse([e.key2id[v[e.k]]],  [1f0], [get(v, e.v, 0)], e.n)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+end
+
+function (e::ExtractOneHot{K,I,V})(vs::Vector; store_input=false) where {K, I, V<:Nothing}
+	if isempty(vs)
+		x = spzeros(Float32, e.n, 1)
+		return store_input ? ArrayNode(x, vs) : ArrayNode(x)
+	end
+	ids = [get(e.key2id, v[e.k], e.n) for v in vs]
+	x = sparse(ids, Ones(length(ids)), 1f0, e.n, 1)
+	store_input ? ArrayNode(x, vs) : ArrayNode(x)
+end
+
+function (e::ExtractOneHot{K,I,V})(vs::Vector; store_input=false) where {K, I, V}
 	isempty(vs) && return(ArrayNode(spzeros(Float32, e.n, 1)))
 	ids = [get(e.key2id, v[e.k], e.n) for v in vs]
 	x = [Float32(v[e.v]) for v in vs]
-	ArrayNode(sparse(ids, Ones(length(ids)), x, e.n, 1))
+	val = sparse(ids, Ones(length(ids)), x, e.n, 1)
+	store_input ? ArrayNode(val, vs) : ArrayNode(val)
 end
 
-(e::ExtractOneHot)(::Nothing) = ArrayNode(spzeros(Float32, e.n, 1))
-(e::ExtractOneHot)(v) = e(nothing)
+function (e::ExtractOneHot)(v::Nothing; store_input=false)
+	x = spzeros(Float32, e.n, 1)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+end
+function (e::ExtractOneHot)(v; store_input=false)
+	# we default to nothing. So this is hardcoded to nothing. Todo: dedupliate it
+	x = spzeros(Float32, e.n, 1)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+end
 
 Base.hash(e::ExtractOneHot, h::UInt) = hash((e.k, e.v, e.key2id, e.n), h)
 Base.:(==)(e1::ExtractOneHot, e2::ExtractOneHot) = e1.k === e2.k && e1.v === e2.v && e1.key2id == e2.key2id && e1.n === e2.n

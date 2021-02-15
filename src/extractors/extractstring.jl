@@ -6,10 +6,21 @@ struct ExtractString{T} <: AbstractExtractor
 end
 
 ExtractString(::Type{T}) where {T<:String} = ExtractString(T, 3, 256, 2053)
-(s::ExtractString)(v::String) = ArrayNode(Mill.NGramMatrix([v], s.n, s.b, s.m))
-(s::ExtractString)(v::AbstractString) = s(String(v))
-(s::ExtractString)(v::S) where {S<:Nothing} = ArrayNode(Mill.NGramMatrix([""], s.n, s.b, s.m))
-(s::ExtractString)(v) = s(nothing)
+function (s::ExtractString)(v::String; store_input=false)
+	x = Mill.NGramMatrix([v], s.n, s.b, s.m)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+ end
+(s::ExtractString)(v::AbstractString; store_input=false) = s(String(v); store_input)
+function (s::ExtractString)(v::S; store_input=false) where {S<:Nothing}
+	x = Mill.NGramMatrix([""], s.n, s.b, s.m)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+ end
+function (s::ExtractString)(v; store_input=false)
+	# we default to nothing. So this is hardcoded to nothing. Todo: dedupliate it
+ 	x = Mill.NGramMatrix([""], s.n, s.b, s.m)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+end
+
 extractsmatrix(s::ExtractString) = false
 
 """

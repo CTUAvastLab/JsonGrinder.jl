@@ -28,15 +28,21 @@ end
 
 extractsmatrix(s::ExtractArray) = false
 
-function (s::ExtractArray)(v::V) where {V<:Union{Missing, Nothing}}
+function (s::ExtractArray)(v::V; store_input=false) where {V<:Union{Missing, Nothing}}
 	Mill._emptyismissing[] && return(BagNode(missing, [0:-1]))
-	ds = s.item(nothing)[1:0]
+	ds = s.item(nothing; store_input)[1:0]
 	BagNode(ds, [0:-1])
 end
 
-(s::ExtractArray)(v::V) where {V<:Vector} = isempty(v) ? s(nothing) : BagNode(reduce(catobs, map(s.item, v)),[1:length(v)])
+(s::ExtractArray)(v::V; store_input=false) where {V<:Vector} =
+	isempty(v) ? s(nothing; store_input) : BagNode(reduce(catobs, map(x->s.item(x; store_input), v)),[1:length(v)])
 
-(s::ExtractArray)(v) = s(missing)
+function (s::ExtractArray)(v; store_input=false)
+	# we default to nothing. So this is hardcoded to nothing. Todo: dedupliate it
+	Mill._emptyismissing[] && return store_input ? BagNode(missing, [0:-1]) : BagNode(missing, [0:-1], [v])
+	ds = s.item(nothing; store_input)[1:0]
+	store_input ? BagNode(ds, [0:-1]) : BagNode(ds, [0:-1], [v])
+end
 
 Base.hash(e::ExtractArray, h::UInt) = hash(e.item, h)
 Base.:(==)(e1::ExtractArray, e2::ExtractArray) = e1.item == e2.item

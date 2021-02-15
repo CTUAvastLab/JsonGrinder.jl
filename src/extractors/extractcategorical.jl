@@ -26,18 +26,25 @@ end
 
 extractsmatrix(s::ExtractCategorical) = false
 
-function (s::ExtractCategorical{V,I})(v::V) where {V,I}
+function (s::ExtractCategorical{V,I})(v::V; store_input=false) where {V,I}
     x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(get(s.keyvalemap, v, s.n), s.n)])
-    ArrayNode(x)
+    store_input ? ArrayNode(x, [v]) : ArrayNode(x)
 end
 
-function (s::ExtractCategorical{V,I})(vs::Vector{V}) where {V,I}
+function (s::ExtractCategorical{V,I})(vs::Vector{V}; store_input=false) where {V,I}
 	x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(get(s.keyvalemap, v, s.n), s.n) for v in vs])
-	ArrayNode(x)
+	store_input ? ArrayNode(x, vs) : ArrayNode(x)
 end
 
-(s::ExtractCategorical)(::Nothing) =  ArrayNode(Flux.OneHotMatrix(s.n,[Flux.OneHotVector(s.n, s.n)]))
-(s::ExtractCategorical)(v) = s(nothing)
+function (s::ExtractCategorical)(v::Nothing; store_input=false)
+	x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(s.n, s.n)])
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+end
+function (s::ExtractCategorical)(v; store_input=false)
+	# we default to nothing. So this is hardcoded to nothing. Todo: dedupliate it
+	x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(s.n, s.n)])
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+end
 
 Base.reduce(::typeof(catobs), a::Vector{S}) where {S<:Flux.OneHotMatrix} = _catobs(a[:])
 catobs(a::Flux.OneHotMatrix...) = _catobs(collect(a))

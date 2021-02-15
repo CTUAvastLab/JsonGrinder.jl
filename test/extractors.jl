@@ -499,6 +499,12 @@ end
 	ext = JsonGrinder.extractscalar(AbstractString)
 	@test SparseMatrixCSC(ext(c).data) == SparseMatrixCSC(ext(e).data)
 	@test ext(f) == ext(nothing)
+
+	@test ext(f, store_input=true) != ext(nothing, store_input=true)
+	@test ext(f, store_input=true).data == ext(nothing, store_input=true).data
+	@test ext(f, store_input=true).metadata == [5.2]
+	@test ext(nothing, store_input=true).metadata == [nothing]
+	#todo: add tests for all extractors for store_input=true
 end
 
 @testset "key as field" begin
@@ -519,7 +525,7 @@ end
 
 @testset "AuxiliaryExtractor HUtils" begin
 	e2 = ExtractCategorical(["a","b"])
-	e = AuxiliaryExtractor(e2, (ext, sample)->ext(String(sample)))
+	e = AuxiliaryExtractor(e2, (ext, sample; store_input=false)->ext(String(sample); store_input))
 
 	@test e("b") == e(:b)
 	@test e("b").data ≈ [0, 1, 0]
