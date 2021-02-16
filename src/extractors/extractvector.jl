@@ -43,7 +43,7 @@ function (s::ExtractVector{T})(v::V; store_input=false) where {T,V<:AbstractArra
 	else
 		x .= v
 	end
-	store_input ? ArrayNode(x, v) : ArrayNode(x)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
 end
 
 Base.length(e::ExtractVector) = e.n
