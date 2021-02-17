@@ -67,12 +67,12 @@ end
 Base.keys(e::ExtractDict) = keys(e.dict)
 
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
-(s::ExtractDict)(v::V) where {V<:Nothing} = s(Dict{String,Any}())
-(s::ExtractDict)(v)  = s(nothing)
+(s::ExtractDict)(v::V; store_input=false) where {V<:Nothing} = s(Dict{String,Any}())
+(s::ExtractDict)(v; store_input=false)  = s(nothing)
 
 
-function (s::ExtractDict{S})(v::Dict) where {S<:Dict}
-	o = [Symbol(k) => f(get(v,String(k),nothing)) for (k,f) in s.dict]
+function (s::ExtractDict{S})(v::Dict; store_input=false) where {S<:Dict}
+	o = [Symbol(k) => f(get(v,String(k),nothing); store_input) for (k,f) in s.dict]
 	ProductNode((; o...))
 end
 

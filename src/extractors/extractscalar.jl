@@ -43,15 +43,34 @@ function extractscalar(::Type{T}, e::Entry) where {T<:Number}
 	max_val = maximum(values)
 	c = min_val
 	s = max_val == min_val ? 1 : 1 / (max_val - min_val)
-	ExtractScalar(Float32(c), Float32(s))
+	ExtractScalar(FloatType(c), FloatType(s))
 end
 
-(s::ExtractScalar{T})(v::W) where {T,W<:MissingOrNothing} = ArrayNode(fill(missing,(1,1)))
-(s::ExtractScalar{T})(v::W) where {T,W<:ExtractEmpty} = ArrayNode(fill(zero(T),(1,0)))
-(s::ExtractScalar{T})(v::Number) where {T} = ArrayNode(s.s .* (fill(T(v),1,1) .- s.c))
-(s::ExtractScalar{T})(v::AbstractString) where{T} = s((tryparse(T,v)))
-(s::ExtractScalar)(v) = s(missing)
+(s::ExtractScalar{T})(v::W; store_input=false) where {T,W<:MissingOrNothing} = ArrayNode(fill(missing,(1,1)))
+(s::ExtractScalar{T})(v::W; store_input=false) where {T,W<:ExtractEmpty} = ArrayNode(fill(zero(T),(1,0)))
+(s::ExtractScalar{T})(v::Number; store_input=false) where {T} = ArrayNode(s.s .* (fill(T(v),1,1) .- s.c))
+(s::ExtractScalar{T})(v::AbstractString; store_input=false) where{T} = s((tryparse(T,v)))
+(s::ExtractScalar)(v; store_input=false) = s(missing)
 
+
+
+function (s::ExtractScalar{T,V})(v::AbstractString; store_input=false) where {T,V}
+	# logic for normalization is duplicated here, because I need to store metadata before it's parsed
+	w = tryparse(s.datatype, v)
+	# this should definitely be written more nicely, but for now it suffices
+	if isnothing(w)
+		x = fill(zero(T),(1,1))
+		return store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+	end
+	x = s.s .* (fill(s.datatype(w),1,1) .- s.c)
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+# todo: všude projít, že tam budu posílat orig. hodnotu
+end
+function (s::ExtractScalar{T,V})(v; store_input=false) where {T,V}
+	# we default to nothing. So this is hardcoded to nothing. Todo: dedupliate it
+	x = fill(zero(T),(1,1))
+	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+end
 Base.length(e::ExtractScalar) = 1
 
 # data type has different hashes for each patch version of julia
