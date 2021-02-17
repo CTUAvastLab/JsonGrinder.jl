@@ -16,6 +16,7 @@ makedocs(
                   "Creating extractors" => "extractors.md",
                   "Extractor functions" => "exfunctions.md",
                   "AutoML" => "automl.md",
+                  "External tools" => "hierarchical.md",
                   "API Documentation" => "api.md",
                   "Developers" => "developers.md",
                   "Citation" => "citation.md"

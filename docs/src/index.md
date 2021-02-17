@@ -263,7 +263,7 @@ Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = F
 We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on validation and test set we get over 70%.
 
 Last part is inference on test data
-```julia
+```@repl mutagenesis
 probs = softmax(model(testset).data)
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]

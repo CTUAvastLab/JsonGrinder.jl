@@ -25,4 +25,12 @@ using Setfield
 	@test get(ext, l_ext) == ext["w"]
 	@test lens2code(sch, l_sch) |> only == "w"
 	@test lens2code(ext, l_ext) |> only == "w"
+
+	j1 = JSON.parse("""{"a": 4, "b": "birb"}""")
+	j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}, "b": "bird"}""")
+	j3 = JSON.parse("""{"a": [1, 2, 3, "hi"], "b": "word"}""")
+
+	sch = schema([j1, j2, j3])
+	l_sch = code2lens(sch, "S") |> only
+	@test l_sch == (@lens _.childs[:a].childs[3].items)
 end
