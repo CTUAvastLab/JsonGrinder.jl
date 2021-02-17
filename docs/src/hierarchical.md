@@ -1,7 +1,3 @@
-```@setup hierarchical
-using Mill, JSON
-```
-
 # HierarchicalUtils.jl
 JsonGrinder.jl uses [HierarchicalUtils.jl](https://github.com/Sheemon7/HierarchicalUtils.jl) which brings a lot of additional features.
 
@@ -13,6 +9,7 @@ Let's say we gave complex schema and we want to find type instabilities.
 
 After creating the schema as
 ```@repl hierarchical
+using JSON, JsonGrinder
 j1 = JSON.parse("""{"a": 4, "b": "birb"}""")
 j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}, "b": "bird"}""")
 j3 = JSON.parse("""{"a": [1, 2, 3, "hi"], "b": "word"}""")
@@ -31,20 +28,20 @@ printtree(sch)
 Callling with `trav=true` enables convenient traversal functionality with string indexing:
 
 ```@repl hierarchical
-printtree(sch; trav=true)
+printtree(sch, trav=true)
 ```
 
-This way any element in the schema is swiftly accessible, which may come in handy when inspecting model parameters or simply deleting/replacing/inserting nodes to tree (for instance when constructing adversarial samples). All tree nodes are accessible by indexing with the traversal code:.
+This way any element in the schema is swiftly accessible, which may come in handy when inspecting model parameters or simply deleting/replacing/inserting nodes to tree (for instance when constructing adversarial samples). All tree nodes are accessible by indexing with the traversal code:
 
- ```@repl hierarchical
- sch["N"]
- ```
+```@repl hierarchical
+sch["N"]
+```
 
- The following two approaches give the same result:
+The following two approaches give the same result:
 
- ```@repl hierarchical
- sch["N"] === sch.childs[:a][2][:a]
- ```
+```@repl hierarchical
+sch["N"] === sch.childs[:a][2][:a]
+```
 
 We can even search for specific elements in schema. Let's examine occurrences of irregularities a.k.a. MultiEntry by running
 
@@ -80,4 +77,4 @@ get(sch, lenses[2])
 
 returns the second one.
 
- For the complete showcase of possibilities, refer to [HierarchicalUtils.jl](https://github.com/CTUAvastLab/HierarchicalUtils.jl) and [this notebook](https://github.com/CTUAvastLab/HierarchicalUtils.jl/blob/master/examples/mill_integration.ipynb)
+For the complete showcase of possibilities, refer to [HierarchicalUtils.jl](https://github.com/CTUAvastLab/HierarchicalUtils.jl) and [this notebook](https://github.com/CTUAvastLab/HierarchicalUtils.jl/blob/master/examples/mill_integration.ipynb)
