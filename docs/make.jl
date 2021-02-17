@@ -3,7 +3,7 @@ using JsonGrinder
 
 DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
 # for running only doctests
-# doctest(JsonGrinder)
+doctest(JsonGrinder)
 makedocs(
          sitename = "JsonGrinder.jl",
          # doctest = false,

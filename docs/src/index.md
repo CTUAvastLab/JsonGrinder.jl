@@ -85,13 +85,13 @@ The first three steps are handled by `JsonGrinder.jl`, the fourth step by `Mill.
 Authors see the biggest advantage in the `model` being hierarchical and reflecting the JSON structure. Thanks to `Mill.jl`, it can handle missing values at all levels.
 
 ## Example
-Our idealized workflow is demonstrated in `examples/mutagenesis.jl` [determining mutagenicity on Salmonella typhimurium](https://relational.fit.cvut.cz/dataset/Mutagenesis) looks as follows (for many datasets which fits in memory it's sufficient just to change the key with labels (`labelkey`) and names of files to use the example on them):
+Our idealized workflow is demonstrated in `examples/mutagenesis.jl` [determining mutagenicity on Salmonella typhimurium](https://relational.fit.cvut.cz/dataset/Mutagenesis) and it looks as follows (for many datasets which fits in memory it's sufficient just to change the key with labels (`labelkey`) and names of files to use the example on them):
 ```julia
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, StatsBase, ThreadTools
 using JsonGrinder: suggestextractor, ExtractDict
 using Mill: reflectinmodel
 
-samples = Vector{Dict}(open(JSON.parse, "data/mutagenesis/data.json"))
+samples = Vector{Dict}(open(JSON.parse, "../data/mutagenesis/data.json"))
 
 metadata = open(JSON.parse, "data/mutagenesis/meta.json")
 labelkey = metadata["label"]
@@ -173,39 +173,44 @@ print(probs)
 
 ## A walkthrough of the example
 
-Include libraries and load the data.
+Here we include libraries and load the data.
 ```@example mutagenesis
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, StatsBase, ThreadTools
 using JsonGrinder: suggestextractor, ExtractDict
 using Mill: reflectinmodel
-
-samples = Vector{Dict}(open(JSON.parse, "data/mutagenesis/data.json"))
+samples = Vector{Dict}(open(JSON.parse, "../../data/mutagenesis/data.json"))
 ```
 
+we load metadata, which store which class is to be predicted and how many samples to be used for validation and for testing
 ```@example mutagenesis
-metadata = open(JSON.parse, "data/mutagenesis/meta.json")
-labelkey = metadata["label"]
+metadata = open(JSON.parse, "../../data/mutagenesis/meta.json")
 val_num = metadata["val_samples"]
 test_num = metadata["test_samples"]
 minibatchsize = 100
 iterations = 10_000
 neurons = 20 		# neurons per layer
+labelkey = metadata["label"]
 ```
 
-Create labels and remove them from data, such that we do not use them as features. We also remove `device_id` key, such that we do not predict it
-```julia
+we see  that label to be predicted is `mutagenic`.
+
+We create labels and remove them from data, such that we do not use them as features. We also prepare indices of train, test and validation data here.
+```@example mutagenesis
 targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)
-foreach(i -> delete!(i, "device_id"), samples)
+
+train_indices = 1:length(samples)-val_num-test_num
+val_indices = length(samples)-val_num-test_num+1:length(samples)-test_num
+test_indices = length(samples)-test_num+1:length(samples)
 ```
 
 Create the schema of data
-```julia
+```@example mutagenesis
 sch = JsonGrinder.schema(samples)
 ```
 
 Create the extractor converting jsons to Mill structure. The `suggestextractor` is executed below with default setting, but it allows you heavy customization.
-```julia
+```@example mutagenesis
 extractor = suggestextractor(sch)
 ```
 
