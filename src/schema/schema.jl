@@ -55,7 +55,7 @@ updated(s::T) where {T<:JSONEntry} = s.updated
 merge(combine::typeof(merge), es::JSONEntry...) = merge(es...)
 merge(::Nothing, e::JSONEntry) = e
 
-function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.Dense(d, 10), fa=d->SegmentedMean(d); fsm = Dict(), fsa = Dict(),
+function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.Dense(d, 10), fa=d->meanmax_aggregation(d); fsm = Dict(), fsa = Dict(),
 			   single_key_identity=true, single_scalar_identity=true)
 	# we do catobs of 3 samples here, because we want full representative sample to build whole "supersample" from which some samples are just subset
 	# we also want sample with leaves missing in places where leaves can be actually missing in order to have imputation in all correct places

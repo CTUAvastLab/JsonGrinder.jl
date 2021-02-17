@@ -1,6 +1,7 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, StatsBase, ThreadTools
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, ThreadTools
 using JsonGrinder: suggestextractor, ExtractDict
 using Mill: reflectinmodel
+using StatsBase: sample
 
 ###############################################################
 # start by loading all samples
@@ -60,9 +61,10 @@ valset = reduce(catobs, data[val_indices])
 testset = reduce(catobs, data[test_indices])
 
 cb = () -> begin
-	println("train accuracy = ", accuracy(trainset, targets[train_indices]))
-	println("val accuracy = ", accuracy(valset, targets[val_indices]))
-	println("test accuracy = ", accuracy(testset, targets[test_indices]))
+	train_acc = accuracy(trainset, targets[train_indices])
+	val_acc = accuracy(valset, targets[val_indices])
+	test_acc = accuracy(testset, targets[test_indices])
+	println("accuracy: train = $train_acc, val = $val_acc, test = $test_acc")
 end
 ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
