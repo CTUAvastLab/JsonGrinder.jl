@@ -807,7 +807,7 @@ end
 	@test buf_printtree(m) ==
     """
 	ProductModel … ↦ ArrayModel(identity)
-	  └── a: BagModel … ↦ ⟨SegmentedMean(1), SegmentedMax(1)⟩ ↦ ArrayModel(Dense(2, 10))
+	  └── a: BagModel … ↦ ⟨SegmentedMean(1), SegmentedMax(1)⟩ ↦ ArrayModel(Dense(3, 10))
 	           └── ArrayModel(identity)"""
 end
 
