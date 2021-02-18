@@ -87,7 +87,3 @@ print(pred_classes)
 print(targets[test_indices])
 # probabilities for test set
 print(probs)
-repr("text/html", [Dict(), Dict()])
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, StatsBase, ThreadTools
-using JsonGrinder: suggestextractor, ExtractDict
-repr("text/html", Vector{Dict}(open(JSON.parse, "data/mutagenesis/data.json")))
