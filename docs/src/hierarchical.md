@@ -70,7 +70,7 @@ gives us lenses to access them and also information about path from root.
 get(sch, lenses[1])
 ```
 
-returns first MultiEntry and
+returns the first `MultiEntry` and
 
 ```@repl hierarchical
 get(sch, lenses[2])
