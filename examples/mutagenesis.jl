@@ -81,11 +81,11 @@ pred_classes = labelnames[o]
 print(mean(pred_classes .== targets[test_indices]))
 # we see the accuracy is around 79% on test set
 
-#predicted classes for first 10 samples
+#predicted classes for test set
 print(pred_classes)
-#gt classes for first 10 samples
-print(ground_truth_classes)
-# probabilities of first 10 samples
+#gt classes for test set
+print(targets[test_indices])
+# probabilities for test set
 print(probs)
 repr("text/html", [Dict(), Dict()])
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, StatsBase, ThreadTools
