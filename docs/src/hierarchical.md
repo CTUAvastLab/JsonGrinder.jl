@@ -59,6 +59,7 @@ filter(e->sch[e] isa JsonGrinder.MultiEntry, list_traversal(sch))
 we can see that `sch["E"]` and `sch["S"]` are indeed MultiEntry, but we don't have easy way to see where they are in schema.
 
 ```@repl hierarchical
+using Mill
 lenses = [only(code2lens(sch, e)) for e in list_traversal(sch) if sch[e] isa JsonGrinder.MultiEntry]
 ```
 
