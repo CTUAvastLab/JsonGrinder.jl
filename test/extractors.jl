@@ -10,13 +10,13 @@ using LinearAlgebra
 	@test all(sc(nothing).data .== [0])
 
 	@test sc("5", store_input=true).data == sc("5", store_input=false).data
-	@test sc("5", store_input=true).metadata == hcat("5")
+	@test sc("5", store_input=true).metadata == fill("5",1,1)
 	@test isnothing(sc("5", store_input=false).metadata)
 	@test sc(5, store_input=true).data == sc(5, store_input=false).data
-	@test sc(5, store_input=true).metadata == hcat(5)
+	@test sc(5, store_input=true).metadata == fill(5,1,1)
 	@test isnothing(sc(5, store_input=false).metadata)
 	@test sc(nothing, store_input=true).data == sc(nothing, store_input=false).data
-	@test sc(nothing, store_input=true).metadata == [nothing]
+	@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
 	@test isnothing(sc(nothing, store_input=false).metadata)
 end
 
@@ -48,12 +48,12 @@ end
 	@test nobs(en.data) == 0
 	@test all(en.bags.bags .== [0:-1])
 	@test e234s.data.data == e234.data.data
-	@test e234s.data.metadata == [2,3,4]
-	@test e234s.data[1].metadata == [2]
-	@test e234s.data[2].metadata == [3]
-	@test e234s.data[3].metadata == [4]
+	@test e234s.data.metadata == [2 3 4]
+	@test e234s.data[1].metadata == fill(2,1,1)
+	@test e234s.data[2].metadata == fill(3,1,1)
+	@test e234s.data[3].metadata == fill(4,1,1)
 	@test ens.data.data == en.data.data
-	@test ens.data.metadata == []
+	@test ens.data.metadata == zeros(1,0)
 	@test isnothing(e234.data.metadata)
 	@test isnothing(en.data.metadata)
 end
@@ -117,14 +117,14 @@ end
 
 	@test catobs(a1,a1).data[1].data == catobs(a1s,a1s).data[1].data
 	@test catobs(a1,a1).data[2].data.data == catobs(a1s,a1s).data[2].data.data
-	@test catobs(a1s,a1s).data[1].metadata == [7,5,7,5]
-	@test catobs(a1s,a1s).data[2].data.metadata == [1,2,3,4,1,2,3,4]
+	@test catobs(a1s,a1s).data[1].metadata == [7 7; 5 5]
+	@test catobs(a1s,a1s).data[2].data.metadata == [1 2 3 4 1 2 3 4]
 
-	@test a1s.data.c.data.metadata == [1,2,3,4]
-	@test a1s.data.c.data[1].metadata == [1]
-	@test a1s.data.c.data[2].metadata == [2]
-	@test a1s.data.c.data[3].metadata == [3]
-	@test a1s.data.c.data[4].metadata == [4]
+	@test a1s.data.c.data.metadata == [1 2 3 4]
+	@test a1s.data.c.data[1].metadata == fill(1,1,1)
+	@test a1s.data.c.data[2].metadata == fill(2,1,1)
+	@test a1s.data.c.data[3].metadata == fill(3,1,1)
+	@test a1s.data.c.data[4].metadata == fill(4,1,1)
 
 	br = ExtractDict(vector,nothing)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
@@ -187,12 +187,12 @@ end
 	@test catobs(a1,a4).data[2].data.data == catobs(a1s,a4s).data[2].data.data
 	@test catobs(a1,a4).data[2].bags == catobs(a1,a4).data[2].bags
 
-	@test catobs(a1s,a4s).data[1].data.metadata == [1,2,3,4]
-	@test catobs(a1s,a4s).data[2].data.metadata == [1,2,3]
-	@test a1s.data[1].data.metadata == [1,2,3,4]
-	@test a1s.data[2].data.metadata == [1,2,3]
-	@test a4s.data[1].data.metadata == []
-	@test a4s.data[2].data.metadata == []
+	@test catobs(a1s,a4s).data[1].data.metadata == [1 2 3 4]
+	@test catobs(a1s,a4s).data[2].data.metadata == [1 2 3]
+	@test a1s.data[1].data.metadata == [1 2 3 4]
+	@test a1s.data[2].data.metadata == [1 2 3]
+	@test a4s.data[1].data.metadata == zeros(1,0)
+	@test a4s.data[2].data.metadata == zeros(1,0)
 end
 
 @testset "ExtractOneHot" begin
@@ -396,10 +396,10 @@ end
 	@test ext_j3["U"].data == ext_j3s["U"].data
 	@test ext_j4["U"].data == ext_j4s["U"].data
 
-	@test ext_j1s["U"].metadata == [1, "1", 1.1, "1.2", "1.1"]
-	@test ext_j2s["U"].metadata == [2, "2", 2, "1.3", "2"]
-	@test ext_j3s["U"].metadata == [3, "3", 2.3, "1.4", "2.3"]
-	@test ext_j4s["U"].metadata == [3, "4", 5, "1.4", "5"]
+	@test ext_j1s["U"].metadata == reshape([1 "1" 1.1 "1.2" "1.1"], 5, 1)
+	@test ext_j2s["U"].metadata == reshape([2 "2" 2 "1.3" "2"], 5, 1)
+	@test ext_j3s["U"].metadata == reshape([3 "3" 2.3 "1.4" "2.3"], 5, 1)
+	@test ext_j4s["U"].metadata == reshape([3 "4" 5 "1.4" "5"], 5, 1)
 end
 
 @testset "Suggest feature vector extraction" begin
@@ -416,20 +416,41 @@ end
 	@test ext[:b].n == 3
 	@test ext[:c] isa ExtractArray{ExtractScalar{Float32, Float32}}
 
-	ext_j1 = ext(j1)
-	ext_j2 = ext(j2)
-	ext_j3 = ext(j3)
-	ext_j4 = ext(j4)
+	ext_j1 = ext(j1, store_input=false)
+	ext_j2 = ext(j2, store_input=false)
+	ext_j3 = ext(j3, store_input=false)
+	ext_j4 = ext(j4, store_input=false)
+
+	ext_j1s = ext(j1, store_input=true)
+	ext_j2s = ext(j2, store_input=true)
+	ext_j3s = ext(j3, store_input=true)
+	ext_j4s = ext(j4, store_input=true)
 
 	@test ext_j1["E"].data ≈ [1, 2, 3]
 	@test ext_j2["E"].data ≈ [2, 2, 3]
 	@test ext_j3["E"].data ≈ [3, 2, 3]
 	@test ext_j4["E"].data ≈ [2, 3, 4]
 
-	@test ext_j1["U"].data.data ≈ [0 .25 .5]
-	@test ext_j2["U"].data.data ≈ [0 .25 .5 .75]
-	@test ext_j3["U"].data.data ≈ [0 .25 .5 .75 1.]
-	@test ext_j4["U"].data.data ≈ [0 .25 .5]
+	@test ext_j1["c"].data ≈ [0 .25 .5]
+	@test ext_j2["c"].data ≈ [0 .25 .5 .75]
+	@test ext_j3["c"].data ≈ [0 .25 .5 .75 1.]
+	@test ext_j4["c"].data ≈ [0 .25 .5]
+
+	for (a,b) in zip([ext_j1, ext_j2, ext_j3, ext_j4], [ext_j1s, ext_j2s, ext_j3s, ext_j4s])
+		@test a["E"].data == b["E"].data
+		@test a["c"].data == b["c"].data
+		@test a["k"].data == b["k"].data
+	end
+
+	@test ext_j1s["E"].metadata == [[1, 2, 3]]
+	@test ext_j2s["E"].metadata == [[2, 2, 3]]
+	@test ext_j3s["E"].metadata == [[3, 2, 3]]
+	@test ext_j4s["E"].metadata == [[2, 3, 4]]
+
+	@test ext_j1s["c"].metadata == [1 2 3]
+	@test ext_j2s["c"].metadata == [1 2 3 4]
+	@test ext_j3s["c"].metadata == [1 2 3 4 5]
+	@test ext_j4s["c"].metadata == [1 2 3]
 end
 
 @testset "Suggest complex" begin
