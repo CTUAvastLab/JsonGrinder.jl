@@ -10,10 +10,10 @@ using LinearAlgebra
 	@test all(sc(nothing).data .== [0])
 
 	@test sc("5", store_input=true).data == sc("5", store_input=false).data
-	@test sc("5", store_input=true).metadata == ["5"]
+	@test sc("5", store_input=true).metadata == hcat("5")
 	@test isnothing(sc("5", store_input=false).metadata)
 	@test sc(5, store_input=true).data == sc(5, store_input=false).data
-	@test sc(5, store_input=true).metadata == [5]
+	@test sc(5, store_input=true).metadata == hcat(5)
 	@test isnothing(sc(5, store_input=false).metadata)
 	@test sc(nothing, store_input=true).data == sc(nothing, store_input=false).data
 	@test sc(nothing, store_input=true).metadata == [nothing]
