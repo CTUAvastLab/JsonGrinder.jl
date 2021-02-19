@@ -151,6 +151,15 @@ end
 	@test all(a3.bags .== [1:4])
 	@test all(catobs(a3,a3).data.data .== [-3 0 3 6 -3 0 3 6])
 	@test all(catobs(a3,a3).bags .== [1:4,5:8])
+
+	vector = Dict(:a => ExtractScalar(Float64,2,3),:b => ExtractScalar(Float64))
+	br = ExtractDict(vector,nothing)
+	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
+	a2 = br(Dict("a" => 5, "b" => 7))
+	a3 = br(Dict("a" => 5, "c" => [1,2,3,4]))
+	@test all(a1.data .== [9; 7])
+	@test all(a2.data .== [9; 7])
+	@test all(a3.data .== [9; 0])
 end
 
 @testset "Testing Nested Missing Arrays" begin
