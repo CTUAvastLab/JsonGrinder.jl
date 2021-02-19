@@ -43,7 +43,8 @@ function (s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Dict,V<:Dic
 	add_metadata2dicts ? ProductNode(data, [collect(keys(s.vec))]) : ProductNode(data)
 end
 
-(s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Dict,V<:Nothing} = vcat([f(get(v,k,nothing); store_input) for (k,f) in s.vec]...)
+(s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Dict,V<:Nothing} =
+	vcat([f(get(v,String(k),nothing); store_input) for (k,f) in s.vec]...)
 
 function (s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Nothing,V<:Dict}
 	# o = [f(get(v,k,nothing)) for (k,f) in s.other]
