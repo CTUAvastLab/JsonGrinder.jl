@@ -60,10 +60,24 @@ end
 
 @testset "Testing feature vector conversion" begin
 	sc = ExtractVector(5)
-	@test sc([1, 2, 2, 3, 4]).data ≈ [1, 2, 2, 3, 4]
-	@test sc([1, 2, 2, 3, 4]).data isa Array{Float32, 2}
-	@test sc([1, 2, 2, 3, 4], store_input=true).data ≈ sc([1, 2, 2, 3, 4], store_input=false).data
-	@test sc([1, 2, 2, 3, 4], store_input=true).metadata == [[1, 2, 2, 3, 4]]
+	e1 = sc([1, 2, 2, 3, 4], store_input=false)
+	e1s = sc([1, 2, 2, 3, 4], store_input=true)
+	e2s = sc([1, 2, 2, 3], store_input=true)
+	n1 = sc(missing, store_input=false)
+	n1s = sc(missing, store_input=true)
+	@test e1.data == [1 2 2 3 4]'
+	@test e1.data isa Array{Float32, 2}
+	@test e1.data == e1s.data
+	@test e1s.metadata == [[1, 2, 2, 3, 4]]
+	@test catobs(e1s, e1s).data == [1 1; 2 2; 2 2; 3 3; 4 4]
+	@test catobs(e1s, e1s).metadata == [[1, 2, 2, 3, 4], [1, 2, 2, 3, 4]]
+	@test catobs(e1s, e1s)[1].data == [1 2 2 3 4]'
+	@test catobs(e1s, e1s)[1].metadata == [[1, 2, 2, 3, 4]]
+	@test isequal(n1s.metadata, [missing])
+	@test isequal(catobs(e1s, n1s).metadata, [[1, 2, 2, 3, 4], missing])
+	@test e2s.data == [1 2 2 3 0]'
+	@test e2s.metadata == [[1, 2, 2, 3]]
+
 	sc = ExtractVector{Int64}(5)
 	@test sc([1, 2, 2, 3, 4]).data ≈ [1, 2, 2, 3, 4]
 	@test sc([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
@@ -131,7 +145,7 @@ end
 	@test a3s.data.scalars.metadata == reshape([nothing 5],2,1)
 	@test a4s.data.scalars.metadata == fill(nothing, 2,1)
 	@test a5s.data.scalars.metadata == reshape(["world" "hello"],2,1)
-	
+
 	br = ExtractDict(vector,nothing)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
