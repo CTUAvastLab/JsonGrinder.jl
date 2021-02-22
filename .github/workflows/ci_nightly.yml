@@ -2,8 +2,6 @@ name: CI_nightly
 
 on:
   push:
-    branches:
-      - master
     paths:
       - 'src/**'
       - 'test/**'
