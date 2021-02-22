@@ -88,10 +88,10 @@ julia> s2[:e2]
 struct MultipleRepresentation{E<:Union{NamedTuple, Tuple}}
 	extractors::E
 end
-# todo: add jldoctest example
+
 MultipleRepresentation(vs::Vector) = MultipleRepresentation((;[Symbol("e$(i)") => v for (i,v) in enumerate(vs)]...))
 MultipleRepresentation(vs::Tuple) = MultipleRepresentation((;[Symbol("e$(i)") => v for (i,v) in enumerate(vs)]...))
-(m::MultipleRepresentation)(x) = ProductNode(map(e -> e(x), m.extractors))
+(m::MultipleRepresentation)(x; store_input=false) = ProductNode(map(e -> e(x; store_input), m.extractors))
 Base.keys(e::MultipleRepresentation) = keys(e.extractors)
 
 Base.hash(e::MultipleRepresentation, h::UInt) = hash(e.extractors, h)

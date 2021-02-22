@@ -42,6 +42,16 @@ testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 	@test sc(1).data isa Matrix{Float32}
 	@test sc(Dict(1=>1)).data isa Matrix{Missing}
 	@test length(sc) == 1
+
+	@test sc("5", store_input=true).data == sc("5", store_input=false).data
+	@test sc("5", store_input=true).metadata == fill("5",1,1)
+	@test isnothing(sc("5", store_input=false).metadata)
+	@test sc(5, store_input=true).data == sc(5, store_input=false).data
+	@test sc(5, store_input=true).metadata == fill(5,1,1)
+	@test isnothing(sc(5, store_input=false).metadata)
+	@test sc(nothing, store_input=true).data == sc(nothing, store_input=false).data
+	@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
+	@test isnothing(sc(nothing, store_input=false).metadata)
 end
 
 
@@ -124,12 +134,25 @@ end
 @testset "Testing array conversion" begin
 	Mill.emptyismissing!(false)
 	sc = ExtractArray(ExtractCategorical(2:4))
-	@test all(sc([2,3,4]).data.data .== Matrix(1.0I, 4, 3))
-	@test nobs(sc(nothing).data) == 0
-	@test sc(nothing).data.data isa MaybeHotMatrix{Int64,Int64,Bool}
-	@test nobs(sc(nothing).data.data) == 0
-	@test all(sc(nothing).bags.bags .== [0:-1])
+	e234 = sc([2,3,4], store_input=false)
+	en = sc(nothing, store_input=false)
+	e234s = sc([2,3,4], store_input=true)
+	ens = sc(nothing, store_input=true)
+	@test all(e234.data.data .== Matrix(1.0I, 4, 3))
+	@test nobs(en.data) == 0
+	@test en.data.data isa MaybeHotMatrix{Int64,Int64,Bool}
+	@test nobs(en.data.data) == 0
+	@test all(en.bags.bags .== [0:-1])
 
+	@test e234s.data.data == e234.data.data
+	@test e234s.data.metadata == [2,3,4]
+	@test e234s.data[1].metadata == [2]
+	@test e234s.data[2].metadata == [3]
+	@test e234s.data[3].metadata == [4]
+	@test ens.data.data == en.data.data
+	@test ens.data.metadata == []
+	@test isnothing(e234.data.metadata)
+	@test isnothing(en.data.metadata)
 
 	Mill.emptyismissing!(true)
 	@test sc(nothing).data isa Missing
@@ -142,9 +165,13 @@ end
 	@test sc(extractempty).data.data isa MaybeHotMatrix{Int64,Int64,Bool}
 
 	sc = ExtractArray(ExtractScalar(Float32))
-	@test all(sc([2,3,4]).data.data .== [2 3 4])
-	@test nobs(sc(nothing).data) == 0
-	@test all(sc(nothing).bags.bags .== [0:-1])
+	e234 = sc([2,3,4], store_input=false)
+	en = sc(nothing, store_input=false)
+	e234s = sc([2,3,4], store_input=true)
+	ens = sc(nothing, store_input=true)
+	@test all(e234.data.data .== [2 3 4])
+	@test nobs(en.data) == 0
+	@test all(en.bags.bags .== [0:-1])
 	@test nobs(sc(Dict(1=>1)).data) == 0
 
 	@test nobs(sc(extractempty).data.data) == 0
@@ -152,24 +179,53 @@ end
 	@test isempty(sc(extractempty).bags.bags)
 	@test sc(extractempty).data.data isa Matrix{Float32}
 
-	@test sc(nothing).data.data isa Matrix{Float32}
+	@test en.data.data isa Matrix{Float32}
+	@test e234s.data.data == e234.data.data
+	@test e234s.data.metadata == [2 3 4]
+	@test e234s.data[1].metadata == fill(2,1,1)
+	@test e234s.data[2].metadata == fill(3,1,1)
+	@test e234s.data[3].metadata == fill(4,1,1)
+	@test ens.data.data == en.data.data
+	@test ens.data.metadata == zeros(1,0)
+	@test isnothing(e234.data.metadata)
+	@test isnothing(en.data.metadata)
 end
 
 @testset "Testing feature vector conversion" begin
 	sc = ExtractVector(5)
-	@test sc([1, 2, 2, 3, 4]).data isa Matrix
-	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
-	@test sc([1, 2, 2, 3, 4]).data isa Array{Float32, 2}
+	e1 = sc([1, 2, 2, 3, 4], store_input=false)
+	e1s = sc([1, 2, 2, 3, 4], store_input=true)
+	e2s = sc([1, 2, 2, 3], store_input=true)
+	n1 = sc(missing, store_input=false)
+	n1s = sc(missing, store_input=true)
+	@test e1.data == [1 2 2 3 4]'
+	# todo: add test to type of matrix
+	@test e1.data isa Matrix
+	@test e1.data == e1s.data
+	@test e1.data isa Array{Float32, 2}
 	@test sc(extractempty).data isa Matrix{Float32}
 	@test nobs(sc(extractempty).data) == 0
+	@test e1s.metadata == [[1, 2, 2, 3, 4]]
+	@test catobs(e1s, e1s).data == [1 1; 2 2; 2 2; 3 3; 4 4]
+	@test catobs(e1s, e1s).metadata == [[1, 2, 2, 3, 4], [1, 2, 2, 3, 4]]
+	@test catobs(e1s, e1s)[1].data == [1 2 2 3 4]'
+	@test catobs(e1s, e1s)[1].metadata == [[1, 2, 2, 3, 4]]
+	@test isequal(n1s.metadata, [missing])
+	@test isequal(catobs(e1s, n1s).metadata, [[1, 2, 2, 3, 4], missing])
+	@test e2s.data == [1 2 2 3 0]'
+	@test e2s.metadata == [[1, 2, 2, 3]]
 
 	sc = ExtractVector{Int64}(5)
-	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
+	@test sc([1, 2, 2, 3, 4]).data ≈ [1, 2, 2, 3, 4]
 	@test sc([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
+	@test sc([1, 2, 2, 3, 4], store_input=true).data ≈ sc([1, 2, 2, 3, 4], store_input=false).data
+	@test sc([1, 2, 2, 3, 4], store_input=true).metadata == [[1, 2, 2, 3, 4]]
 	@test sc(nothing).data isa Matrix
 	@test all(sc(nothing).data .=== missing)
 	@test sc(extractempty).data isa Matrix{Int64}
 	@test nobs(sc(extractempty).data) == 0
+	@test sc(nothing, store_input=true).data ≈ sc(nothing, store_input=false).data
+	@test sc(nothing, store_input=true).metadata == [nothing]
 
 
 	# feature vector longer than expected
@@ -178,6 +234,8 @@ end
 	@test typeof(sc([1, 2, 3, 4, 5]).data) == Array{Float32,2}
 	@test sc([5, 6]).data[1:2] ≈ [5, 6]
 	@test typeof(sc([1, 2]).data) == Array{Union{Missing,Float32},2}
+	@test sc([1, 2, 2, 3, 4, 5], store_input=true).data ≈ sc([1, 2, 2, 3, 4, 5], store_input=false).data
+	@test sc([1, 2, 2, 3, 4, 5], store_input=true).metadata == [[1, 2, 2, 3, 4, 5]]
 	@test sc([1, 2]).data isa Matrix
 	@test all(sc([5, 6]).data[3:5] .=== missing)
 	@test all(sc(Dict(1=>2)).data .=== missing)
