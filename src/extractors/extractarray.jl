@@ -39,13 +39,13 @@ function extract_empty_bag(s::ExtractArray, v; store_input=false)
 	store_input ? BagNode(ds, [0:-1]) : BagNode(ds, [0:-1], [v])
 end
 
-(s::ExtractArray)(v::V; store_input=false) where {V<:Union{Missing, Nothing}} = extract_empty_bag(s, v; store_input)
+(s::ExtractArray)(v::MissingOrNothing; store_input=false) = extract_empty_bag(s, v; store_input)
 
-(s::ExtractArray)(v::V store_input=false) where {V<:Vector} =
+(s::ExtractArray)(v::V, store_input=false) where {V<:Vector} =
     isempty(v) ? s(missing; store_input) : BagNode(mapreduce(x->s.item(x; store_input), catobs, v),[1:length(v)])
 (s::ExtractArray)(v; store_input=false) = extract_empty_bag(s, v; store_input)
 
-(s::ExtractArray)(v::ExtractEmpty store_input=false) =
+(s::ExtractArray)(v::ExtractEmpty, store_input=false) =
     BagNode(s.item(extractempty; store_input), Mill.AlignedBags(Vector{UnitRange{Int64}}()))
 
 Base.hash(e::ExtractArray, h::UInt) = hash(e.item, h)

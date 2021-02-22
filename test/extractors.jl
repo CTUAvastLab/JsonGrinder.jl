@@ -593,6 +593,7 @@ end
 end
 
 @testset "Mixed scalar extraction" begin
+    # todo: add test for extraction of numeric scalars from string and also missings, if it's all matrix and catobsing properly
 	j1 = JSON.parse("""{"a": "1"}""")
 	j2 = JSON.parse("""{"a": 4}""")
 	j3 = JSON.parse("""{"a": "3.1"}""")

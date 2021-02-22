@@ -46,31 +46,21 @@ function extractscalar(::Type{T}, e::Entry) where {T<:Number}
 	ExtractScalar(FloatType(c), FloatType(s))
 end
 
-(s::ExtractScalar{T})(v::W; store_input=false) where {T,W<:MissingOrNothing} = ArrayNode(fill(missing,(1,1)))
-(s::ExtractScalar{T})(v::W; store_input=false) where {T,W<:ExtractEmpty} = ArrayNode(fill(zero(T),(1,0)))
-(s::ExtractScalar{T})(v::Number; store_input=false) where {T} = ArrayNode(s.s .* (fill(T(v),1,1) .- s.c))
-(s::ExtractScalar{T})(v::AbstractString; store_input=false) where{T} = s((tryparse(T,v)))
-(s::ExtractScalar)(v; store_input=false) = s(missing)
+_fill_and_normalize(s::ExtractScalar{T}, v::T) where {T} = s.s .* (fill(v,1,1) .- s.c)
+make_missing_scalar(s::ExtractScalar, v, store_input) = _make_array_node(fill(missing,1,1), fill(v,1,1), store_input)
 
-
-
-function (s::ExtractScalar{T,V})(v::AbstractString; store_input=false) where {T,V}
-	# logic for normalization is duplicated here, because I need to store metadata before it's parsed
-	w = tryparse(s.datatype, v)
-	# this should definitely be written more nicely, but for now it suffices
-	if isnothing(w)
-		x = fill(zero(T),(1,1))
-		return store_input ? ArrayNode(x, [v]) : ArrayNode(x)
-	end
-	x = s.s .* (fill(s.datatype(w),1,1) .- s.c)
-	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
-# todo: všude projít, že tam budu posílat orig. hodnotu
+(s::ExtractScalar{T})(v::MissingOrNothing; store_input=false) where {T} = make_missing_scalar(s, v, store_input)
+(s::ExtractScalar{T})(v::ExtractEmpty; store_input=false) where {T} = ArrayNode(fill(zero(T),1,0))
+(s::ExtractScalar{T})(v::Number; store_input=false) where {T} =
+	_make_array_node(_fill_and_normalize(s, T(v)), fill(v,1,1), store_input)
+(s::ExtractScalar)(v; store_input=false) = make_missing_scalar(s, v, store_input)
+function (s::ExtractScalar{T})(v::AbstractString; store_input=false) where {T}
+	w = tryparse(T,v)
+	isnothing(w) && return make_missing_scalar(s, v, store_input)
+	x = _fill_and_normalize(s, T(w))
+	_make_array_node(x, fill(v,1,1), store_input)
 end
-function (s::ExtractScalar{T,V})(v; store_input=false) where {T,V}
-	# we default to nothing. So this is hardcoded to nothing. Todo: dedupliate it
-	x = fill(zero(T),(1,1))
-	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
-end
+
 Base.length(e::ExtractScalar) = 1
 
 # data type has different hashes for each patch version of julia

@@ -76,12 +76,12 @@ function (s::ExtractDict{S})(v::Dict; store_input=false) where {S<:Dict}
 	ProductNode((; o...))
 end
 
-function (s::ExtractDict{S})(ee::ExtractEmpty) where {S<:Dict}
-	o = [Symbol(k) => f(ee) for (k,f) in s.dict]
+function (s::ExtractDict{S})(ee::ExtractEmpty; store_input=false) where {S<:Dict}
+	o = [Symbol(k) => f(ee; store_input) for (k,f) in s.dict]
 	ProductNode((; o...))
 end
 
-extractbatch(extractor, samples) = reduce(catobs, extractor.(samples))
+extractbatch(extractor, samples) = mapreduce(extractor, catobs, samples)
 
 Base.hash(e::ExtractDict, h::UInt) = hash(e.dict, h)
 Base.:(==)(e1::ExtractDict, e2::ExtractDict) = e1.dict == e2.dict

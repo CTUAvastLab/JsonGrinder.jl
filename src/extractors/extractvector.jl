@@ -18,11 +18,12 @@ struct ExtractVector{T} <: AbstractExtractor
 	n::Int
 end
 ExtractVector(n::Int) = ExtractVector{FloatType}(n)
-
-(s::ExtractVector{T})(::V) where {T,V<:MissingOrNothing} = ArrayNode(fill(missing, s.n, 1))
-(s::ExtractVector{T})(::ExtractEmpty) where {T}= ArrayNode(Matrix{T}(undef, s.n, 0))
-(s::ExtractVector)(v) = s(missing)
-function (s::ExtractVector{T})(v::V) where {T,V<:Vector}
+# todo: dodělat to, zatím je to rozdělané
+# todo: check for every extractor if matrix in data and metadata is consistent, or vector, snd matrix in data does not have vector in metadata
+(s::ExtractVector{T})(::MissingOrNothing; store_input=false) where {T} = ArrayNode(fill(missing, s.n, 1))
+(s::ExtractVector{T})(::ExtractEmpty; store_input=false) where {T} = ArrayNode(Matrix{T}(undef, s.n, 0))
+(s::ExtractVector)(v; store_input=false) = s(missing)
+function (s::ExtractVector{T})(v::Vector; store_input=false) where {T}
 	isempty(v) && return s(missing)
 	if length(v) > s.n
 		@warn "array too long, truncating"
