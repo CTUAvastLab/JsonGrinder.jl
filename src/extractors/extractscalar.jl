@@ -44,7 +44,7 @@ function (s::ExtractScalar{T,V})(v::AbstractString; store_input=false) where {T,
 	# this should definitely be written more nicely, but for now it suffices
 	if isnothing(w)
 		x = fill(zero(T),1,1)
-		return store_input ? ArrayNode(x, [v]) : ArrayNode(x)
+		return store_input ? ArrayNode(x, fill(v,1,1)) : ArrayNode(x)
 	end
 	x = s.s .* (fill(s.datatype(w),1,1) .- s.c)
 	store_input ? ArrayNode(x, fill(v,1,1)) : ArrayNode(x)

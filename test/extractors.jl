@@ -94,6 +94,8 @@ end
 	a1s = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]), store_input=true)
 	a2s = br(Dict("a" => 5, "b" => 7), store_input=true)
 	a3s = br(Dict("a" => 5, "c" => [1,2,3,4]), store_input=true)
+	a4s = br(Dict("c" => [1,2,3,4]), store_input=true)
+	a5s = br(Dict("a" => "hello", "b" => "world", "c" => [1,2,3,4]), store_input=true)
 
 	@test all(catobs(a1,a1).data[1].data .==[7 7; 9 9])
 	@test all(catobs(a1,a1).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
@@ -126,6 +128,10 @@ end
 	@test a1s.data.c.data[3].metadata == fill(3,1,1)
 	@test a1s.data.c.data[4].metadata == fill(4,1,1)
 
+	@test a3s.data.scalars.metadata == reshape([nothing 5],2,1)
+	@test a4s.data.scalars.metadata == fill(nothing, 2,1)
+	@test a5s.data.scalars.metadata == reshape(["world" "hello"],2,1)
+	
 	br = ExtractDict(vector,nothing)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]))
 	a2 = br(Dict("a" => 5, "b" => 7))
