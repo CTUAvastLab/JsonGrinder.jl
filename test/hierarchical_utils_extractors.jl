@@ -117,9 +117,6 @@ end
     e = ExtractCategorical(["a","b"])
     @test buf_printtree(e) == """Categorical d = 3"""
 
-    e = ExtractOneHot(["a","b"], "name", nothing)
-    @test buf_printtree(e) == """OneHot d = 3"""
-
     dict = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
     br = ExtractDict(dict)
     @test buf_printtree(br, trav=true) ==

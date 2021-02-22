@@ -12,7 +12,7 @@ struct ExtractKeyAsField{S,V} <: AbstractExtractor
 	item::V
 end
 
-function (e::ExtractKeyAsField)(v::V; store_input) where {V<:Union{Missing,Nothing}}
+function (e::ExtractKeyAsField)(v::MissingOrNothing; store_input=false)
 	Mill._emptyismissing[] && return BagNode(missing, [0:-1])
 	BagNode(ProductNode((key = e.key(extractempty; store_input), item = e.item(extractempty; store_input)))[1:0], [0:-1])
 end

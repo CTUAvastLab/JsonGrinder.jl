@@ -3,7 +3,7 @@ using JsonGrinder
 
 DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
 # for running only doctests
-# doctest(JsonGrinder)
+doctest(JsonGrinder)
 makedocs(
          sitename = "JsonGrinder.jl",
          # doctest = false,
@@ -16,6 +16,7 @@ makedocs(
                   "Creating extractors" => "extractors.md",
                   "Extractor functions" => "exfunctions.md",
                   "AutoML" => "automl.md",
+                  "External tools" => "hierarchical.md",
                   "API Documentation" => "api.md",
                   "Developers" => "developers.md",
                   "Citation" => "citation.md"
