@@ -30,17 +30,17 @@ extractsmatrix(s::ExtractArray) = false
 
 function (s::ExtractArray)(v::V; store_input=false) where {V<:Union{Missing, Nothing}}
 	Mill._emptyismissing[] && return(BagNode(missing, [0:-1]))
-	ds = s.item(nothing; store_input)[1:0]
+	ds = s.item(nothing, store_input=store_input)[1:0]
 	BagNode(ds, [0:-1])
 end
 
 (s::ExtractArray)(v::V; store_input=false) where {V<:Vector} =
-	isempty(v) ? s(nothing; store_input) : BagNode(reduce(catobs, map(x->s.item(x; store_input), v)),[1:length(v)])
+	isempty(v) ? s(nothing, store_input=store_input) : BagNode(reduce(catobs, map(x->s.item(x, store_input=store_input), v)),[1:length(v)])
 
 function (s::ExtractArray)(v; store_input=false)
 	# we default to nothing. So this is hardcoded to nothing. Todo: dedupliate it
 	Mill._emptyismissing[] && return store_input ? BagNode(missing, [0:-1]) : BagNode(missing, [0:-1], [v])
-	ds = s.item(nothing; store_input)[1:0]
+	ds = s.item(nothing, store_input=store_input)[1:0]
 	store_input ? BagNode(ds, [0:-1]) : BagNode(ds, [0:-1], [v])
 end
 

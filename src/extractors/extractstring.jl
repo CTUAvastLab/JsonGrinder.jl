@@ -10,7 +10,7 @@ function (s::ExtractString)(v::String; store_input=false)
 	x = Mill.NGramMatrix([v], s.n, s.b, s.m)
 	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
  end
-(s::ExtractString)(v::AbstractString; store_input=false) = s(String(v); store_input)
+(s::ExtractString)(v::AbstractString; store_input=false) = s(String(v), store_input=store_input)
 function (s::ExtractString)(v::S; store_input=false) where {S<:Nothing}
 	x = Mill.NGramMatrix([""], s.n, s.b, s.m)
 	store_input ? ArrayNode(x, [v]) : ArrayNode(x)

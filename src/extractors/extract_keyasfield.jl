@@ -21,7 +21,7 @@ end
 function (e::ExtractKeyAsField)(vs::Dict; store_input=false)
 	isempty(vs) && return(e(nothing, store_input=store_input))
 	items = map(collect(vs)) do (k,v)
-		ProductNode((key = e.key(k; store_input), item = e.item(v; store_input)))
+		ProductNode((key = e.key(k, store_input=store_input), item = e.item(v, store_input=store_input)))
 	end
 	BagNode(reduce(catobs, items), [1:length(vs)])
 end

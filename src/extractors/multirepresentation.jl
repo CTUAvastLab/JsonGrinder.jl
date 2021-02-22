@@ -11,7 +11,7 @@ end
 
 MultipleRepresentation(vs::Vector) = MultipleRepresentation((;[Symbol("e$(i)") => v for (i,v) in enumerate(vs)]...))
 MultipleRepresentation(vs::Tuple) = MultipleRepresentation((;[Symbol("e$(i)") => v for (i,v) in enumerate(vs)]...))
-(m::MultipleRepresentation)(x; store_input=false) = ProductNode(map(e -> e(x; store_input), m.extractors))
+(m::MultipleRepresentation)(x; store_input=false) = ProductNode(map(e -> e(x, store_input=store_input), m.extractors))
 
 extractsmatrix(s::MultipleRepresentation) = false
 

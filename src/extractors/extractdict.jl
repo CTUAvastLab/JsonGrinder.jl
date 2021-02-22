@@ -32,23 +32,23 @@ end
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
 
 extractsmatrix(s::ExtractDict) = false
-(s::ExtractDict)(v::V; store_input=false) where {V<:Nothing} = s(Dict{String,Any}(); store_input)
-(s::ExtractDict)(v; store_input=false)  = s(nothing; store_input)
+(s::ExtractDict)(v::V; store_input=false) where {V<:Nothing} = s(Dict{String,Any}(), store_input=store_input)
+(s::ExtractDict)(v; store_input=false)  = s(nothing, store_input=store_input)
 
 
 function (s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Dict,V<:Dict}
-	x = vcat([f(get(v,String(k),nothing); store_input) for (k,f) in s.vec]...)
-	o = [Symbol(k) => f(get(v,String(k),nothing); store_input) for (k,f) in s.other]
+	x = vcat([f(get(v,String(k),nothing), store_input=store_input) for (k,f) in s.vec]...)
+	o = [Symbol(k) => f(get(v,String(k),nothing), store_input=store_input) for (k,f) in s.other]
 	data = (; :scalars => x,o...)
 	add_metadata2dicts ? ProductNode(data, [collect(keys(s.vec))]) : ProductNode(data)
 end
 
 (s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Dict,V<:Nothing} =
-	vcat([f(get(v,String(k),nothing); store_input) for (k,f) in s.vec]...)
+	vcat([f(get(v,String(k),nothing), store_input=store_input) for (k,f) in s.vec]...)
 
 function (s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Nothing,V<:Dict}
 	# o = [f(get(v,k,nothing)) for (k,f) in s.other]
-	o = [Symbol(k) => f(get(v,String(k),nothing); store_input) for (k,f) in s.other]
+	o = [Symbol(k) => f(get(v,String(k),nothing), store_input=store_input) for (k,f) in s.other]
 	if length(o) == 1
 		# return(o[1])
 		return o[1].second

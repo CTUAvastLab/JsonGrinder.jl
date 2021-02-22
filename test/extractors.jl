@@ -695,7 +695,7 @@ end
 
 @testset "AuxiliaryExtractor HUtils" begin
 	e2 = ExtractCategorical(["a","b"])
-	e = AuxiliaryExtractor(e2, (ext, sample; store_input=false)->ext(String(sample); store_input))
+	e = AuxiliaryExtractor(e2, (ext, sample; store_input=false)->ext(String(sample), store_input=store_input))
 
 	@test e("b") == e(:b)
 	@test e("b").data ≈ [0, 1, 0]
