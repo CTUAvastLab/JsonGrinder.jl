@@ -60,7 +60,7 @@ function ExtractCategorical(ks::Vector)
 	ExtractCategorical(Dict(zip(ks, 1:length(ks))), length(ks) +1)
 end
 
-(s::ExtractCategorical{V,I})(v::V) where {V,I} =
+(s::ExtractCategorical{V,I})(v::V; store_input=false) where {V,I} =
     _make_array_node(MaybeHotMatrix([get(s.keyvalemap, v, s.n)], s.n), [v], store_input)
 
 (s::ExtractCategorical{V,I})(vs::Vector{V}; store_input=false) where {V,I} =
@@ -77,7 +77,7 @@ end
 # I'm trying to parse as float because integer can be parsed as float so I assume all numbers we care about
 # are "floatable". Yes, this does not work for
 (s::ExtractCategorical{U,I})(v::V; store_input=false) where {U<:Number,V<:AbstractString,I} =
-    _make_array_node(MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n)], s.n), [vs], store_input)
+    _make_array_node(MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n)], s.n), [v], store_input)
 
 (s::ExtractCategorical{U,I})(vs::Vector{V}; store_input=false) where {U<:Number,V<:AbstractString,I} =
 	_make_array_node(MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n) for v in vs], s.n), [vs], store_input)

@@ -49,7 +49,7 @@ testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 	@test sc(5, store_input=true).data == sc(5, store_input=false).data
 	@test sc(5, store_input=true).metadata == fill(5,1,1)
 	@test isnothing(sc(5, store_input=false).metadata)
-	@test sc(nothing, store_input=true).data == sc(nothing, store_input=false).data
+	@test isequal(sc(nothing, store_input=true).data, sc(nothing, store_input=false).data)
 	@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
 	@test isnothing(sc(nothing, store_input=false).metadata)
 end
