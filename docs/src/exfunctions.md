@@ -2,23 +2,37 @@
 
 Below, we first describe extractors of values (i.e. leaves of JSON tree), then proceed to description of extractors of `Array` and `Dict`, and finish with some specials.
 
-Extractors of scalar values are arguably the most important, but also fortunately the most understood ones. They control, how values are converted to a `Vector` (or generally tensor) for the neural networks. For example they control, if number should be represented as a number, or as one-hot encoded categorical variable. Similarly, it controls how `String` should be treated, although we admit to natively support only n-grams. Because JsonGrinder supports working with missing values, each leaf extractor has `uniontypes` field which determines if it can return missing values or not, and based on this field, extractor returns appropriate data type.
-By default, `uniontypes` is false but we advice to set it during extractor construction according to your data.
+Extractors of scalar values are arguably the most important, but also fortunately the most understood ones. They control, how values are converted to a `Vector` (or generally tensor) for the neural networks. For example they control, if number should be represented as a number, or as one-hot encoded categorical variable. Similarly, they control how `String` should be treated, although we admit to natively support only n-grams.
+
+<!-- this is relevant from JsonGrinder 2.2.0 -->
+<!-- Because `JsonGrinder` supports working with missing values, each leaf extractor has `uniontypes` field which determines if it can return missing values or not, and based on this field, extractor returns appropriate data type. -->
+<!-- By default, `uniontypes` is false but we advice to set it during extractor construction according to your data. -->
+
+Because mapping from JSON (or different hierarchical structure) to `Mill` structures can be non-trivial, extractors have keyword argument `store_input`, which, if `true`, causes input data to be stored as metadata of respective `Mill` structure. By default, it's false, because it can cause type-instability in case of irregular input data and thus suffer from performance loss. The `store_input` argument is propagated to leaves and is used to store primarily leaf values.
 
 Recall
 
+```@setup 1
+using Mill, JSON
+```
+
 ## Numbers
-```julia
+<!-- ```julia
 struct ExtractScalar{T} <: AbstractExtractor
 	c::T
 	s::T
 	uniontypes::Bool
 end
+``` -->
+```julia
+struct ExtractScalar{T} <: AbstractExtractor
+	c::T
+	s::T
+end
 ```
 Extracts a numerical value, centered by subtracting `c` and scaled by multiplying by `s`.
 Strings are converted to numbers. The extractor returns `ArrayNode{Matrix{T}}` with a single row if `uniontypes` if `false`, and `ArrayNode{Matrix{Union{Missing, T}}}` with a single row if `uniontypes` if `true`.
 ```@example 1
-using JsonGrinder, Mill, JSON #hide
 e = ExtractScalar(Float32, 0.5, 4.0)
 e("1").data
 ```
@@ -28,17 +42,33 @@ e("1").data
 e(missing)
 ```
 
+the `e("1")` is equivalent to `e("1", store_input=false)`. To see input data in metadata of `ArrayNode`, we can run
+
+```@example 1
+e("1", store_input=true).metadata
+```
+
+data remain unchanged
+
+```@example 1
+e("1", store_input=true).data
+```
+
+by default, metadata contains `nothing`
+
+```@example 1
+e("1").metadata
+```
+
 ## Strings
 ```julia
-struct ExtractString{T}
-	datatype::Type{T}
+struct ExtractString{T} <: AbstractExtractor
 	n::Int
 	b::Int
 	m::Int
 end
 ```
-Represent `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) with base `b` and modulo `m`.
-
+Represents `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) with base `b` and modulo `m`.
 
 ```@example 1
 e = ExtractString()
@@ -48,6 +78,16 @@ e("Hello")
 `missing` value is extracted as a missing value, as it is automatically handled downstream by `Mill`.
 ```@example 1
 e(missing)
+```
+
+Storing input works in the same manner as for `ExtractScalar`, see
+```@example 1
+e("Hello", store_input=true).metadata
+```
+
+it works the same also with missing values
+```@example 1
+e(missing, store_input=true).metadata
 ```
 
 ## Categorical
@@ -67,6 +107,11 @@ e(["A","B","C","D"]).data
 `missing` value is extracted as a missing value, as it is automatically handled downstream by `Mill`.
 ```@example 1
 e(missing)
+```
+
+Storing input in this case looks as follows
+```@example 1
+e(["A","B","C","D"], store_input=true).metadata
 ```
 
 ## Array (Lists / Sets)
@@ -95,6 +140,24 @@ sc([]).data
 ```@example 1
 Mill.emptyismissing!(false)
 sc([]).data
+```
+
+Storing input is delegated to leaf extractors, so metadata of bag itself are empty
+
+```@example 1
+sc(["A","B","C","D"], store_input=true).metadata
+```
+
+but metadata of underlying `ArrayNode` contain inputs.
+
+```@example 1
+sc(["A","B","C","D"], store_input=true).data.metadata
+```
+
+In case of empty arrays, input is stored in metadata of `BagNode` itself, because there might not be any underlying `ArrayNode`.
+
+```@example 1
+sc([], store_input=true).metadata
 ```
 
 

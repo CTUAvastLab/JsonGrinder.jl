@@ -1,5 +1,5 @@
 """
-	struct ExtractScalar{T}
+	struct ExtractScalar{T} <: AbstractExtractor
 		c::T
 		s::T
 	end
