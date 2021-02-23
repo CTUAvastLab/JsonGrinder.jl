@@ -2,6 +2,7 @@ using JSON, Printf
 import Base: merge, length
 
 abstract type AbstractExtractor end
+abstract type BagExtractor <: AbstractExtractor end
 abstract type JSONEntry end
 StringOrNumber = Union{AbstractString,Number}
 max_keys = 10_000

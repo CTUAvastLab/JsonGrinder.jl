@@ -29,16 +29,19 @@ julia> es([2,3,4]).data
  2.0  3.0  4.0
 ```
 """
-struct ExtractArray{T} <: AbstractExtractor
+struct ExtractArray{T} <: BagExtractor
 	item::T
 end
+
+extract_empty_bag_item(s::BagExtractor, store_input) = @error "Abstract method, please, implement it for your extractor"
+extract_empty_bag_item(s::ExtractArray, store_input) = s.item(extractempty; store_input)
 
 """
 returns missing bag of 1 observation
 """
-function extract_missing_bag(s::ExtractArray, v; store_input=false)
+function extract_missing_bag(s::BagExtractor, v; store_input=false)
 	Mill._emptyismissing[] && return _make_bag_node(missing, [0:-1], [v], store_input)
-	ds = s.item(extractempty; store_input)
+	ds = extract_empty_bag_item(s, store_input)
 	_make_bag_node(ds, [0:-1], [v], store_input)
 end
 

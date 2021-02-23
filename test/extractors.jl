@@ -465,17 +465,18 @@ end
 	b = ext(js[1], store_input=true)
 	k = only(keys(js[1]))
 	@test b.data[:key].metadata == [k]
-	@test b.data[:item][:a].metadata == fill(js[1][first_key][:a],1,1)
-	@test b.data[:item][:b].metadata == [js[1][first_key][:b]]
+	@test b.data[:item][:a].metadata == fill(js[1][k][:a],1,1)
+	@test b.data[:item][:b].metadata == [js[1][k][:b]]
 
 	b = ext(Dict(), store_input=true)
-	@test b.data.data.key.metadata == []
-	b.metadata =
-	@test b.data.data.item.metadata == []
+	@test b.metadata == [Dict()]
+	@test isnothing(b.data[:key].metadata)
+	@test isnothing(b.data[:item].metadata)
 
 	b = ext(nothing, store_input=true)
-	@test b.data.data.key.metadata == []
-	@test b.data.data.item.metadata == []
+	@test b.metadata == [nothing]
+	@test isnothing(b.data.data.key.metadata)
+	@test isnothing(b.data.data.item.metadata)
 end
 
 
@@ -600,10 +601,10 @@ end
 	@test ext_j3["U"].data == ext_j3s["U"].data
 	@test ext_j4["U"].data == ext_j4s["U"].data
 
-	@test ext_j1s["U"].metadata == reshape([1 "1" 1.1 "1.2" "1.1"], 5, 1)
-	@test ext_j2s["U"].metadata == reshape([2 "2" 2 "1.3" "2"], 5, 1)
-	@test ext_j3s["U"].metadata == reshape([3 "3" 2.3 "1.4" "2.3"], 5, 1)
-	@test ext_j4s["U"].metadata == reshape([3 "4" 5 "1.4" "5"], 5, 1)
+	@test Mill.metadata.(values(ext_j1s.data)) == ([1], ["a"], ["1"], fill(1.1,1,1), ["1.2"], ["1.1"], fill("1",1,1))
+	@test Mill.metadata.(values(ext_j2s.data)) == ([2], ["b"], ["2"], fill(2,1,1), ["1.3"], ["2"], fill("2",1,1))
+	@test Mill.metadata.(values(ext_j3s.data)) == ([3], ["c"], ["3"], fill(2.3,1,1), ["1.4"], ["2.3"], fill("3",1,1))
+	@test Mill.metadata.(values(ext_j4s.data)) == ([3], ["c"], ["4"], fill(5,1,1), ["1.4"], ["5"], fill("4",1,1))
 
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) == """
@@ -695,19 +696,19 @@ end
 
 	for (a,b) in zip([ext_j1, ext_j2, ext_j3, ext_j4], [ext_j1s, ext_j2s, ext_j3s, ext_j4s])
 		@test a["E"].data == b["E"].data
-		@test a["c"].data == b["c"].data
-		@test a["k"].data == b["k"].data
+		@test a["U"].data == b["U"].data
+		@test a["s"].data == b["s"].data
 	end
 
-	@test ext_j1s["E"].metadata == [[1, 2, 3]]
-	@test ext_j2s["E"].metadata == [[2, 2, 3]]
-	@test ext_j3s["E"].metadata == [[3, 2, 3]]
-	@test ext_j4s["E"].metadata == [[2, 3, 4]]
+	@test ext_j1s["U"].metadata == [[1, 2, 3]]
+	@test ext_j2s["U"].metadata == [[2, 2, 3]]
+	@test ext_j3s["U"].metadata == [[3, 2, 3]]
+	@test ext_j4s["U"].metadata == [[2, 3, 4]]
 
-	@test ext_j1s["c"].metadata == [1 2 3]
-	@test ext_j2s["c"].metadata == [1 2 3 4]
-	@test ext_j3s["c"].metadata == [1 2 3 4 5]
-	@test ext_j4s["c"].metadata == [1 2 3]
+	@test ext_j1s["s"].metadata == [1, 2, 3]
+	@test ext_j2s["s"].metadata == [1, 2, 3, 4]
+	@test ext_j3s["s"].metadata == [1, 2, 3, 4, 5]
+	@test ext_j4s["s"].metadata == [1, 2, 3]
 end
 
 @testset "Suggest complex" begin
@@ -920,7 +921,7 @@ end
 	@test all(ext(f).data.s .=== ext(nothing).data.s)
 
 	@test ext(f, store_input=true) != ext(nothing, store_input=true)
-	@test ext(f, store_input=true).data == ext(nothing, store_input=true).data
+	@test ext(f, store_input=true).data ≃ ext(nothing, store_input=true).data
 	@test ext(a, store_input=true).metadata == ["a"]
 	@test ext(b, store_input=true).metadata == ["b"]
 	@test ext(c, store_input=true).metadata == [""]

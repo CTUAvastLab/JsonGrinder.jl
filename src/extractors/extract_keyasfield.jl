@@ -7,14 +7,16 @@
 
 extracts all items in `vec` and in `other` and return them as a ProductNode.
 """
-struct ExtractKeyAsField{S,V} <: AbstractExtractor
+struct ExtractKeyAsField{S,V} <: BagExtractor
 	key::S
 	item::V
 end
 
-function (e::ExtractKeyAsField)(v::MissingOrNothing; store_input=false)
+extract_empty_bag_item(e::ExtractKeyAsField, store_input) = ProductNode((key = e.key(extractempty; store_input), item = e.item(extractempty; store_input)))[1:0]
+
+function (s::ExtractKeyAsField)(v::MissingOrNothing; store_input=false)
 	Mill._emptyismissing[] && return _make_bag_node(missing, [0:-1], [v], store_input)
-	ds = ProductNode((key = e.key(extractempty; store_input), item = e.item(extractempty; store_input)))[1:0]
+	ds = ProductNode((key = s.key(extractempty; store_input), item = s.item(extractempty; store_input)))[1:0]
 	_make_bag_node(ds, [0:-1], [v], store_input)
 end
 
@@ -22,7 +24,7 @@ end
 	make_empty_bag(ProductNode((key = e.key(v; store_input), item = e.item(v; store_input))), v)
 
 function (e::ExtractKeyAsField)(vs::Dict; store_input=false)
-	isempty(vs) && return e(missing; store_input)
+	isempty(vs) && return extract_missing_bag(e, vs; store_input)
 	items = map(collect(vs)) do (k,v)
 		ProductNode((key = e.key(k; store_input), item = e.item(v; store_input)))
 	end
