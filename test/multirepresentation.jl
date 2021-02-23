@@ -10,7 +10,7 @@ import HierarchicalUtils: printtree
 	@test length(e.data) == 2
 	@test size(e.data[1].data) == (4, 1)
 	@test e.data[1].data == MaybeHotMatrix([2],4)
-	@test e.data[1].data[:] ≈ [0, 1, 0, 0]
+	@test Matrix(e.data[1].data) == [0 1 0 0]'
 	@test size(e.data[2].data) == (2053, 1)
 	@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(206, 1), (272, 1), (624, 1), (738, 1), (1536, 1), (1676, 1)]
 
