@@ -13,20 +13,20 @@ struct ExtractKeyAsField{S,V} <: AbstractExtractor
 end
 
 function (e::ExtractKeyAsField)(v::MissingOrNothing; store_input=false)
-	Mill._emptyismissing[] && return BagNode(missing, [0:-1])
-	BagNode(ProductNode((key = e.key(extractempty; store_input), item = e.item(extractempty; store_input)))[1:0], [0:-1])
+	Mill._emptyismissing[] && return _make_bag_node(missing, [0:-1], [v], store_input)
+	ds = ProductNode((key = e.key(extractempty; store_input), item = e.item(extractempty; store_input)))[1:0]
+	_make_bag_node(ds, [0:-1], [v], store_input)
 end
 
-function (e::ExtractKeyAsField)(v::ExtractEmpty; store_input=false)
-	BagNode(ProductNode((key = e.key(v; store_input), item = e.item(v; store_input))), Mill.AlignedBags(Array{UnitRange{Int64},1}()))
-end
+(e::ExtractKeyAsField)(v::ExtractEmpty; store_input=false) =
+	make_empty_bag(ProductNode((key = e.key(v; store_input), item = e.item(v; store_input))), v)
 
 function (e::ExtractKeyAsField)(vs::Dict; store_input=false)
 	isempty(vs) && return e(missing; store_input)
 	items = map(collect(vs)) do (k,v)
 		ProductNode((key = e.key(k; store_input), item = e.item(v; store_input)))
 	end
-	BagNode(reduce(catobs, items), [1:length(vs)])
+	_make_bag_node(reduce(catobs, items), [1:length(vs)], [vs], store_input)
 end
 
 Base.hash(e::ExtractKeyAsField, h::UInt) = hash((e.key, e.item), h)

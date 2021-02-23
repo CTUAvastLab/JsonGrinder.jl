@@ -33,20 +33,24 @@ struct ExtractArray{T} <: AbstractExtractor
 	item::T
 end
 
-function extract_empty_bag(s::ExtractArray, v; store_input=false)
+"""
+returns missing bag of 1 observation
+"""
+function extract_missing_bag(s::ExtractArray, v; store_input=false)
 	Mill._emptyismissing[] && return _make_bag_node(missing, [0:-1], [v], store_input)
 	ds = s.item(extractempty; store_input)
 	_make_bag_node(ds, [0:-1], [v], store_input)
 end
 
-(s::ExtractArray)(v::MissingOrNothing; store_input=false) = extract_empty_bag(s, v; store_input)
+(s::ExtractArray)(v::MissingOrNothing; store_input=false) = extract_missing_bag(s, v; store_input)
 
 (s::ExtractArray)(v::Vector; store_input=false) =
-    isempty(v) ? s(missing; store_input) : BagNode(mapreduce(x->s.item(x; store_input), catobs, v),[1:length(v)])
-(s::ExtractArray)(v; store_input=false) = extract_empty_bag(s, v; store_input)
+    isempty(v) ?
+	extract_missing_bag(s, v; store_input) :
+	BagNode(mapreduce(x->s.item(x; store_input), catobs, v),[1:length(v)])
+(s::ExtractArray)(v; store_input=false) = extract_missing_bag(s, v; store_input)
 
-(s::ExtractArray)(v::ExtractEmpty; store_input=false) =
-    BagNode(s.item(extractempty; store_input), Mill.AlignedBags(Vector{UnitRange{Int64}}()))
+(s::ExtractArray)(v::ExtractEmpty; store_input=false) = make_empty_bag(s.item(extractempty; store_input), v)
 
 Base.hash(e::ExtractArray, h::UInt) = hash(e.item, h)
 Base.:(==)(e1::ExtractArray, e2::ExtractArray) = e1.item == e2.item

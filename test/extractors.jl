@@ -37,7 +37,9 @@ testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 	sc = ExtractScalar(Float32, 0.5, 4.0)
 	@test sc(1).data isa Matrix{Float32}
 	@test sc(extractempty).data isa Matrix{Float32}
-
+	@test isnothing(sc(extractempty, store_input=false).metadata)
+	@test sc(extractempty, store_input=true).metadata isa Matrix{UndefInitializer}
+	@test size(sc(extractempty, store_input=true).metadata) == (1,0)
 	sc = JsonGrinder.extractscalar(Float32)
 	@test sc(1).data isa Matrix{Float32}
 	@test sc(Dict(1=>1)).data isa Matrix{Missing}
@@ -52,83 +54,6 @@ testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 	@test sc(nothing, store_input=true).data ≃ sc(nothing, store_input=false).data
 	@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
 	@test isnothing(sc(nothing, store_input=false).metadata)
-end
-
-
-@testset "ExtractCategorical" begin
-	e = ExtractCategorical(["a","b"])
-	@test e("a").data ≈ [1, 0, 0]
-	@test e("b").data ≈ [0, 1, 0]
-	@test e("z").data ≈ [0, 0, 1]
-	@test e(nothing).data ≃ [missing missing missing]'
-	@test e(missing).data ≃ [missing missing missing]'
-	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Int64,Bool}
-	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Int64,Missing}
-	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Int64,Missing}
-	@test e(extractempty).data isa MaybeHotMatrix{Int64,Int64,Bool}
-	@test nobs(e(extractempty)) == 0
-
-	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
-	@test e(["a", missing]).data ≃ [true missing; false missing; false missing]
-	@test e(["a", missing, "x"]).data ≃ [true missing false; false missing false; false missing true]
-	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Int64,Bool}
-	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
-
-	@test isnothing(ExtractCategorical([]))
-	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
-	@test e2("a").data ≈ [1, 0, 0]
-	@test e2("c").data ≈ [0, 1, 0]
-	@test e2("b").data ≈ [0, 0, 1]
-	@test e2(nothing).data ≃ [missing missing missing]'
-	@test e2(missing).data ≃ [missing missing missing]'
-
-	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
-	@test reduce(catobs, [e("a").data, e("b").data]) ≈ [1 0; 0 1; 0 0]
-	@test hcat(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
-	@test e(Dict(1=>2)).data |> collect ≃ [missing missing missing]'
-
-	@test nobs(e("a")) == 1
-	@test nobs(e("b")) == 1
-	@test nobs(e("z")) == 1
-	@test nobs(e(nothing)) == 1
-	@test nobs(e(missing)) == 1
-	@test nobs(e(missing).data) == 1
-	@test nobs(e([missing, nothing])) == 2
-	@test nobs(e([missing, nothing, "a"])) == 3
-
-	e3 = ExtractCategorical(JsonGrinder.Entry(Dict(1=>1,2=>1), 2))
-	@test e3(1).data ≈ [1, 0, 0]
-	@test e3(2).data ≈ [0, 1, 0]
-	@test e3(4).data ≈ [0, 0, 1]
-	@test e3(1.).data ≈ [1, 0, 0]
-	@test e3(2.).data ≈ [0, 1, 0]
-	@test e3(4.).data ≈ [0, 0, 1]
-	@test e3([]).data ≃ [missing missing missing]'
-
-	e4 = ExtractCategorical(JsonGrinder.Entry(Dict(1.0=>1,2.0=>1), 2))
-	@test e4(1).data ≈ [1, 0, 0]
-	@test e4(2).data ≈ [0, 1, 0]
-	@test e4(4).data ≈ [0, 0, 1]
-	@test e4(1.).data ≈ [1, 0, 0]
-	@test e4(2.).data ≈ [0, 1, 0]
-	@test e4(4.).data ≈ [0, 0, 1]
-	@test e4([]).data ≃ [missing missing missing]'
-end
-
-@testset "ExtractCategorical type conversions" begin
-	j1 = JSON.parse("""{"a": "4"}""")
-	j2 = JSON.parse("""{"a": "11.5"}""")
-	j3 = JSON.parse("""{"a": 7}""")
-	j4 = JSON.parse("""{"a": 4.5}""")
-
-	sch = JsonGrinder.schema([j1,j2,j3,j4])
-
-	ext = suggestextractor(sch)
-
-	@test ext(Dict("a"=>4)) == ext(Dict("a"=>4.0))
-	@test ext(Dict("a"=>4)) == ext(Dict("a"=>4f0))
-	@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4"))
-	@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4.0"))
 end
 
 @testset "Testing array conversion" begin
@@ -200,7 +125,7 @@ end
 	@test e234s.data[2].metadata == fill(3,1,1)
 	@test e234s.data[3].metadata == fill(4,1,1)
 	@test ens.data.data == en.data.data
-	@test isnothing(ens.data.metadata)
+	@test isnothing(en.data.metadata)
 	@test ens.metadata == [nothing]
 	@test isnothing(e234.data.metadata)
 	@test isnothing(en.data.metadata)
@@ -315,10 +240,14 @@ end
 	dict = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),
 		"b" => ExtractArray(ExtractScalar(Float32,2,3)))
 	br = ExtractDict(dict)
-	a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]))
-	a2 = br(Dict("b" => [2,3,4]))
-	a3 = br(Dict("a" => [2,3,4]))
-	a4 = br(Dict{String,Any}())
+	a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=false)
+	a2 = br(Dict("b" => [2,3,4]), store_input=false)
+	a3 = br(Dict("a" => [2,3,4]), store_input=false)
+	a4 = br(Dict{String,Any}(), store_input=false)
+	a1s = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=true)
+	a2s = br(Dict("b" => [2,3,4]), store_input=true)
+	a3s = br(Dict("a" => [2,3,4]), store_input=true)
+	a4s = br(Dict{String,Any}(), store_input=true)
 
 	@test all(catobs(a1,a2).data[1].data.data .== [-3.0  0.0  3.0  6.0  0.0  3.0  6.0])
 	@test all(catobs(a1,a2).data[1].bags .== [1:4, 5:7])
@@ -338,6 +267,19 @@ end
 	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
 
 	@test all(a4.data[2].data.data isa Matrix{Float32})
+	# todo: ověřit catobsování empty bagů s plnými bagy s metadaty jestli to funguje u všech možných extraktorů uvnitř bagu
+	@test catobs(a1,a4).data[1].data.data == catobs(a1s,a4s).data[1].data.data
+	@test catobs(a1,a4).data[1].bags == catobs(a1s,a4s).data[1].bags
+	@test catobs(a1,a4).data[2].data.data == catobs(a1s,a4s).data[2].data.data
+	@test catobs(a1,a4).data[2].bags == catobs(a1,a4).data[2].bags
+
+	@test catobs(a1s,a4s).data[1].data.metadata == [1 2 3 4]
+	@test catobs(a1s,a4s).data[2].data.metadata == [1 2 3]
+	@test a1s.data[1].data.metadata == [1 2 3 4]
+	@test a1s.data[2].data.metadata == [1 2 3]
+	@test a4s.data[1].data.metadata == zeros(1,0)
+	@test a4s.data[2].data.metadata == zeros(1,0)
+
 	a4 = br(extractempty)
 	@test nobs(a4[:a]) == 0
 	@test nobs(a4[:a].data) == 0
@@ -345,6 +287,99 @@ end
 	@test nobs(a4[:b]) == 0
 	@test nobs(a4[:b].data) == 0
 	@test a4[:b].data.data isa Matrix{Float32}
+end
+
+@testset "ExtractCategorical" begin
+	e = ExtractCategorical(["a","b"])
+	ea = e("a", store_input=false)
+	eb = e("b", store_input=false)
+	ez = e("z", store_input=false)
+	en = e(nothing, store_input=false)
+	em = e(missing, store_input=false)
+	eas = e("a", store_input=true)
+	ebs = e("b", store_input=true)
+	ezs = e("z", store_input=true)
+	ens = e(nothing, store_input=true)
+	@test ea.data ≈ [1, 0, 0]
+	@test eb.data ≈ [0, 1, 0]
+	@test ez.data ≈ [0, 0, 1]
+	@test en.data ≃ [missing missing missing]'
+	@test em.data ≃ [missing missing missing]'
+	@test typeof(ea.data) == MaybeHotMatrix{Int64,Int64,Bool}
+	@test typeof(en.data) == MaybeHotMatrix{Missing,Int64,Missing}
+	@test typeof(em.data) == MaybeHotMatrix{Missing,Int64,Missing}
+	@test e(extractempty).data isa MaybeHotMatrix{Int64,Int64,Bool}
+	@test nobs(e(extractempty)) == 0
+
+	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
+	@test e(["a", missing]).data ≃ [true missing; false missing; false missing]
+	@test e(["a", missing, "x"]).data ≃ [true missing false; false missing false; false missing true]
+	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Int64,Bool}
+	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+
+	@test isnothing(ExtractCategorical([]))
+	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
+	@test e2("a").data ≈ [1, 0, 0]
+	@test e2("c").data ≈ [0, 1, 0]
+	@test e2("b").data ≈ [0, 0, 1]
+	@test e2(nothing).data ≃ [missing missing missing]'
+	@test e2(missing).data ≃ [missing missing missing]'
+
+	@test catobs(ea, eb).data ≈ [1 0; 0 1; 0 0]
+	@test reduce(catobs, [ea.data, eb.data]) ≈ [1 0; 0 1; 0 0]
+	@test hcat(ea.data, eb.data) ≈ [1 0; 0 1; 0 0]
+	@test e(Dict(1=>2)).data |> collect ≃ [missing missing missing]'
+
+	@test catobs(eas, ebs).data == catobs(ea, eb).data
+	@test reduce(catobs, [eas.data, ebs.data]) == reduce(catobs, [ea.data, eb.data])
+	@test e(Dict(1=>2)).data ≃ [missing missing missing]'
+
+	@test catobs(eas, ebs).metadata == ["a", "b"]
+	@test e(Dict(1=>2), store_input=true).metadata == [Dict(1=>2)]
+
+	@test nobs(ea) == 1
+	@test nobs(eb) == 1
+	@test nobs(ez) == 1
+	@test nobs(en) == 1
+	@test nobs(em) == 1
+	@test nobs(em.data) == 1
+	@test nobs(e([missing, nothing])) == 2
+	@test nobs(e([missing, nothing, "a"])) == 3
+
+	e3 = ExtractCategorical(JsonGrinder.Entry(Dict(1=>1,2=>1), 2))
+	@test e3(1).data ≈ [1, 0, 0]
+	@test e3(2).data ≈ [0, 1, 0]
+	@test e3(4).data ≈ [0, 0, 1]
+	@test e3(1.).data ≈ [1, 0, 0]
+	@test e3(2.).data ≈ [0, 1, 0]
+	@test e3(4.).data ≈ [0, 0, 1]
+	@test e3([]).data ≃ [missing missing missing]'
+
+	e4 = ExtractCategorical(JsonGrinder.Entry(Dict(1.0=>1,2.0=>1), 2))
+	@test e4(1).data ≈ [1, 0, 0]
+	@test e4(2).data ≈ [0, 1, 0]
+	@test e4(4).data ≈ [0, 0, 1]
+	@test e4(1.).data ≈ [1, 0, 0]
+	@test e4(2.).data ≈ [0, 1, 0]
+	@test e4(4.).data ≈ [0, 0, 1]
+	@test e4([]).data ≃ [missing missing missing]'
+end
+
+@testset "ExtractCategorical type conversions" begin
+	j1 = JSON.parse("""{"a": "4"}""")
+	j2 = JSON.parse("""{"a": "11.5"}""")
+	j3 = JSON.parse("""{"a": 7}""")
+	j4 = JSON.parse("""{"a": 4.5}""")
+
+	sch = JsonGrinder.schema([j1,j2,j3,j4])
+
+	ext = suggestextractor(sch)
+
+	@test ext(Dict("a"=>4)) == ext(Dict("a"=>4.0))
+	@test ext(Dict("a"=>4)) == ext(Dict("a"=>4f0))
+	@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4"))
+	@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4.0"))
+	# todo: add here metadata test
 end
 
 @testset "ExtractString" begin
@@ -414,8 +449,11 @@ end
 	k = only(keys(js[1]))
 	i = ext.item(js[1][k])
 	@test b.data[:item][:a].data == i[:a].data
-	@test b.data[:item][:b].data ==i[:b].data
+	@test b.data[:item][:b].data == i[:b].data
 	@test b.data[:key].data.s[1] == k
+	@test isnothing(b.data[:key].metadata)
+	@test isnothing(b.data[:item][:a].metadata)
+	@test isnothing(b.data[:item][:b].metadata)
 
 	b = ext(nothing)
 	@test nobs(b) == 1
@@ -423,6 +461,21 @@ end
 	b = ext(Dict())
 	@test nobs(b) == 1
 	@test nobs(b.data) == 0
+
+	b = ext(js[1], store_input=true)
+	k = only(keys(js[1]))
+	@test b.data[:key].metadata == [k]
+	@test b.data[:item][:a].metadata == fill(js[1][first_key][:a],1,1)
+	@test b.data[:item][:b].metadata == [js[1][first_key][:b]]
+
+	b = ext(Dict(), store_input=true)
+	@test b.data.data.key.metadata == []
+	b.metadata =
+	@test b.data.data.item.metadata == []
+
+	b = ext(nothing, store_input=true)
+	@test b.data.data.key.metadata == []
+	@test b.data.data.item.metadata == []
 end
 
 
@@ -537,6 +590,21 @@ end
 	@test ext_j3["U"].data ≈ [(2.3-1.1)/23.9]
 	@test ext_j4["U"].data ≈ [(5-1.1)/23.9]
 
+	ext_j1s = ext(j1, store_input=true)
+	ext_j2s = ext(j2, store_input=true)
+	ext_j3s = ext(j3, store_input=true)
+	ext_j4s = ext(j4, store_input=true)
+
+	@test ext_j1["U"].data == ext_j1s["U"].data
+	@test ext_j2["U"].data == ext_j2s["U"].data
+	@test ext_j3["U"].data == ext_j3s["U"].data
+	@test ext_j4["U"].data == ext_j4s["U"].data
+
+	@test ext_j1s["U"].metadata == reshape([1 "1" 1.1 "1.2" "1.1"], 5, 1)
+	@test ext_j2s["U"].metadata == reshape([2 "2" 2 "1.3" "2"], 5, 1)
+	@test ext_j3s["U"].metadata == reshape([3 "3" 2.3 "1.4" "2.3"], 5, 1)
+	@test ext_j4s["U"].metadata == reshape([3 "4" 5 "1.4" "5"], 5, 1)
+
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) == """
 	ProductModel … ↦ ArrayModel(Dense(52, 10))
@@ -573,10 +641,15 @@ end
 	  └── c: Array of ["k"]
 	           └── Categorical d = 6 ["s"]"""
 
-	ext_j1 = ext(j1)
-	ext_j2 = ext(j2)
-	ext_j3 = ext(j3)
-	ext_j4 = ext(j4)
+	ext_j1 = ext(j1, store_input=false)
+	ext_j2 = ext(j2, store_input=false)
+	ext_j3 = ext(j3, store_input=false)
+	ext_j4 = ext(j4, store_input=false)
+
+	ext_j1s = ext(j1, store_input=true)
+	ext_j2s = ext(j2, store_input=true)
+	ext_j3s = ext(j3, store_input=true)
+	ext_j4s = ext(j4, store_input=true)
 
 	@test ext_j1["E"].data ≈ [0]
 	@test ext_j2["E"].data ≈ [1/3]
@@ -619,6 +692,22 @@ end
  	0  0  0
  	0  0  0
 	]
+
+	for (a,b) in zip([ext_j1, ext_j2, ext_j3, ext_j4], [ext_j1s, ext_j2s, ext_j3s, ext_j4s])
+		@test a["E"].data == b["E"].data
+		@test a["c"].data == b["c"].data
+		@test a["k"].data == b["k"].data
+	end
+
+	@test ext_j1s["E"].metadata == [[1, 2, 3]]
+	@test ext_j2s["E"].metadata == [[2, 2, 3]]
+	@test ext_j3s["E"].metadata == [[3, 2, 3]]
+	@test ext_j4s["E"].metadata == [[2, 3, 4]]
+
+	@test ext_j1s["c"].metadata == [1 2 3]
+	@test ext_j2s["c"].metadata == [1 2 3 4]
+	@test ext_j3s["c"].metadata == [1 2 3 4 5]
+	@test ext_j4s["c"].metadata == [1 2 3]
 end
 
 @testset "Suggest complex" begin
@@ -829,6 +918,17 @@ end
 	ext = JsonGrinder.extractscalar(AbstractString)
 	@test SparseMatrixCSC(ext(c).data) == SparseMatrixCSC(ext(e).data)
 	@test all(ext(f).data.s .=== ext(nothing).data.s)
+
+	@test ext(f, store_input=true) != ext(nothing, store_input=true)
+	@test ext(f, store_input=true).data == ext(nothing, store_input=true).data
+	@test ext(a, store_input=true).metadata == ["a"]
+	@test ext(b, store_input=true).metadata == ["b"]
+	@test ext(c, store_input=true).metadata == [""]
+	@test ext(d, store_input=true).metadata == ["d"]
+	@test ext(e, store_input=true).metadata == [""]
+	@test ext(f, store_input=true).metadata == [5.2]
+	@test ext(nothing, store_input=true).metadata == [nothing]
+	#todo: add tests for all extractors for store_input=true
 end
 
 @testset "key as field" begin

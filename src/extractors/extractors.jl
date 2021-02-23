@@ -18,6 +18,11 @@ const MissingOrNothing = Union{Missing, Nothing}
 _make_array_node(x, v, store_input) = store_input ? ArrayNode(x, v) : ArrayNode(x)
 _make_bag_node(x, bags, v, store_input) = store_input ? BagNode(x, bags, v) : BagNode(x, bags)
 
+"""
+returns empty bag of 0 observations
+"""
+make_empty_bag(x, v) = BagNode(x, Mill.AlignedBags(Vector{UnitRange{Int64}}()))
+
 include("auxiliary.jl")
 include("extractarray.jl")
 include("extractdict.jl")
