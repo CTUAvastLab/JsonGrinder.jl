@@ -49,7 +49,7 @@ testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 	@test sc(5, store_input=true).data == sc(5, store_input=false).data
 	@test sc(5, store_input=true).metadata == fill(5,1,1)
 	@test isnothing(sc(5, store_input=false).metadata)
-	@test isequal(sc(nothing, store_input=true).data, sc(nothing, store_input=false).data)
+	@test sc(nothing, store_input=true).data ≃ sc(nothing, store_input=false).data
 	@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
 	@test isnothing(sc(nothing, store_input=false).metadata)
 end
@@ -60,8 +60,8 @@ end
 	@test e("a").data ≈ [1, 0, 0]
 	@test e("b").data ≈ [0, 1, 0]
 	@test e("z").data ≈ [0, 0, 1]
-	@test isequal(e(nothing).data, [missing missing missing]')
-	@test isequal(e(missing).data, [missing missing missing]')
+	@test e(nothing).data ≃ [missing missing missing]'
+	@test e(missing).data ≃ [missing missing missing]'
 	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Int64,Bool}
 	@test typeof(e(nothing).data) == MaybeHotMatrix{Missing,Int64,Missing}
 	@test typeof(e(missing).data) == MaybeHotMatrix{Missing,Int64,Missing}
@@ -69,8 +69,8 @@ end
 	@test nobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
-	@test isequal(e(["a", missing]).data, [true missing; false missing; false missing])
-	@test isequal(e(["a", missing, "x"]).data, [true missing false; false missing false; false missing true])
+	@test e(["a", missing]).data ≃ [true missing; false missing; false missing]
+	@test e(["a", missing, "x"]).data ≃ [true missing false; false missing false; false missing true]
 	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Int64,Bool}
 	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
 
@@ -79,13 +79,13 @@ end
 	@test e2("a").data ≈ [1, 0, 0]
 	@test e2("c").data ≈ [0, 1, 0]
 	@test e2("b").data ≈ [0, 0, 1]
-	@test isequal(e2(nothing).data, [missing missing missing]')
-	@test isequal(e2(missing).data, [missing missing missing]')
+	@test e2(nothing).data ≃ [missing missing missing]'
+	@test e2(missing).data ≃ [missing missing missing]'
 
 	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
 	@test reduce(catobs, [e("a").data, e("b").data]) ≈ [1 0; 0 1; 0 0]
 	@test hcat(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
-	@test isequal(e(Dict(1=>2)).data |> collect, [missing missing missing]')
+	@test e(Dict(1=>2)).data |> collect ≃ [missing missing missing]'
 
 	@test nobs(e("a")) == 1
 	@test nobs(e("b")) == 1
@@ -103,7 +103,7 @@ end
 	@test e3(1.).data ≈ [1, 0, 0]
 	@test e3(2.).data ≈ [0, 1, 0]
 	@test e3(4.).data ≈ [0, 0, 1]
-	@test isequal(e3([]).data, [missing missing missing]')
+	@test e3([]).data ≃ [missing missing missing]'
 
 	e4 = ExtractCategorical(JsonGrinder.Entry(Dict(1.0=>1,2.0=>1), 2))
 	@test e4(1).data ≈ [1, 0, 0]
@@ -112,7 +112,7 @@ end
 	@test e4(1.).data ≈ [1, 0, 0]
 	@test e4(2.).data ≈ [0, 1, 0]
 	@test e4(4.).data ≈ [0, 0, 1]
-	@test isequal(e4([]).data, [missing missing missing]')
+	@test e4([]).data ≃ [missing missing missing]'
 end
 
 @testset "ExtractCategorical type conversions" begin
@@ -150,13 +150,27 @@ end
 	@test e234s.data[2].metadata == [3]
 	@test e234s.data[3].metadata == [4]
 	@test ens.data.data == en.data.data
-	@test ens.data.metadata == []
+	@test ens.metadata == [nothing]
+	@test isnothing(en.metadata)
+	@test isnothing(ens.data.metadata)
 	@test isnothing(e234.data.metadata)
 	@test isnothing(en.data.metadata)
 
 	Mill.emptyismissing!(true)
-	@test sc(nothing).data isa Missing
-	@test all(sc(nothing).bags.bags .== [0:-1])
+	en = sc(nothing, store_input=false)
+	ens = sc(nothing, store_input=true)
+	em = sc(missing, store_input=false)
+	ems = sc(missing, store_input=true)
+	@test en.data isa Missing
+	@test en.data ≃ em.data
+	@test ens.data isa Missing
+	@test ens.data ≃ ems.data
+	@test isnothing(en.metadata)
+	@test isnothing(em.metadata)
+	@test ens.metadata == [nothing]
+	@test ems.metadata ≃ [missing]
+	@test all(en.bags.bags .== [0:-1])
+	@test all(em.bags.bags .== [0:-1])
 	Mill.emptyismissing!(false)
 
 	@test nobs(sc(extractempty).data.data) == 0
@@ -186,7 +200,8 @@ end
 	@test e234s.data[2].metadata == fill(3,1,1)
 	@test e234s.data[3].metadata == fill(4,1,1)
 	@test ens.data.data == en.data.data
-	@test ens.data.metadata == zeros(1,0)
+	@test isnothing(ens.data.metadata)
+	@test ens.metadata == [nothing]
 	@test isnothing(e234.data.metadata)
 	@test isnothing(en.data.metadata)
 end
@@ -210,9 +225,9 @@ end
 	@test catobs(e1s, e1s).metadata == [[1, 2, 2, 3, 4], [1, 2, 2, 3, 4]]
 	@test catobs(e1s, e1s)[1].data == [1 2 2 3 4]'
 	@test catobs(e1s, e1s)[1].metadata == [[1, 2, 2, 3, 4]]
-	@test isequal(n1s.metadata, [missing])
-	@test isequal(catobs(e1s, n1s).metadata, [[1, 2, 2, 3, 4], missing])
-	@test e2s.data == [1 2 2 3 0]'
+	@test n1s.metadata ≃ [missing]
+	@test catobs(e1s, n1s).metadata ≃ [[1, 2, 2, 3, 4], missing]
+	@test e2s.data ≃ [1 2 2 3 missing]'
 	@test e2s.metadata == [[1, 2, 2, 3]]
 
 	sc = ExtractVector{Int64}(5)
@@ -220,22 +235,24 @@ end
 	@test sc([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
 	@test sc([1, 2, 2, 3, 4], store_input=true).data ≈ sc([1, 2, 2, 3, 4], store_input=false).data
 	@test sc([1, 2, 2, 3, 4], store_input=true).metadata == [[1, 2, 2, 3, 4]]
-	@test sc(nothing).data isa Matrix
+	@test sc(nothing).data isa Matrix{Missing}
 	@test all(sc(nothing).data .=== missing)
 	@test sc(extractempty).data isa Matrix{Int64}
 	@test nobs(sc(extractempty).data) == 0
-	@test sc(nothing, store_input=true).data ≈ sc(nothing, store_input=false).data
+	@test sc(nothing, store_input=true).data ≃ sc(nothing, store_input=false).data
 	@test sc(nothing, store_input=true).metadata == [nothing]
-
 
 	# feature vector longer than expected
 	sc = ExtractVector{Float32}(5)
-	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
-	@test typeof(sc([1, 2, 3, 4, 5]).data) == Array{Float32,2}
+	sc122345 = sc([1, 2, 2, 3, 4, 5], store_input=false)
+	sc122345s = sc([1, 2, 2, 3, 4, 5], store_input=true)
+	sc12345 = sc([1, 2, 3, 4, 5])
+	@test all(sc122345.data .== [1, 2, 2, 3, 4])
+	@test typeof(sc12345.data) == Matrix{Float32}
 	@test sc([5, 6]).data[1:2] ≈ [5, 6]
-	@test typeof(sc([1, 2]).data) == Array{Union{Missing,Float32},2}
-	@test sc([1, 2, 2, 3, 4, 5], store_input=true).data ≈ sc([1, 2, 2, 3, 4, 5], store_input=false).data
-	@test sc([1, 2, 2, 3, 4, 5], store_input=true).metadata == [[1, 2, 2, 3, 4, 5]]
+	@test typeof(sc([1, 2]).data) == Matrix{Union{Missing,Float32}}
+	@test sc122345s.data ≈ sc122345.data
+	@test sc122345s.metadata == [[1, 2, 2, 3, 4, 5]]
 	@test sc([1, 2]).data isa Matrix
 	@test all(sc([5, 6]).data[3:5] .=== missing)
 	@test all(sc(Dict(1=>2)).data .=== missing)
@@ -261,12 +278,12 @@ end
 	@test all(catobs(a1,a2)[:c].bags .== [1:4,0:-1])
 
 	@test catobs(a2,a3)[:a].data ≈ [9 9]
-	@test isequal(catobs(a2,a3)[:b].data, [7.0 missing])
+	@test catobs(a2,a3)[:b].data ≃ [7.0 missing]
 	@test catobs(a2,a3)[:c].data.data ≈ [-3 0 3 6]
 	@test all(catobs(a2,a3)[:c].bags .== [0:-1,1:4])
 
 	@test catobs(a1,a3)[:a].data ≈ [9 9]
-	@test isequal(catobs(a1,a3)[:b].data, [7.0 missing])
+	@test catobs(a1,a3)[:b].data ≃ [7.0 missing]
 	@test catobs(a1,a3)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
 	@test all(catobs(a1,a3)[:c].bags .== [1:4,5:8])
 
@@ -275,7 +292,7 @@ end
 	@test a2[:a].data ≈ [9]
 	@test a2[:b].data ≈ [7]
 	@test a3[:a].data ≈ [9]
-	@test isequal(a3[:b].data, hcat(missing))
+	@test a3[:b].data ≃ hcat(missing)
 	@test a1[:c].data.data ≈ [-3 0 3 6]
 	@test all(a1[:c].bags .== [1:4])
 
@@ -320,7 +337,7 @@ end
 	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
 	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
 
-	@test all(a4.data[2].data.data isa Array{Float32,2})
+	@test all(a4.data[2].data.data isa Matrix{Float32})
 	a4 = br(extractempty)
 	@test nobs(a4[:a]) == 0
 	@test nobs(a4[:a].data) == 0
@@ -332,13 +349,18 @@ end
 
 @testset "ExtractString" begin
 	e = ExtractString()
-	@test e("Hello").data.s == ["Hello"]
+	ehello = e("Hello", store_input=false)
+	ehellos = e("Hello", store_input=true)
+	@test ehello.data.s == ["Hello"]
+	@test ehello.data == ehellos.data
 	@test e(Symbol("Hello")).data.s == ["Hello"]
 	@test e(["Hello", "world"]).data.s == ["Hello", "world"]
 	@test all(e(missing).data.s .=== [missing])
-	@test e("Hello") isa ArrayNode{NGramMatrix{String,Int64},Nothing}
-	@test e("Hello").data isa NGramMatrix{String,Int64}
+	@test ehello isa ArrayNode{NGramMatrix{String,Int64},Nothing}
+	@test ehello.data isa NGramMatrix{String,Int64}
 	@test e(missing).data isa NGramMatrix{Missing,Missing}
+	@test isnothing(ehello.metadata)
+	@test ehellos.metadata == ["Hello"]
 end
 
 @testset "Extractor of keys as field" begin
@@ -690,7 +712,7 @@ end
 	@test e1["M"].data ≈ [0]
 	@test e2["M"].data ≈ [1]
 	@test e3["M"].data ≈ [0.7]
-	@test isequal(e4["M"].data, hcat(missing))
+	@test e4["M"].data ≃ hcat(missing)
 	@test e1["U"].data ≈ [0]
 	@test e2["U"].data ≈ [1/3]
 	@test e3["U"].data ≈ [2/3]
@@ -827,7 +849,7 @@ end
 
 @testset "AuxiliaryExtractor HUtils" begin
 	e2 = ExtractCategorical(["a","b"])
-	e = AuxiliaryExtractor(e2, (ext, sample)->ext(String(sample)))
+	e = AuxiliaryExtractor(e2, (ext, sample; store_input=false)->ext(String(sample); store_input))
 
 	@test e("b") == e(:b)
 	@test e("b").data ≈ [0, 1, 0]

@@ -8,6 +8,7 @@ function buf_printtree(data; kwargs...)
 	String(take!(buf))
 end
 
+const ≃ = isequal
 
 @testset "JsonGrinder.jl" begin
 

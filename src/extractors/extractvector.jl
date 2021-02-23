@@ -23,7 +23,7 @@ ExtractVector(n::Int) = ExtractVector{FloatType}(n)
 make_missing_vector(s::ExtractVector, v, store_input) =
 	_make_array_node(fill(missing, s.n, 1), [v], store_input)
 
-(s::ExtractVector{T})(::MissingOrNothing; store_input=false) where {T} = make_missing_vector(s, v, store_input)
+(s::ExtractVector{T})(v::MissingOrNothing; store_input=false) where {T} = make_missing_vector(s, v, store_input)
 (s::ExtractVector{T})(::ExtractEmpty; store_input=false) where {T} = ArrayNode(Matrix{T}(undef, s.n, 0))
 (s::ExtractVector)(v; store_input=false) = make_missing_vector(s, v, store_input)
 function (s::ExtractVector{T})(v::Vector; store_input=false) where {T}

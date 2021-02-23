@@ -348,9 +348,9 @@ end
 	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
 		:a=>[Dict(:a=>"c",:b=>2,:c=>1), Dict(:a=>"c",:b=>2,:c=>1)]
 	)
-	@test isequal(JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true), Dict(
+	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true) ≃ Dict(
 		:a=>[Dict(:a=>missing,:b=>missing,:c=>1), Dict(:a=>missing,:b=>missing,:c=>1)]
-	))
+	)
 
 	ext1 = suggestextractor(sch1)
 	m = reflectinmodel(sch1, ext1)
@@ -371,9 +371,9 @@ end
 	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
 		:a=>Dict(:a=>"c",:b=>3,:c=>1), :b=>1
 	)
-	@test isequal(JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true), Dict(
+	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true) ≃ Dict(
 		:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
-	))
+	)
 
 	ext1 = suggestextractor(sch1)
 	m = reflectinmodel(sch1, ext1)
@@ -398,9 +398,9 @@ end
 	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
 		:a=>[2, "4"]	# this is wrong I need to fix it
 	)
-	# @test isequal(JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true), Dict(
+	# @test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true) ≃ Dict(
 	# 	:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
-	# ))
+	# )
 	#
 	# ext1 = suggestextractor(sch1)
 	# m = reflectinmodel(sch1, ext1)
