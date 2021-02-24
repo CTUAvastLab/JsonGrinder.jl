@@ -7,53 +7,68 @@
 Imagine that you want to train a classifier on data looking like this
 ```json
 {
-  "services": [
-    {
-      "protocol": "tcp",
-      "port": 80
-    },
-    {
-      "protocol": "tcp",
-      "port": 443
-    },
-  ],
-  "ip": "192.168.1.109",
-  "device_id": "2717684b-3937-4644-a33a-33f4226c43ec",
-  "upnp": [
-    {
-      "device_type": "urn:schemas-upnp-org:device:MediaServer:1",
-      "services": [
-        "urn:upnp-org:serviceId:ContentDirectory",
-        "urn:upnp-org:serviceId:ConnectionManager"
-      ],
-      "manufacturer": "ARRIS",
-      "model_name": "Verizon Media Server",
-      "model_description": "Media Server"
-    }
-  ],
-  "device_class": "MEDIA_BOX",
-  "ssdp": [
-    {
-      "st": "",
-      "location": "http://192.168.1.109:9098/device_description.xml",
-      "method": "",
-      "nt": "upnp:rootdevice",
-      "server": "ARRIS DIAL/1.7.2 UPnP/1.0 ARRIS Settop Box",
-      "user_agent": ""
-    },
-    {
-      "st": "",
-      "location": "http://192.168.1.109:8091/XD/21e13e66-1dd2-11b2-9b87-44e137a2ec6a",
-      "method": "",
-      "nt": "upnp:rootdevice",
-      "server": "Allegro-Software-RomPager/5.41 UPnP/1.0 ARRIS Settop Box",
-      "user_agent": ""
-    },
-   ],
-  "mac": "44:e1:37:a2:ec:c1"
-}
+  "ind1": 1,
+  "inda": 0,
+  "logp": 6.01,
+  "lumo": -2.184,
+  "mutagenic": 1,
+  "atoms": [
+	{
+	  "element": "c",
+	  "atom_type": 22,
+	  "charge": -0.118,
+	  "bonds": [
+		{
+		  "bond_type": 7,
+		  "element": "c",
+		  "atom_type": 22,
+		  "charge": -0.118
+		},
+		{
+		  "bond_type": 1,
+		  "element": "h",
+		  "atom_type": 3,
+		  "charge": 0.141
+		},
+		{
+		  "bond_type": 7,
+		  "element": "c",
+		  "atom_type": 22,
+		  "charge": -0.118
+		}
+	  ]
+	},
+	⋮
+	{
+	  "element": "c",
+	  "atom_type": 27,
+	  "charge": 0.012,
+	  "bonds": [
+		{
+		  "bond_type": 7,
+		  "element": "c",
+		  "atom_type": 22,
+		  "charge": -0.118
+		},
+		{
+		  "bond_type": 7,
+		  "element": "c",
+		  "atom_type": 27,
+		  "charge": -0.089
+		},
+		{
+		  "bond_type": 7,
+		  "element": "c",
+		  "atom_type": 22,
+		  "charge": -0.118
+		}
+	  ]
+	}
+  ]
+},
+
 ```
-and the task is to predict the value in key `device_class` (in this sample it's `MEDIA_BOX`) from the rest of the JSON.
+and the task is to predict the value in key `mutagenic` (in this sample it's `1`) from the rest of the JSON.
 
 With most machine learning libraries assuming your data being stored as tensors of a fixed dimension, or a sequence, you will have a bad time. Contrary, `JsonGrider.jl` assumes your data to be stored in a flexible JSON format and tries to automate most labor using reasonable default, but it still gives you an option to control and tweak almost everything. `JsonGrinder.jl` is built on top of [Mill.jl](https://github.com/CTUAvastLab/Mill.jl) which itself is built on top of [Flux.jl](https://fluxml.ai/) (we do not reinvent the wheel). **Although JsonGrinder was designed for JSON files, you can easily adapt it to XML, [Protocol Buffers](https://developers.google.com/protocol-buffers), [MessagePack](https://msgpack.org/index.html), and other similar structures**
 
@@ -70,29 +85,33 @@ The first three steps are handled by `JsonGrinder.jl`, the fourth step by `Mill.
 Authors see the biggest advantage in the `model` being hierarchical and reflecting the JSON structure. Thanks to `Mill.jl`, it can handle missing values at all levels.
 
 ## Example
-Our idealized workflow is demonstrated in `examples/identification.jl` solving [device identification challenge](https://www.kaggle.com/c/cybersecprague2019-challenge/data) looks as follows (for many datasets which fits in memory it suggest just to change the key with labels (`:device_class`) and names of files):
+Our idealized workflow is demonstrated in `examples/mutagenesis.jl` [determining mutagenicity on Salmonella typhimurium](https://relational.fit.cvut.cz/dataset/Mutagenesis) and it looks as follows (for many datasets which fits in memory it's sufficient just to change the key with labels (`labelkey`) and names of files to use the example on them):
 ```julia
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, ThreadTools, StatsBase
-using JsonGrinder: suggestextractor
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, StatsBase, ThreadTools
+using JsonGrinder: suggestextractor, ExtractDict
 using Mill: reflectinmodel
 
-samples = map(readlines("/Users/tomas.pevny/Work/Presentations/JuliaMeetup/dataset/train.json")) do s
-           JSON.parse(s)
-       end;
+samples = Vector{Dict}(open(JSON.parse, "../data/mutagenesis/data.json"))
 
-labelkey = "device_class"
+metadata = open(JSON.parse, "data/mutagenesis/meta.json")
+labelkey = metadata["label"]
+val_num = metadata["val_samples"]
+test_num = metadata["test_samples"]
 minibatchsize = 100
-iterations = 10_000
+iterations = 1_000
 neurons = 20 		# neurons per layer
 
 targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)
-foreach(i -> delete!(i, "device_id"), samples)
+
+train_indices = 1:length(samples)-val_num-test_num
+val_indices = length(samples)-val_num-test_num+1:length(samples)-test_num
+test_indices = length(samples)-test_num+1:length(samples)
 
 #####
 #  Create the schema and extractor
 #####
-sch = schema(samples)
+sch = JsonGrinder.schema(samples)
 extractor = suggestextractor(sch)
 
 #####
@@ -106,7 +125,7 @@ labelnames = unique(targets)
 #####
 model = reflectinmodel(sch, extractor,
 	k -> Dense(k, neurons, relu),
-	d -> SegmentedMeanMax(d),
+	d -> meanmax_aggregation(d),
 	fsm = Dict("" => k -> Dense(k, length(labelnames))),
 )
 
@@ -114,178 +133,191 @@ model = reflectinmodel(sch, extractor,
 #  Train the model
 #####
 function minibatch()
-	idx = sample(1:length(data), minibatchsize, replace = false)
+	idx = sample(1:length(data[train_indices]), minibatchsize, replace = false)
 	reduce(catobs, data[idx]), Flux.onehotbatch(targets[idx], labelnames)
 end
 
-accuracy(x,y) = map(xy -> labelnames[argmax(model(xy[1]).data[:])] == xy[2], x, y) |> mean
+accuracy(x,y) = mean(labelnames[Flux.onecold(model(x).data)] .== y)
 
-cb = () -> println("accuracy = ", accuracy(data, targets))
+trainset = reduce(catobs, data[train_indices])
+valset = reduce(catobs, data[val_indices])
+testset = reduce(catobs, data[test_indices])
+
+cb = () -> begin
+	train_acc = accuracy(trainset, targets[train_indices])
+	val_acc = accuracy(valset, targets[val_indices])
+	test_acc = accuracy(testset, targets[test_indices])
+	println("accuracy: train = $train_acc, val = $val_acc, test = $test_acc")
+end
 ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
 Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
 
-#####
-#  Classify test data
-#####
-test_samples = map(JSON.parse, readlines("data/dataset/test.json"))
-test_data = tmap(extractor, test_samples)
-o = Flux.onecold(model(reduce(catobs, test_data)).data)
-predicted_classes = labelnames[o]
+###############################################################
+#  Classify test set
+###############################################################
 
+probs = softmax(model(testset).data)
+o = Flux.onecold(probs)
+pred_classes = labelnames[o]
+
+print(mean(pred_classes .== targets[test_indices]))
+# we see the accuracy is around 79% on test set
+
+#predicted classes for test set
+print(pred_classes)
+#gt classes for test set
+print(targets[test_indices])
+# probabilities for test set
+print(probs)
 ```
-
 
 ## A walkthrough of the example
 
-Include libraries and load the data.
-```julia
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools, StatsBase
-using JsonGrinder: suggestextractor
+Here we include libraries and load the data.
+```@example mutagenesis
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, StatsBase, ThreadTools
+using JsonGrinder: suggestextractor, ExtractDict
 using Mill: reflectinmodel
-
-samples = map(readlines("train.json")) do s
-	JSON.parse(s)
-end;
+samples = Vector{Dict}(open(JSON.parse, "../../data/mutagenesis/data.json"))
 ```
 
-```julia
-labelkey = "device_class"
+we load metadata, which store which class is to be predicted and how many samples to be used for validation and for testing
+```@example mutagenesis
+metadata = open(JSON.parse, "../../data/mutagenesis/meta.json")
+val_num = metadata["val_samples"]
+test_num = metadata["test_samples"]
 minibatchsize = 100
-iterations = 5_000
+iterations = 1_000
 neurons = 20 		# neurons per layer
+labelkey = metadata["label"]
 ```
 
-Create labels and remove them from data, such that we do not use them as features. We also remove `device_id` key, such that we do not predict it
-```julia
+we see  that label to be predicted is `mutagenic`.
+
+We create labels and remove them from data, such that we do not use them as features. We also prepare indices of train, test and validation data here.
+```@example mutagenesis
 targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)
-foreach(i -> delete!(i, "device_id"), samples)
+
+train_indices = 1:length(samples)-val_num-test_num
+val_indices = length(samples)-val_num-test_num+1:length(samples)-test_num
+test_indices = length(samples)-test_num+1:length(samples)
 ```
 
-Create the schema of data
-```julia
+We create the schema of data
+```@example mutagenesis
 sch = JsonGrinder.schema(samples)
 ```
 
-Create the extractor converting jsons to Mill structure. The `suggestextractor` is executed below with default setting, but it allows you heavy customization.
-```julia
+Then we use it to create the extractor converting jsons to Mill structure. The `suggestextractor` is executed below with default setting, but it allows you heavy customization.
+```@example mutagenesis
 extractor = suggestextractor(sch)
 ```
 
-Convert jsons to mill data samples.
-```julia
+We convert jsons to mill data samples.
+```@example mutagenesis
 data = tmap(extractor, samples)
 labelnames = unique(targets)
 ```
 
-Create the model according to the data
-```julia
+We create the model reflecting structure of the data
+```@example mutagenesis
 model = reflectinmodel(sch, extractor,
 	k -> Dense(k, neurons, relu),
-	d -> SegmentedMeanMax(d),
+	d -> meanmax_aggregation(d),
 	fsm = Dict("" => k -> Dense(k, length(labelnames))),
 )
 ```
 
 individual arguments of `reflectinmodel` are explained in [Mill.jl documentation](https://CTUAvastLab.github.io/Mill.jl/dev/manual/reflectin/#Model-Reflection)
 
-Lastly, we define few handy functions and then we start training.
-```julia
+Lastly, we define few handy functions.
+```@example mutagenesis
 function minibatch()
-	idx = sample(1:length(data), minibatchsize, replace = false)
+	idx = sample(1:length(data[train_indices]), minibatchsize, replace = false)
 	reduce(catobs, data[idx]), Flux.onehotbatch(targets[idx], labelnames)
 end
 
-accuracy(x,y) = map(xy -> labelnames[argmax(model(xy[1]).data[:])] == xy[2], x, y) |> mean
+accuracy(x,y) = mean(labelnames[Flux.onecold(model(x).data)] .== y)
 
-cb = () -> println("accuracy = ", accuracy(data, targets))
+trainset = reduce(catobs, data[train_indices])
+valset = reduce(catobs, data[val_indices])
+testset = reduce(catobs, data[test_indices])
+
+cb = () -> begin
+	train_acc = accuracy(trainset, targets[train_indices])
+	val_acc = accuracy(valset, targets[val_indices])
+	test_acc = accuracy(testset, targets[test_indices])
+	println("accuracy: train = $train_acc, val = $val_acc, test = $test_acc")
+end
 ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
+```
+
+and then we can start trining
+```@repl mutagenesis
 Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
 ```
 
-We should see something like
-```
-accuracy = 0.1104894138776638
-accuracy = 0.45656754049666703
-accuracy = 0.8238869892584534
-accuracy = 0.893102614582254
-accuracy = 0.9316651124235831
-accuracy = 0.9554795703381342
-accuracy = 0.9693468725175284
-accuracy = 0.975166649397299
-accuracy = 0.9758056159983421
-accuracy = 0.978465098608089
-accuracy = 0.9825752080958795
-accuracy = 0.9840949124443062
-accuracy = 0.9837495250923911
-accuracy = 0.9853037681760094
-accuracy = 0.9850965357648603
-accuracy = 0.9861499671882016
-accuracy = 0.9881359444617138
-accuracy = 0.9886540254895866
-accuracy = 0.9903118847787794
-accuracy = 0.9901219217352261
-accuracy = 0.9905363865575243
-accuracy = 0.9911408144233759
-accuracy = 0.9913135080993334
-accuracy = 0.9903809622491624
-```
-
-accuracy rising and obtaining over 98% on training set quite quickly.
+We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on validation and test set we get over 70%.
 
 Last part is inference on test data
-```julia
-test_samples = map(JSON.parse, readlines("data/dataset/test.json"))
-test_data = tmap(extractor, test_samples)
-o = Flux.onecold(model(reduce(catobs, test_data)).data)
-predicted_classes = labelnames[o]
+```@repl mutagenesis
+probs = softmax(model(testset).data)
+o = Flux.onecold(probs)
+pred_classes = labelnames[o]
+
+print(mean(pred_classes .== targets[test_indices]))
 ```
 
-`predicted_classes` contains the predictions for our test set.
+`pred_classes` contains the predictions for our test set.
 
-We can look at individual samples. For instance, `test_samples[2]` is
+We can look at individual samples. For instance, first sample in te `test_samples[2]` is
 ```json
 {
-    "mac":"64:b5:c6:66:2b:ab",
-    "ip":"192.168.1.46",
-    "dhcp":[
-        {
-            "paramlist":"1,3,6,15,28,33",
-            "classid":""
-        }
-    ],
-    "device_id":"addb3142-6b4a-4aef-9d00-ce7ab250c05c"
+  "ind1": 1,
+  "inda": 0,
+  "logp": 3.92,
+  "lumo": -3.406,
+  "mutagenic": 1,
+  "atoms": [
+	{
+	  "element": "c",
+	  "atom_type": 22,
+	  "charge": -0.109,
+	  "bonds": [
+		{
+		  "bond_type": 1,
+		  "element": "h",
+		  "atom_type": 3,
+		  "charge": 0.151
+		},
+		...
+		{
+		  "bond_type": 7,
+		  "element": "c",
+		  "atom_type": 22,
+		  "charge": -0.109
+		}
+	  ]
+	}
+	...
+	]
 }
 ```
 
 and the corresponding classification is
-```julia
-julia> predicted_classes[2]
-"GAME_CONSOLE"
+```@repl mutagenesis
+pred_classes[1]
 ```
 
 if you want to see the probability distribution, it can be obtained by applying `softmax` to the output of the network.
-```julia
-julia> softmax(model(test_data[2]).data)
-13×1 Array{Float32,2}:
-2.2447991f-6
-0.0006994973
-7.356086f-5
-0.9131056
-0.00015438742
-2.277255f-6
-1.2209773f-5
-0.07608723
-0.0024369168
-0.0012505687
-0.006140974
-3.3941535f-5
-3.9533225f-7
+```@repl mutagenesis
+softmax(model(testset[1]).data)
 ```
 
-so we can see that the probability that given sample is `GAME_CONSOLE` is ~91% (in 4th element of array).
+so we can see that the probability that given sample is `mutagenetic` is almost 1.
 
 This concludes a simple classifier for JSON data.
 

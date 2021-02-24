@@ -28,4 +28,4 @@ struct AuxiliaryExtractor <: AbstractExtractor
 	extract_fun::Function
 end
 
-(e::AuxiliaryExtractor)(x) = e.extract_fun(e.extractor, x)
+(e::AuxiliaryExtractor)(x; store_input=false) = e.extract_fun(e.extractor, x; store_input)

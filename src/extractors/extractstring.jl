@@ -5,7 +5,7 @@ using Mill: NGramMatrix
 		n::Int
 		b::Int
 		m::Int
-		full::Bool
+		uniontypes::Bool
 	end
 
 Represents `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) with base `b` and modulo `m`.
@@ -14,6 +14,7 @@ The `uniontypes` field determines whether extractor may or may not accept `missi
 If `uniontypes` is false, it does not accept missing values. If `uniontypes` is true, it accepts missing values,
 and always returns Mill structure of type Union{Missing, T} due to type stability reasons.
 
+# Example
 ```jldoctest
 julia> ExtractString(true)("hello")
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
@@ -54,6 +55,8 @@ const MaybeString = Union{Missing, String}
 ExtractString(n::Int, b::Int, m::Int) = ExtractString(n, b, m, true)
 ExtractString(uniontypes::Bool) = ExtractString(3, 256, 2053, uniontypes)
 ExtractString() = ExtractString(3, 256, 2053, true)
+make_missing_string(s::ExtractString, v, store_input) =
+	_make_array_node(NGramMatrix(missing, s.n, s.b, s.m), [v], store_input)
 (s::ExtractString)(v::String) = ArrayNode(NGramMatrix(s.uniontypes ? MaybeString[v] : [v], s.n, s.b, s.m))
 (s::ExtractString)(v::Vector{String}) = ArrayNode(NGramMatrix(s.uniontypes ? Vector{MaybeString}(v) : v, s.n, s.b, s.m))
 (s::ExtractString)(v::AbstractString) = s(String(v))
@@ -63,6 +66,15 @@ ExtractString() = ExtractString(3, 256, 2053, true)
 	ArrayNode(NGramMatrix(s.uniontypes ? Vector{MaybeString}() : Vector{String}(), s.n, s.b, s.m))
 (s::ExtractString)(v) = s(missing)
 (s::ExtractString)(v::Symbol) = s(String(v))
+
+#(s::ExtractString)(v::String; store_input=false) = _make_array_node(NGramMatrix([v], s.n, s.b, s.m), [v], store_input)
+#(s::ExtractString)(v::Vector{String}; store_input=false) =
+#	_make_array_node(NGramMatrix(v, s.n, s.b, s.m), v, store_input)
+#(s::ExtractString)(v::AbstractString; store_input=false) = s(String(v); store_input)
+#(s::ExtractString)(v::MissingOrNothing; store_input=false) = make_missing_string(s, v, store_input)
+#(s::ExtractString)(v::ExtractEmpty; store_input=false) = ArrayNode(NGramMatrix(Vector{String}(), s.n, s.b, s.m))
+#(s::ExtractString)(v; store_input=false) = make_missing_string(s, v, store_input)
+#(s::ExtractString)(v::Symbol; store_input=false) = s(String(v); store_input)
 
 """
 	extractscalar(Type{String}, n = 3, b = 256, m = 2053)
@@ -75,6 +87,17 @@ represents strings as ngrams with
 	extractscalar(Type{Number}, m = 0, s = 1)
 
 extracts number subtracting `m` and multiplying by `s`
+
+# Example
+```jldoctest
+julia> JsonGrinder.extractscalar(String, 3, 256, 2053)("5")
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Int64},Nothing}:
+ "5"
+
+julia> JsonGrinder.extractscalar(Int32, 3, 256)("5")
+1×1 Mill.ArrayNode{Array{Int32,2},Nothing}:
+ 512
+```
 """
 extractscalar(::Type{<:AbstractString}, n = 3, b = 256, m = 2053, uniontypes = true) = ExtractString(n, b, m, uniontypes)
 

@@ -8,6 +8,7 @@ function buf_printtree(data; kwargs...)
 	String(take!(buf))
 end
 
+const ≃ = isequal
 
 @testset "JsonGrinder.jl" begin
 
@@ -17,13 +18,21 @@ end
     	doctest(JsonGrinder)
 	end
 
-	include("extractors.jl")
-	include("multirepresentation.jl")
-	include("pipelinetest.jl")
-	include("schema.jl")
+	@testset "Extractors" begin
+		include("extractors.jl")
+		include("multirepresentation.jl")
+	end
+	@testset "Pipeline" begin
+		include("pipelinetest.jl")
+	end
+	@testset "Schema" begin
+		include("schema.jl")
+	end
+	@testset "HierarchicalUtils" begin
+		include("hierarchical_utils_extractors.jl")
+		include("hierarchical_utils_schema.jl")
+	end
 	include("show_html.jl")
-	include("hierarchical_utils_extractors.jl")
-	include("hierarchical_utils_schema.jl")
 	include("util.jl")
 
 end

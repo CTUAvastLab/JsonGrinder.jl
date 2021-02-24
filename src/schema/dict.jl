@@ -133,6 +133,5 @@ _extract_missing(empty_dict_vals, child_less_than_parent, child) =
 sample_synthetic(e::DictEntry; empty_dict_vals=false, child_less_than_parent=false) = Dict(
 	k => _extract_missing(empty_dict_vals, child_less_than_parent || e.updated > v.updated, v) ?
 		missing :
-		sample_synthetic(v, empty_dict_vals=empty_dict_vals,
-			child_less_than_parent=child_less_than_parent || e.updated > v.updated)
+		sample_synthetic(v, child_less_than_parent=child_less_than_parent || e.updated > v.updated; empty_dict_vals)
 	for (k, v) in e.childs)

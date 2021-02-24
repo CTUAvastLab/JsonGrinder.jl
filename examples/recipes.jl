@@ -5,7 +5,7 @@ import Mill: mapdata, sparsify, reflectinmodel
 ###############################################################
 # start by loading all samples
 ###############################################################
-samples = open("examples/recipes.json","r") do fid
+samples = open("data/recipes.json","r") do fid
 	Vector{Dict}(JSON.parse(read(fid, String)))
 end
 JSON.print(samples[1],2)
@@ -45,7 +45,7 @@ target = reduce(catobs, target)[:cuisine].data
 ###############################################################
 m = reflectinmodel(sch, extract_data,
 	k -> Dense(k,20,relu),
-	d -> SegmentedMeanMax(d),
+	d -> meanmax_aggregation(d),
 	fsm = Dict("" => k -> Dense(k, size(target, 1))),
 )
 

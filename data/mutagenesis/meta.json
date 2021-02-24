@@ -1,0 +1,76 @@
+{
+	"name": "mutagenesis_188",
+	"samples": 188,
+	"val_samples": 44,
+	"test_samples": 44,
+	"classes": 2,
+	"class_occurrence": [63, 125],
+	"depth": 3,
+
+	"label": "mutagenic",
+
+	"description": {
+		"ind1": {
+			"type": "binary",
+			"cost": 1.0
+		},
+		"inda": {
+			"type": "binary",
+			"cost": 1.0
+		},
+		"logp": {
+			"type": "float",
+			"cost": 1.0
+		},
+		"lumo": {
+			"type": "float",
+			"cost": 1.0
+		},
+		"mutagenic": {
+			"type": "label"
+		},
+		"atoms": {
+			"type": "bag",
+			"cost": 0.0,
+
+			"element": {
+				"type": "category",
+				"values": ["n", "o", "f", "i", "c", "h", "b"],
+				"cost": 0.5
+			},
+			"atom_type": {
+				"type": "category",
+				"values": [1, 3, 8, 10, 14, 16, 19, 21, 22, 25, 26, 27, 28, 29, 31, 32, 34, 35, 36, 38, 40, 41, 42, 45, 49, 50, 51, 52, 194, 195, 92, 93, 94, 95, 230, 232],
+				"cost": 0.5
+			},
+			"charge": {
+				"type": "float",
+				"cost": 0.5
+			},
+			"bonds": {
+				"type": "bag",
+				"cost": 0.5,
+
+				"bond_type": {
+					"type": "category",
+					"values": [1, 2, 3, 4, 5, 7],
+					"cost": 0.1
+				},
+				"element": {
+					"type": "category",
+					"values": ["n", "o", "f", "i", "c", "h", "b"],
+					"cost": 0.1
+				},
+				"atom_type": {
+					"type": "category",
+					"values": [1, 3, 8, 10, 14, 16, 19, 21, 22, 25, 26, 27, 28, 29, 31, 32, 34, 35, 36, 38, 40, 41, 42, 45, 49, 50, 51, 52, 194, 195, 92, 93, 94, 95, 230, 232],
+					"cost": 0.1
+				},
+				"charge": {
+					"type": "float",
+					"cost": 0.1
+				}	
+			}
+		}
+	}
+}

@@ -1,8 +1,8 @@
 """
-	struct ExtractScalar{T}
+	struct ExtractScalar{T} <: AbstractExtractor
 		c::T
 		s::T
-		full::Bool
+		uniontypes::Bool
 	end
 
 Extracts a numerical value, centred by subtracting `c` and scaled by multiplying by `s`.
@@ -57,6 +57,22 @@ function extractscalar(::Type{T}, e::Entry, uniontypes = true) where {T<:Number}
 	s = max_val == min_val ? 1 : 1 / (max_val - min_val)
 	ExtractScalar(Float32(c), Float32(s), uniontypes)
 end
+
+_fill_and_normalize(s::ExtractScalar{T}, v::T) where {T} = s.s .* (fill(v,1,1) .- s.c)
+make_missing_scalar(s::ExtractScalar, v, store_input) = _make_array_node(fill(missing,1,1), fill(v,1,1), store_input)
+make_empty_scalar(s::ExtractScalar{T}, store_input) where {T} = _make_array_node(fill(zero(T),1,0), fill(undef,1,0), store_input)
+
+#(s::ExtractScalar{T})(v::MissingOrNothing; store_input=false) where {T} = make_missing_scalar(s, v, store_input)
+#(s::ExtractScalar{T})(v::ExtractEmpty; store_input=false) where {T} = make_empty_scalar(s, store_input)
+#(s::ExtractScalar{T})(v::Number; store_input=false) where {T} =
+#	_make_array_node(_fill_and_normalize(s, T(v)), fill(v,1,1), store_input)
+#(s::ExtractScalar)(v; store_input=false) = make_missing_scalar(s, v, store_input)
+#function (s::ExtractScalar{T})(v::AbstractString; store_input=false) where {T}
+#	w = tryparse(T,v)
+#	isnothing(w) && return make_missing_scalar(s, v, store_input)
+#	x = _fill_and_normalize(s, T(w))
+#	_make_array_node(x, fill(v,1,1), store_input)
+#end
 
 (s::ExtractScalar{T})(v::MissingOrNothing) where {T,W} =
 	s.uniontypes ? ArrayNode(Matrix{Union{Missing, T}}(fill(missing,1,1))) : error("This extractor does not support missing values")

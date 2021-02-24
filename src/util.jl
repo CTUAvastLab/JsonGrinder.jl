@@ -2,12 +2,16 @@ using Setfield: IdentityLens, PropertyLens, IndexLens, ComposedLens, Lens
 import Mill: pred_lens, code2lens, lens2code, _pred_lens, catobs
 using Flux: OneHotMatrix
 
-function _pred_lens(n::T, p::Function) where T <: Union{AbstractExtractor, JSONEntry}
-    res = vcat([map(l -> PropertyLens{k}() ∘ l, _pred_lens(getproperty(n, k), p))
+function _pred_lens(p::Function, n::T) where T <: Union{AbstractExtractor, JSONEntry}
+    res = vcat([map(l -> PropertyLens{k}() ∘ l, _pred_lens(p, getproperty(n, k)))
                 for k in fieldnames(T)]...)
     p(n) ? [IdentityLens(); res] : res
 end
-_pred_lens(n::Dict{Symbol, <:Any}, p::Function) = vcat([map(l -> IndexLens(tuple(k)) ∘ l, _pred_lens(v, p)) for (k, v) in n]...)
+
+# because of DictEntry
+_pred_lens(p::Function, n::Dict{Symbol, <:Any}) = vcat([map(l -> IndexLens(tuple(k)) ∘ l, _pred_lens(p, v)) for (k, v) in n]...)
+# because of MultiEntry
+_pred_lens(p::Function, n::Vector{<:JSONEntry}) = vcat([map(l -> IndexLens(tuple(k)) ∘ l, _pred_lens(p, v)) for (k, v) in enumerate(n)]...)
 
 code2lens(n::Union{AbstractExtractor, JSONEntry}, c::AbstractString) = find_lens(n, n[c])
 lens2code(n::Union{AbstractExtractor, JSONEntry}, l::Lens) = HierarchicalUtils.find_traversal(n, get(n, l))

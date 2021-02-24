@@ -1,4 +1,5 @@
 using Mill, JSON, Flux, JsonGrinder, Test, HierarchicalUtils, Setfield
+
 using JsonGrinder: DictEntry, suggestextractor, schema
 using Mill: reflectinmodel
 
@@ -50,7 +51,7 @@ end
 	extractor = suggestextractor(sch)
 	dss = extractor.([j1,j2,j3,j4,j5])
 	ds = extractbatch(extractor, [j1,j2,j3,j4,j5])
-	@test isequal(reduce(catobs, dss), ds)
+	@test reduce(catobs, dss) ≃ ds
 	m = reflectinmodel(ds, k -> Dense(k,10, relu))
 	o = m(ds).data
 	for i in 1:length(dss)
@@ -73,14 +74,14 @@ end
 	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k, 10, relu))
 
-	@test isequal(NodeIterator(m, ds) |> collect, [
+	@test NodeIterator(m, ds) |> collect ≃ [
 		(m[""], ds[""]),
 		(m["U"], ds["U"]),
 		(m["k"], ds["k"]),
 		(m["o"], ds["o"]),
 		(m["s"], ds["s"]),
 		(m["w"], ds["w"]),
-	])
+	]
 	@test NodeIterator(sch, ext) |> collect == [
 		(sch[""], ext[""]),
 		(sch["U"], ext["U"]),
@@ -105,14 +106,14 @@ end
 		(ext["s"], m["s"]),
 		(ext["w"], m["w"]),
 	]
-	@test isequal(NodeIterator(ext, ds) |> collect, [
+	@test NodeIterator(ext, ds) |> collect ≃ [
 		(ext[""], ds[""]),
 		(ext["U"], ds["U"]),
 		(ext["k"], ds["k"]),
 		(ext["o"], ds["o"]),
 		(ext["s"], ds["s"]),
 		(ext["w"], ds["w"]),
-	])
+	]
 	@test buf_printtree(sch) == """
 	[Dict] (updated = 5)
 	  └── a: [List] (updated = 4)
@@ -129,7 +130,7 @@ end
 	                 └── c: String"""
 	@test buf_printtree(m) == """
 	ProductModel … ↦ ArrayModel(identity)
-	  └── a: BagModel … ↦ ⟨SegmentedMean(10)⟩ ↦ ArrayModel(Dense(11, 10, relu))
+	  └── a: BagModel … ↦ ⟨SegmentedMean(10), SegmentedMax(10)⟩ ↦ ArrayModel(Dense(21, 10, relu))
 	           └── ProductModel … ↦ ArrayModel(Dense(30, 10, relu))
 	                 ├── a: ArrayModel([post_imputing]Dense(3, 10, relu))
 	                 ├── b: ArrayModel([post_imputing]Dense(3, 10, relu))

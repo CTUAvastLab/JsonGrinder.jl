@@ -63,4 +63,4 @@ items(s::T) where {T<:ArrayEntry} = s.items
 Base.hash(e::ArrayEntry, h::UInt) = hash((e.items, e.l, e.updated), h)
 Base.:(==)(e1::ArrayEntry, e2::ArrayEntry) = e1.updated === e2.updated && e1.l == e2.l && e1.items == e2.items
 sample_synthetic(e::ArrayEntry; empty_dict_vals=false, child_less_than_parent=false) =
-	isnothing(e.items) ? [] : repeat([sample_synthetic(e.items, empty_dict_vals=empty_dict_vals, child_less_than_parent=child_less_than_parent)], 2)
+	isnothing(e.items) ? [] : repeat([sample_synthetic(e.items; empty_dict_vals, child_less_than_parent)], 2)

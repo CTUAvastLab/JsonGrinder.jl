@@ -60,7 +60,9 @@ testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 	@test sc.uniontypes == false
 	@test sc(1).data isa Matrix{Float32}
 	@test sc(extractempty).data isa Matrix{Float32}
-
+	@test isnothing(sc(extractempty, store_input=false).metadata)
+	@test sc(extractempty, store_input=true).metadata isa Matrix{UndefInitializer}
+	@test size(sc(extractempty, store_input=true).metadata) == (1,0)
 	sc = JsonGrinder.extractscalar(Float32,false)
 	@test sc.uniontypes == false
 	@test sc(1).data isa Matrix{Float32}

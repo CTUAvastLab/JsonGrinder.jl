@@ -1,5 +1,4 @@
-using Mill: ArrayNode, MaybeHotMatrix
-
+import Mill: ArrayNode, MaybeHotMatrix
 """
 	ExtractCategorical(s::Entry, uniontypes = true)
 	ExtractCategorical(s::UnitRange, uniontypes = true)
@@ -91,6 +90,18 @@ val2idx(s::ExtractCategorical{<:Number,I}, v::Number) where {V,I} =
 	s.uniontypes ? Union{Missing, I}[map_val(s, v)] : [map_val(s, v)]
 val2idx(s::ExtractCategorical{<:Number,I}, vs::Vector{<:Number}) where {V,I} =
 	s.uniontypes ? Union{Missing, I}[map_val(s, v) for v in vs] : [map_val(s, v) for v in vs]
+#(s::ExtractCategorical{V,I})(v::V; store_input=false) where {V,I} =
+#    _make_array_node(MaybeHotMatrix([get(s.keyvalemap, v, s.n)], s.n), [v], store_input)
+
+#(s::ExtractCategorical{V,I})(vs::Vector{V}; store_input=false) where {V,I} =
+#	_make_array_node(MaybeHotMatrix([get(s.keyvalemap, v, s.n) for v in vs], s.n), [vs], store_input)
+
+# following 2 methods are to let us extract float from int extractor and vice versa
+#(s::ExtractCategorical{U,I})(v::V; store_input=false) where {U<:Number,V<:Number,I} =
+#    _make_array_node(MaybeHotMatrix([get(s.keyvalemap, v, s.n)], s.n), [v], store_input)
+
+#(s::ExtractCategorical{U,I})(vs::Vector{V}; store_input=false) where {U<:Number,V<:Number,I} =
+#	_make_array_node(MaybeHotMatrix([get(s.keyvalemap, v, s.n) for v in vs], s.n), [vs], store_input)
 
 (s::ExtractCategorical{V,I})(v::V) where {V,I} = ArrayNode(MaybeHotMatrix(val2idx(s, v), s.n))
 (s::ExtractCategorical{V,I})(vs::Vector{V}) where {V,I} = ArrayNode(MaybeHotMatrix(val2idx(s, vs), s.n))
@@ -98,6 +109,20 @@ val2idx(s::ExtractCategorical{<:Number,I}, vs::Vector{<:Number}) where {V,I} =
 # following 2 methods are to let us extract float from int extractor and vice versa
 (s::ExtractCategorical{<:Number,I})(v::Number) where {I} = ArrayNode(MaybeHotMatrix(val2idx(s, v), s.n))
 (s::ExtractCategorical{<:Number,I})(vs::Vector{<:Number}) where {I} = ArrayNode(MaybeHotMatrix(val2idx(s, vs), s.n))
+
+# following 2 methods are to let us extract numeric string from float or int extractor
+# I'm trying to parse as float because integer can be parsed as float so I assume all numbers we care about
+# are "floatable". Yes, this does not work for
+#(s::ExtractCategorical{U,I})(v::V; store_input=false) where {U<:Number,V<:AbstractString,I} =
+#    _make_array_node(MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n)], s.n), [v], store_input)
+
+#(s::ExtractCategorical{U,I})(vs::Vector{V}; store_input=false) where {U<:Number,V<:AbstractString,I} =
+#	_make_array_node(MaybeHotMatrix([get(s.keyvalemap, tryparse(FloatType, v), s.n) for v in vs], s.n), [vs], store_input)
+
+#function (s::ExtractCategorical{V,I})(vs::Vector{<:Union{V, Missing, Nothing}}; store_input=false) where {V,I}
+#	x = MaybeHotMatrix([ismissing(v) || isnothing(v) ? missing : get(s.keyvalemap, v, s.n) for v in vs], s.n)
+#	_make_array_node(x, [vs], store_input)
+#end
 
 # following 2 methods are to let us extract numeric string from float or int extractor
 # I'm trying to parse as float because integer can be parsed as float so I assume all numbers we care about
@@ -112,6 +137,11 @@ val2idx(s::ExtractCategorical{<:Number,I}, vs::Vector{<:Number}) where {V,I} =
 	s.uniontypes ? ArrayNode(MaybeHotMatrix(Union{Missing, I}[missing], s.n)) : error("This extractor does not support missing values")
 (s::ExtractCategorical{V,I})(::ExtractEmpty) where {V,I} = ArrayNode(MaybeHotMatrix(s.uniontypes ? Vector{Union{Missing, I}}() : Vector{I}(), s.n))
 (s::ExtractCategorical)(v) = s(missing)
+
+#make_missing_categorical(s::ExtractCategorical, v, store_input) = _make_array_node(MaybeHotMatrix([missing], s.n), [v], store_input)
+#(s::ExtractCategorical)(v::MissingOrNothing; store_input=false) = make_missing_categorical(s, v, store_input)
+#(s::ExtractCategorical)(::ExtractEmpty; store_input=false) = ArrayNode(MaybeHotMatrix(Vector{Int}(), s.n))
+#(s::ExtractCategorical)(v; store_input=false) = make_missing_categorical(s, v, store_input)
 
 Base.hash(e::ExtractCategorical, h::UInt) = hash((e.keyvalemap, e.n, e.uniontypes), h)
 Base.:(==)(e1::ExtractCategorical, e2::ExtractCategorical) =

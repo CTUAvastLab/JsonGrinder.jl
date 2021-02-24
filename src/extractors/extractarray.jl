@@ -29,18 +29,31 @@ julia> es([2,3,4]).data
  2.0f0  3.0f0  4.0f0
 ```
 """
-struct ExtractArray{T} <: AbstractExtractor
+struct ExtractArray{T} <: BagExtractor
 	item::T
 end
 
-function (s::ExtractArray)(v::V) where {V<:MissingOrNothing}
-	Mill._emptyismissing[] && return BagNode(missing, [0:-1])
-	BagNode(s.item(extractempty), [0:-1])
+extract_empty_bag_item(s::BagExtractor, store_input) = @error "Abstract method, please, implement it for your extractor"
+extract_empty_bag_item(s::ExtractArray, store_input) = s.item(extractempty; store_input)
+
+"""
+returns missing bag of 1 observation
+"""
+function extract_missing_bag(s::BagExtractor, v; store_input=false)
+	Mill._emptyismissing[] && return _make_bag_node(missing, [0:-1], [v], store_input)
+	ds = extract_empty_bag_item(s, store_input)
+	_make_bag_node(ds, [0:-1], [v], store_input)
 end
 
-(s::ExtractArray)(v::V) where {V<:Vector} = isempty(v) ? s(missing) : BagNode(reduce(catobs, map(s.item, v)),[1:length(v)])
-(s::ExtractArray)(v) = s(missing)
-(s::ExtractArray)(v::ExtractEmpty) = BagNode(s.item(extractempty), Mill.AlignedBags(Vector{UnitRange{Int64}}()))
+(s::ExtractArray)(v::MissingOrNothing; store_input=false) = extract_missing_bag(s, v; store_input)
+
+(s::ExtractArray)(v::Vector; store_input=false) =
+    isempty(v) ?
+	extract_missing_bag(s, v; store_input) :
+	BagNode(mapreduce(x->s.item(x; store_input), catobs, v),[1:length(v)])
+(s::ExtractArray)(v; store_input=false) = extract_missing_bag(s, v; store_input)
+
+(s::ExtractArray)(v::ExtractEmpty; store_input=false) = make_empty_bag(s.item(extractempty; store_input), v)
 
 Base.hash(e::ExtractArray, h::UInt) = hash(e.item, h)
 Base.:(==)(e1::ExtractArray, e2::ExtractArray) = e1.item == e2.item

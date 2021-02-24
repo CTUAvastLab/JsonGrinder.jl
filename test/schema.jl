@@ -327,88 +327,97 @@ end
 end
 
 @testset "Sample synthetic" begin
-	j1 = JSON.parse("""{"a": []}""")
-	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
-	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}""")
-	j4 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+	@testset "basic" begin
+		sch = DictEntry(Dict(
+			:a=>ArrayEntry(
+				DictEntry(Dict(
+					:a=>Entry(Dict(1=>3,2=>1), 4),
+					:b=>Entry(Dict(2=>2,3=>2), 4),
+					),
+				5),
+				Dict(0=>1,1=>1,2=>2),
+			4)),
+		4)
+		@test JsonGrinder.sample_synthetic(sch) == Dict(:a=>[Dict(:a=>2,:b=>2), Dict(:a=>2,:b=>2)])
+		# todo: add test that  empty_dict_vals=true does not return missing if samples were always full
+	end
 
-	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
-	@test JsonGrinder.sample_synthetic(sch1) == Dict(:a=>[Dict(:a=>2,:b=>2), Dict(:a=>2,:b=>2)])
-	# todo: add test that  empty_dict_vals=true does not return missing if samples were always full
+	@testset "with missing keys in dict" begin
+		sch = DictEntry(Dict(
+			:a=>ArrayEntry(
+				DictEntry(Dict(
+					:a=>Entry(Dict("a"=>1,"b"=>1,"c"=>1,"d"=>1), 4),
+					:b=>Entry(Dict(3=>1,2=>2), 3),
+					:c=>Entry(Dict(1=>5), 5)
+					),
+				5),
+				Dict(0=>1,1=>1,2=>2),
+			4)),
+		4)
 
-end
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=false) == Dict(
+			:a=>[Dict(:a=>"c",:b=>2,:c=>1), Dict(:a=>"c",:b=>2,:c=>1)]
+		)
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
+			:a=>[Dict(:a=>missing,:b=>missing,:c=>1), Dict(:a=>missing,:b=>missing,:c=>1)]
+		)
 
-@testset "Sample synthetic with missing keys in dict" begin
-	j1 = JSON.parse("""{"a": []}""")
-	j2 = JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}""")
-	j3 = JSON.parse("""{"a": [{"a":"b","b":3,"c":1},{"b":2,"a":"d","c":1}]}""")
-	j4 = JSON.parse("""{"a": [{"a":"c","c":1}]}""")
+		ext = suggestextractor(sch)
+		m = reflectinmodel(sch, ext)
+		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": []}"""))).data isa Matrix{Float32}
+	end
 
-	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
-	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
-		:a=>[Dict(:a=>"c",:b=>2,:c=>1), Dict(:a=>"c",:b=>2,:c=>1)]
-	)
-	@test isequal(JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true), Dict(
-		:a=>[Dict(:a=>missing,:b=>missing,:c=>1), Dict(:a=>missing,:b=>missing,:c=>1)]
-	))
+	@testset "with missing nested dicts" begin
+		sch = DictEntry(Dict(
+			:a=>DictEntry(Dict(
+					:a=>Entry(Dict("a"=>1,"b"=>1,"c"=>1), 3),
+					:b=>Entry(Dict(3=>1), 1),
+					:c=>Entry(Dict(1=>3), 3)),
+				3),
+			:b=>Entry(Dict(1=>3), 3)),
+		4)
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=false) == Dict(
+			:a=>Dict(:a=>"c",:b=>3,:c=>1), :b=>1
+		)
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
+			:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
+		)
 
-	ext1 = suggestextractor(sch1)
-	m = reflectinmodel(sch1, ext1)
-	# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-	@test m(ext1(j1)).data isa Matrix{Float32}
-	@test m(ext1(j2)).data isa Matrix{Float32}
-	@test m(ext1(j3)).data isa Matrix{Float32}
-	@test m(ext1(j4)).data isa Matrix{Float32}
-end
+		ext = suggestextractor(sch)
+		# todo: add test for make_representative_sample
+		m = reflectinmodel(sch, ext)
+		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		@test m(ext(JSON.parse("""{"b":1}"""))).data isa Matrix{Float32}
+		@test m(ext("""{"a": {"a":"c","c":1}}""")).data isa Matrix{Float32}
+	end
 
-@testset "Sample synthetic with missing nested dicts" begin
-	j1 = JSON.parse("""{"b":1}""")
-	j2 = JSON.parse("""{"a": {"a":"a","c":1}, "b":1}""")
-	j3 = JSON.parse("""{"a": {"a":"b","b":3,"c":1}, "b":1}""")
-	j4 = JSON.parse("""{"a": {"a":"c","c":1}}""")
+	@testset "with numbers and numeric strings" begin
+		sch = DictEntry(Dict(
+			:a=>MultiEntry([
+				Entry(Dict(2=>1,5=>1), 2),
+				Entry(Dict("4"=>1,"3"=>1), 2)],
+			4)),
+		4)
 
-	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
-	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
-		:a=>Dict(:a=>"c",:b=>3,:c=>1), :b=>1
-	)
-	@test isequal(JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true), Dict(
-		:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
-	))
-
-	ext1 = suggestextractor(sch1)
-	m = reflectinmodel(sch1, ext1)
-	# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-	@test m(ext1(j1)).data isa Matrix{Float32}
-	@test m(ext1(j2)).data isa Matrix{Float32}
-	@test m(ext1(j3)).data isa Matrix{Float32}
-	@test m(ext1(j4)).data isa Matrix{Float32}
-end
-
-@testset "Sample synthetic with missing nested dicts" begin
-	j1 = JSON.parse("""{"a":5}""")
-	j2 = JSON.parse("""{"a":"4"}""")
-	j3 = JSON.parse("""{"a":2}""")
-	j4 = JSON.parse("""{"a":"3"}""")
-
-	sch1 = JsonGrinder.schema([j1, j2, j3, j4])
-	# todo: there is bug with multiple representation and sample synthetic, fix it!
-	# fix this so extracting synthetic data makes and is similar to real samples
-	# I must not extract array, but instead extract multiple samples, each with different type, but single value
-	# multireprestations showld be somewat compatible with magic I perform in suggestextractor
-	@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
-		:a=>[2, "4"]	# this is wrong I need to fix it
-	)
-	# @test isequal(JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true), Dict(
-	# 	:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
-	# ))
-	#
-	# ext1 = suggestextractor(sch1)
-	# m = reflectinmodel(sch1, ext1)
-	# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-	# @test m(ext1(j1)).data isa Matrix{Float32}
-	# @test m(ext1(j2)).data isa Matrix{Float32}
-	# @test m(ext1(j3)).data isa Matrix{Float32}
-	# @test m(ext1(j4)).data isa Matrix{Float32}
+		# todo: there is bug with multiple representation and sample synthetic, fix it!
+		# fix this so extracting synthetic data makes and is similar to real samples
+		# I must not extract array, but instead extract multiple samples, each with different type, but single value
+		# multireprestations showld be somewat compatible with magic I perform in suggestextractor
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=false) == Dict(
+			:a=>[2, "4"]	# this is wrong I need to fix it
+		)
+		# @test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true) ≃ Dict(
+		# 	:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
+		# )
+		#
+		# ext = suggestextractor(sch)
+		# m = reflectinmodel(sch, ext)
+		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		# @test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
+		# @test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
+	end
 end
 
 @testset "Merge empty lists" begin
