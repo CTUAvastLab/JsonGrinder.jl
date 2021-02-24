@@ -116,7 +116,7 @@ make_missing_categorical(s::ExtractCategorical, v, store_input) =
 	_make_array_node(MaybeHotMatrix(val2idx(s, tryparse.(FloatType, vs)), s.n), [vs], store_input)
 (s::ExtractCategorical{V,I})(vs::Vector{<:Union{V, Missing, Nothing}}; store_input=false) where {V,I} =
 	_make_array_node(MaybeHotMatrix(val2idx(s, vs), s.n), [vs], store_input)
-(s::ExtractCategorical)(::MissingOrNothing; store_input=false) = make_missing_categorical(s, v, store_input)
+(s::ExtractCategorical)(v::MissingOrNothing; store_input=false) = make_missing_categorical(s, v, store_input)
 
 (s::ExtractCategorical{V,I})(::ExtractEmpty; store_input=false) where {V,I} =
 	ArrayNode(MaybeHotMatrix(s.uniontypes ? Vector{Union{Missing, I}}() : Vector{I}(), s.n))

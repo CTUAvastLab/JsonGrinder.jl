@@ -21,13 +21,13 @@ struct ExtractVector{T} <: AbstractExtractor
 end
 ExtractVector(n::Int, uniontypes = true) = ExtractVector{FloatType}(n, uniontypes)
 
-make_missing_vector(s::ExtractVector{T}, v, store_input) where {T} =
+make_missing_vector(s::ExtractVector, v, store_input) =
     s.uniontypes ?
     _make_array_node(stabilize_types_vector(fill(missing, s.n, 1)), [v], store_input) :
     error("This extractor does not support missing values")
 stabilize_types_vector(s::ExtractVector{T}, x) where {T} = s.uniontypes ? Matrix{Union{Missing, T}}(x) : x
 
-(s::ExtractVector{T})(v::MissingOrNothing; store_input=false) = make_missing_vector(s, v, store_input)
+(s::ExtractVector)(v::MissingOrNothing; store_input=false) = make_missing_vector(s, v, store_input)
 (s::ExtractVector{T})(::ExtractEmpty; store_input=false) where {T} =
     ArrayNode(stabilize_types_vector(s, Matrix{T}(undef, s.n, 0)))
 (s::ExtractVector)(v; store_input=false) = make_missing_vector(s, v, store_input)
