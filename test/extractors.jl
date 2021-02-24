@@ -140,7 +140,7 @@ end
 	n1 = sc(missing, store_input=false)
 	n1s = sc(missing, store_input=true)
 	@test e1.data == [1 2 2 3 4]'
-	# todo: add test to type of matrix
+
 	@test e1.data isa Matrix
 	@test e1.data == e1s.data
 	@test e1.data isa Array{Float32, 2}

@@ -44,7 +44,6 @@ make_missing_string(s::ExtractString, v, store_input) =
 (s::ExtractString)(v; store_input=false) = make_missing_string(s, v, store_input)
 (s::ExtractString)(v::Symbol; store_input=false) = s(String(v); store_input)
 
-# todo: add jldoctest here so it's better
 """
 	extractscalar(Type{String}, n = 3, b = 256, m = 2053)
 

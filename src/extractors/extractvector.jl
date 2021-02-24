@@ -18,8 +18,6 @@ struct ExtractVector{T} <: AbstractExtractor
 	n::Int
 end
 ExtractVector(n::Int) = ExtractVector{FloatType}(n)
-# todo: dodělat to, zatím je to rozdělané
-# todo: check for every extractor if matrix in data and metadata is consistent, or vector, snd matrix in data does not have vector in metadata
 make_missing_vector(s::ExtractVector, v, store_input) =
 	_make_array_node(fill(missing, s.n, 1), [v], store_input)
 

@@ -157,7 +157,7 @@ end
 	sch1 = JsonGrinder.schema([j1,j2])
 	ext1 = suggestextractor(sch1)
 	m = reflectinmodel(sch1, ext1)
-	# todo: add tests that b is not there
+
 	@test sch1.updated == 2
 	@test sch1[:a].updated == 2
 	@test :b ∈ keys(sch1)
