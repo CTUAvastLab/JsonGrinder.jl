@@ -80,7 +80,7 @@ end
 
 map_val(s, v::MissingOrNothing) = s.uniontypes ? missing : error("This extractor does not support missing values")
 map_val(s, v) = get(s.keyvalemap, v, s.n)
-stabilize_types_categorical(s::ExtractCategorical{V,I}, x) = s.uniontypes ? Vector{Union{Missing, I}}(x) : x
+stabilize_types_categorical(s::ExtractCategorical{V,I}, x) where {V,I} = s.uniontypes ? Vector{Union{Missing, I}}(x) : x
 val2idx(s::ExtractCategorical{V,I}, v::V) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
 val2idx(s::ExtractCategorical{V,I}, vs::Vector{V}) where {V,I} =
 	stabilize_types_categorical(s, [map_val(s, v) for v in vs])
