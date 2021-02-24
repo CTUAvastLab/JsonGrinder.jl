@@ -14,7 +14,7 @@ makedocs(
          pages = ["Home" => "index.md",
                   "Schema" => "schema.md",
                   "Creating extractors" => "extractors.md",
-                  "Extractor functions" => "exfunctions.md",
+                  "Extractors overview" => "exfunctions.md",
                   "AutoML" => "automl.md",
                   "External tools" => "hierarchical.md",
                   "API Documentation" => "api.md",

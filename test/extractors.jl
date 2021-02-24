@@ -100,6 +100,7 @@ end
 
 	@test nobs(sc(extractempty).data.data) == 0
 	@test nobs(sc(extractempty).data) == 0
+	@test nobs(sc(extractempty)) == 0
 	@test isempty(sc(extractempty).bags.bags)
 	@test sc(extractempty).data.data isa MaybeHotMatrix{Int64,Int64,Bool}
 
@@ -145,6 +146,7 @@ end
 	@test e1.data isa Array{Float32, 2}
 	@test sc(extractempty).data isa Matrix{Float32}
 	@test nobs(sc(extractempty).data) == 0
+	@test nobs(sc(extractempty)) == 0
 	@test e1s.metadata == [[1, 2, 2, 3, 4]]
 	@test catobs(e1s, e1s).data == [1 1; 2 2; 2 2; 3 3; 4 4]
 	@test catobs(e1s, e1s).metadata == [[1, 2, 2, 3, 4], [1, 2, 2, 3, 4]]
@@ -164,6 +166,7 @@ end
 	@test all(sc(nothing).data .=== missing)
 	@test sc(extractempty).data isa Matrix{Int64}
 	@test nobs(sc(extractempty).data) == 0
+	@test nobs(sc(extractempty)) == 0
 	@test sc(nothing, store_input=true).data ≃ sc(nothing, store_input=false).data
 	@test sc(nothing, store_input=true).metadata == [nothing]
 
@@ -227,6 +230,7 @@ end
 	@test all(catobs(a3,a3)[:c].bags .== [1:4,5:8])
 
 	a4 = br(extractempty)
+	@test nobs(a4) == 0
 	@test nobs(a4[:a]) == 0
 	@test a4[:a].data isa Matrix{Float64}
 	@test nobs(a4[:b]) == 0
@@ -281,6 +285,7 @@ end
 	@test a4s.data[2].data.metadata == zeros(1,0)
 
 	a4 = br(extractempty)
+	@test nobs(a4) == 0
 	@test nobs(a4[:a]) == 0
 	@test nobs(a4[:a].data) == 0
 	@test a4[:a].data.data isa Matrix{Float32}
@@ -396,6 +401,7 @@ end
 	@test e(missing).data isa NGramMatrix{Missing,Missing}
 	@test isnothing(ehello.metadata)
 	@test ehellos.metadata == ["Hello"]
+	@test nobs(e(extractempty)) == 0
 end
 
 @testset "Extractor of keys as field" begin
@@ -477,8 +483,21 @@ end
 	@test b.metadata == [nothing]
 	@test isnothing(b.data.data.key.metadata)
 	@test isnothing(b.data.data.item.metadata)
-end
 
+	j1 = JSON.parse("""{"a": 1}""")
+	j2 = JSON.parse("""{"b": 2.5}""")
+	j3 = JSON.parse("""{"c": 3.1}""")
+	j4 = JSON.parse("""{"d": 5}""")
+	j5 = JSON.parse("""{"e": 4.5}""")
+	j6 = JSON.parse("""{"f": 5}""")
+	sch = JsonGrinder.schema([j1, j2, j3, j4, j5, j6])
+	e = JsonGrinder.key_as_field(sch, NamedTuple(), path = "")
+	@test e isa JsonGrinder.ExtractKeyAsField
+
+	e2 = JsonGrinder.key_as_field(sch, NamedTuple(), path = "")
+	@test hash(e) === hash(e2)
+	@test e == e2
+end
 
 @testset "equals and hash test" begin
 	other1 = Dict(
@@ -930,22 +949,6 @@ end
 	@test ext(f, store_input=true).metadata == [5.2]
 	@test ext(nothing, store_input=true).metadata == [nothing]
 	#todo: add tests for all extractors for store_input=true
-end
-
-@testset "key as field" begin
-	j1 = JSON.parse("""{"a": 1}""")
-	j2 = JSON.parse("""{"b": 2.5}""")
-	j3 = JSON.parse("""{"c": 3.1}""")
-	j4 = JSON.parse("""{"d": 5}""")
-	j5 = JSON.parse("""{"e": 4.5}""")
-	j6 = JSON.parse("""{"f": 5}""")
-	sch = JsonGrinder.schema([j1, j2, j3, j4, j5, j6])
-	e = JsonGrinder.key_as_field(sch, NamedTuple(), path = "")
-	@test e isa JsonGrinder.ExtractKeyAsField
-
-	e2 = JsonGrinder.key_as_field(sch, NamedTuple(), path = "")
-	@test hash(e) === hash(e2)
-	@test e == e2
 end
 
 @testset "AuxiliaryExtractor HUtils" begin

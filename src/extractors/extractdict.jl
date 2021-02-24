@@ -1,7 +1,7 @@
 
 """
-	struct ExtractDict
-		dict::Dict{Symbol,Any}
+	struct ExtractDict{S} <: AbstractExtractor
+		dict::S
 	end
 
 extracts all items in `dict` and return them as a `Mill.ProductNode`.

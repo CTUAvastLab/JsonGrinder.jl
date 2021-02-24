@@ -112,6 +112,10 @@ function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "")
 	end
 end
 
+"""
+Default scalar extractor, it contains reasonable defaults, but sometimes it does not fullfill all needs.
+We advice to use it as base which you will modify for your needs or as a default that you will append to your other rules.
+"""
 function default_scalar_extractor()
 	[
 	(e -> length(keys(e)) <= 100 && is_numeric_or_numeric_string(e),

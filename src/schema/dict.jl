@@ -55,7 +55,7 @@ create convertor of json to tree-structure of `DataNode`
   and if it matches, second element, function which maps schema to specific extractor, is called.
 """
 function suggestextractor(e::DictEntry, settings = NamedTuple(); path = "")
-	length(e.childs) >= get(settings, :key_as_field, 500) && return(key_as_field(e, settings; path = path))
+	length(e.childs) >= get(settings, :key_as_field, 500) && return key_as_field(e, settings; path = path)
 
 	for k in filter(k->!isnothing(e.childs[k]) && isempty(e.childs[k]), keys(e.childs))
 		@warn "$(path): key $k contains empty array, skipping"
