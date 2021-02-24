@@ -328,7 +328,7 @@ end
 
 @testset "Sample synthetic" begin
 	@testset "basic" begin
-		sch1 = DictEntry(Dict(
+		sch = DictEntry(Dict(
 			:a=>ArrayEntry(
 				DictEntry(Dict(
 					:a=>Entry(Dict(1=>3,2=>1), 4),
@@ -338,7 +338,7 @@ end
 				Dict(0=>1,1=>1,2=>2),
 			4)),
 		4)
-		@test JsonGrinder.sample_synthetic(sch1) == Dict(:a=>[Dict(:a=>2,:b=>2), Dict(:a=>2,:b=>2)])
+		@test JsonGrinder.sample_synthetic(sch) == Dict(:a=>[Dict(:a=>2,:b=>2), Dict(:a=>2,:b=>2)])
 		# todo: add test that  empty_dict_vals=true does not return missing if samples were always full
 	end
 
@@ -362,7 +362,7 @@ end
 			:a=>[Dict(:a=>missing,:b=>missing,:c=>1), Dict(:a=>missing,:b=>missing,:c=>1)]
 		)
 
-		ext1 = suggestextractor(sch)
+		ext = suggestextractor(sch)
 		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
 		@test m(ext1(JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}"""))).data isa Matrix{Float32}
@@ -370,7 +370,7 @@ end
 	end
 
 	@testset "with missing nested dicts" begin
-		sch1 = DictEntry(Dict(
+		sch = DictEntry(Dict(
 			:a=>DictEntry(Dict(
 					:a=>Entry(Dict("a"=>1,"b"=>1,"c"=>1), 3),
 					:b=>Entry(Dict(3=>1), 1),
@@ -378,22 +378,23 @@ end
 				3),
 			:b=>Entry(Dict(1=>3), 3)),
 		4)
-		@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=false) == Dict(
 			:a=>Dict(:a=>"c",:b=>3,:c=>1), :b=>1
 		)
-		@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true) ≃ Dict(
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
 			:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
 		)
 
-		ext1 = suggestextractor(sch1)
-		m = reflectinmodel(sch1, ext1)
+		ext = suggestextractor(sch)
+		# todo: add test for make_representative_sample
+		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext1(JSON.parse("""{"b":1}"""))).data isa Matrix{Float32}
-		@test m(ext1("""{"a": {"a":"c","c":1}}""")).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"b":1}"""))).data isa Matrix{Float32}
+		@test m(ext("""{"a": {"a":"c","c":1}}""")).data isa Matrix{Float32}
 	end
 
 	@testset "with numbers and numeric strings" begin
-		sch1 = DictEntry(Dict(
+		sch = DictEntry(Dict(
 			:a=>MultiEntry([
 				Entry(Dict(2=>1,5=>1), 2),
 				Entry(Dict("4"=>1,"3"=>1), 2)],
@@ -404,7 +405,7 @@ end
 		# fix this so extracting synthetic data makes and is similar to real samples
 		# I must not extract array, but instead extract multiple samples, each with different type, but single value
 		# multireprestations showld be somewat compatible with magic I perform in suggestextractor
-		@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=false) == Dict(
 			:a=>[2, "4"]	# this is wrong I need to fix it
 		)
 		# @test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true) ≃ Dict(
