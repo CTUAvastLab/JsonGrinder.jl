@@ -21,18 +21,20 @@ struct ExtractVector{T} <: AbstractExtractor
 end
 ExtractVector(n::Int, uniontypes = true) = ExtractVector{FloatType}(n, uniontypes)
 
-make_missing_vector(s::ExtractVector, v, store_input) =
-	_make_array_node(fill(missing, s.n, 1), [v], store_input)
+make_missing_vector(s::ExtractVector{T}, v, store_input) where {T} =
+    s.uniontypes ?
+    ArrayNode(Matrix{Union{Missing, T}}(fill(missing, s.n, 1))) :
+    _make_array_node(stabilize_types_vector(fill(missing, s.n, 1)), [v], store_input) :
+    error("This extractor does not support missing values")
+stabilize_types_vector(s::ExtractVector{T}, x) where {T} = s.uniontypes ? Matrix{Union{Missing, T}}(x) : x
 
-(s::ExtractVector{T})(v::MissingOrNothing; store_input=false) where {T} =
-	s.uniontypes ? ArrayNode(Matrix{Union{Missing, T}}(fill(missing, s.n, 1))) : error("This extractor does not support missing values")
-(s::ExtractVector{T})(::ExtractEmpty) where {T} =
-	ArrayNode(s.uniontypes ? Matrix{Union{Missing, T}}(undef, s.n, 0) : Matrix{T}(undef, s.n, 0))
-(s::ExtractVector)(v) = s(missing)
+(s::ExtractVector{T})(v::MissingOrNothing; store_input=false) = make_missing_vector(s, v, store_input)
+(s::ExtractVector{T})(::ExtractEmpty; store_input=false) where {T} =
+    ArrayNode(stabilize_types_vector(s, Matrix{T}(undef, s.n, 0)))
+(s::ExtractVector)(v; store_input=false) = make_missing_vector(s, v, store_input)
 
-function (s::ExtractVector{T})(v::V) where {T,V<:Vector}
-	isempty(v) && s.uniontypes && return s(missing)
-	isempty(v) && !s.uniontypes && error("This extractor does not support missing values")
+function (s::ExtractVector{T})(v::Vector; store_input=false) where {T}
+	isempty(v) && make_missing_vector(s, v, store_input)
 	if length(v) > s.n
 		@warn "array too long, truncating"
 		x = reshape(T.(v[1:s.n]), :, 1)
@@ -43,27 +45,8 @@ function (s::ExtractVector{T})(v::V) where {T,V<:Vector}
 	else
 		x = reshape(T.(v), :, 1)
 	end
-	return ArrayNode(s.uniontypes ? Matrix{Union{Missing, T}}(x) : x)
+	_make_array_node(stabilize_types_vector(s, x), [v], store_input)
 end
-
-#(s::ExtractVector{T})(v::MissingOrNothing; store_input=false) where {T} = make_missing_vector(s, v, store_input)
-#(s::ExtractVector{T})(::ExtractEmpty; store_input=false) where {T} = ArrayNode(Matrix{T}(undef, s.n, 0))
-#(s::ExtractVector)(v; store_input=false) = make_missing_vector(s, v, store_input)
-#function (s::ExtractVector{T})(v::Vector; store_input=false) where {T}
-#	isempty(v) && return make_missing_vector(s, v, store_input)
-#	if length(v) > s.n
-#		@warn "array too long, truncating"
-#		x = reshape(T.(v[1:s.n]), :, 1)
-#		return _make_array_node(x, [v], store_input)
-#	elseif length(v) < s.n
-#		x = Matrix{Union{Missing, T}}(missing, s.n, 1)
-#		x[1:length(v)] .= v
-#		return _make_array_node(x, [v], store_input)
-#	else
-#		x = reshape(T.(v), :, 1)
-#		return _make_array_node(x, [v], store_input)
-#	end
-#end
 
 Base.length(e::ExtractVector) = e.n
 Base.hash(e::ExtractVector, h::UInt) = hash((e.n, e.uniontypes), h)
