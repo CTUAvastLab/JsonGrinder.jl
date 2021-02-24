@@ -1,0 +1,1675 @@
+{
+    "paper_id": "000bcb3aee2d3acd5f5cd2b25e1b0f132fbc430d",
+    "metadata": {
+        "title": "",
+        "authors": []
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "the life of children and their parents (Golberstein et al., 2020; Wang et al., 2020b) , especially for families of young children, who need consistent care. However, few studies have focused on children and their parents' psychological responses during the COVID-19 pandemic. A preliminary study conducted in China during the pandemic showed that children between the ages of 3 and 6 years were more likely to manifest symptoms such as clinginess and fears about the pandemic, while children aged 6-18 years were more likely to show inattention and persistent inquiry (Jiao et al., 2020) .",
+            "cite_spans": [
+                {
+                    "start": 39,
+                    "end": 65,
+                    "text": "(Golberstein et al., 2020;",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 66,
+                    "end": 85,
+                    "text": "Wang et al., 2020b)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 568,
+                    "end": 587,
+                    "text": "(Jiao et al., 2020)",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Sleep is crucial for adults' and children's physical and psychosocial well-being (Gregory & Sadeh, 2016) . The current stressful circumstances of home confinement and major changes to daily routines, higher levels of anxiety, decrease in daylight exposure, increased blue light exposure due to massive reliance on digital media, changes in diet, and reduced physical activity may all have negative implications for sleep quality (Altena et al., 2020; Becker & Gregory, 2020) . A recent study exploring sleep health among an adult Greek population during the COVID-19 crisis (Voitsidis et al., 2020) showed that 37.6% of the participants scored above the cut-off score for insomnia, which is significantly greater than the 10% worldwide insomnia prevalence estimated before the pandemic (Riemann et al., 2017) . These results emphasise the possible effects of the changes imposed by the COVID-19 crisis on insomnia, a disorder associated with increased risk of chronic illnesses, poor mental health, functional limitations, and cognitive decline (Riemann et al., 2015) . Another study conducted recently among an Italian population found that, during home confinement, sleep timing markedly changed, with people going to bed and waking up later, spending more time in bed, and reporting a lower sleep quality. The increase in sleep difficulties was more pronounced in people with a higher level of depression and anxiety (Cellini et al., 2020) .",
+            "cite_spans": [
+                {
+                    "start": 81,
+                    "end": 104,
+                    "text": "(Gregory & Sadeh, 2016)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 429,
+                    "end": 450,
+                    "text": "(Altena et al., 2020;",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 451,
+                    "end": 474,
+                    "text": "Becker & Gregory, 2020)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 574,
+                    "end": 598,
+                    "text": "(Voitsidis et al., 2020)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 786,
+                    "end": 808,
+                    "text": "(Riemann et al., 2017)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1045,
+                    "end": 1067,
+                    "text": "(Riemann et al., 2015)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1420,
+                    "end": 1442,
+                    "text": "(Cellini et al., 2020)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "| Sleep and psychological distress during the COVID-19 pandemic"
+        },
+        {
+            "text": "Despite the marked impact of the COVID-19 pandemic on the life of families and its possible negative implications on sleep, little is known about how sleep among parents and children has been impacted by the current crisis. Previous studies conducted during conventional times have documented strong links between poorer maternal sleep quality and children's sleep disturbances (Tikotzky et al., 2015) . Furthermore, lower maternal sleep quality and poorer infant sleep, as reported by the mother, have been shown to be related to higher levels of maternal anxiety (Goldberg et al., 2013; Okun et al., 2018) .",
+            "cite_spans": [
+                {
+                    "start": 378,
+                    "end": 401,
+                    "text": "(Tikotzky et al., 2015)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 565,
+                    "end": 588,
+                    "text": "(Goldberg et al., 2013;",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 589,
+                    "end": 607,
+                    "text": "Okun et al., 2018)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "| Sleep and psychological distress during the COVID-19 pandemic"
+        },
+        {
+            "text": "We are aware of only one study that examined sleep patterns of children during the COVID-19 crisis. In this recent study , sleep patterns and sleep disturbances of Chinese preschoolers were studied during the COVID-19 home confinement. The findings showed that children demonstrated changes in sleep patterns characterised by later bedtimes and wake times, and longer nocturnal and shorter nap sleep durations, compared to children's sleep patterns in non-crisis time. In addition, modifiable behavioural practices (e.g. reduced electronic device use, regular diet) and positive family environment were associated with less sleep disturbances in the confined sample.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Sleep and psychological distress during the COVID-19 pandemic"
+        },
+        {
+            "text": "In the present study, we addressed, for the first time, possible consequences of the COVID-19 crisis and home confinement on maternal reports of their anxiety, sleep and their children's sleep patterns (aged 6-72 months) in Israel. The specific aims of the study were: (a) to explore whether mothers experienced a change in their own insomnia symptoms and child's sleep during the current crisis compared to pre-crisis period (retrospectively reported); (b) to assess maternal levels of acute and (c) to explore the associations between child's sleep, maternal insomnia, and maternal acute COVID-19 anxiety.",
+            "cite_spans": [
+                {
+                    "start": 493,
+                    "end": 500,
+                    "text": "and (c)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "| Sleep and psychological distress during the COVID-19 pandemic"
+        },
+        {
+            "text": "Mothers of 264 children (120 boys), with a mean (SD, range) age of 31.27 (17.39, 6-72) crisis. Table 1 shows the demographic characteristics of the sample.",
+            "cite_spans": [
+                {
+                    "start": 67,
+                    "end": 86,
+                    "text": "31.27 (17.39, 6-72)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 95,
+                    "end": 102,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "| Participants"
+        },
+        {
+            "text": "We conducted an anonymous web-based study during the COVID-19 crisis, from 20 to 30April 2020, 4 weeks into the national lockdown in Israel. In response to the COVID-19 outbreak, the Israeli government ordered a nationwide school closure and prevented all forms of public activities as an emergency measure to prevent the spread of the infection. People were instructed to stay at home, with permission to leave home only for necessities (e.g. food, medicine).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Procedure"
+        },
+        {
+            "text": "The study was approved by the Ethical Committee of the Max-Stern Yezreel Valley College. There was no compensation for participation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Procedure"
+        },
+        {
+            "text": "Participants were reached through social media platforms, while the only inclusion criterion was having a child aged between 6 and 72 months. In case of having more than one child in this age range, mothers were instructed to report on the youngest child. The survey took ~20 min to complete. All respondents were included in the data analysis. Overall, the percentage of missing data was minor (<5%), and, thus, no special handling of missing data was conducted.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Procedure"
+        },
+        {
+            "text": "The Insomnia Severity Index (ISI) is a seven-item self-report questionnaire assessing the nature, severity, and impact of insomnia based on a 5-point scale. Scores range from 0 to 28, with 15 as a cutoff for clinical insomnia. The alpha coefficient in the current sample was .86 (Morin, 1993) .",
+            "cite_spans": [
+                {
+                    "start": 279,
+                    "end": 292,
+                    "text": "(Morin, 1993)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "| Insomnia Severity Index (ISI)"
+        },
+        {
+            "text": "Mothers were asked to complete the ISI with reference to two time points: (a) retrospectively 1-2 months before the COVID-19 outbreak in Israel, and (b) during home confinement. We then computed, for each mother, a score representing the mother's perception of change in her sleep quality (\u0394ISI = ISI during COVID-19 minus ISI before COVID-19). Higher \u0394 values indicate a higher increase of insomnia symptoms. (i.e., child's crib located in separate room, child's crib attached to parents' bed, child's crib located in parents' room, in parents' bed); (b) bedtime soothing method (i.e., child falling asleep: independently in child's crib, in child's crib with parental assistance, in parents' bed, out of bed while breastfeeding/being rocked/being held) (Sadeh, 2004) .",
+            "cite_spans": [
+                {
+                    "start": 755,
+                    "end": 768,
+                    "text": "(Sadeh, 2004)",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "| Insomnia Severity Index (ISI)"
+        },
+        {
+            "text": "For the purposes of the present study, we added questions regarding the perceived change in child's sleep during home confinement. Mothers were asked whether their child's sleep quality and duration had changed, using a 5-point scale ranging from 1 (major increase in sleep quality/duration) to 5 (major decrease in sleep quality/duration). The questions were also related to change in sleeping arrangements, settling to sleep, and change in the degree to which mothers perceived their child's sleep as problematic. Regarding the last three questions, mothers were asked to indicate whether there was a change or not (yes/no).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Brief Infant/Child Sleep Questionnaire"
+        },
+        {
+            "text": "This scale assesses the relatively stable aspects of anxiety proneness. It includes 20 items, with scores ranging between 20 and 80.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Trait Anxiety Scale"
+        },
+        {
+            "text": "Higher scores indicate greater anxiety, with 40 as a clinical cut-off.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Trait Anxiety Scale"
+        },
+        {
+            "text": "The alpha coefficient in the current sample was .91 (Spielberger et al., 1983 ).",
+            "cite_spans": [
+                {
+                    "start": 52,
+                    "end": 77,
+                    "text": "(Spielberger et al., 1983",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "| Trait Anxiety Scale"
+        },
+        {
+            "text": "Mothers responded to a question assessing their degree of anxiety, specific to the current COVID-19 crisis. This item was rated on a 5-point scale. Higher points indicate a higher level of acute COVID-19 anxiety. This item was developed for an independent study addressing the impact of the COVID-19 crisis among the Israeli population (unpublished data).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| COVID-19 acute anxiety"
+        },
+        {
+            "text": "No significant correlations were found between the sociodemographic variables (e.g. mother's age and income level) and the study's main variables (maternal insomnia and child's sleep as reported by the mother during the COVID-19 pandemic, retrospectively before the pandemic, and the change variables). Thus, the demographic variables were not controlled for in subsequent analyses, except for child's age, due to the wide age range in this study and the important role of maturation in sleep development. *Household monthly income: 1 = <4,000 new Israeli shekel (NIS) (roughly 1,000$); 2 = 4,001-8,000 NIS; 3 = 8,001-12,000 NIS; 4 = 12,001-16,000 NIS; 5 = 16,001-20,000 NIS; 6 = over 20,001 NIS (roughly 6,000$). The change in income was assessed using yes\\no question; \"Yes\" represents a change in family income due to COVID-19 crisis and \"No\" represents no change in family income due to COVID-19 crisis.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Preliminary analysis"
+        },
+        {
+            "text": "Moreover, no differences were found in the study's variables between Arabic and Jewish participants, so they were combined into one group.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "TA B L E 1 Demographic variables"
+        },
+        {
+            "text": "Descriptive statistics for the sleep measures according to the Brief Infant/Child Sleep Questionnaire are described in Table 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 119,
+                    "end": 126,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "| Child's sleep"
+        },
+        {
+            "text": "Almost 29% of mothers reported a negative change in their child's sleep quality during home confinement, while 59% reported no change and 12% reported a positive change.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sleep quality"
+        },
+        {
+            "text": "A total of 35% of the mothers reported a decrease in their child's sleep duration during home confinement, while 40% reported no change and ~25% reported an increase.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sleep duration"
+        },
+        {
+            "text": "A total of 19.3% of the mothers reported a change in their child's sleeping arrangement, and 26.1% reported a change in the way the child falls asleep.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sleeping arrangement and settling"
+        },
+        {
+            "text": "The majority of mothers (69%) reported no change in their perceptions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mothers' perception of child's sleep as problematic"
+        },
+        {
+            "text": "Overall, 60% of the mothers reported a negative change in their sleep quality. In all, 23% of mothers scored above the clinical cut-off for insomnia (ISI score of >15) during the COVID-19 crisis, compared to only 11% who reported (retrospectively) having clinical insomnia before the COVID-19 crisis (\u03c7 2 (1) = 5.36, p = .02).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Maternal sleep"
+        },
+        {
+            "text": "There was no difference in the proportion of mothers with a subclinical score before (34.7%) and during the pandemic (35.1%); 133 mothers retrospectively reported not having insomnia before the pandemic, compared to 102 who reported no insomnia during the pandemic. However, this difference was not significant (p > .05; Figure 1 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 321,
+                    "end": 329,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "| Maternal sleep"
+        },
+        {
+            "text": "The average level of maternal trait anxiety was 35.71 (SD = 9.08), and 31% of mothers scored above the clinical cut-off (>40).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Maternal anxiety"
+        },
+        {
+            "text": "The prevalence of acute COVID-19 anxiety was as follows: 63% reported mild levels of anxiety and 17.2% reported high levels of anxiety.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Maternal anxiety"
+        },
+        {
+            "text": "We examined the correlations between: (a) maternal insomnia and child's sleep variables; and (b) maternal acute COVID-19 anxiety and mother-child sleep. As presented in F I G U R E 1 Differences in the number of mothers reporting not having insomnia symptoms, sub-clinical insomnia symptoms, and clinical insomnia symptoms, before (retrospectively reported) and during the COVID-19 crisis. *p < .05 *p<.05 respectively), while the correlations with child's sleep latency and sleep duration were no longer significant.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Associations between maternal insomnia, child's sleep and maternal anxiety"
+        },
+        {
+            "text": "The correlation between maternal acute COVID-19 anxiety and the current maternal ISI score was significant (r = .38, p < .001) and remained significant after controlling for the child's sleep duration, number of night awakenings, and WASO (r = .40, p < .001).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Associations between maternal insomnia, child's sleep and maternal anxiety"
+        },
+        {
+            "text": "The change in child's sleep quality was associated with the change in ISI score of the mother (r s = \u2212.33, p < .001), so that mothers who reported that their child's sleep improved during the COVID-19 crisis, were more likely to report a decrease in their own insomnia symptoms during the crisis. A similar result was found regarding the change in child's sleep duration and maternal change in ISI (r s = \u2212.24, p < .001), so that mothers who reported that their child's sleep duration increased during the COVID-19 crisis were more likely to report a decrease in their own insomnia symptoms.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| Correlations with the change variables"
+        },
+        {
+            "text": "To assess whether anxiety levels (i.e. COVID-19 acute anxiety and mothers' trait anxiety) are different for mothers with no change in sleep quality, compared to mothers who reported a negative change in sleep quality, one-way ANCOVAs were conducted. Because of the large age range in our sample, child's age was controlled for.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| ANCOVA analyses comparing between mothers, based on their sleep scores"
+        },
+        {
+            "text": "Significant between-group differences were found in COVID-19",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| ANCOVA analyses comparing between mothers, based on their sleep scores"
+        },
+        {
+            "text": "acute anxiety levels (F[1, 232] = 14.97, p < .001, partial \u03b7 2 = 0.06), so that mothers with an increase in insomnia symptoms showed significantly higher levels of COVID-19 acute anxiety. No significant between-group differences were found for maternal trait anxiety ( Figure 2 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 269,
+                    "end": 277,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "| ANCOVA analyses comparing between mothers, based on their sleep scores"
+        },
+        {
+            "text": "To assess whether anxiety levels (i.e. COVID-19 acute anxiety and mothers' trait anxiety) are different for mothers who reported no change in their children's sleep quality, compared to mothers who reported such a change, a one-way ANCOVA was conducted with child's age as a covariate. Significant between-group differences were found in maternal trait anxiety (F[1, 214] = 5.04, p = .025, partial \u03b7 2 = 0.02), so that mothers who reported that their child's sleep had negatively changed had higher levels of trait anxiety, compared to mothers who reported no change in their child's sleep. No significant between-group differences were found in COVID-19 acute anxiety ( Figure 3 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 671,
+                    "end": 679,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "| ANCOVA analyses comparing between mothers, based on their sleep scores"
+        },
+        {
+            "text": "To the best of our knowledge, the present study is the first to address the possible implications of the COVID-19 crisis and associated home confinement on maternal acute anxiety, maternal insomnia symptoms, and maternal reports of young children's sleep. Focussing on mothers and children, we found that many mothers are experiencing an average increase in insomnia severity and mild-high levels of acute COVID-19 anxiety. The present study revealed a high frequency of clinical insomnia during the COVID-19 pandemic: 23% of mothers scored above the cut-off for insomnia during the COVID-19, (Brooks et al., 2020; Qiu et al., 2020) .",
+            "cite_spans": [
+                {
+                    "start": 593,
+                    "end": 614,
+                    "text": "(Brooks et al., 2020;",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 615,
+                    "end": 632,
+                    "text": "Qiu et al., 2020)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "| D ISCUSS I ON"
+        },
+        {
+            "text": "Our present findings are consistent with previous studies demonstrating significant links between maternal and child sleep quality (Tikotzky et al., 2015) . The present findings show that these links are relevant also in times of crises, as mothers who reported higher scores of insomnia during the current COVID-19 crisis were also more likely to report that their children had poorer sleep quality and shorter sleep duration. Moreover, our present results support previous research on the relations between maternal emotional distress and mother-child sleep (Goldberg et al., 2013; Okun et al., 2018) by demonstrating that, also in times of crises, mothers with higher acute COVID-19 anxiety have higher insomnia symptoms and children with lower reported sleep quality.",
+            "cite_spans": [
+                {
+                    "start": 131,
+                    "end": 154,
+                    "text": "(Tikotzky et al., 2015)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 560,
+                    "end": 583,
+                    "text": "(Goldberg et al., 2013;",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 584,
+                    "end": 602,
+                    "text": "Okun et al., 2018)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "| D ISCUSS I ON"
+        },
+        {
+            "text": "We further observed that mothers with severe insomnia symptoms (ISI score of >15) had significantly higher levels of acute The present study has several limitations that should be considered, given the complexity of conducting a study under crises conditions and home confinement. First, the cross-sectional design and relying on retrospective self-reports to assess sleep before the pandemic limit the ability to make inferences and increase the risk of a reporting bias. Moreover, the sample size was relatively small, which limits the generalisability of our present results.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| D ISCUSS I ON"
+        },
+        {
+            "text": "Notwithstanding these limitations, our preliminary results highlight the importance of considering changes to sleep within the family context during the ongoing COVID-19 crisis.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| D ISCUSS I ON"
+        },
+        {
+            "text": "The results of the present study indicate that many mothers of ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "| CON CLUS ION"
+        },
+        {
+            "text": "Data available on request from the authors.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DATA AVA I L A B I L I T Y S TAT E M E N T"
+        },
+        {
+            "text": "F I G U R E 3 Differences in anxiety levels (i.e. acute COVID-19 anxiety and mothers' trait anxiety) between mothers reporting no change in their children's sleep quality, compared to mothers reporting a negative change in their children's sleep quality during the COVID-19 crisis. *p < .05 *p<.05",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DATA AVA I L A B I L I T Y S TAT E M E N T"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Dealing with sleep problems during home confinement due to the COVID-19 outbreak: Practical recommendations from a task force of the European CBT-I Academy",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Altena",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Baglioni",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Espie",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ellis",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gavriloff",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Holzinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Schlarb",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Frase",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Jernel\u00f6v",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Riemann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Sleep Research",
+            "volume": "29",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jsr.13052"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Editorial perspective: Perils and promise for child and adolescent sleep and associated psychopathology during the COVID-19 pandemic",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Becker",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Gregory",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Child Psychology and Psychiatry",
+            "volume": "",
+            "issn": "7",
+            "pages": "757--759",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jcpp.13278"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The psychological impact of quarantine and how to reduce it: Rapid review of the evidence",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Brooks",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Webster",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Woodland",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wessely",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Greenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Rubin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "30460--30468",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30460-8"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Changes in sleep pattern, sense of time and digital media use during COVID-19 lockdown in Italy",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Cellini",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Canale",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Mioni",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Costa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Sleep Research",
+            "volume": "29",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jsr.13074"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Coronavirus disease 2019 (COVID-19) and mental health for children and adolescents",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Golberstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Miller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA Pediatrics",
+            "volume": "174",
+            "issn": "9",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jamapediatrics.2020.1456"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Eye of the beholder? Maternal mental health and the quality of infant sleep",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Goldberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Lucas-Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Germo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Keller",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Davis",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Sandman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Social Science & Medicine",
+            "volume": "79",
+            "issn": "",
+            "pages": "101--108",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.socscimed.2012.07.006"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Annual research review: Sleep problems in childhood psychiatric disorders-a review of the latest science",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Gregory",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sadeh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of Child Psychology and Psychiatry",
+            "volume": "57",
+            "issn": "3",
+            "pages": "296--317",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jcpp.12469"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Behavioral and emotional disorders in children during the COVID-19 epidemic",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Jiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Jiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Pettoello-Mantovani",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Somekh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Pediatrics",
+            "volume": "221",
+            "issn": "",
+            "pages": "264--266",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jpeds.2020.03.013"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Sleep of preschoolers during the coronavirus disease 2019 (COVID-19) outbreak",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Rao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Owens",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Sleep Research",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jsr.13142"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Insomnia: Psychological assessment and management",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Morin",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Poor sleep quality increases symptoms of depression and anxiety in postpartum women",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Okun",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Mancuso",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hobel",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Schetter",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Coussons",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Journal of Behavioral Medicine",
+            "volume": "41",
+            "issn": "5",
+            "pages": "703--710",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "A nationwide survey of psychological distress among Chinese people in the COVID-19 epidemic: Implications and policy recommendations",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Qiu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "General Psychiatry",
+            "volume": "33",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1136/gpsych-2020-100213"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "European guideline for the diagnosis and treatment of insomnia",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Riemann",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Baglioni",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Bassetti",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Bjorvatn",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Dolenc Groselj",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Ellis",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Espie",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Garcia-Borreguero",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gjerstad",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gon\u00e7alves",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Hertenstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jansson-Fr\u00f6jmark",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Jennum",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Leger",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Nissen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Parrino",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Paunio",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pevernagie",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Verbraecken",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Spiegelhalder",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Journal of Sleep Research",
+            "volume": "26",
+            "issn": "6",
+            "pages": "675--700",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jsr.12594"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "The neurobiology, investigation, and treatment of chronic insomnia",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Riemann",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Nissen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Palagini",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Otte",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Perlis",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Spiegelhalder",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Lancet Neurology",
+            "volume": "14",
+            "issn": "5",
+            "pages": "21--27",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1474-4422(15)00021-6"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "A brief screening questionnaire for infant sleep problems: Validation and findings for an internet sample",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sadeh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Pediatrics",
+            "volume": "113",
+            "issn": "6",
+            "pages": "570--577",
+            "other_ids": {
+                "DOI": [
+                    "10.1542/peds.113.6.e570"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Manual for the state-trait anxiety inventory",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Spielberger",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Gorsuch",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Lushene",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Vagg",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Jacobs",
+                    "suffix": ""
+                }
+            ],
+            "year": 1983,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Infnat sleep development from 3-6 months postpartum: Links with maternal sleep and parental involvement. Monoghraphs of the Society for Research in Child Development",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tikotzky",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sadeh",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Volkovich",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Manber",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Meiri",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Shahar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "80",
+            "issn": "",
+            "pages": "107--124",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Insomnia during the COVID-19 pandemic in a Greek population",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Voitsidis",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Gliatas",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Bairachtari",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Papadopoulou",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Papageorgiou",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Parlapani",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Syngelakis",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Holeva",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Diakogiannis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Psychiatry Research",
+            "volume": "289",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.psychres.2020.113076"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Clinical characteristics of 138 hospitalized patients with novel coronavirus-infected pneumonia in Wuhan",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "China. JAMA",
+            "volume": "323",
+            "issn": "11",
+            "pages": "1061--1069",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.1585"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Mitigate the effects of home confinement on children during the COVID-19 outbreak",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30547-X"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Posttraumatic stress, anxiety and depression in survivors of severe acute respiratory syndrome (SARS)",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Journal of Traumatic Stress",
+            "volume": "18",
+            "issn": "1",
+            "pages": "39--42",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/jts.20004"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Maternal perceptions of sleep problems among children and mothers during the coronavirus disease 2019 (COVID-19) pandemic in Israel",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Zreik",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Asraf",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Haimov",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tikotzky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Sleep Res",
+            "volume": "00",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jsr.13201"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "months, participated in the study: 100 of the mothers were Arab and 141 were Jewish. Approximately 38% of the infants were firstborns, and families had a mean (SD) of 2.15 (0.95) children. The mean (SD) age of the mothers was 33.97 (4.20) years, and their mean (SD) duration of education was 16.37 (2.03) years. Moreover, 54.2% of mothers reported a change in the family income due to the COVID-19",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "This measure includes parental reports about child sleep patterns and parental sleep-related behaviours. Parents were asked to describe their child's sleep during the last 2 weeks of home confinement. In the present study, the derived measures were: (a) sleep onset time; (b) sleep duration; (c) daytime sleep duration;",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "young children are experiencing substantial negative psychosocial changes during the COVID-19 crisis, as shown in the exacerbation of insomnia severity and the high levels of acute anxiety during the current crisis. Notwithstanding these significant findings, it is important to note that the majority of mothers reported no change in their child's sleep quality, duration, arrangement, and their perception of child's sleep as problematic. Moreover, 12% of mothers even reported a positive change in their child's sleep quality, and 25% reported an increase in sleep duration. These findings emphasise the importance of further exploring familial resiliency factors that may explain the different patterns of responses in children's and mothers' sleep during times of crises. This is particularly important given the role of sleep in child development and parental functioning.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "related with child's sleep duration. When examining the correlations between the current maternal ISI score and child's sleep variables with maternal acute COVID-19 anxiety as a covariate, the correlations with child's sleep variables, number of night awakenings and WASO, remained significant (r = .26, p = .001 and r = .31, p < .001,",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "COVID-19 anxiety, while no differences were detected in their trait anxiety, cautiously suggesting that the current state of anxiety may contribute to the increase in insomnia symptoms severity.Interestingly, our present results showed that despite the overall high level of acute anxiety and significant increase in mothers' subjective insomnia severity symptoms, child's sleep during the pandemic was relatively unchanged. The majority of mothers reported no change in their child's sleep quality, duration, arrangement, and their perception of child's sleep as problematic, while the rates of reported change ranged between 19.3% to 35% for the different variables. Also, 12% of mothers reported a positive change in child sleep quality, and 25% reported an increase in sleep duration. These findings suggest that the changes in sleep patterns during the COVID-19 pandemic are varied and that no unified change for the worse should be expected(Altena et al., 2020;Becker & Gregory, 2020). Furthermore, while a somewhat higher level of trait anxiety was found among the mothers of children with reported negative change in their sleep quality, no differences were found in regard to the level of maternal acute anxiety, compared to children with no such change. These findings could indicate that, in times of crises, factors related to maternal personality tendencies may be more strongly associated with maternal perceptions of their children's sleep, compared to acute maternal anxiety.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

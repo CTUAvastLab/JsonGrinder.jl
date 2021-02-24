@@ -1,7 +1,7 @@
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, HierarchicalUtils, StatsBase
 
-# load files in examples/documents and parse them
-sch = JsonGrinder.schema(readdir("examples/documents", join=true), x->open(JSON.parse, x))
+# load files in data/documents and parse them
+sch = JsonGrinder.schema(readdir("data/documents", join=true), x->open(JSON.parse, x))
 # suggest default extractor with some keys as field
 extractor = suggestextractor(sch)
 # show whole extractor
