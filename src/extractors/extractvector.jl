@@ -23,7 +23,6 @@ ExtractVector(n::Int, uniontypes = true) = ExtractVector{FloatType}(n, uniontype
 
 make_missing_vector(s::ExtractVector{T}, v, store_input) where {T} =
     s.uniontypes ?
-    ArrayNode(Matrix{Union{Missing, T}}(fill(missing, s.n, 1))) :
     _make_array_node(stabilize_types_vector(fill(missing, s.n, 1)), [v], store_input) :
     error("This extractor does not support missing values")
 stabilize_types_vector(s::ExtractVector{T}, x) where {T} = s.uniontypes ? Matrix{Union{Missing, T}}(x) : x
