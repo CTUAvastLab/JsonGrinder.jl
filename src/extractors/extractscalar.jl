@@ -77,7 +77,6 @@ function (s::ExtractScalar{T})(v::AbstractString; store_input=false) where {T}
 	isnothing(w) && return make_missing_scalar(s, v, store_input)
 	_make_array_node(stabilize_types_scalar(s, _fill_and_normalize(s, T(w))), fill(v,1,1), store_input)
 end
-(s::ExtractScalar)(v; store_input=false) = make_missing_scalar(s, v, store_input)
 
 Base.length(e::ExtractScalar) = 1
 
