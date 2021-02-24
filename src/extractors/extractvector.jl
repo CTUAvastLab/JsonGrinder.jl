@@ -18,23 +18,27 @@ struct ExtractVector{T} <: AbstractExtractor
 	n::Int
 end
 ExtractVector(n::Int) = ExtractVector{FloatType}(n)
+# todo: dodělat to, zatím je to rozdělané
+# todo: check for every extractor if matrix in data and metadata is consistent, or vector, snd matrix in data does not have vector in metadata
+make_missing_vector(s::ExtractVector, v, store_input) =
+	_make_array_node(fill(missing, s.n, 1), [v], store_input)
 
-(s::ExtractVector{T})(::V) where {T,V<:MissingOrNothing} = ArrayNode(fill(missing, s.n, 1))
-(s::ExtractVector{T})(::ExtractEmpty) where {T}= ArrayNode(Matrix{T}(undef, s.n, 0))
-(s::ExtractVector)(v) = s(missing)
-function (s::ExtractVector{T})(v::V) where {T,V<:Vector}
-	isempty(v) && return s(missing)
+(s::ExtractVector{T})(v::MissingOrNothing; store_input=false) where {T} = make_missing_vector(s, v, store_input)
+(s::ExtractVector{T})(::ExtractEmpty; store_input=false) where {T} = ArrayNode(Matrix{T}(undef, s.n, 0))
+(s::ExtractVector)(v; store_input=false) = make_missing_vector(s, v, store_input)
+function (s::ExtractVector{T})(v::Vector; store_input=false) where {T}
+	isempty(v) && return make_missing_vector(s, v, store_input)
 	if length(v) > s.n
 		@warn "array too long, truncating"
 		x = reshape(T.(v[1:s.n]), :, 1)
-		return(ArrayNode(x))
+		return _make_array_node(x, [v], store_input)
 	elseif length(v) < s.n
 		x = Matrix{Union{Missing, T}}(missing, s.n, 1)
 		x[1:length(v)] .= v
-		return(ArrayNode(x))
+		return _make_array_node(x, [v], store_input)
 	else
 		x = reshape(T.(v), :, 1)
-		return(ArrayNode(x))
+		return _make_array_node(x, [v], store_input)
 	end
 end
 

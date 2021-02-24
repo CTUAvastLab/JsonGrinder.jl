@@ -1,7 +1,7 @@
 
 """
-	struct ExtractDict
-		dict::Dict{Symbol,Any}
+	struct ExtractDict{S} <: AbstractExtractor
+		dict::S
 	end
 
 extracts all items in `dict` and return them as a `Mill.ProductNode`.
@@ -67,21 +67,21 @@ end
 Base.keys(e::ExtractDict) = keys(e.dict)
 
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
-(s::ExtractDict)(v::V) where {V<:Nothing} = s(Dict{String,Any}())
-(s::ExtractDict)(v)  = s(nothing)
+(s::ExtractDict)(v::V; store_input=false) where {V<:Nothing} = s(Dict{String,Any}())
+(s::ExtractDict)(v; store_input=false)  = s(nothing)
 
 
-function (s::ExtractDict{S})(v::Dict) where {S<:Dict}
-	o = [Symbol(k) => f(get(v,String(k),nothing)) for (k,f) in s.dict]
+function (s::ExtractDict{S})(v::Dict; store_input=false) where {S<:Dict}
+	o = [Symbol(k) => f(get(v,String(k),nothing); store_input) for (k,f) in s.dict]
 	ProductNode((; o...))
 end
 
-function (s::ExtractDict{S})(ee::ExtractEmpty) where {S<:Dict}
-	o = [Symbol(k) => f(ee) for (k,f) in s.dict]
+function (s::ExtractDict{S})(ee::ExtractEmpty; store_input=false) where {S<:Dict}
+	o = [Symbol(k) => f(ee; store_input) for (k,f) in s.dict]
 	ProductNode((; o...))
 end
 
-extractbatch(extractor, samples) = reduce(catobs, extractor.(samples))
+extractbatch(extractor, samples) = mapreduce(extractor, catobs, samples)
 
 Base.hash(e::ExtractDict, h::UInt) = hash(e.dict, h)
 Base.:(==)(e1::ExtractDict, e2::ExtractDict) = e1.dict == e2.dict
