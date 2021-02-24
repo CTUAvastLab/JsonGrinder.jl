@@ -15,7 +15,7 @@ end
 extract_empty_bag_item(e::ExtractKeyAsField, store_input) =
 	ProductNode((key = e.key(extractempty; store_input), item = e.item(extractempty; store_input)))[1:0]
 
-(s::ExtractKeyAsField)(v::MissingOrNothing; store_input=false) = extract_empty_bag_item(s, v; store_input)
+(s::ExtractKeyAsField)(v::MissingOrNothing; store_input=false) = extract_missing_bag(s, v; store_input)
 
 (e::ExtractKeyAsField)(v::ExtractEmpty; store_input=false) =
 	make_empty_bag(ProductNode((key = e.key(v; store_input), item = e.item(v; store_input))), v)
