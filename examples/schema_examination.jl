@@ -1,4 +1,5 @@
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, HierarchicalUtils, StatsBase
+using JsonGrinder: DictEntry
 
 # load files in data/documents and parse them
 sch = JsonGrinder.schema(readdir("data/documents", join=true), x->open(JSON.parse, x))
