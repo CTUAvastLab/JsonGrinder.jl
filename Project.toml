@@ -26,7 +26,7 @@ ThreadTools = "dbf13d8f-d36e-4350-8970-f3a99faba1a8"
 Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 
 [compat]
-BSON = "^0.2"
+BSON = "^0.2, 0.3"
 DataStructures = "~0.17, ~0.18"
 FillArrays = "~0.8, ~0.9, ~0.10, 0.11"
 Flux = "^0.11"

@@ -31,9 +31,9 @@ uuid = "ab4f0b2a-ad5b-11e8-123f-65d77653426b"
 version = "0.1.0"
 
 [[BSON]]
-git-tree-sha1 = "dd36d7cf3d185eeaaf64db902c15174b22f5dafb"
+git-tree-sha1 = "2878972c4bc17d9c8d26d48d9ef00fcfe1899e7a"
 uuid = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
-version = "0.2.6"
+version = "0.3.0"
 
 [[Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
@@ -303,9 +303,9 @@ version = "1.0.0"
 
 [[JLD2]]
 deps = ["CodecZlib", "DataStructures", "MacroTools", "Mmap", "Pkg", "Printf", "Requires", "UUIDs"]
-git-tree-sha1 = "bb9a457481adf060ab5898823a49d4f854ff4ddd"
+git-tree-sha1 = "e8c4d588007dc02a1b23442ef3d14a8d7146df97"
 uuid = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
-version = "0.4.0"
+version = "0.4.1"
 
 [[JLLWrappers]]
 git-tree-sha1 = "a431f5f2ca3f4feef3bd7a5e94b8b8d4f2f647a0"
@@ -322,7 +322,7 @@ version = "0.21.1"
 deps = ["BSON", "DataStructures", "FillArrays", "Flux", "HierarchicalUtils", "HttpCommon", "JSON", "LearnBase", "LinearAlgebra", "MLDataPattern", "Mill", "Mustache", "Printf", "SHA", "Setfield", "SparseArrays", "Statistics", "StatsBase", "ThreadTools", "Zygote"]
 path = ".."
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
-version = "2.1.5"
+version = "2.2.0"
 
 [[Juno]]
 deps = ["Base64", "Logging", "Media", "Profile"]
