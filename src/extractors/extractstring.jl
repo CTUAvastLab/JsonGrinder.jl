@@ -56,25 +56,22 @@ ExtractString(n::Int, b::Int, m::Int) = ExtractString(n, b, m, true)
 ExtractString(uniontypes::Bool) = ExtractString(3, 256, 2053, uniontypes)
 ExtractString() = ExtractString(3, 256, 2053, true)
 make_missing_string(s::ExtractString, v, store_input) =
-	_make_array_node(NGramMatrix(missing, s.n, s.b, s.m), [v], store_input)
-(s::ExtractString)(v::String) = ArrayNode(NGramMatrix(s.uniontypes ? MaybeString[v] : [v], s.n, s.b, s.m))
-(s::ExtractString)(v::Vector{String}) = ArrayNode(NGramMatrix(s.uniontypes ? Vector{MaybeString}(v) : v, s.n, s.b, s.m))
-(s::ExtractString)(v::AbstractString) = s(String(v))
-(s::ExtractString)(v::MissingOrNothing) =
-	s.uniontypes ? ArrayNode(NGramMatrix(MaybeString[missing], s.n, s.b, s.m)) : error("This extractor does not support missing values")
-(s::ExtractString)(v::ExtractEmpty) =
+	s.uniontypes ?
+	_make_array_node(NGramMatrix(MaybeString[missing], s.n, s.b, s.m), [v], store_input) :
+	error("This extractor does not support missing values")
+stabilize_types_string(s::ExtractString, x) = s.uniontypes ? Vector{MaybeString}(v) : v
+make_empty_string(s::ExtractString, store_input) where {T} =
 	ArrayNode(NGramMatrix(s.uniontypes ? Vector{MaybeString}() : Vector{String}(), s.n, s.b, s.m))
-(s::ExtractString)(v) = s(missing)
-(s::ExtractString)(v::Symbol) = s(String(v))
 
-#(s::ExtractString)(v::String; store_input=false) = _make_array_node(NGramMatrix([v], s.n, s.b, s.m), [v], store_input)
-#(s::ExtractString)(v::Vector{String}; store_input=false) =
-#	_make_array_node(NGramMatrix(v, s.n, s.b, s.m), v, store_input)
-#(s::ExtractString)(v::AbstractString; store_input=false) = s(String(v); store_input)
-#(s::ExtractString)(v::MissingOrNothing; store_input=false) = make_missing_string(s, v, store_input)
-#(s::ExtractString)(v::ExtractEmpty; store_input=false) = ArrayNode(NGramMatrix(Vector{String}(), s.n, s.b, s.m))
-#(s::ExtractString)(v; store_input=false) = make_missing_string(s, v, store_input)
-#(s::ExtractString)(v::Symbol; store_input=false) = s(String(v); store_input)
+(s::ExtractString)(v::String; store_input=false) =
+	_make_array_node(NGramMatrix(stabilize_types_string(s, [v]), s.n, s.b, s.m), [v], store_input)
+(s::ExtractString)(v::Vector{String}; store_input=false) =
+	_make_array_node(NGramMatrix(stabilize_types_string(s, v), s.n, s.b, s.m), v, store_input)
+(s::ExtractString)(v::AbstractString; store_input=false) = s(String(v); store_input)
+(s::ExtractString)(v::MissingOrNothing; store_input=false) = make_missing_string(s, v, store_input)
+(s::ExtractString)(v::ExtractEmpty; store_input=false) = make_empty_string(s, store_input)
+(s::ExtractString)(v; store_input=false) = make_missing_string(s, v, store_input)
+(s::ExtractString)(v::Symbol; store_input=false) = s(String(v); store_input)
 
 """
 	extractscalar(Type{String}, n = 3, b = 256, m = 2053)

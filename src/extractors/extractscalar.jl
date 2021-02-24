@@ -59,33 +59,25 @@ function extractscalar(::Type{T}, e::Entry, uniontypes = true) where {T<:Number}
 end
 
 _fill_and_normalize(s::ExtractScalar{T}, v::T) where {T} = s.s .* (fill(v,1,1) .- s.c)
-make_missing_scalar(s::ExtractScalar, v, store_input) = _make_array_node(fill(missing,1,1), fill(v,1,1), store_input)
-make_empty_scalar(s::ExtractScalar{T}, store_input) where {T} = _make_array_node(fill(zero(T),1,0), fill(undef,1,0), store_input)
+stabilize_types_scalar(s::ExtractScalar{T}, x) = s.uniontypes ? Matrix{Union{Missing, T}}(data) : data
+make_missing_scalar(s::ExtractScalar{T}, v, store_input) where {T} =
+	s.uniontypes ?
+	_make_array_node(Matrix{Union{Missing, T}}(fill(missing,1,1)), fill(v,1,1), store_input) :
+	error("This extractor does not support missing values")
+make_empty_scalar(s::ExtractScalar{T}, store_input) where {T} =
+	_make_array_node(stabilize_types_scalar(s, fill(zero(T),1,0)), fill(undef,1,0), store_input)
 
-#(s::ExtractScalar{T})(v::MissingOrNothing; store_input=false) where {T} = make_missing_scalar(s, v, store_input)
-#(s::ExtractScalar{T})(v::ExtractEmpty; store_input=false) where {T} = make_empty_scalar(s, store_input)
-#(s::ExtractScalar{T})(v::Number; store_input=false) where {T} =
-#	_make_array_node(_fill_and_normalize(s, T(v)), fill(v,1,1), store_input)
-#(s::ExtractScalar)(v; store_input=false) = make_missing_scalar(s, v, store_input)
-#function (s::ExtractScalar{T})(v::AbstractString; store_input=false) where {T}
-#	w = tryparse(T,v)
-#	isnothing(w) && return make_missing_scalar(s, v, store_input)
-#	x = _fill_and_normalize(s, T(w))
-#	_make_array_node(x, fill(v,1,1), store_input)
-#end
-
-(s::ExtractScalar{T})(v::MissingOrNothing) where {T,W} =
-	s.uniontypes ? ArrayNode(Matrix{Union{Missing, T}}(fill(missing,1,1))) : error("This extractor does not support missing values")
-function (s::ExtractScalar{T})(v::ExtractEmpty) where {T}
-	data = fill(zero(T),1,0)
-	ArrayNode(s.uniontypes ? Matrix{Union{Missing, T}}(data) : data)
+(s::ExtractScalar)(v; store_input=false) = make_missing_scalar(s, v, store_input)
+(s::ExtractScalar{T})(v::MissingOrNothing; store_input=false) where {T} = make_missing_scalar(s, v, store_input)
+(s::ExtractScalar{T})(v::ExtractEmpty; store_input=false) where {T} = make_empty_scalar(s, store_input)
+(s::ExtractScalar{T})(v::Number; store_input=false) where {T} =
+	_make_array_node(stabilize_types_scalar(s, _fill_and_normalize(s, T(v))), fill(v,1,1), store_input)
+function (s::ExtractScalar{T})(v::AbstractString; store_input=false) where {T}
+	w = tryparse(T,v)
+	isnothing(w) && return make_missing_scalar(s, v, store_input)
+	_make_array_node(stabilize_types_scalar(s, _fill_and_normalize(s, T(w))), fill(v,1,1), store_input)
 end
-function (s::ExtractScalar{T})(v::Number) where {T}
-	data = s.s .* (fill(T(v),1,1) .- s.c)
-	ArrayNode(s.uniontypes ? Matrix{Union{Missing, T}}(data) : data)
-end
-(s::ExtractScalar{T})(v::AbstractString) where {T} = s((tryparse(T,v)))
-(s::ExtractScalar)(v) = s(missing)
+(s::ExtractScalar)(v; store_input=false) = make_missing_scalar(s, v, store_input)
 
 Base.length(e::ExtractScalar) = 1
 
