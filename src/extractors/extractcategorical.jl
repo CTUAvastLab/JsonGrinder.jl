@@ -91,6 +91,9 @@ val2idx(s::ExtractCategorical{<:Number,I}, v::Number) where {V,I} =
 val2idx(s::ExtractCategorical{<:Number,I}, vs::Vector{<:Number}) where {V,I} =
 	stabilize_types_categorical(s, [map_val(s, v) for v in vs])
 
+make_missing_categorical(s::ExtractCategorical, v, store_input) =
+    _make_array_node(MaybeHotMatrix(stabilize_types_categorical(s, [missing]), s.n), [v], store_input)
+
 (s::ExtractCategorical{V,I})(v::V; store_input=false) where {V,I} =
 	_make_array_node(MaybeHotMatrix(val2idx(s, v), s.n), [v], store_input)
 (s::ExtractCategorical{V,I})(vs::Vector{V}; store_input=false) where {V,I} =
