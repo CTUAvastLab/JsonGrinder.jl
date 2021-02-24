@@ -322,7 +322,7 @@ version = "0.21.1"
 deps = ["BSON", "DataStructures", "FillArrays", "Flux", "HierarchicalUtils", "HttpCommon", "JSON", "LearnBase", "LinearAlgebra", "MLDataPattern", "Mill", "Mustache", "Printf", "SHA", "Setfield", "SparseArrays", "Statistics", "StatsBase", "ThreadTools", "Zygote"]
 path = ".."
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
-version = "2.1.4"
+version = "2.1.5"
 
 [[Juno]]
 deps = ["Base64", "Logging", "Media", "Profile"]
