@@ -15,7 +15,7 @@ labelkey = metadata["label"]
 val_num = metadata["val_samples"]
 test_num = metadata["test_samples"]
 minibatchsize = 100
-iterations = 10_000
+iterations = 5_000
 neurons = 20 		# neurons per layer
 
 targets = map(i -> i[labelkey], samples)
