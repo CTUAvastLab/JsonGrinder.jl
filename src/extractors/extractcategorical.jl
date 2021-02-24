@@ -113,9 +113,9 @@ val2idx(s::ExtractCategorical{<:Number,I}, vs::Vector{<:Number}) where {V,I} =
 	_make_array_node(MaybeHotMatrix(val2idx(s, vs), s.n), [vs], store_input)
 (s::ExtractCategorical{V,I})(::MissingOrNothing; store_input=false) where {V,I} =
 	s.uniontypes ? make_missing_categorical(s, v, store_input) : error("This extractor does not support missing values")
-(s::ExtractCategorical{V,I})(::ExtractEmpty) where {V,I} =
+(s::ExtractCategorical{V,I})(::ExtractEmpty; store_input=false) where {V,I} =
 	ArrayNode(MaybeHotMatrix(s.uniontypes ? Vector{Union{Missing, I}}() : Vector{I}(), s.n))
-(s::ExtractCategorical)(v) = make_missing_categorical(s, v, store_input)
+(s::ExtractCategorical)(v; store_input=false) = make_missing_categorical(s, v, store_input)
 
 Base.hash(e::ExtractCategorical, h::UInt) = hash((e.keyvalemap, e.n, e.uniontypes), h)
 Base.:(==)(e1::ExtractCategorical, e2::ExtractCategorical) =
