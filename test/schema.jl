@@ -365,7 +365,7 @@ end
 		ext = suggestextractor(sch)
 		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext(JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}"""))).data isa Matrix{Float32}
 		@test m(ext(JSON.parse("""{"a": []}"""))).data isa Matrix{Float32}
 	end
 
