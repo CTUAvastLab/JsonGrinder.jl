@@ -59,7 +59,7 @@ function extractscalar(::Type{T}, e::Entry, uniontypes = true) where {T<:Number}
 end
 
 _fill_and_normalize(s::ExtractScalar{T}, v::T) where {T} = s.s .* (fill(v,1,1) .- s.c)
-stabilize_types_scalar(s::ExtractScalar{T}, x) = s.uniontypes ? Matrix{Union{Missing, T}}(data) : data
+stabilize_types_scalar(s::ExtractScalar{T}, x) where {T} = s.uniontypes ? Matrix{Union{Missing, T}}(data) : data
 make_missing_scalar(s::ExtractScalar{T}, v, store_input) where {T} =
 	s.uniontypes ?
 	_make_array_node(Matrix{Union{Missing, T}}(fill(missing,1,1)), fill(v,1,1), store_input) :
