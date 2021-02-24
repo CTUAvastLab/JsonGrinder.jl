@@ -73,8 +73,8 @@ function string_multi_representation_scalar_extractor()
 		e -> MultipleRepresentation((
 			ExtractCategorical(top_n_keys(e, 20)),
 			extractscalar(unify_types(e), e)
-		))
-	], JsonGrinder.default_scalar_extractor()))
+		)))
+	], JsonGrinder.default_scalar_extractor())
 end
 
 top_n_keys(e::Entry, n::Int) = map(x->x[1], sort(e.counts |> collect, by=x->x[2], rev=true)[begin:min(n, end)])
