@@ -343,7 +343,7 @@ end
 	end
 
 	@testset "with missing keys in dict" begin
-		sch1 = DictEntry(Dict(
+		sch = DictEntry(Dict(
 			:a=>ArrayEntry(
 				DictEntry(Dict(
 					:a=>Entry(Dict("a"=>1,"b"=>1,"c"=>1,"d"=>1), 4),
@@ -355,20 +355,18 @@ end
 			4)),
 		4)
 
-		@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=false) == Dict(
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=false) == Dict(
 			:a=>[Dict(:a=>"c",:b=>2,:c=>1), Dict(:a=>"c",:b=>2,:c=>1)]
 		)
-		@test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true) ≃ Dict(
+		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
 			:a=>[Dict(:a=>missing,:b=>missing,:c=>1), Dict(:a=>missing,:b=>missing,:c=>1)]
 		)
 
-		ext1 = suggestextractor(sch1)
-		m = reflectinmodel(sch1, ext1)
+		ext1 = suggestextractor(sch)
+		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext1(j1)).data isa Matrix{Float32}
-		@test m(ext1(j2)).data isa Matrix{Float32}
-		@test m(ext1(j3)).data isa Matrix{Float32}
-		@test m(ext1(j4)).data isa Matrix{Float32}
+		@test m(ext1(JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}"""))).data isa Matrix{Float32}
+		@test m(ext1(JSON.parse("""{"a": []}"""))).data isa Matrix{Float32}
 	end
 
 	@testset "with missing nested dicts" begin
@@ -390,10 +388,8 @@ end
 		ext1 = suggestextractor(sch1)
 		m = reflectinmodel(sch1, ext1)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext1(j1)).data isa Matrix{Float32}
-		@test m(ext1(j2)).data isa Matrix{Float32}
-		@test m(ext1(j3)).data isa Matrix{Float32}
-		@test m(ext1(j4)).data isa Matrix{Float32}
+		@test m(ext1(JSON.parse("""{"b":1}"""))).data isa Matrix{Float32}
+		@test m(ext1("""{"a": {"a":"c","c":1}}""")).data isa Matrix{Float32}
 	end
 
 	@testset "with numbers and numeric strings" begin
@@ -418,10 +414,8 @@ end
 		# ext1 = suggestextractor(sch1)
 		# m = reflectinmodel(sch1, ext1)
 		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		# @test m(ext1(j1)).data isa Matrix{Float32}
-		# @test m(ext1(j2)).data isa Matrix{Float32}
-		# @test m(ext1(j3)).data isa Matrix{Float32}
-		# @test m(ext1(j4)).data isa Matrix{Float32}
+		# @test m(ext1(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
+		# @test m(ext1(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
 	end
 end
 
