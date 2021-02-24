@@ -365,8 +365,8 @@ end
 		ext = suggestextractor(sch)
 		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext1(JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}"""))).data isa Matrix{Float32}
-		@test m(ext1(JSON.parse("""{"a": []}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}]}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": []}"""))).data isa Matrix{Float32}
 	end
 
 	@testset "with missing nested dicts" begin
@@ -412,11 +412,11 @@ end
 		# 	:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
 		# )
 		#
-		# ext1 = suggestextractor(sch1)
-		# m = reflectinmodel(sch1, ext1)
+		# ext = suggestextractor(sch)
+		# m = reflectinmodel(sch, ext)
 		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		# @test m(ext1(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
-		# @test m(ext1(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
+		# @test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
+		# @test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
 	end
 end
 
