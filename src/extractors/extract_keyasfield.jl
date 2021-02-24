@@ -12,23 +12,20 @@ struct ExtractKeyAsField{S,V} <: BagExtractor
 	item::V
 end
 
-extract_empty_bag_item(e::ExtractKeyAsField, store_input) = ProductNode((key = e.key(extractempty; store_input), item = e.item(extractempty; store_input)))[1:0]
+extract_empty_bag_item(e::ExtractKeyAsField, store_input) =
+	ProductNode((key = e.key(extractempty; store_input), item = e.item(extractempty; store_input)))[1:0]
 
-function (s::ExtractKeyAsField)(v::MissingOrNothing; store_input=false)
-	Mill._emptyismissing[] && return _make_bag_node(missing, [0:-1], [v], store_input)
-	ds = ProductNode((key = s.key(extractempty; store_input), item = s.item(extractempty; store_input)))[1:0]
-	_make_bag_node(ds, [0:-1], [v], store_input)
-end
+(s::ExtractKeyAsField)(v::MissingOrNothing; store_input=false) = extract_empty_bag_item(s, v; store_input)
 
 (e::ExtractKeyAsField)(v::ExtractEmpty; store_input=false) =
 	make_empty_bag(ProductNode((key = e.key(v; store_input), item = e.item(v; store_input))), v)
 
 function (e::ExtractKeyAsField)(vs::Dict; store_input=false)
 	isempty(vs) && return extract_missing_bag(e, vs; store_input)
-	items = map(collect(vs)) do (k,v)
+	items = mapreduce(catobs, collect(vs)) do (k,v)
 		ProductNode((key = e.key(k; store_input), item = e.item(v; store_input)))
 	end
-	_make_bag_node(reduce(catobs, items), [1:length(vs)], [vs], store_input)
+	_make_bag_node(items, [1:length(vs)], [vs], store_input)
 end
 
 Base.hash(e::ExtractKeyAsField, h::UInt) = hash((e.key, e.item), h)
