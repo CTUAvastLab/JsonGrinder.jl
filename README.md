@@ -11,8 +11,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/CTUAvastLab/JsonGrinder.jl/badge.svg?branch=master)](https://coveralls.io/github/CTUAvastLab/JsonGrinder.jl?branch=master)
 [![codecov.io](http://codecov.io/github/CTUAvastLab/JsonGrinder.jl/coverage.svg?branch=master)](http://codecov.io/github/CTUAvastLab/JsonGrinder.jl?branch=master)
 
-This branch is now merged into version_2_1
-
 **JsonGrinder** is a collection of routines that facilitates conversion of JSON documents into structures used by
 [`Mill.jl`](https://github.com/CTUAvastLab/Mill.jl) project.
 
