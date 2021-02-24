@@ -1,0 +1,678 @@
+{
+    "paper_id": "000f9e2d3dadab239e44c57471b7a8b9b35452b9",
+    "metadata": {
+        "title": "Viral Gene Compression: Complexity and Verification",
+        "authors": [
+            {
+                "first": "Mark",
+                "middle": [],
+                "last": "Daley",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Saskatchewan",
+                    "location": {
+                        "settlement": "Saskatoon",
+                        "region": "Saskatchewan",
+                        "country": "Canada"
+                    }
+                },
+                "email": "daley@cs.usask.ca"
+            },
+            {
+                "first": "Ian",
+                "middle": [],
+                "last": "Mcquillan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Western Ontario",
+                    "location": {
+                        "settlement": "London Ontario",
+                        "country": "Canada"
+                    }
+                },
+                "email": "imcquill@csd.uwo.ca"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The smallest known biological organisms are, by far, the viruses. One of the unique adaptations that many viruses have aquired is the compression of the genes in their genomes. In this paper we study a formalized model of gene compression in viruses. Specifically, we define a set of constraints that describe viral gene compression strategies and investigate the properties of these constraints from the point of view of genomes as languages. We pay special attention to the finite case (representing real viral genomes) and describe a metric for measuring the level of compression in a real viral genome. An efficient algorithm for establishing this metric is given along with applications to real genomes including automated classification of viruses and prediction of horizontal gene transfer between host and virus.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In contrast to the lengthy, often redundant, genomes of higher organisms, the genomes of viruses are extremely efficient in the encoding of their genes. Where mammalian genomes, for example, possess lengthy introns which code for no genes at all, any given segment of a viral genome may be a coding region for several genes. In addition to prefix and suffix overlap of viral genes, some genes may also be encoded in a retrograde fashion (that is, the gene would be read in a direction opposite to other genes). These systems provide evidence that viruses have evolved a special type of information compression technique. Studying this natural compression system in a rigorous setting could yield insight into the structure of viral genomes and may contribute to a basis for classifying such structures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this paper, we will specifically consider the types of compression seen in two small double-stranded DNA virus families, Papillomavirus and Polyomavirus, and single-stranded RNA viruses from the Bornavirus, Coronavirus and, to a lesser extent, the Filovirus and Retrovirus families.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The importance of this genetic compression becomes obvious when considering the structure of viruses. Viruses generally consist of two principal components: a protein capsid, and genetic material inside the capsid. The capsid serves as protection for the genetic material and also as a mechanism for inserting the genetic material into a host cell. The genetic material may consist of single-or double-stranded DNA or RNA and, in some rare cases, a mixture of the former possibly also including proteins.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The need for compression stems from the fact that the size of the capsid limits the amount of room for genetic information inside the virus. In the case of Polyomaviruses, the genome is constrained to be approximately 5kbp (5,000 basepairs) of DNA (compare to the human genome of size 3,150,000 kb), yet still manages to encode 6 distinct genes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We exposit here a formal model of the viral compression techniques in terms of constraints on languages. For example, we would say that a language satisfies the \"viral overlapping compression\" property if some prefix of some word in the language is also a suffix of some other word in the language. We can likewise define constraints for other viral compression techniques, including retrograde encodings. We will focus here on deterministic modeling of the gene-level mechanics, in contrast to the probabilistic analysis of [8] , which addresses gene compression from the point of view of evolutionary pressures and constraints on entire genomes.",
+            "cite_spans": [
+                {
+                    "start": 525,
+                    "end": 528,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The organization of the paper is as follows: In section 2 we consider basic notation and prerequisites. In section 3 we define formal versions of the basic viral compression techniques and investigate relationships and dependencies between them. We consider also the question of for which families of languages it is possible to decide these properties. Section 4 focuses on the finitary case of the problem as this is the most interesting from the point of view of applied viral genetics. We present efficient algorithms to decide each of the properties for real viral genomes. Section 5 contains our conclusions and a discussion of practical applications.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "For a general introduction to virology, we refer the reader to [3] and [10] ; for formal language theory preliminaries, we refer to [9] . Let \u03a3 be a finite alphabet. We denote, by \u03a3 * and \u03a3 + , the sets of words and non-empty words, respectively, over \u03a3 and the empty word by \u03bb. A language L is any subset of \u03a3 * . For a word w \u2208 \u03a3 * , we denote the length of w by |w| and the reversal of w by w R . Let N be the set of positive integers. Furthermore, for k \u2208 N, define \u03a3 \u2265k = {w \u2208 \u03a3 * | |w| \u2265 k}.",
+            "cite_spans": [
+                {
+                    "start": 63,
+                    "end": 66,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 71,
+                    "end": 75,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 132,
+                    "end": 135,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Notation and Prerequisites"
+        },
+        {
+            "text": "A full trio is a language family closed under homomorphism, inverse homomorphism and intersection with regular sets. A full trio is also referred to as a cone. It is known that every full trio is closed under arbitrary a-transductions 1 and hence arbitrary gsm mappings. We refer to [1, 4] for the theory of AFL's.",
+            "cite_spans": [
+                {
+                    "start": 283,
+                    "end": 286,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 287,
+                    "end": 289,
+                    "text": "4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Notation and Prerequisites"
+        },
+        {
+            "text": "For a binary relation \u2286 \u03a3 * \u00d7 \u03a3 * and a language L \u2286 \u03a3 * , we define",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notation and Prerequisites"
+        },
+        {
+            "text": "We will consider the following well-known relations. Let w, v \u2208 \u03a3 * .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notation and Prerequisites"
+        },
+        {
+            "text": "Also, for each of the relations above, we prepend the word \"proper\", which will be denoted by < p , < s , < i where we enforce that x, y \u2208 \u03a3 + above.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notation and Prerequisites"
+        },
+        {
+            "text": "For example,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notation and Prerequisites"
+        },
+        {
+            "text": "Before formally stating the definitions of the viral properties, we will define the following sets which will be used for the conditions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Viral Properties"
+        },
+        {
+            "text": "Let L \u2286 \u03a3 * be a language, and let n \u2208 N such that 1 \u2264 n \u2264 6 and let k \u2208 N. Then we define the following sets:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Viral Properties"
+        },
+        {
+            "text": "So, for example, Z(i, L, k) consists of all words w \u2208 L such that there exists a word u of length at least k, a non-empty word x and a word v whereby xu is in L and w = uv which is also in L.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Viral Properties"
+        },
+        {
+            "text": "We now define the properties that we will study.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Viral Properties"
+        },
+        {
+            "text": "Let L \u2286 \u03a3 * , let n satisfy 1 \u2264 n \u2264 6 and let k, l \u2208 N. We say that L satisfies condition W (n, k, l) if |Z(n, L, k)| \u2265 l.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "We also call condition W (1, k, l) the l-weak k-prefix overlapping property, condition W (2, k, l) the l-weak k-suffix overlapping property, condition W (3, k, l) the l-weak k-overlapping property, condition W (4, k, l) the l-weak k-double-sided overlapping property, condition W (5, k, l) the l-weak k-retrograde overlapping property and condition W (6, k, l) the l-weak k-concatenated retrograde overlapping property.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "For example, a language L satisfies W (1, k, l) if and only if there exists l distinct words w \u2208 L whereby w = uv for some u, v, x \u2208 \u03a3 * , with u of length at least k,x non-empty and xu \u2208 L.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "We also define a strong version of the properties above.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "We also refer to each of these properties by replacing the prefix \"l-weak\" of each condition above with \"strong\". 2 We now consider the relationships of these properties to each other. The following is immediate from the definitions.",
+            "cite_spans": [
+                {
+                    "start": 114,
+                    "end": 115,
+                    "text": "2",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Then the following are true:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Also, we note the following:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Then the following are true:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Proof. The first three statements are straightforward. For the fourth statement,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Combining Lemma 1, 2, we obtain:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Then the following statements are true:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "We see, however that if L 1 = {abc, aa} and",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "We also define the following sets which we will use for a characterization.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Hence, there exists x \u2208 \u03a3 + such that xu \u2208 L. Let i = 2. \"\u2286\" Let w \u2208 U (2, L, k). Thus, there exists v \u2208 \u03a3 \u2265k , u \u2208 \u03a3 * , y \u2208 \u03a3 + , vy \u2208 L, w = uv. Therefore, v \u2208< \u22121 p (L) \u2229 \u03a3 \u2265k and w \u2208\u2264 s (< \u22121 p (L) \u2229 \u03a3 \u2265k ). \"\u2287\" Let w \u2208\u2264 s (< \u22121 p (L) \u2229 \u03a3 \u2265k ). Thus, there exists u, v \u2208 \u03a3 * such that w = uv with v \u2208< \u22121 p (L) \u2229 \u03a3 \u2265k . Hence, there exists x \u2208 \u03a3 + such that vx \u2208 L.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Let i = 3. Immediate from case 1, 2. Let i = 4. \"\u2286\" Let w \u2208 U (4, L, k). Thus, there exists u, v \u2208 \u03a3 \u2265k , x, y \u2208 \u03a3 + , w = uv, (xu \u2208 L\u2227vy \u2208 L). Therefore, u \u2208< \u22121",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Hence, there exists x, y \u2208 \u03a3 + such that xu \u2208 L and vy \u2208 L.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Let i = 5. \"\u2286\" Let w \u2208 U (5, L, k) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 25,
+                    "end": 34,
+                    "text": "(5, L, k)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Definition 1."
+        },
+        {
+            "text": "This leads naturally to some decision problems. One would like to provide algorithms to test whether languages (or genomes) satisfy these properties. Namely, can we decide whether a given language satisfies one of the properties, depending on the language family that the given language is in? For each weak condition, this amounts to deciding whether |Z(i, L, k)| \u2265 l and for each strong condition, it amounts to deciding whether Z(i, L, k) = L. Proposition 3. Let L 1 , L 2 be language families effectively closed under intersection and the full trio operations with L 1 being effectively semilinear and L 2 having a decidable equality problem. Then the following are true:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "1. For each k, l \u2208 N and i, 1 \u2264 i \u2264 4, it is decidable whether L \u2208 L 1 satisfies W (i, k, l) and it is decidable whether L \u2208 L 2 satisfies V (i, k). 2. If L 1 , L 2 are also effectively closed under reversal, then it is decidable whether L \u2208 L 1 satisfies W (5, k, l) and it is decidable whether L \u2208 L 2 satisfies V (5, k). 3. If L 1 , L 2 are also effectively closed under reversal and +, then it is decidable whether L \u2208 L 1 satisfies W (6, k, l) and it is decidable whether L \u2208 L 2 satisfies V (6, k).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 1."
+        },
+        {
+            "text": "Also, every intersectionclosed full trio is closed under union and concatenation since L 1 $\u03a3 * \u2229 \u03a3 * $L 2 is in L 1 and L 2 , there is an a-transducer which outputs L 1 \u222a L 2 and there is a homomorphism which outputs L 1 L 2 . Thus, Z(1, L, k), Z(2, L, k), Z(3, L, k), Z(4, L, k) are in L 1 and L 2 . Additionally, if L 1 , L 2 are closed under reversal, then Z(5, L, k) is in L 1 and L 2 and if L 1 , L 2 are closed under reversal and +, then Z(6, L, k) is in L 1 and L 2 . Since L 1 is effectively semilinear, we can decide if L \u2208 L 1 is infinite [5] and if it is not, then we can effectively find the length of the longest word in L. Then, we can test membership of every word of length less than or equal to that length to determine whether |Z(i, L, k)| \u2265 l (emptiness is always decidable for semilinear sets, and since L 1 is closed under intersection with regular languages, we can decide whether w \u2208 L by testing whether L\u2229{w} = \u2205). Also, by the decidability of equality for L 2 , the proposition follows.",
+            "cite_spans": [
+                {
+                    "start": 550,
+                    "end": 553,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Proof. It is easy to construct a-transducers which output"
+        },
+        {
+            "text": "We denote by NCM the family of languages defined by one-way nondeterministic, reversal-bounded multicounter machines. It is known that NCM is an intersection and reversal closed full trio effectively closed under semilinearity [7] . Also, it is known that the family of regular languages is closed under all of the operations above and has a decidable equality problem.",
+            "cite_spans": [
+                {
+                    "start": 227,
+                    "end": 230,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Proof. It is easy to construct a-transducers which output"
+        },
+        {
+            "text": "For each L \u2208 NCM, each i, 1 \u2264 i \u2264 5 and each k, l \u2208 N, it is decidable whether L satisfies W (i, k, l). In addition, for each L \u2208 REG, each i, 1 \u2264 i \u2264 6 and each k, l \u2208 N, it is decidable whether L satisfies W (i, k, l) and V (i, k).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Corollary 1."
+        },
+        {
+            "text": "Ideally, one would like to apply the formal definitions given here to real viral genomes as a method for classifying viruses based on gene compression. In this section we will consider fast algorithms to do exactly this, and their complexity. Since all real viral genomes are finite, we will restrict ourselves to dealing with finite input languages here. We will describe algorithms which will verify each of the viral properties for a given input viral genome. A viral genome is a finite language in which the words are the genes of the virus.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Computational Verification of Viral Properties"
+        },
+        {
+            "text": "For a finite language L \u2286 \u03a3 + , we let s L be the sum of the lengths of every word of L (the length of the genome).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Computational Verification of Viral Properties"
+        },
+        {
+            "text": "We recall a well-known and important result from [2] . A partial deterministic finite automaton is a deterministic finite automaton in which each state need not have a transition on every letter. The smallest partial DFA for a given regular language is the partial DFA that recognizes the language and has the smallest number of states. In [2] , it is demonstrated that, for each word w \u2208 \u03a3 * , the smallest partial DFA accepting ",
+            "cite_spans": [
+                {
+                    "start": 49,
+                    "end": 52,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 340,
+                    "end": 343,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computational Verification of Viral Properties"
+        },
+        {
+            "text": "For each algorithm in this section, we assume that we have some encoding of L as input, whereby there is only one copy of each word given. We have discussed above how to perform the method suffix dfa. It is easy to pass in the reversal of a language to suffix dfa, in time linear in s L . Then, in line 5 of Algorithm 1, we can check to see if the intersection is empty by keeping a counter starting at k and running w through the transition function of M , decreasing the counter at each step. Then, when the counter reaches 0, we test every state we hit on input w to see whether it is a final state. If it is, we increase l 1 and set v 1 indicating that w \u2208 Z(1, L, k). Also, in line 8, we are testing whether w R \u2208 Z(1, L R , k). Indeed, by Lemma 2(3), w R \u2208 Z(1, L R , k) if and only if w \u2208 Z(2, L, k). Thus, if this is true, we increase l 2 and set v 2 to true. In addition, w \u2208 Z (3, L, k) if and only if w \u2208 Z(1, L, k) \u222a Z(2, L, k) and so we increase l 3 if and only if either v 1 or v 2 is true, and we reset each to false. In this way, when the method completes, l 1 , l 2 and l 3 will be the maximum such that L satisfies W (1, k, l 1 ), W (2, k, l 2 ) and W (3, k, l 3 ), respectively. Furthermore, this method runs in time O(s L ) time. In addition, it is well-known that we can test whether a word w is in the language generated by an NFA in time O(|Q||w|) (see [6] ). Thus, to find the largest integer l 6 such that L satisfies W (6, k, l), we construct the NFA from L and decide membership of w R for each w \u2208 L. This takes time O(|w 1 ||Q| + \u00b7 \u00b7 \u00b7 + |w m ||Q|) = O(|Q|s L ). Thus, one can decide whether a finite language L satisfies W (6, k, l) in time O(s 2 L ). Finally, the strong properties can also be verified straightforwardly using the algorithms presented above. Indeed, they are just a special case where l = |L|. We summarize the preceding thusly: Proposition 4. Let i satisfy 1 \u2264 i \u2264 5 and let \u03a3 be some fixed alphabet. Then given a finite language L \u2286 \u03a3 + as input without duplicates and k \u2208 N, we can both find the largest integer l such that L satisfies W (i, k, l) and we can decide whether L satisfies V (i, k) in time O(s L ). Furthermore, we can both find the largest l whereby L satisfies W (6, k, l) and we can decide whether L satisfies V (6, k) in time O(s 2 L ).",
+            "cite_spans": [
+                {
+                    "start": 887,
+                    "end": 896,
+                    "text": "(3, L, k)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1376,
+                    "end": 1379,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computational Verification of Viral Properties"
+        },
+        {
+            "text": "We have presented here a formalization of the process of gene compression that occurs in many viral genomes. We have shown dependencies and relationships between these properties and demonstrated that, in general, most of the weak versions of the properties can be decided for languages defined by nondeterministic finite automata augmented with reversal-bounded counters while the strong versions can be decided for regular languages. Most significantly, we have given algorithms which can efficiently decide these properties for real viral genomes and provide information which is immediately useful to virologists. These algorithms give us the ability to study the relative amount of gene compression between related viruses in a quantifiable way. It may be possible to infer evolutionary relationships between viruses using this information. The fact that genes overlap one another provides a very serious constraint for viral genome evolution. It is known that viruses occasionally aquire genes horizontally (that is, a gene from an infected host becomes part of the virus's own genome). Clearly, only those genes which meet very specific constraints (e.g. those that are \"compressible\" relative to the virus's genome) will be able to be incorporated into the virus. Using the algorithms presented here and real viral genome data, we can find target genes in the host organism which, due to their structure, have the greatest probability of being incorporated into the viral genome.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and Discussion"
+        },
+        {
+            "text": "Finally, the formal properties here also present a framework for automated classification of a virus given only its genome. The family of Coronaviruses, for example, has a very regular genomic structure: a single strand of +-sense RNA of length 27-30kb. The beginning of this RNA strand always encodes a viral polymerase (often as part of a polyprotein) and the remainder encodes a series of \"nested\" genes. Each of these nested genes is a proper suffix of the previous gene.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and Discussion"
+        },
+        {
+            "text": "This structure can obviously be formally encoded using the properties given here. Similar compression regularities can be found in other viral genomes and encoded using our properties. Classification of a new virus is then simply a matter of verifying compliance to our properties and then checking to see if this matches any known structures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and Discussion"
+        },
+        {
+            "text": "By formalizing this ancient form of data compression, we have provided tools which will allow for further insight in the molecular evolution of viruses and assist in the automated classification of new viruses by reference to only their genomes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and Discussion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Transductions and Context-Free Languages",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Berstel",
+                    "suffix": ""
+                }
+            ],
+            "year": 1979,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "The smallest automaton recognizing the subwords of a text",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Blumer",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Blumer",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ehrenfeucht",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Haussler",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Seiferas",
+                    "suffix": ""
+                }
+            ],
+            "year": 1985,
+            "venue": "Theoretical Computer Science",
+            "volume": "40",
+            "issn": "1",
+            "pages": "31--55",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Principles of Molecular Virology, 3e",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Algebraic and Automata-Theoretic Properties of Formal Languages",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ginsburg",
+                    "suffix": ""
+                }
+            ],
+            "year": 1975,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Bounded algol-like languages",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ginsburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Spanier",
+                    "suffix": ""
+                }
+            ],
+            "year": 1964,
+            "venue": "Transactions of the American Mathematical Society",
+            "volume": "113",
+            "issn": "2",
+            "pages": "333--368",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Implementation of nondeterministic finite automata for approximate pattern matching",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Holub",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Melichar",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "WIA '98",
+            "volume": "1660",
+            "issn": "",
+            "pages": "92--99",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Reversal-bounded multicounter machines and their decision problems",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Ibarra",
+                    "suffix": ""
+                }
+            ],
+            "year": 1978,
+            "venue": "Journal of the ACM",
+            "volume": "25",
+            "issn": "1",
+            "pages": "116--133",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Evolutionary principles of genome compression",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Krakauer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Comments on Theoretical Biology",
+            "volume": "7",
+            "issn": "4",
+            "pages": "215--236",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Formal Languages",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Salomaa",
+                    "suffix": ""
+                }
+            ],
+            "year": 1973,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Basic Virology",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Wagner",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hewlett",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Blackwell Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "is linear in the length of w. Precisely, it has at most 2|w| \u2212 1 states and 3|w| \u2212 4 transitions. Moreover, it is shown that the smallest partial DFA accepting \u2264 \u22121 i (w) is linear in the length of w. That is, if |w| > 2, then it has at most 2|w| \u2212 2 states and at most 3|w| \u2212 4 transitions. In addition, they show that for any w over a fixed finite alphabet \u03a3, both the smallest partial DFA accepting\u2264 \u22121 s (L) and the smallest DFA accepting \u2264 \u22121 i (L) can be built in time linear in the length of w. Now, let L = {w 1 , . . . , w m } \u2286 \u03a3 + . For our algorithms, we construct a method which we call suffix dfa(L) which returns a DFA accepting \u2264 \u22121 s(L). Let w = w 1 #w 2 # \u00b7 \u00b7 \u00b7 #w m #. Then \u2264 m #)) \u222a (\u2264 \u22121 s (w m\u22121 #)w m #) \u222a . . . \u222a (\u2264 \u22121 s (w 1 #)w 2 #w 3 # \u00b7 \u00b7 \u00b7 w m #). Let M = (Q, \u03a3 \u222a {#}, q 0 , F,\u03b4) be the smallest partial DFA accepting \u2264 \u22121 s (w). Thus, it is clear that for every x \u2208 \u03a3 * , x \u2208\u2264 \u22121 s (L) if and only if x#v \u2208\u2264 \u22121 s (w) = L(M ), where v \u2208 (\u03a3 \u222a {#}) * . Moreover, since M is partial and the smallest DFA, for each y \u2208 (\u03a3 \u222a {#}) * , \u03b4(q 0 , y) is defined if and only if yu \u2208 L(M ) for some u \u2208 (\u03a3 \u222a {#}) * . Thus, for each x \u2208 \u03a3 * , x \u2208\u2264 \u22121 s (L) if and only if \u03b4(q 0 , x#) is defined. Hence, we transform M into a new DFA M by making the new final state set F to be the set of all states q \u2208 Q such that \u03b4(q, #) is defined, and by removing all transitions of the form \u03b4(q, #) = p for p, q \u2208 Q. Let w \u2208 L(M ). Then w \u2208 \u03a3 * since there are no transitions on # and necessarily w# is defined in M . Thus, w#v \u2208 L(M ) for some v \u2208 (\u03a3 \u222a {#}) * . Thus, w \u2208\u2264 \u22121 s (L). Conversely, let w \u2208\u2264 \u22121 s (L). Then w#v \u2208 L(M ) for some v \u2208 (\u03a3 \u222a {#}) * and so w \u2208 L(M ). Hence we see that L(M ) =\u2264 \u22121 s (L) and M can be constructed in linear time from M which is linear in |w| which is linear in s L . We note that suffix dfa(\u03a3 \u22121 L) =< \u22121 s (L). Further, for a DFA M = (Q, \u03a3, q 0 , F, \u03b4) over \u03a3 and w \u2208 \u03a3 * , define S M,k",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Algorithm 1 input: k \u2208 N, L \u2286 \u03a3 + , \u03a3 fixed, L finite, returns: largest l 1 , l 2 , l 3 such that L satisfies W (1, k, l 1 ), W (2, k, l 2 ) and W (3, k, l 2 )1: Let l1, l2, l3 := 0, v1, v2 := f alse, if k \u2265 sL, return. 2: Let M = (Q1, \u03a3 \u222a {#}, q0, F1, \u03b41) := suffix dfa(\u03a3 \u22121 L), 3: Let M R = (Q2, \u03a3 \u222a {#}, p0, F2, \u03b42) := suffix dfa((L\u03a3 \u22121 ) R ) 4: for all w \u2208 L do 5: if S M,k (w) \u2229 F1 = \u2205then 6: v1 := true, l1 := l1 + 1 7: end if 8: if S M R ,k (w R ) \u2229 F2 = \u2205 then 9: v2 := true, l2 := l2 + 1, 10: end if 11: if either v1 or v2 is true, then 12: l3 := l3 + 1, v1 := f alse, v2 := false. 13: end if 14: end for",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "For the fourth property, our algorithm requires only a small modification. For a word w, let w(i) be the i th position of w. This algorithm, for each word w, Algorithm 2 input: k \u2208 N, L \u2286 \u03a3 + , \u03a3 fixed, L finite, returns: the largest integer l 4 such that L satisfies W (4, k, l 4 )Let l4, if k \u2265 sL, return. 2: Let M = (Q1, \u03a3 \u222a {#}, q0, F1, \u03b41) := suffix dfa(\u03a3 \u22121 L), Let M R = (Q2, \u03a3 \u222a {#}, p0, F2, \u03b42) := suffix dfa((L\u03a3 \u22121 ) R ) 4: for all w \u2208 L doLet b1, b2 be bit vectors of length |w| all initialized to 0, let j := 0, 6:while j \u2264 |w| do if \u03b4(w(1) \u00b7 \u00b7 \u00b7 w(j)) \u2229 F1 = \u2205 then 8: set b1(j) := 1, end if 10: if \u03b4(w(|w|) \u00b7 \u00b7 \u00b7 w(|w| \u2212 j + 1) \u2229 F2 = \u2205 then set b2(|w| \u2212 j + 1) := 1, 12: end if j := j+1, 14: end while if there exists j such that (k \u2264 j) \u2227 (k \u2264 |w|\u2212j +1)\u2227 (b1(j) = 1)\u2227 (b2(j +1) = 1) then 16: l4 := l4 + 1.end if 18: end for remembers every position of w which has the prefix of that length in < \u22121 s (L) and it also remembers every position of w R which has the prefix of that length in < \u22121 s (L R ). Then w = uv for some u, v with u \u2208< \u22121 s (L), v R \u2208< \u22121 s (L R ) and |u|, |v| \u2265 k if and only if statement 14 is true. Hence, upon completion, l 4 will be the largest integer such that L satisfies W (4, k, l 4 ). Furthermore, this method also runs in O(s L ) time. Property 5 can also be verified easily. Indeed, w R is defined if and only if Algorithm 3 input: k \u2208 N, L \u2286 \u03a3 + , \u03a3 fixed, L finite, returns: largest integer l 5 such that L satisfies W (5, k, l 5 ) Let l5 := 0, if k \u2265 sL then return. 2: Let M = (Q, \u03a3 \u222a {#}, q0, F, \u03b4) := suffix dfa(L R ), for all w \u2208 L do 4: if \u03b4(q0, w R ) is defined then let l5 := l5 + 1. 6: end if end for w R u \u2208\u2264 \u22121 s (L) for some u if and only if w R \u2208\u2264 \u22121 i (L). Hence we can decide this property in time O(s L ). For property 6, we note that a word w \u2264 i v \u2208 L + if and only if w \u2208 R = (\u2264 \u22121 i (L)) \u222a (\u2264 \u22121 s (L)L * \u2264 \u22121 p (L)). Moreover, it is easy to construct an NFA M = (Q, \u03a3, q 0 , F, \u03b4) accepting R in linear time, with the number of states linear in s L .",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

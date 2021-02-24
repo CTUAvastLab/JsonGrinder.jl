@@ -1,0 +1,1248 @@
+{
+    "paper_id": "000ed27575c028d3173a3fd59be053446454f985",
+    "metadata": {
+        "title": "COVID-19 and its Modes of Transmission",
+        "authors": [
+            {
+                "first": "Rutu",
+                "middle": [],
+                "last": "Karia",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Ishita",
+                "middle": [],
+                "last": "Gupta",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Harshwardhan",
+                "middle": [],
+                "last": "Khandait",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Ashima",
+                "middle": [],
+                "last": "Yadav",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Anmol",
+                "middle": [],
+                "last": "Yadav",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The World Health Organization recognized SARS-CoV-2 as a public health concern and declared it as a pandemic on March 11, 2020. Over 12 million people have been affected across several countries since it was first recognized. SARS-CoV-2 is thought to commonly spread via respiratory droplets formed while talking, coughing, and sneezing of an infected patient. As several cases, with an absence of travel history to the majorly affected areas were identified, a strong possibility of community transmission could have been possible. Broadly, two modes of transmission of COVID-19 exist-direct and indirect. The direct mode includes (1) transmission via aerosols formed via surgical and dental procedures and/or in the form of respiratory droplet nuclei; (2) other body fluids and secretions, for example, feces, saliva, urine, semen, and tears; and (3) mother-to-child. Indirect transmission may occur via (1) fomites or surfaces (e.g., furniture and fixtures) present within the immediate environment of an infected patient and (2) objects used on the infected person (e.g., stethoscope or thermometer). As many of these modes may be underestimated, it is necessary to emphasize and illustrate them. The goal of this paper is to briefly review how SARS-CoV-2 is shown to transmit via various modes and propose measures to reduce the risk of spread within the population and operating personnel.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Coronavirus disease-2019 (COVID- 19) , caused by severe acute respiratory distress syndrome-coronavirus-2 (SARS-CoV-2), was initially reported in December 2019 as pneumonia with unknown etiology in Wuhan city of China. The World Health Organization recognized SARS-CoV-2 as a public health concern and declared it as a pandemic on March 11, 2020. Over 12 million people have been affected across several countries since it was first recognized [1] . The disease, unless combined with other comorbidities or other preexisting diseases, is usually mild. Approximately 11% of cases require acute medical aid [2] . Broadly, two modes of transmission of COVID-19 exist-direct and indirect [3] . The direct mode includes (1) transmission via aerosols formed via surgical and dental procedures and/or in the form of respiratory droplet nuclei; (2) other body fluids and secretions, for example, feces, saliva, urine, semen, and tears; and (3) mother-to-child. SARS-CoV-2 is thought to commonly spread via respiratory droplets formed while talking, coughing, and sneezing of an infected person. The exposure and, hence, risk of transmission are increased if the infected person is present within 1-m length of susceptible host. Less number of infected patients has shown to shed virus from sources other than the respiratory tract. Though not high, the risk of transmission This article is part of the Topical Collection on Covid-19 through modes other than respiratory tract can still be possible. Indirect transmission may occur via (1) fomites or surfaces (e.g., furniture and fixtures) present within the immediate environment of an infected patient and (2) objects used on the infected person (e.g., stethoscope or thermometer) [3, 4] . Several of these modes may be underestimated and cause increased spread of virus. The goal of this paper is to briefly review how SARS-CoV-2 is shown to transmit via various modes and propose measures to reduce the risk of spread within the population and operating personnel.",
+            "cite_spans": [
+                {
+                    "start": 33,
+                    "end": 36,
+                    "text": "19)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 444,
+                    "end": 447,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 605,
+                    "end": 608,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 684,
+                    "end": 687,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1725,
+                    "end": 1728,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1729,
+                    "end": 1731,
+                    "text": "4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "An electronic search was conducted in the months of May and June 2020 for manuscripts on possible modes of transmission of SARS-CoV-2. Primary databases that were used for the search are WHO, PubMed, and Google Scholar. The search strategy used the keywords modes, transmission, spread, coronavirus, COVID-19, and their combination.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Search Method and Strategy"
+        },
+        {
+            "text": "The final review articles fulfilled the following criteria:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data Screening and Eligibility"
+        },
+        {
+            "text": "1. Reported modes of transmission in the laboratory-proven COVID-19 patients 2. Included patient data regardless of age, gender, or location 3. Full text, peer-reviewed articles 4. Articles in English Articles that did not contain patient data or studies pertaining to SARS-CoV-1 and MERS were excluded. Each paper was reviewed by two reviewers independently, and disagreements were discussed and resolved via a consensus.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data Screening and Eligibility"
+        },
+        {
+            "text": "Data was collected in the following categories when available:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data Collection and Analysis"
+        },
+        {
+            "text": "We tabulated the data using Microsoft Excel. Referencing was done according to guidelines using Endnote.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Number of patients per mode"
+        },
+        {
+            "text": "This study did not require ethical approval as data was obtained from already available databases, and patients were not directly involved.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Number of patients per mode"
+        },
+        {
+            "text": "The outbreak of SARS-CoV-2 occurred in Wuhan, China, and soon a large number of residents and the tourists visiting the city contracted the virus. However, overtime several cases with an absence of travel history to the majorly affected areas were identified, hence, raising a strong possibility of community transmission and necessitating the need to explore various ways by which the virus may be transmitted. Interestingly, a number of modes were identified other than respiratory tract secretions (Fig. 1) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 501,
+                    "end": 509,
+                    "text": "(Fig. 1)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "Airborne transmission via aerosols formation is suspected to be the main mode of transmission. Aerosols are particles under 100 \u03bcm in diameter [5] . Thus, their minute size and suspension in the air may ease direct contraction of the virus. Aerosols may be formed during various surgical and dental procedures or may be formed as droplet nuclei while talking, coughing, and sneezing by an infected patient. In a study by Li et al., eight healthcare staff and five postoperational patients tested positive for COVID-19 after being in close contact with an infected patient. This suggests that droplet formation serves as a potent mode for human-to-human transmission [6] . In the same study, Li et al. also suggested that cough training (respiratory exercise), which is done postoperatively, produces a large number of droplets and aerosols in the surrounding space. This increases the amount of exposure and, thus, the risk of virus transmission [6] . Dentists are at a higher risk of exposure as dental patients are required to spit or gargle after oral procedures like extraction, drilling, and drainage of dental abscess. Thus, these aerosol-producing procedures must be performed using appropriate protective equipment.",
+            "cite_spans": [
+                {
+                    "start": 143,
+                    "end": 146,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 666,
+                    "end": 669,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 946,
+                    "end": 949,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "Ong et al. studied several samples taken from the furniture and fixtures from an infected patient's room (before routine cleaning of the room) [7] . Interestingly, all the samples returned positive for the virus. Work by Doremalen et al. demonstrated that aerosolized SARS-CoV-2 remains viable in the aerosols for 3 h and on different surfaces for 4-72 h [8] . Thus, virus may be transmitted to those touching the contaminated surfaces (fomites). Fomites may be regarded as an indirect way of human-to-human transmission. Measures including strict precautions and adequate protective devices and infection control training should be implemented for all hospital workers for such circumstances.",
+            "cite_spans": [
+                {
+                    "start": 143,
+                    "end": 146,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 355,
+                    "end": 358,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "Gastrointestinal tract may be regarded as another potent mode of transmission. Huang et al. reported a COVID-19 positive family cluster, wherein anal swabs taken from both the cases were persistently positive SARS-CoV-2 [9] . Xing et al. studied 3 patients for persistent fecal shedding of virus in stools. They found that viral shedding in the stools occurred despite resolution of the symptoms and radiological findings, while samples from nasopharynx and/or oropharynx were also negative for viral nucleic acid [10] . Similarly, Fan et al. reported an infant with COVID-19 who continued to test positive in the anal swabs, even after 14 days of testing negative by the nasopharyngeal swab test [11] . This raises the need to include testing of feces or anal swab or rectal swab samples for possible presence of virus prior to discharge. Sharing of toilets may risk transmission of virus.",
+            "cite_spans": [
+                {
+                    "start": 220,
+                    "end": 223,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 514,
+                    "end": 518,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 697,
+                    "end": 701,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "Less data is available on other body fluids and secretions (other than respiratory secretions) of infected patients testing positive for the virus. These include saliva, urine, semen, and tears. In the study by Azzi et al., salivary samples of two patients proved positive, while their respiratory swabs showed negative results on the same day [12] . Virus may migrate from the nasopharynx but may be present in the oral cavity as the epithelial cells of the oral mucosa show a high expression of angiotensin-converting enzyme-2 (ACE-2) receptors [12] . Ren et al. found that urine of an asymptomatic patient was positive for viral nucleic acid and concluded that urine may serve as a mode of virus transmission [13] . Valente et al. identified conjunctival swabs from three of the 27 patients, with ocular manifestations, tested positive for COVID-19, while G\u00fcemes-Villahoz et al. identified only one patient with the presence of viral RNA in the tears [14, 15] . Despite the low prevalence and rapid regression of viral presence in the conjunctiva, SARS-CoV-2 transmission through tears may be possible, even in patients without apparent ocular involvement. Of note, Li et al. found that semen of 6 cases tested positive for SARS-CoV-2 [16] . Thus, the authors suggest that the presence of virus in semen may raise suspicion of sexual transmission of virus.",
+            "cite_spans": [
+                {
+                    "start": 344,
+                    "end": 348,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 547,
+                    "end": 551,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 712,
+                    "end": 716,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 954,
+                    "end": 958,
+                    "text": "[14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 959,
+                    "end": 962,
+                    "text": "15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1238,
+                    "end": 1242,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "In a study by Yu et al., one of the seven neonates tested positive for SARS-CoV-2 after 36 h of birth [17] . On the contrary, all the neonates born to 14 pregnant women, included in the two studies by Khan et al. and Li et al., tested negative for virus and, thus, could not find any evidence of vertical transmission [18, 19] . Authors conclude that transmission from mother-to-child may be rare, but not completely absent. Further data is needed to find the details on this mode of transmission. Transmission from mother-to-child can be prevented by delivering the neonates in negative pressure isolation rooms. Newborns may also be infected post-delivery via breastfeeding or via inhalation of droplets produced by infected parents and/or healthcare professionals. Protective measures like mothers and all healthcare staff wearing protective suits and masks at all times while being around the newborns may mitigate transmission. Inculcating appropriate hygiene measures, transferring the newborns to the neonatology department after birth and avoiding prolonged exposure of the neonate to family members becomes of utmost importance.",
+            "cite_spans": [
+                {
+                    "start": 14,
+                    "end": 24,
+                    "text": "Yu et al.,",
+                    "ref_id": null
+                },
+                {
+                    "start": 102,
+                    "end": 106,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 201,
+                    "end": 216,
+                    "text": "Khan et al. and",
+                    "ref_id": null
+                },
+                {
+                    "start": 318,
+                    "end": 322,
+                    "text": "[18,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 323,
+                    "end": 326,
+                    "text": "19]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "However, our review consists of several limitations. The included studies are mainly from China, Italy, Spain, and Singapore. Thus, data from other majorly affected demographic areas would contribute in a better understanding of virus transmission. Number of patients in the included studies was relatively small. Hence, samples from a bigger and diverse population are needed to gain adequate details on transmission as well as duration and source of viral shedding postresolution of symptoms. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "COVID-19 has a very high infectivity rate. Two modes of transmission exist-direct and indirect. The direct mode includes transmission via aerosols, anal (feco-oral) secretions, tears, saliva, semen, and mother-to-child. Indirect modes include transmission via fomites. Several of these modes may be underestimated and, thus, risk the spread of virus. To contain the spread of the virus, it is imperative to reduce human-tohuman contact, disinfection of day-to-day objects and proper self-hygiene (washing hands regularly, proper coughing and sneezing techniques, and use of face masks). Social distancing plays a key role in reducing transmission. SARS-CoV-2 has impacted medical practice to a great extent. The use of personal protective equipment among health professionals is essential to reduce the risk of transmission. Knowledge about SARS-CoV-2 is still rapidly evolving, and a greater number of studies are required to assess other potential modes of transmission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "World Health Organisation: WHO Coronavirus Disease (COVID-19)",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Letter: the risk of COVID-19 infection during neurosurgical procedures: a review of severe acute respiratory distress syndrome coronavirus 2 (SARS-CoV-2) modes of transmission and proposed neurosurgery-specific measures for mitigation",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Iorio-Morin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hodaie",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sarica",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Dea",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Westwick",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Christie",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Neurosurgery",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/neuros/nyaa157"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Modes of transmission of virus causing COVID-19: implications for IPC precaution recommendations",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Organisation",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Indirect virus transmission in cluster of COVID-19 cases",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gamber",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Emerg Infect Dis J",
+            "volume": "26",
+            "issn": "6",
+            "pages": "1343--1348",
+            "other_ids": {
+                "DOI": [
+                    "10.3201/eid2606.200412"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Recognition of aerosol transmission of infectious agents: a commentary",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tellier",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cowling",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Tang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "BMC Infect Dis",
+            "volume": "19",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s12879-019-3707-y"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Clinical and transmission characteristics of Covid-19-a retrospective study of 25 cases from a single thoracic surgery department",
+            "authors": [
+                {
+                    "first": "Y-K",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L-Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ping",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Curr Med Sci",
+            "volume": "40",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s11596-020-2176-2"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Air, surface environmental, and personal protective equipment contamination by severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) from a symptomatic patient",
+            "authors": [
+                {
+                    "first": "Swx",
+                    "middle": [],
+                    "last": "Ong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Chia",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Ng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Msy",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "323816",
+            "issn": "",
+            "pages": "1610--1612",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.3227"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Aerosol and surface stability of SARS-CoV-2 as compared with SARS-CoV-1",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Van Doremalen",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Bushmaker",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Morris",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Holbrook",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gamble",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Williamson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "1564--1571",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMc2004973"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A family cluster of COVID-19 involving an asymptomatic case with persistently positive SARS-CoV-2 in anal swabs",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Shao",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Travel Med Infect Dis",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.tmaid.2020.101745"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Prolonged viral shedding in feces of pediatric patients with coronavirus disease 2019",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "J Microbiol Immunol Infect",
+            "volume": "2020",
+            "issn": "",
+            "pages": "25--480",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jmii.2020.03.021"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Anal swab findings in an infant with COVID-19",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Pediatr Investig",
+            "volume": "4",
+            "issn": "1",
+            "pages": "48--50",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/ped4.12186"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Saliva is a reliable tool to detect SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Azzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Carcano",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Gianfagna",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Grossi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dalla",
+                    "middle": [],
+                    "last": "Gasperina",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Genoni",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Infect",
+            "volume": "81",
+            "issn": "",
+            "pages": "45--50",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jinf.2020.04.005"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Positive RT-PCR in urine from an asymptomatic patient with novel coronavirus 2019 infection: a case report",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "-G R",
+                    "suffix": ""
+                },
+                {
+                    "first": "D-Y",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C-F",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J-H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y-J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Infect Dis",
+            "volume": "2020",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {
+                "DOI": [
+                    "10.1080/23744235.2020.1766105"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Ocular manifestations and viral shedding in tears of pediatric patients with coronavirus disease 2019: a preliminary report",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Valente",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Iarossi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Federici",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Petroni",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Palma",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Cotugno",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Am Assoc Pediatr Ophthalmol Strabismus",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jaapos.2020.05.002"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "SARS-CoV-2 RNA detection in tears and conjunctival secretions of COVID-19 patients with conjunctivitis",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "G\u00fcemes-Villahoz",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Burgos-Blasco",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Arribi-Vilela",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Arriola-Villalobos",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Vidal-Villegas",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Mendez-Fernandez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Infect",
+            "volume": "81",
+            "issn": "",
+            "pages": "452--82",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jinf.2020.05.070"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Clinical characteristics and results of semen tests among men with coronavirus disease 2019",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bao",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA Netw Open",
+            "volume": "3",
+            "issn": "5",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jamanetworkopen.2020.8292"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Clinical features and obstetric and neonatal outcomes of pregnant patients with COVID-19 in Wuhan, China: a retrospective, single-Centre, descriptive study",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Infect Dis",
+            "volume": "20",
+            "issn": "",
+            "pages": "30176--30182",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20)30176-6"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Impact of COVID-19 infection on pregnancy outcomes and the risk of maternal-to-neonatal intrapartum transmission of COVID-19 during natural birth",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Siddique",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Nawsherwan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Xue",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Infect Control Hosp Epidemiol",
+            "volume": "41",
+            "issn": "",
+            "pages": "748--50",
+            "other_ids": {
+                "DOI": [
+                    "10.1017/ice.2020.84"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Lack of vertical transmission of severe acute respiratory syndrome coronavirus 2, China",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Sheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "395",
+            "issn": "",
+            "pages": "30360--30363",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30360-3"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Publisher's Note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Modes of transmission SN Compr. Clin. Med.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Authors' Contributions RK conceived the idea. RK, IG, and HK reviewed the literature and collected the data with the help of As Y and An Y. RK and HK designed the figure. All authors discussed the results and contributed to the final manuscript.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "annex"
+        },
+        {
+            "text": "Conflict of Interest The authors declare that they have no conflict of interests.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Compliance with Ethical Standards"
+        },
+        {
+            "text": "The data used in this study are publicly available and de-identified database thus informed consent or IRB approval was not needed for this study.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Informed Consent"
+        }
+    ]
+}
