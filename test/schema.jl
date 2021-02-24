@@ -327,7 +327,7 @@ end
 end
 
 @testset "Sample synthetic" begin
-	@testset "basic"
+	@testset "basic" begin
 		sch1 = DictEntry(Dict(
 			:a=>ArrayEntry(
 				DictEntry(Dict(
