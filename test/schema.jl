@@ -452,16 +452,14 @@ end
 
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
-		@test ext[:a][1].uniontypes
-		@test_broken !ext[:a][1].uniontypes
+		@test !ext[:a][1].uniontypes
 
 		s = ext(sample_synthetic(sch))
 		# this is wrong
 		@test s[:a][:e1].data ≃ [1 0 0 0 0]'
 
 		m = reflectinmodel(sch, ext)
-		# this is wrong, it should not be postimputing
-		@test m[:a][:e1].m isa PostImputingDense
+		@test !(m[:a][:e1].m isa PostImputingDense)
 
 		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
 		@test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
@@ -931,14 +929,9 @@ params_empty(m) = m |> params .|> size |> isempty
 
 	# testing that I have no params in all models
 	@test params_empty(m12)
-	# this is wrong! it should be empty as after the consolidation
-	# the element is always present in compatible way so imputation is not needed
-	@test !params_empty(m23)
+	@test params_empty(m23)
 	@test params_empty(m34)
-	# this is wrong! it should be empty as after the consolidation
-	# the element is always present in compatible way so imputation is not needed
-	@test !params_empty(m14)
-
+	@test params_empty(m14)
 end
 
 @testset "is_numeric is_floatable is_intable" begin

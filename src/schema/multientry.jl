@@ -60,7 +60,8 @@ function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "", chi
 	# that's why we enforce true here
 	MultipleRepresentation(map(k -> suggestextractor(e.childs[k], settings,
 			path = path,
-			child_less_than_parent = true
+			# in case of numberic strings and numbers I may have full samples so it should not be uniontype in such case
+			child_less_than_parent = length(e.childs) > 1
 		),ks))
 end
 
@@ -101,6 +102,5 @@ end
 childs(s::T) where {T<:MultiEntry} = s.childs
 Base.hash(e::MultiEntry, h::UInt) = hash((e.childs, e.updated), h)
 Base.:(==)(e1::MultiEntry, e2::MultiEntry) = e1.updated === e2.updated && e1.childs == e2.childs
-sample_synthetic(e::MultiEntry) =
-	# because we have all the structure inside types, I don't actually need to extract values for all children
-	sample_synthetic(first(e.childs))
+# because we have all the structure inside types, I don't actually need to extract values for all children
+sample_synthetic(e::MultiEntry) = sample_synthetic(first(e.childs))
