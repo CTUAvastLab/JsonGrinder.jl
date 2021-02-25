@@ -242,19 +242,19 @@ end
 end
 
 @testset "Bson and symbol keys testing" begin
-	b1 = IOBuffer()
-	j1 = BSON.bson(b1, Dict(:a=>4, :b=>Dict(:a=>[1,2,3], :b=>1), :c=>Dict(:a=>Dict(:a=>[1,2,3],:b=>[4,5,6]))))
-	b2 = IOBuffer()
-	j2 = BSON.bson(b2, Dict(:a=>4,:c=>Dict(:a=>Dict(:a=>[2,3],:b=>[5,6]))))
-	b3 = IOBuffer()
-	j3 = BSON.bson(b3, Dict(:a=>4,:b=>Dict(:a=>[1,2,3],:b=>1)))
-	b4 = IOBuffer()
-	j4 = BSON.bson(b4, Dict(:a=>4,:b=>Dict()))
-	b5 = IOBuffer()
-	j5 = BSON.bson(b5, Dict(:b=>Dict()))
-	b6 = IOBuffer()
-	j6 = BSON.bson(b6, Dict())
-	bs = [(seek(b, 0); BSON.load(b)) for b in [b1,b2,b3,b4,b5,b6]]
+	function bson_buffer(data)
+		b = IOBuffer()
+		BSON.bson(b, data)
+		seek(b, 0)
+	end
+
+	b1 = bson_buffer(Dict(:a=>4,:b=>Dict(:a=>[1,2,3], :b=>1), :c=>Dict(:a=>Dict(:a=>[1,2,3],:b=>[4,5,6]))))
+	b2 = bson_buffer(Dict(:a=>4,:c=>Dict(:a=>Dict(:a=>[2,3],:b=>[5,6]))))
+	b3 = bson_buffer(Dict(:a=>4,:b=>Dict(:a=>[1,2,3],:b=>1)))
+	b4 = bson_buffer(Dict(:a=>4,:b=>Dict()))
+	b5 = bson_buffer(Dict(:b=>Dict()))
+	b6 = bson_buffer(Dict())
+	bs = [BSON.BSONDict(BSON.load(b)) for b in [b1,b2,b3,b4,b5,b6]]
 	sch = JsonGrinder.schema(bs)
 
 	@test sch[:a].counts == Dict(4 => 4)

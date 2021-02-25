@@ -1,9 +1,11 @@
+using BSON: BSONDict
 """
 	newentry(v)
 
 creates new entry describing json according to the type of v
 """
 newentry(v::Dict) = DictEntry()
+newentry(v::BSONDict) = newentry(v.d)
 newentry(v::A) where {A<:StringOrNumber} = Entry(v)
 newentry(v::Vector) = isempty(v) ? ArrayEntry(nothing) : ArrayEntry(newentry(v[1]))
 function newentry!(v)
@@ -41,3 +43,5 @@ end
 schema(map_fun::Function, samples::AbstractArray) = schema(samples, map_fun)
 schema(samples::AbstractArray{<:Dict}) = schema(samples, identity)
 schema(samples::AbstractArray{<:AbstractString}) = schema(samples, JSON.parse)
+# BSON integration
+schema(samples::AbstractArray{<:BSONDict}) = schema(samples, identity)

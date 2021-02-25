@@ -88,9 +88,8 @@ testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
        	@test sc(5, store_input=true).data == sc(5, store_input=false).data
        	@test sc(5, store_input=true).metadata == fill(5,1,1)
        	@test isnothing(sc(5, store_input=false).metadata)
-       	@test sc(nothing, store_input=true).data ≃ sc(nothing, store_input=false).data
-       	@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
-       	@test isnothing(sc(nothing, store_input=false).metadata)
+       	@test_throws ErrorException sc(nothing, store_input=true)
+       	@test_throws ErrorException sc(nothing, store_input=true)
     end
 end
 # todo: add for each extractor tests with and without uniontypes, and with and without store_input
