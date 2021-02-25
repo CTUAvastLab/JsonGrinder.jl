@@ -392,18 +392,15 @@ end
 			4)),
 		4)
 
-		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=false) == Dict(
+		@test JsonGrinder.sample_synthetic(sch) == Dict(
 			:a=>[Dict(:a=>"c",:b=>2,:c=>1), Dict(:a=>"c",:b=>2,:c=>1)]
-		)
-		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
-			:a=>[Dict(:a=>missing,:b=>missing,:c=>1), Dict(:a=>missing,:b=>missing,:c=>1)]
 		)
 
 		ext = suggestextractor(sch)
 		@test ext[:a].item[:a].uniontypes
 		@test ext[:a].item[:b].uniontypes
 		@test !ext[:a].item[:c].uniontypes
-
+# todo: add tests for extraction of synthetic samples and if they have correct types
 		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
 		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}"""))).data isa Matrix{Float32}
@@ -459,18 +456,10 @@ end
 		# fix this so extracting synthetic data makes and is similar to real samples
 		# I must not extract array, but instead extract multiple samples, each with different type, but single value
 		# multireprestations showld be somewat compatible with magic I perform in suggestextractor
-		@test sample_synthetic(sch, empty_dict_vals=false) == Dict(
-			:a=>[2, "4"]	# this is wrong I need to fix it
+		@test sample_synthetic(sch) == Dict(
+			:a=>[2]	# this is wrong I need to fix it
 		)
-		# this should be correct behavior
-		@test_broken sample_synthetic(sch, empty_dict_vals=false) == [Dict(
-			:a=>[2]
-		), Dict(
-			:a=>["4"]
-		)]
-		@test_broken sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
-			:a=>missing
-		)
+
 		#
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
@@ -506,24 +495,17 @@ end
 
 		# todo: dodělat tohle, nalézt edgecasy a fixnout to
 		# ocheckovat kde je cyhba usample_synthetic a ávrhu modelu
-		@test sample_synthetic(sch, empty_dict_vals=false) == Dict(
-			:a=>[2, Dict(:a=>3,:b=>1)]	# this is wrong I need to fix it
+		@test sample_synthetic(sch) == Dict(
+			:a=>2
 		)
-		# this should be correct behavior
-		@test_broken sample_synthetic(sch, empty_dict_vals=false) == [Dict(
-			:a=>[2]
-		), Dict(
-			:a=>Dict(:a=>3,:b=>1)
-		)]
-		
-		#
+		# this is not representative, but all information is inside types
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
 		@test ext[:a][1].uniontypes
 		@test ext[:a][2][:a].uniontypes
 		@test ext[:a][2][:b].uniontypes
 
-		s = ext(sample_synthetic(sch, empty_dict_vals=false))
+		s = ext(sample_synthetic(sch))
 		# this is wrong
 		@test s[:a][:e1].data ≃ [missing missing missing missing missing]'
 		@test_broken s[:a][:e1].data ≃ [1 0 0 0 0]'

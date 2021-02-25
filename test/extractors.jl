@@ -23,8 +23,6 @@ end
 testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 
 function with_emptyismissing(f::Function, a)
-	Mill.emptyismissing!(true)
-	Mill.emptyismissing()
     orig_val = Mill.emptyismissing()
     Mill.emptyismissing!(a)
     f()
@@ -91,9 +89,9 @@ end
     		@test sc1(extractempty).data isa Matrix{Float64}
     		@test nobs(sc1(extractempty)) == 0
 			@test sc2(extractempty).data isa Matrix{Float32}
-	    	@test isnothing(sc(extractempty, store_input=false).metadata)
+	    	@test isnothing(sc2(extractempty, store_input=false).metadata)
 	    	@test sc2(extractempty, store_input=true).metadata isa Matrix{UndefInitializer}
-	    	@test size(sc(extractempty, store_input=true).metadata) == (1,0)
+	    	@test size(sc2(extractempty, store_input=true).metadata) == (1,0)
 		end
 
 		@testset "store_input" begin
@@ -232,7 +230,7 @@ end
 		@test e56.data ≃ [5f0 6f0 missing missing missing]'
 		@test e56s.data ≃ e56.data
 		@test sc122345s.data ≈ sc122345.data
-		@test all(sc(Dict(1=>2)).data .=== missing)
+		@test all(sc3(Dict(1=>2)).data .=== missing)
 
 		@testset "extractempty" begin
 			@test sc1(extractempty).data isa Matrix{Union{Missing, Float32}}
@@ -392,7 +390,6 @@ end
 		@test all(catobs(a2,a3).data[1].bags .== [1:3, 0:-1])
 		@test all(catobs(a2,a3).data[2].data.data .== [0 3 6])
 		@test all(catobs(a2,a3).data[2].bags .== [0:-1, 1:3])
-
 
 		@test all(catobs(a1,a4).data[1].data.data .== [-3.0  0.0  3.0  6.0])
 		@test all(catobs(a1,a4).data[1].bags .== [1:4, 0:-1])
@@ -623,25 +620,24 @@ end
 
 	orig_emptyismissing = Mill.emptyismissing()
 
-	Mill.emptyismissing!(true)
-	b = ext(nothing)
-	@test nobs(b) == 1
-	@test ismissing(b.data)
-	b = ext(Dict())
-	@test nobs(b) == 1
-	@test ismissing(b.data)
-
-	Mill.emptyismissing!(false)
-	b = ext(nothing)
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
-	@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
-	b = ext(Dict())
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
-	@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
-
-	Mill.emptyismissing!(orig_emptyismissing)
+	with_emptyismissing(true) do
+		b = ext(nothing)
+		@test nobs(b) == 1
+		@test ismissing(b.data)
+		b = ext(Dict())
+		@test nobs(b) == 1
+		@test ismissing(b.data)
+	end
+	with_emptyismissing(false) do
+		b = ext(nothing)
+		@test nobs(b) == 1
+		@test nobs(b.data) == 0
+		@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+		b = ext(Dict())
+		@test nobs(b) == 1
+		@test nobs(b.data) == 0
+		@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+	end
 
 	b = ext(extractempty)
 	@test nobs(b) == 0
