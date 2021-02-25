@@ -1,5 +1,5 @@
 using Mill, JSON, BSON, Flux, JsonGrinder, Test, HierarchicalUtils
-using JsonGrinder: suggestextractor, schema
+using JsonGrinder: suggestextractor, schema, sample_synthetic
 using JsonGrinder: DictEntry, Entry, MultiEntry, ArrayEntry
 using Mill: reflectinmodel
 
@@ -405,18 +405,30 @@ end
 		# fix this so extracting synthetic data makes and is similar to real samples
 		# I must not extract array, but instead extract multiple samples, each with different type, but single value
 		# multireprestations showld be somewat compatible with magic I perform in suggestextractor
-		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=false) == Dict(
+		@test sample_synthetic(sch, empty_dict_vals=false) == Dict(
 			:a=>[2, "4"]	# this is wrong I need to fix it
 		)
-		# @test JsonGrinder.sample_synthetic(sch1, empty_dict_vals=true) ≃ Dict(
-		# 	:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
-		# )
+		# this should be correct behavior
+		@test_broken sample_synthetic(sch, empty_dict_vals=false) == [Dict(
+			:a=>[2]
+		), Dict(
+			:a=>["4"]
+		)]
+		@test_broken sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
+			:a=>missing
+		)
 		#
-		# ext = suggestextractor(sch)
-		# m = reflectinmodel(sch, ext)
+		ext = suggestextractor(sch)
+		s = ext(sample_synthetic(sch, empty_dict_vals=false))
+		# this is wrong
+		@test s[:a][:e1].data ≃ [missing missing missing missing missing]'
+		@test_broken s[:a][:e1].data ≃ [1 0 0 0 0]'
+
+		m = reflectinmodel(sch, ext)
 		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		# @test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
-		# @test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
+		
 	end
 end
 
@@ -516,7 +528,7 @@ end
 	j5 = JSON.parse("""{"a": 2}""")
 	j6 = JSON.parse("""{"a": 3}""")
 
-	# todo: otestovat jak funguje newentry s víceprvkovám polem
+	# todo: test how newentry works with array with multiple elements
 	sch1 = JsonGrinder.schema([j1,j2,j3])
 	sch2 = JsonGrinder.schema([j4,j5,j6])
 	sch1[:a]
@@ -606,7 +618,7 @@ end
 
 	prev_keys = JsonGrinder.max_keys
 	JsonGrinder.updatemaxkeys!(4)
-	# todo: otestovat jak funguje newentry s víceprvkovám polem
+	# todo: test how newentry works with array with multiple elements
 	sch1 = JsonGrinder.schema([j1,j2,j3,j4,j5,j11])
 	sch2 = JsonGrinder.schema([j6,j7,j8,j9,j10])
 

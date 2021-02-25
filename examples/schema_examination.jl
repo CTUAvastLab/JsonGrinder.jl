@@ -70,9 +70,9 @@ using JsonGrinder: is_intable, is_floatable, unify_types, extractscalar
 function string_multi_representation_scalar_extractor()
 	vcat([
 	(e -> unify_types(sch[:paper_id]) <: String,
-		e -> MultipleRepresentation((
-			ExtractCategorical(top_n_keys(e, 20)),
-			extractscalar(unify_types(e), e)
+		(e, uniontypes) -> MultipleRepresentation((
+			ExtractCategorical(top_n_keys(e, 20), uniontypes),
+			extractscalar(unify_types(e), e, uniontypes)
 		)))
 	], JsonGrinder.default_scalar_extractor())
 end

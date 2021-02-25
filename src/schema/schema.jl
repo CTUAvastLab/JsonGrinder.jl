@@ -47,10 +47,11 @@ include("array.jl")
 include("multientry.jl")
 include("makeschema.jl")
 
-# todo: otestovat si schema pro inty a floaty v různém pořadí
-# todo : pro multirepresentation mít inty a stringy
-# todo: pro stringy to natvrdo přetypovat na abstractstringy, aby to pobralo šimonovu issue
-# todo: otestovat když mám na stejném fieldu stringy a dictionary, co se stane když bude první dict nebo string, otestovat a popsat
+# todo: test if schema for ints and floats if different oderings behaves the same
+# todo: test if schema where samples are string and abstractstring is working properly
+#   maybe treat all strings as abstractstrings?
+# todo: test if I have string and dict in same key in json, and that schema building behaves the same not matter that order are they in
+#     (it should not matter if it first sees dict or string)
 
 updated(s::T) where {T<:JSONEntry} = s.updated
 merge(combine::typeof(merge), es::JSONEntry...) = merge(es...)

@@ -34,8 +34,8 @@ function update!(a::ArrayEntry, b::Vector; path = "")
 end
 
 # todo:
-# logiku jestli to je missing nebo ne přesunout z sample_synthetic do suggestextractor
-# pokud vrátím správné typy u full samplu, ověřit, jestli potřebuju empty sample nebo se to odvodí z plného
+#   logiku jestli to je missing nebo ne přesunout z sample_synthetic do suggestextractor
+#   pokud vrátím správné typy u full samplu, ověřit, jestli potřebuju empty sample nebo se to odvodí z plného
 function suggestextractor(node::ArrayEntry, settings = NamedTuple(); path = "", child_less_than_parent = false)
 	if isempty(node)
 		@warn "$(path) is an empty array, therefore I can not suggest extractor."

@@ -1,61 +1,84 @@
-using JsonGrinder, JSON, Test, SparseArrays, Mill
-using HierarchicalUtils
+using JsonGrinder, JSON, Test, SparseArrays, Mill, HierarchicalUtils
 import HierarchicalUtils: printtree
+using Mill: nobs
 
 @testset "ExtractMultipleRepresentation" begin
-	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"], true),
-		JsonGrinder.ExtractString(true)))
-	e = ex("Olda")
+	@testset "with uniontypes" begin
+		ex = MultipleRepresentation((
+			ExtractCategorical(["Olda", "Tonda", "Milda"], true),
+			ExtractString(true)))
+		e = ex("Olda")
 
-	@test length(e.data) == 2
-	@test size(e.data[1].data) == (4, 1)
-	@test e.data[1].data == MaybeHotMatrix([2],4)
-	@test size(e.data[2].data) == (2053, 1)
-	@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(206, 1), (272, 1), (624, 1), (738, 1), (1536, 1), (1676, 1)]
+		@test nobs(e) == 1
+		@test length(e.data) == 2
+		@test size(e.data[1].data) == (4, 1)
+		@test e.data[1].data == MaybeHotMatrix([2],4)
+		@test size(e.data[2].data) == (2053, 1)
+		@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(206, 1), (272, 1), (624, 1), (738, 1), (1536, 1), (1676, 1)]
 
-	e = ex(extractempty)
-	@test nobs(e) == 0
-	@test nobs(e[:e1]) == 0
-	@test e[:e1].data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
-	@test nobs(e[:e2]) == 0
-	@test e[:e2].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+		e = ex(extractempty)
+		@test nobs(e) == 0
+		@test nobs(e[:e1]) == 0
+		@test e[:e1].data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+		@test nobs(e[:e2]) == 0
+		@test e[:e2].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
 
-	ex2 = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"], true),
-		JsonGrinder.ExtractString(true)))
-	@test hash(ex) === hash(ex2)
-	@test ex == ex2
+		ex2 = MultipleRepresentation((
+			ExtractCategorical(["Olda", "Tonda", "Milda"], true),
+			JsonGrinder.ExtractString(true)))
+		@test hash(ex) === hash(ex2)
+		@test ex == ex2
 
-	ex3 = MultipleRepresentation((ExtractCategorical(["Polda", "Tonda", "Milada"], true),
-		JsonGrinder.ExtractString(true)))
-	@test hash(ex) !== hash(ex3)
-	@test ex != ex3
+		ex3 = MultipleRepresentation((
+			ExtractCategorical(["Polda", "Tonda", "Milada"], true),
+			ExtractString(true)))
+		@test hash(ex) !== hash(ex3)
+		@test ex != ex3
 
-	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"], false),
-		JsonGrinder.ExtractString(false)))
-	e = ex("Olda")
+		ex = MultipleRepresentation((
+			ExtractArray(JsonGrinder.extractscalar(Float32, true)),
+			ExtractString(true)))
+		e = ex("Olda")
+		@test e[:e1].data.data == fill(1,1,0)
+		@test e[:e2].data.s == ["Olda"]
 
-	@test length(e.data) == 2
-	@test size(e.data[1].data) == (4, 1)
-	@test e.data[1].data == MaybeHotMatrix([2],4)
-	@test size(e.data[2].data) == (2053, 1)
-	@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(206, 1), (272, 1), (624, 1), (738, 1), (1536, 1), (1676, 1)]
+		e = ex([1,2])
+		@test e[:e1].data.data == [1 2]
+		@test e[:e2].data.s ≃ [missing]
 
-	e = ex(extractempty)
-	@test nobs(e) == 0
-	@test nobs(e[:e1]) == 0
-	@test e[:e1].data isa MaybeHotMatrix{Int64,Int64,Bool}
-	@test nobs(e[:e2]) == 0
-	@test e[:e2].data isa NGramMatrix{String,Int64}
+		
+	end
+	@testset "without uniontypes" begin
+		ex = MultipleRepresentation((
+			ExtractCategorical(["Olda", "Tonda", "Milda"], false),
+			ExtractString(false)))
+		e = ex("Olda")
 
-	ex2 = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"], false),
-		JsonGrinder.ExtractString(false)))
-	@test hash(ex) === hash(ex2)
-	@test ex == ex2
+		@test length(e.data) == 2
+		@test size(e.data[1].data) == (4, 1)
+		@test e.data[1].data == MaybeHotMatrix([2],4)
+		@test size(e.data[2].data) == (2053, 1)
+		@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(206, 1), (272, 1), (624, 1), (738, 1), (1536, 1), (1676, 1)]
 
-	ex3 = MultipleRepresentation((ExtractCategorical(["Polda", "Tonda", "Milada"], false),
-		JsonGrinder.ExtractString(false)))
-	@test hash(ex) !== hash(ex3)
-	@test ex != ex3
+		e = ex(extractempty)
+		@test nobs(e) == 0
+		@test nobs(e[:e1]) == 0
+		@test e[:e1].data isa MaybeHotMatrix{Int64,Int64,Bool}
+		@test nobs(e[:e2]) == 0
+		@test e[:e2].data isa NGramMatrix{String,Int64}
+
+		ex2 = MultipleRepresentation((
+			ExtractCategorical(["Olda", "Tonda", "Milda"], false),
+			JsonGrinder.ExtractString(false)))
+		@test hash(ex) === hash(ex2)
+		@test ex == ex2
+
+		ex3 = MultipleRepresentation((
+			ExtractCategorical(["Polda", "Tonda", "Milada"], false),
+			JsonGrinder.ExtractString(false)))
+		@test hash(ex) !== hash(ex3)
+		@test ex != ex3
+	end
 end
 
 @testset "show" begin
