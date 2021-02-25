@@ -569,6 +569,7 @@ end
 		@test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
 		@test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
 	end
+	# todo: test schema with keyasfield
 end
 
 @testset "Merge empty lists" begin

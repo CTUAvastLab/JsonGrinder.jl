@@ -1,5 +1,6 @@
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, StatsBase, HierarchicalUtils, BenchmarkTools, JLD2, Random
 using Pkg
+include(joinpath(@__DIR__, "..", "utils.jl"))
 pkg"precompile"
 
 make_model(sch, extractor, n_classes) = reflectinmodel(sch, extractor,
