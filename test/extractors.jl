@@ -285,7 +285,7 @@ end
 
 		@testset "extractempty" begin
 			@test sc1(extractempty).data isa Matrix{Float32}
-			@test nobs(sc(extractempty).data) == 0
+			@test nobs(sc1(extractempty).data) == 0
 			@test sc2(extractempty).data isa Matrix{Int64}
 			@test nobs(sc2(extractempty).data) == 0
 			@test sc3(extractempty).data isa Matrix{Float32}

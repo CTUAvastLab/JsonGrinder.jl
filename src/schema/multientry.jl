@@ -101,5 +101,6 @@ end
 childs(s::T) where {T<:MultiEntry} = s.childs
 Base.hash(e::MultiEntry, h::UInt) = hash((e.childs, e.updated), h)
 Base.:(==)(e1::MultiEntry, e2::MultiEntry) = e1.updated === e2.updated && e1.childs == e2.childs
-sample_synthetic(e::MultiEntry; empty_dict_vals=false, child_less_than_parent=false) =
-	[sample_synthetic(v; empty_dict_vals, child_less_than_parent) for v in e.childs]
+sample_synthetic(e::MultiEntry) =
+	# because we have all the structure inside types, I don't actually need to extract values for all children
+	sample_synthetic(first(e.childs))

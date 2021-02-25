@@ -326,8 +326,33 @@ end
 	JsonGrinder.updatemaxkeys!(prev_keys)
 end
 
-@testset "Sample synthetic" begin
-	@testset "basic" begin
+@testset "Sample synthetic and uniontypes in suggestextractor" begin
+	@testset "basic without missing keys" begin
+		sch = DictEntry(Dict(
+			:a=>ArrayEntry(
+				DictEntry(Dict(
+					:a=>Entry(Dict(1=>4,2=>1), 5),
+					:b=>Entry(Dict(1=>1,2=>2,3=>2), 5),
+					),
+				5),
+				Dict(0=>1,1=>1,2=>2),
+			4),
+			:b=>Entry(Dict(1=>2,2=>2), 4),
+			),
+		4)
+		@test sample_synthetic(sch) == Dict(
+			:a=>[
+				Dict(:a=>2,:b=>2),
+				Dict(:a=>2,:b=>2)
+			],
+			:b=>2)
+		ext = suggestextractor(sch)
+		@test !ext[:a].item[:a].uniontypes
+		@test !ext[:a].item[:b].uniontypes
+		# todo: add test that  empty_dict_vals=true does not return missing if samples were always full
+	end
+
+	@testset "basic with missing keys" begin
 		sch = DictEntry(Dict(
 			:a=>ArrayEntry(
 				DictEntry(Dict(
@@ -336,9 +361,21 @@ end
 					),
 				5),
 				Dict(0=>1,1=>1,2=>2),
-			4)),
+			4),
+			:b=>Entry(Dict(1=>2,2=>2), 4),
+			),
 		4)
-		@test JsonGrinder.sample_synthetic(sch) == Dict(:a=>[Dict(:a=>2,:b=>2), Dict(:a=>2,:b=>2)])
+		@test sample_synthetic(sch) == Dict(
+			:a=>[
+				Dict(:a=>2,:b=>2),
+				Dict(:a=>2,:b=>2),
+				],
+			:b=>2
+			)
+		ext = suggestextractor(sch)
+		@test ext[:a].item[:a].uniontypes
+		@test ext[:a].item[:b].uniontypes
+		@test !ext[:b].uniontypes
 		# todo: add test that  empty_dict_vals=true does not return missing if samples were always full
 	end
 
@@ -363,6 +400,10 @@ end
 		)
 
 		ext = suggestextractor(sch)
+		@test ext[:a].item[:a].uniontypes
+		@test ext[:a].item[:b].uniontypes
+		@test !ext[:a].item[:c].uniontypes
+
 		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
 		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}"""))).data isa Matrix{Float32}
@@ -376,21 +417,34 @@ end
 					:b=>Entry(Dict(3=>1), 1),
 					:c=>Entry(Dict(1=>3), 3)),
 				3),
-			:b=>Entry(Dict(1=>3), 3)),
+			:b=>Entry(Dict(1=>4), 4)),
 		4)
-		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=false) == Dict(
+		@test sample_synthetic(sch, empty_dict_vals=false) == Dict(
 			:a=>Dict(:a=>"c",:b=>3,:c=>1), :b=>1
 		)
-		@test JsonGrinder.sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
-			:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>missing
+		@test sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
+			:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>1
 		)
 
 		ext = suggestextractor(sch)
+
+		@test ext[:a][:a].uniontypes
+		@test ext[:a][:b].uniontypes
+		@test ext[:a][:c].uniontypes
+		@test !ext[:b].uniontypes
+
 		# todo: add test for make_representative_sample
 		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
 		@test m(ext(JSON.parse("""{"b":1}"""))).data isa Matrix{Float32}
-		@test m(ext("""{"a": {"a":"c","c":1}}""")).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": {"a":"c","c":1},"b":1}"""))).data isa Matrix{Float32}
+
+		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}], "b": 1}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": [], "b": 1}"""))).data isa Matrix{Float32}
+		# the key b is always present, it should not be missing
+		@test_throws ErrorException m(ext(JSON.parse("""{"a": []}""")))
+
 	end
 
 	@testset "with numbers and numeric strings" begin
@@ -419,16 +473,68 @@ end
 		)
 		#
 		ext = suggestextractor(sch)
+		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
+		@test ext[:a][1].uniontypes
+		@test_broken !ext[:a][1].uniontypes
+
 		s = ext(sample_synthetic(sch, empty_dict_vals=false))
 		# this is wrong
 		@test s[:a][:e1].data ≃ [missing missing missing missing missing]'
 		@test_broken s[:a][:e1].data ≃ [1 0 0 0 0]'
 
 		m = reflectinmodel(sch, ext)
+		# this is wrong, it should not be postimputing
+		@test m[:a][:e1].m isa PostImputingDense
+
 		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
 		@test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
 		@test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
+	end
+
+
+	@testset "with irregular schema, dict and scalars mixed" begin
+		sch = DictEntry(Dict(
+			:a=>MultiEntry([
+				Entry(Dict(2=>1,5=>1), 2),
+				DictEntry(Dict(
+					:a=>Entry(Dict(3=>2), 1),
+					:b=>Entry(Dict(1=>2), 2)),
+				2),
+				],
+			4)),
+		4)
+
+		# todo: dodělat tohle, nalézt edgecasy a fixnout to
+		# ocheckovat kde je cyhba usample_synthetic a ávrhu modelu
+		@test sample_synthetic(sch, empty_dict_vals=false) == Dict(
+			:a=>[2, Dict(:a=>3,:b=>1)]	# this is wrong I need to fix it
+		)
+		# this should be correct behavior
+		@test_broken sample_synthetic(sch, empty_dict_vals=false) == [Dict(
+			:a=>[2]
+		), Dict(
+			:a=>Dict(:a=>3,:b=>1)
+		)]
 		
+		#
+		ext = suggestextractor(sch)
+		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
+		@test ext[:a][1].uniontypes
+		@test ext[:a][2][:a].uniontypes
+		@test ext[:a][2][:b].uniontypes
+
+		s = ext(sample_synthetic(sch, empty_dict_vals=false))
+		# this is wrong
+		@test s[:a][:e1].data ≃ [missing missing missing missing missing]'
+		@test_broken s[:a][:e1].data ≃ [1 0 0 0 0]'
+
+		m = reflectinmodel(sch, ext)
+		# this is wrong, it should not be postimputing
+		@test m[:a][:e1].m isa PostImputingDense
+
+		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		@test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
 	end
 end
 

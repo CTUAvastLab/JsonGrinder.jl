@@ -130,4 +130,4 @@ end
 counts(s::T) where {T<:Entry} = s.counts
 Base.hash(e::Entry, h::UInt) = hash((e.counts, e.updated), h)
 Base.:(==)(e1::Entry, e2::Entry) = e1.updated === e2.updated && e1.counts == e2.counts
-sample_synthetic(e::Entry; empty_dict_vals=false, child_less_than_parent=false) = first(keys(e.counts))
+sample_synthetic(e::Entry) = first(keys(e.counts))

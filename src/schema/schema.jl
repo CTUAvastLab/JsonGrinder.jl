@@ -59,14 +59,12 @@ merge(::Nothing, e::JSONEntry) = e
 
 function make_representative_sample(sch::JSONEntry, ex::AbstractExtractor)
 	full_sample = ex(sample_synthetic(sch, empty_dict_vals=false))
-	leaves_empty_sample = ex(sample_synthetic(sch, empty_dict_vals=true))
-	catobs(full_sample, leaves_empty_sample)
 end
 
 function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.Dense(d, 10), fa=d->meanmax_aggregation(d); fsm = Dict(), fsa = Dict(),
 			   single_key_identity=true, single_scalar_identity=true)
-	# we do catobs of 3 samples here, because we want full representative sample to build whole "supersample" from which some samples are just subset
-	# we also want sample with leaves missing in places where leaves can be actually missing in order to have imputation in all correct places
+	# because we have type-stable extractors, we now have information about what is missing and what not inside types
+	# so I don't have to extract empty and missing samples, the logic is now part of suggestextractor
 	specimen = make_representative_sample(sch, ex)
 	reflectinmodel(specimen, fm, fa; fsm, fsa, single_key_identity, single_scalar_identity)
 end
