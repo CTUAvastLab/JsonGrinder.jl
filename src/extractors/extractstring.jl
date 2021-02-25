@@ -87,11 +87,19 @@ extracts number subtracting `m` and multiplying by `s`
 
 # Example
 ```jldoctest
-julia> JsonGrinder.extractscalar(String, 3, 256, 2053)("5")
+julia> JsonGrinder.extractscalar(String, 3, 256, 2053, true)("5")
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
+ "5"
+
+julia> JsonGrinder.extractscalar(Int32, 3, 256, true)("5")
+1×1 Mill.ArrayNode{Array{Union{Missing, Int32},2},Nothing}:
+ 512
+
+julia> JsonGrinder.extractscalar(String, 3, 256, 2053, false)("5")
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Int64},Nothing}:
  "5"
 
-julia> JsonGrinder.extractscalar(Int32, 3, 256)("5")
+julia> JsonGrinder.extractscalar(Int32, 3, 256, false)("5")
 1×1 Mill.ArrayNode{Array{Int32,2},Nothing}:
  512
 ```
