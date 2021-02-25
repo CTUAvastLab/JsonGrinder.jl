@@ -326,7 +326,7 @@ end
 	JsonGrinder.updatemaxkeys!(prev_keys)
 end
 
-@testset "Sample synthetic and uniontypes in suggestextractor" begin
+@testset "Sample synthetic and make_representative_sample" begin
 	@testset "basic without missing keys" begin
 		sch = DictEntry(Dict(
 			:a=>ArrayEntry(
@@ -416,11 +416,8 @@ end
 				3),
 			:b=>Entry(Dict(1=>4), 4)),
 		4)
-		@test sample_synthetic(sch, empty_dict_vals=false) == Dict(
+		@test sample_synthetic(sch) == Dict(
 			:a=>Dict(:a=>"c",:b=>3,:c=>1), :b=>1
-		)
-		@test sample_synthetic(sch, empty_dict_vals=true) ≃ Dict(
-			:a=>Dict(:a=>missing,:b=>missing,:c=>missing), :b=>1
 		)
 
 		ext = suggestextractor(sch)
@@ -441,7 +438,6 @@ end
 		@test m(ext(JSON.parse("""{"a": [], "b": 1}"""))).data isa Matrix{Float32}
 		# the key b is always present, it should not be missing
 		@test_throws ErrorException m(ext(JSON.parse("""{"a": []}""")))
-
 	end
 
 	@testset "with numbers and numeric strings" begin
@@ -452,24 +448,16 @@ end
 			4)),
 		4)
 
-		# todo: there is bug with multiple representation and sample synthetic, fix it!
-		# fix this so extracting synthetic data makes and is similar to real samples
-		# I must not extract array, but instead extract multiple samples, each with different type, but single value
-		# multireprestations showld be somewat compatible with magic I perform in suggestextractor
-		@test sample_synthetic(sch) == Dict(
-			:a=>[2]	# this is wrong I need to fix it
-		)
+		@test sample_synthetic(sch) == Dict(:a=>2)
 
-		#
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
 		@test ext[:a][1].uniontypes
 		@test_broken !ext[:a][1].uniontypes
 
-		s = ext(sample_synthetic(sch, empty_dict_vals=false))
+		s = ext(sample_synthetic(sch))
 		# this is wrong
-		@test s[:a][:e1].data ≃ [missing missing missing missing missing]'
-		@test_broken s[:a][:e1].data ≃ [1 0 0 0 0]'
+		@test s[:a][:e1].data ≃ [1 0 0 0 0]'
 
 		m = reflectinmodel(sch, ext)
 		# this is wrong, it should not be postimputing
@@ -507,8 +495,7 @@ end
 
 		s = ext(sample_synthetic(sch))
 		# this is wrong
-		@test s[:a][:e1].data ≃ [missing missing missing missing missing]'
-		@test_broken s[:a][:e1].data ≃ [1 0 0 0 0]'
+		@test s[:a][:e1].data ≃ [1 0 0]'
 
 		m = reflectinmodel(sch, ext)
 		# this is wrong, it should not be postimputing

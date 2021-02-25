@@ -57,9 +57,7 @@ updated(s::T) where {T<:JSONEntry} = s.updated
 merge(combine::typeof(merge), es::JSONEntry...) = merge(es...)
 merge(::Nothing, e::JSONEntry) = e
 
-function make_representative_sample(sch::JSONEntry, ex::AbstractExtractor)
-	full_sample = ex(sample_synthetic(sch, empty_dict_vals=false))
-end
+make_representative_sample(sch::JSONEntry, ex::AbstractExtractor) = ex(sample_synthetic(sch))
 
 function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.Dense(d, 10), fa=d->meanmax_aggregation(d); fsm = Dict(), fsa = Dict(),
 			   single_key_identity=true, single_scalar_identity=true)
