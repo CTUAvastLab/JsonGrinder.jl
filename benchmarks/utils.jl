@@ -1,9 +1,10 @@
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, StatsBase, HierarchicalUtils, BenchmarkTools
 
 load_documents_1k() = [open(JSON.parse, x) for x in readdir(joinpath(@__DIR__, "..", "examples2", "documents"), join=true)]
-load_recipes() = open(joinpath(@__DIR__, "..", "examples", "recipes.json"),"r") do fid
+load_recipes() = open(joinpath(@__DIR__, "..", "data", "recipes.json"),"r") do fid
 	Vector{Dict}(JSON.parse(read(fid, String)))
 end
+load_recipes(n::Int) = collect(Iterators.take(load_recipes(), n))
 load_deviceid() = map(JSON.parse, readlines(joinpath(@__DIR__, "..", "data", "dataset", "train.json")))
 
 function author_cite_themself(s)
@@ -38,4 +39,41 @@ function benchmark_stuff(name, data, targets, labenames, batch_size, model)
 	@info "$name - gradient"
 	@btime gradient(() -> loss($mbx, $mby), $ps)
 	Flux.Optimise.update!(opt, ps, gs)
+end
+
+function load_prepare_documents_stuff()
+	samples = load_documents_1k()
+	sch = JsonGrinder.schema(samples)
+	delete!(sch.childs,:paper_id)
+	# extractor = suggestextractor(sch, (; key_as_field=13))	# for small dataset
+	extractor = suggestextractor(sch, (; key_as_field=300))
+	targets = author_cite_themself.(samples)
+	labelnames = unique(targets)
+	data = extractor.(samples)
+	samples, sch, extractor, targets, labelnames, data
+end
+
+function load_prepare_deviceid_stuff()
+	samples = load_deviceid()
+	labelkey = "device_class"
+	targets = map(i -> i[labelkey], samples)
+	foreach(i -> delete!(i, labelkey), samples)
+	foreach(i -> delete!(i, "device_id"), samples)
+	sch = JsonGrinder.schema(samples)
+	extractor = suggestextractor(sch)
+	labelnames = unique(targets)
+	data = extractor.(samples)
+	samples, sch, extractor, targets, labelnames, data
+end
+
+function load_prepare_recipes_stuff()
+	samples = load_recipes(500)
+	sch = JsonGrinder.schema(samples)
+	targets = map(i -> i["cuisine"], samples)
+	delete!(sch.childs,:id)
+	delete!(sch.childs,:cuisine)
+	extractor = suggestextractor(sch)
+	labelnames = unique(targets)
+	data = extractor.(samples)
+	samples, sch, extractor, targets, labelnames, data
 end
