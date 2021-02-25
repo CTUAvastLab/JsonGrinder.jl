@@ -22,7 +22,16 @@ end
 
 testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 
-@testset "Testing ExtractScalar" begin
+function with_emptyismissing(f::Function, a)
+	Mill.emptyismissing!(true)
+	Mill.emptyismissing()
+    orig_val = Mill.emptyismissing()
+    Mill.emptyismissing!(a)
+    f()
+    Mill.emptyismissing!(orig_val)
+end
+
+@testset "ExtractScalar" begin
     @testset "with uniontypes" begin
 	    sc = ExtractScalar(Float64,2,3,true)
 	    @test sc.uniontypes == true
@@ -47,101 +56,116 @@ testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
 	    @test sc(Dict(1=>1)).data isa Matrix{Union{Missing, Float32}}
 	    @test length(sc) == 1
 
-    	@test sc("5", store_input=true).data == sc("5", store_input=false).data
-       	@test sc("5", store_input=true).metadata == fill("5",1,1)
-       	@test isnothing(sc("5", store_input=false).metadata)
-       	@test sc(5, store_input=true).data == sc(5, store_input=false).data
-       	@test sc(5, store_input=true).metadata == fill(5,1,1)
-       	@test isnothing(sc(5, store_input=false).metadata)
-       	@test sc(nothing, store_input=true).data ≃ sc(nothing, store_input=false).data
-       	@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
-       	@test isnothing(sc(nothing, store_input=false).metadata)
+		@testset "store_input" begin
+    		@test sc("5", store_input=true).data == sc("5", store_input=false).data
+			@test sc("5", store_input=true).metadata == fill("5",1,1)
+			@test isnothing(sc("5", store_input=false).metadata)
+			@test sc(5, store_input=true).data == sc(5, store_input=false).data
+			@test sc(5, store_input=true).metadata == fill(5,1,1)
+			@test isnothing(sc(5, store_input=false).metadata)
+			@test sc(nothing, store_input=true).data ≃ sc(nothing, store_input=false).data
+			@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
+			@test isnothing(sc(nothing, store_input=false).metadata)
+		end
     end
 
     @testset "without uniontypes" begin
-    	sc = ExtractScalar(Float64,2,3,false)
-    	@test sc.uniontypes == false
-    	@test all(sc("5").data .== [9])
-    	@test all(sc(5).data .== [9])
-    	@test_throws ErrorException sc(nothing)
-    	@test_throws ErrorException sc(missing)
-    	@test sc(extractempty).data isa Matrix{Float64}
-    	@test nobs(sc(extractempty)) == 0
-    	@test nobs(sc(5)) == 1
+    	sc1 = ExtractScalar(Float64,2,3,false)
+    	@test sc1.uniontypes == false
+    	@test all(sc1("5").data .== [9])
+    	@test all(sc1(5).data .== [9])
+    	@test_throws ErrorException sc1(nothing)
+    	@test_throws ErrorException sc1(missing)
+		@test nobs(sc1(5)) == 1
 
-    	sc = ExtractScalar(Float32, 0.5, 4.0, false)
-    	@test sc.uniontypes == false
-    	@test sc(1).data isa Matrix{Float32}
-    	@test sc(extractempty).data isa Matrix{Float32}
-    	@test isnothing(sc(extractempty, store_input=false).metadata)
-    	@test sc(extractempty, store_input=true).metadata isa Matrix{UndefInitializer}
-    	@test size(sc(extractempty, store_input=true).metadata) == (1,0)
-    	sc = JsonGrinder.extractscalar(Float32,false)
-    	@test sc.uniontypes == false
-    	@test sc(1).data isa Matrix{Float32}
-    	@test_throws ErrorException sc(Dict(1=>1))
-    	@test length(sc) == 1
+    	sc2 = ExtractScalar(Float32, 0.5, 4.0, false)
+    	@test sc2.uniontypes == false
+    	@test sc2(1).data isa Matrix{Float32}
+    	sc3 = JsonGrinder.extractscalar(Float32,false)
+    	@test sc3.uniontypes == false
+    	@test sc3(1).data isa Matrix{Float32}
+    	@test_throws ErrorException sc3(Dict(1=>1))
+    	@test length(sc3) == 1
 
-    	@test sc("5", store_input=true).data == sc("5", store_input=false).data
-       	@test sc("5", store_input=true).metadata == fill("5",1,1)
-       	@test isnothing(sc("5", store_input=false).metadata)
-       	@test sc(5, store_input=true).data == sc(5, store_input=false).data
-       	@test sc(5, store_input=true).metadata == fill(5,1,1)
-       	@test isnothing(sc(5, store_input=false).metadata)
-       	@test_throws ErrorException sc(nothing, store_input=true)
-       	@test_throws ErrorException sc(nothing, store_input=true)
+		@testset "extractempty" begin
+    		@test sc1(extractempty).data isa Matrix{Float64}
+    		@test nobs(sc1(extractempty)) == 0
+			@test sc2(extractempty).data isa Matrix{Float32}
+	    	@test isnothing(sc(extractempty, store_input=false).metadata)
+	    	@test sc2(extractempty, store_input=true).metadata isa Matrix{UndefInitializer}
+	    	@test size(sc(extractempty, store_input=true).metadata) == (1,0)
+		end
+
+		@testset "store_input" begin
+    		@test sc3("5", store_input=true).data == sc3("5", store_input=false).data
+       		@test sc3("5", store_input=true).metadata == fill("5",1,1)
+       		@test isnothing(sc3("5", store_input=false).metadata)
+       		@test sc3(5, store_input=true).data == sc3(5, store_input=false).data
+       		@test sc3(5, store_input=true).metadata == fill(5,1,1)
+       		@test isnothing(sc3(5, store_input=false).metadata)
+       		@test_throws ErrorException sc3(nothing, store_input=true)
+       		@test_throws ErrorException sc3(nothing, store_input=true)
+		end
     end
 end
 # todo: add for each extractor tests with and without uniontypes, and with and without store_input
-# todo: categorize tests w.r.t. individual rextractors, make a checklist of what each extractor needs to test
-@testset "Testing array conversion" begin
-	Mill.emptyismissing!(false)
+# todo: categorize tests w.r.t. individual extractors, make a checklist of what each extractor needs to test
+@testset "ExtractArray" begin
 	sc = ExtractArray(ExtractCategorical(2:4))
-	e234 = sc([2,3,4], store_input=false)
-	en = sc(nothing, store_input=false)
-	e234s = sc([2,3,4], store_input=true)
-	ens = sc(nothing, store_input=true)
-	@test all(e234.data.data .== Matrix(1.0I, 4, 3))
-	@test nobs(en.data) == 0
-	@test en.data.data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
-	@test nobs(en.data.data) == 0
-	@test all(en.bags.bags .== [0:-1])
+	with_emptyismissing(false) do
+		e234 = sc([2,3,4], store_input=false)
+		en = sc(nothing, store_input=false)
+		e234s = sc([2,3,4], store_input=true)
+		ens = sc(nothing, store_input=true)
+		@test all(e234.data.data .== Matrix(1.0I, 4, 3))
+		@test nobs(en.data) == 0
+		@test en.data.data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+		@test nobs(en.data.data) == 0
+		@test all(en.bags.bags .== [0:-1])
 
-	@test e234s.data.data == e234.data.data
-	@test e234s.data.metadata == [2,3,4]
-	@test e234s.data[1].metadata == [2]
-	@test e234s.data[2].metadata == [3]
-	@test e234s.data[3].metadata == [4]
-	@test ens.data.data == en.data.data
-	@test ens.metadata == [nothing]
-	@test isnothing(en.metadata)
-	@test isnothing(ens.data.metadata)
-	@test isnothing(e234.data.metadata)
-	@test isnothing(en.data.metadata)
+		@testset "store_input" begin
+			@test e234s.data.data == e234.data.data
+			@test e234s.data.metadata == [2,3,4]
+			@test e234s.data[1].metadata == [2]
+			@test e234s.data[2].metadata == [3]
+			@test e234s.data[3].metadata == [4]
+			@test ens.data.data == en.data.data
+			@test ens.metadata == [nothing]
+			@test isnothing(en.metadata)
+			@test isnothing(ens.data.metadata)
+			@test isnothing(e234.data.metadata)
+			@test isnothing(en.data.metadata)
+		end
+	end
+	with_emptyismissing(true) do
+		en = sc(nothing, store_input=false)
+		ens = sc(nothing, store_input=true)
+		em = sc(missing, store_input=false)
+		ems = sc(missing, store_input=true)
+		@test en.data isa Missing
+		@test en.data ≃ em.data
+		@test ens.data isa Missing
+		@test ens.data ≃ ems.data
+		@test isnothing(en.metadata)
+		@test isnothing(em.metadata)
+		@test ens.metadata == [nothing]
+		@test ems.metadata ≃ [missing]
+		@test all(en.bags.bags .== [0:-1])
+		@test all(em.bags.bags .== [0:-1])
+	end
 
-	Mill.emptyismissing!(true)
-	en = sc(nothing, store_input=false)
-	ens = sc(nothing, store_input=true)
-	em = sc(missing, store_input=false)
-	ems = sc(missing, store_input=true)
-	@test en.data isa Missing
-	@test en.data ≃ em.data
-	@test ens.data isa Missing
-	@test ens.data ≃ ems.data
-	@test isnothing(en.metadata)
-	@test isnothing(em.metadata)
-	@test ens.metadata == [nothing]
-	@test ems.metadata ≃ [missing]
-	@test all(en.bags.bags .== [0:-1])
-	@test all(em.bags.bags .== [0:-1])
-	Mill.emptyismissing!(false)
-
-	@test nobs(sc(extractempty).data.data) == 0
-	@test nobs(sc(extractempty).data) == 0
-	@test nobs(sc(extractempty)) == 0
-	@test isempty(sc(extractempty).bags.bags)
-	@test sc(extractempty).data.data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
-
+	@testset "extractempty" begin
+		@test nobs(sc(extractempty).data.data) == 0
+		@test nobs(sc(extractempty).data) == 0
+		@test isempty(sc(extractempty).bags.bags)
+		@test sc(extractempty).data.data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+		with_emptyismissing(true) do
+			@test nobs(sc(extractempty)) == 0
+		end
+		with_emptyismissing(false) do
+			@test nobs(sc(extractempty)) == 0
+		end
+	end
 	sc = ExtractArray(ExtractScalar(Float32))
 	e234 = sc([2,3,4], store_input=false)
 	en = sc(nothing, store_input=false)
@@ -170,88 +194,128 @@ end
 	@test isnothing(en.data.metadata)
 end
 
-@testset "Testing feature vector conversion" begin
-	sc = ExtractVector(5, true)
-	e1 = sc([1, 2, 2, 3, 4], store_input=false)
-	e1s = sc([1, 2, 2, 3, 4], store_input=true)
-	e2s = sc([1, 2, 2, 3], store_input=true)
-	n1 = sc(missing, store_input=false)
-	n1s = sc(missing, store_input=true)
-	@test sc.uniontypes == true
-	@test e1.data isa Matrix
-	@test e1.data == e1s.data
-	@test e1.data isa Matrix{Union{Missing, Float32}}
-	@test sc(extractempty).data isa Matrix{Union{Missing, Float32}}
-	@test nobs(sc(extractempty).data) == 0
-	@test nobs(sc(extractempty)) == 0
-	@test e1s.metadata == [[1, 2, 2, 3, 4]]
-	@test catobs(e1s, e1s).data == [1 1; 2 2; 2 2; 3 3; 4 4]
-	@test catobs(e1s, e1s).metadata == [[1, 2, 2, 3, 4], [1, 2, 2, 3, 4]]
-	@test catobs(e1s, e1s)[1].data == [1 2 2 3 4]'
-	@test catobs(e1s, e1s)[1].metadata == [[1, 2, 2, 3, 4]]
-	@test n1s.metadata ≃ [missing]
-	@test catobs(e1s, n1s).metadata ≃ [[1, 2, 2, 3, 4], missing]
-	@test e2s.data ≃ [1 2 2 3 missing]'
-	@test e2s.metadata == [[1, 2, 2, 3]]
+@testset "ExtractVector" begin
+	@testset "with uniontypes" begin
+		sc1 = ExtractVector(5, true)
+		e1 = sc1([1, 2, 2, 3, 4], store_input=false)
+		e1s = sc1([1, 2, 2, 3, 4], store_input=true)
+		e2s = sc1([1, 2, 2, 3], store_input=true)
+		n1 = sc1(missing, store_input=false)
+		n1s = sc1(missing, store_input=true)
+		@test sc1.uniontypes == true
+		@test e1.data == e1s.data
+		@test e1.data isa Matrix{Union{Missing, Float32}}
 
-	sc = ExtractVector{Int64}(5, true)
-	@test sc.uniontypes == true
-	@test sc([1, 2, 2, 3, 4]).data ≈ [1, 2, 2, 3, 4]
-	@test sc([1, 2, 2, 3, 4]).data isa Matrix{Union{Missing, Int64}}
-	@test sc([1, 2, 2, 3, 4], store_input=true).data ≈ sc([1, 2, 2, 3, 4], store_input=false).data
-	@test sc([1, 2, 2, 3, 4], store_input=true).metadata == [[1, 2, 2, 3, 4]]
-	@test sc(nothing).data isa Matrix{Union{Missing, Int64}}
-	@test all(sc(nothing).data .=== missing)
-	@test sc(extractempty).data isa Matrix{Union{Missing, Int64}}
-	@test nobs(sc(extractempty).data) == 0
-	@test nobs(sc(extractempty)) == 0
-	@test sc(nothing, store_input=true).data ≃ sc(nothing, store_input=false).data
-	@test sc(nothing, store_input=true).metadata == [nothing]
+		sc2 = ExtractVector{Int64}(5, true)
+		e12234 = sc2([1, 2, 2, 3, 4], store_input=false)
+		e12234s = sc2([1, 2, 2, 3, 4], store_input=true)
+		en = sc2(nothing, store_input=false)
+		ens = sc2(nothing, store_input=true)
+		@test sc2.uniontypes == true
+		@test e12234.data ≈ [1, 2, 2, 3, 4]
+		@test e12234.data isa Matrix{Union{Missing, Int64}}
+		@test e12234s.data ≈ e12234.data
+		@test ens.data ≃ en.data
+		@test en.data isa Matrix{Union{Missing, Int64}}
+		@test en.data ≃ [missing missing missing missing missing]'
 
-	# feature vector longer than expected
-	sc = ExtractVector{Float32}(5, true)
-	@test sc.uniontypes == true
-	sc122345 = sc([1, 2, 2, 3, 4, 5], store_input=false)
-	sc122345s = sc([1, 2, 2, 3, 4, 5], store_input=true)
-	sc12345 = sc([1, 2, 3, 4, 5])
-	@test all(sc122345.data .== [1, 2, 2, 3, 4])
-	@test typeof(sc12345.data) == Matrix{Union{Missing, Float32}}
-	@test sc([5, 6]).data[1:2] ≈ [5, 6]
-	@test typeof(sc([1, 2]).data) == Matrix{Union{Missing, Float32}}
-	@test sc122345s.data ≈ sc122345.data
-	@test sc122345s.metadata == [[1, 2, 2, 3, 4, 5]]
-	@test sc([1, 2]).data isa Matrix{Union{Missing, Float32}}
-	@test all(sc([5, 6]).data[3:5] .=== missing)
-	@test all(sc(Dict(1=>2)).data .=== missing)
+		sc3 = ExtractVector{Float32}(5, true)
+		@test sc3.uniontypes == true
+		# feature vector longer than expected
+		sc122345 = sc3([1, 2, 2, 3, 4, 5], store_input=false)
+		sc122345s = sc3([1, 2, 2, 3, 4, 5], store_input=true)
+		sc12345 = sc3([1, 2, 3, 4, 5])
+		@test sc122345.data == [1f0 2f0 2f0 3f0 4f0]'
+		@test sc12345.data isa Matrix{Union{Missing, Float32}}
+		e56 = sc3([5, 6], store_input=false)
+		e56s = sc3([5, 6], store_input=true)
+		@test e56.data ≃ [5f0 6f0 missing missing missing]'
+		@test e56s.data ≃ e56.data
+		@test sc122345s.data ≈ sc122345.data
+		@test all(sc(Dict(1=>2)).data .=== missing)
 
-	sc = ExtractVector(5, false)
-	@test sc.uniontypes == false
-	@test sc([1, 2, 2, 3, 4]).data isa Matrix
-	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
-	@test sc([1, 2, 2, 3, 4]).data isa Matrix{Float32}
-	@test sc(extractempty).data isa Matrix{Float32}
-	@test nobs(sc(extractempty).data) == 0
+		@testset "extractempty" begin
+			@test sc1(extractempty).data isa Matrix{Union{Missing, Float32}}
+			@test nobs(sc1(extractempty).data) == 0
+			@test nobs(sc1(extractempty)) == 0
+			@test sc2(extractempty).data isa Matrix{Union{Missing, Int64}}
+			@test nobs(sc2(extractempty).data) == 0
+			@test nobs(sc2(extractempty)) == 0
+		end
 
-	sc = ExtractVector{Int64}(5, false)
-	@test sc.uniontypes == false
-	@test all(sc([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
-	@test sc([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
-	@test_throws ErrorException sc(nothing)
-	@test_throws ErrorException sc(missing)
-	@test sc(extractempty).data isa Matrix{Int64}
-	@test nobs(sc(extractempty).data) == 0
+		@testset "store_input" begin
+			@test e1s.metadata == [[1, 2, 2, 3, 4]]
+			@test isnothing(e1.metadata)
+			@test catobs(e1s, e1s).data == [1 1; 2 2; 2 2; 3 3; 4 4]
+			@test catobs(e1s, e1s).metadata == [[1, 2, 2, 3, 4], [1, 2, 2, 3, 4]]
+			@test catobs(e1s, e1s)[1].data == [1 2 2 3 4]'
+			@test catobs(e1s, e1s)[1].metadata == [[1, 2, 2, 3, 4]]
+			@test n1s.metadata ≃ [missing]
+			@test catobs(e1s, n1s).metadata ≃ [[1, 2, 2, 3, 4], missing]
+			@test e2s.data ≃ [1 2 2 3 missing]'
+			@test e2s.metadata == [[1, 2, 2, 3]]
+			@test e12234s.metadata == [[1, 2, 2, 3, 4]]
+			@test ens.metadata == [nothing]
+			@test sc122345s.metadata == [[1, 2, 2, 3, 4, 5]]
+			@test isnothing(e56.metadata)
+			@test e56s.metadata == [[5, 6]]
+		end
+	end
+	@testset "without uniontypes" begin
+		sc1 = ExtractVector(5, false)
+		@test sc1.uniontypes == false
+		e1 = sc1([1, 2, 2, 3, 4], store_input=false)
+		e1s = sc1([1, 2, 2, 3, 4], store_input=true)
+		@test e1.data == [1f0 2f0 2f0 3f0 4f0]'
+		@test e1.data isa Matrix{Float32}
+		@test e1.data == e1s.data
 
-	# feature vector longer than expected
-	sc = ExtractVector{Float32}(5, false)
-	@test sc.uniontypes == false
-	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
-	@test typeof(sc([1, 2, 3, 4, 5]).data) == Array{Float32,2}
-	@test_throws ErrorException sc([5, 6])
-	@test_throws ErrorException sc([1, 2])
-	@test_throws ErrorException sc(Dict(1=>2))
+		sc2 = ExtractVector{Int64}(5, false)
+		@test sc2.uniontypes == false
+		@test all(sc2([1, 2, 2, 3, 4]).data .== [1, 2, 2, 3, 4])
+		@test sc2([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
+
+		sc3 = ExtractVector{Float32}(5, false)
+		@test sc3.uniontypes == false
+
+		# feature vector longer than expected
+		@test sc3([1, 2, 2, 3, 4, 5]).data == [1f0 2f0 2f0 3f0 4f0]'
+		@test sc3([1, 2, 3, 4, 5]).data isa Matrix{Float32}
+
+
+		@testset "extractempty" begin
+			@test sc1(extractempty).data isa Matrix{Float32}
+			@test nobs(sc(extractempty).data) == 0
+			@test sc2(extractempty).data isa Matrix{Int64}
+			@test nobs(sc2(extractempty).data) == 0
+			@test sc3(extractempty).data isa Matrix{Float32}
+			@test nobs(sc3(extractempty).data) == 0
+		end
+
+		@testset "store_input" begin
+			@test e1s.metadata == [[1, 2, 2, 3, 4]]
+			@test catobs(e1s, e1s).data == [1 1; 2 2; 2 2; 3 3; 4 4]
+			@test catobs(e1s, e1s).metadata == [[1, 2, 2, 3, 4], [1, 2, 2, 3, 4]]
+			@test catobs(e1s, e1s)[1].data == [1 2 2 3 4]'
+			@test catobs(e1s, e1s)[1].metadata == [[1, 2, 2, 3, 4]]
+			@test isnothing(e1.metadata)
+		end
+
+		@testset "missing" begin
+			@test_throws ErrorException sc1(nothing, store_input=false)
+			@test_throws ErrorException sc1(nothing, store_input=true)
+			@test_throws ErrorException sc2(nothing, store_input=false)
+			@test_throws ErrorException sc2(nothing, store_input=true)
+			@test_throws ErrorException sc1(missing)
+			@test_throws ErrorException sc2(missing)
+			@test_throws ErrorException sc1([5, 6])
+			@test_throws ErrorException sc3([5, 6])
+			@test_throws ErrorException sc3(Dict(1=>2))
+		end
+	end
 end
 
-@testset "Testing ExtractDict" begin
+@testset "ExtractDict" begin
 	dict = Dict("a" => ExtractScalar(Float64,2,3),
 				"b" => ExtractScalar(Float64),
 				"c" => ExtractArray(ExtractScalar(Float64,2,3)))
@@ -294,69 +358,70 @@ end
 	@test catobs(a3,a3)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
 	@test all(catobs(a3,a3)[:c].bags .== [1:4,5:8])
 
-	a4 = br(extractempty)
-	@test nobs(a4) == 0
-	@test nobs(a4[:a]) == 0
-	@test a4[:a].data isa Matrix{Union{Missing, Float64}}
-	@test nobs(a4[:b]) == 0
-	@test a4[:b].data isa Matrix{Union{Missing, Float64}}
-	@test nobs(a4[:c]) == 0
-	@test nobs(a4[:c].data) == 0
-	@test a4[:c].data.data isa Matrix{Union{Missing, Float64}}
-end
+	@testset "extractempty" begin
+		a4 = br(extractempty)
+		@test nobs(a4) == 0
+		@test nobs(a4[:a]) == 0
+		@test a4[:a].data isa Matrix{Union{Missing, Float64}}
+		@test nobs(a4[:b]) == 0
+		@test a4[:b].data isa Matrix{Union{Missing, Float64}}
+		@test nobs(a4[:c]) == 0
+		@test nobs(a4[:c].data) == 0
+		@test a4[:c].data.data isa Matrix{Union{Missing, Float64}}
+	end
+	@testset "Nested Missing Arrays" begin
+		dict = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),
+			"b" => ExtractArray(ExtractScalar(Float32,2,3)))
+		br = ExtractDict(dict)
+		a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=false)
+		a2 = br(Dict("b" => [2,3,4]), store_input=false)
+		a3 = br(Dict("a" => [2,3,4]), store_input=false)
+		a4 = br(Dict{String,Any}(), store_input=false)
+		a1s = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=true)
+		a2s = br(Dict("b" => [2,3,4]), store_input=true)
+		a3s = br(Dict("a" => [2,3,4]), store_input=true)
+		a4s = br(Dict{String,Any}(), store_input=true)
 
-@testset "Testing Nested Missing Arrays" begin
-	dict = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),
-		"b" => ExtractArray(ExtractScalar(Float32,2,3)))
-	br = ExtractDict(dict)
-	a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=false)
-	a2 = br(Dict("b" => [2,3,4]), store_input=false)
-	a3 = br(Dict("a" => [2,3,4]), store_input=false)
-	a4 = br(Dict{String,Any}(), store_input=false)
-	a1s = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=true)
-	a2s = br(Dict("b" => [2,3,4]), store_input=true)
-	a3s = br(Dict("a" => [2,3,4]), store_input=true)
-	a4s = br(Dict{String,Any}(), store_input=true)
-
-	@test all(catobs(a1,a2).data[1].data.data .== [-3.0  0.0  3.0  6.0  0.0  3.0  6.0])
-	@test all(catobs(a1,a2).data[1].bags .== [1:4, 5:7])
-	@test all(catobs(a1,a2).data[2].data.data .== [-3.0  0.0  3.0])
-	@test all(catobs(a1,a2).data[2].bags .== [1:3, 0:-1])
-
-
-	@test all(catobs(a2,a3).data[1].data.data .== [0.0  3.0  6.0])
-	@test all(catobs(a2,a3).data[1].bags .== [1:3, 0:-1])
-	@test all(catobs(a2,a3).data[2].data.data .== [0 3 6])
-	@test all(catobs(a2,a3).data[2].bags .== [0:-1, 1:3])
+		@test all(catobs(a1,a2).data[1].data.data .== [-3.0  0.0  3.0  6.0  0.0  3.0  6.0])
+		@test all(catobs(a1,a2).data[1].bags .== [1:4, 5:7])
+		@test all(catobs(a1,a2).data[2].data.data .== [-3.0  0.0  3.0])
+		@test all(catobs(a1,a2).data[2].bags .== [1:3, 0:-1])
 
 
-	@test all(catobs(a1,a4).data[1].data.data .== [-3.0  0.0  3.0  6.0])
-	@test all(catobs(a1,a4).data[1].bags .== [1:4, 0:-1])
-	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
-	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
+		@test all(catobs(a2,a3).data[1].data.data .== [0.0  3.0  6.0])
+		@test all(catobs(a2,a3).data[1].bags .== [1:3, 0:-1])
+		@test all(catobs(a2,a3).data[2].data.data .== [0 3 6])
+		@test all(catobs(a2,a3).data[2].bags .== [0:-1, 1:3])
 
-	@test all(a4.data[2].data.data isa Matrix{Union{Missing, Float32}})
-	# todo: ověřit catobsování empty bagů s plnými bagy s metadaty jestli to funguje u všech možných extraktorů uvnitř bagu
-	@test catobs(a1,a4).data[1].data.data == catobs(a1s,a4s).data[1].data.data
-	@test catobs(a1,a4).data[1].bags == catobs(a1s,a4s).data[1].bags
-	@test catobs(a1,a4).data[2].data.data == catobs(a1s,a4s).data[2].data.data
-	@test catobs(a1,a4).data[2].bags == catobs(a1,a4).data[2].bags
 
-	@test catobs(a1s,a4s).data[1].data.metadata == [1 2 3 4]
-	@test catobs(a1s,a4s).data[2].data.metadata == [1 2 3]
-	@test a1s.data[1].data.metadata == [1 2 3 4]
-	@test a1s.data[2].data.metadata == [1 2 3]
-	@test a4s.data[1].data.metadata == zeros(1,0)
-	@test a4s.data[2].data.metadata == zeros(1,0)
+		@test all(catobs(a1,a4).data[1].data.data .== [-3.0  0.0  3.0  6.0])
+		@test all(catobs(a1,a4).data[1].bags .== [1:4, 0:-1])
+		@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
+		@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
 
-	a4 = br(extractempty)
-	@test nobs(a4) == 0
-	@test nobs(a4[:a]) == 0
-	@test nobs(a4[:a].data) == 0
-	@test a4[:a].data.data isa Matrix{Union{Missing, Float32}}
-	@test nobs(a4[:b]) == 0
-	@test nobs(a4[:b].data) == 0
-	@test a4[:b].data.data isa Matrix{Union{Missing, Float32}}
+		@test all(a4.data[2].data.data isa Matrix{Union{Missing, Float32}})
+		# todo: ověřit catobsování empty bagů s plnými bagy s metadaty jestli to funguje u všech možných extraktorů uvnitř bagu
+		@test catobs(a1,a4).data[1].data.data == catobs(a1s,a4s).data[1].data.data
+		@test catobs(a1,a4).data[1].bags == catobs(a1s,a4s).data[1].bags
+		@test catobs(a1,a4).data[2].data.data == catobs(a1s,a4s).data[2].data.data
+		@test catobs(a1,a4).data[2].bags == catobs(a1,a4).data[2].bags
+
+		@test catobs(a1s,a4s).data[1].data.metadata == [1 2 3 4]
+		@test catobs(a1s,a4s).data[2].data.metadata == [1 2 3]
+		@test a1s.data[1].data.metadata == [1 2 3 4]
+		@test a1s.data[2].data.metadata == [1 2 3]
+		@test a4s.data[1].data.metadata == zeros(1,0)
+		@test a4s.data[2].data.metadata == zeros(1,0)
+
+		a4 = br(extractempty)
+		@test nobs(a4) == 0
+		@test nobs(a4[:a]) == 0
+		@test nobs(a4[:a].data) == 0
+		@test a4[:a].data.data isa Matrix{Union{Missing, Float32}}
+		@test nobs(a4[:b]) == 0
+		@test nobs(a4[:b].data) == 0
+		@test a4[:b].data.data isa Matrix{Union{Missing, Float32}}
+	end
 end
 
 @testset "ExtractCategorical" begin
@@ -496,23 +561,23 @@ end
 	@test e4(2.).data ≈ [0, 1, 0]
 	@test e4(4.).data ≈ [0, 0, 1]
 	@test_throws ErrorException isequal(e4([]).data, [missing missing missing]')
-end
 
-@testset "ExtractCategorical type conversions" begin
-	j1 = JSON.parse("""{"a": "4"}""")
-	j2 = JSON.parse("""{"a": "11.5"}""")
-	j3 = JSON.parse("""{"a": 7}""")
-	j4 = JSON.parse("""{"a": 4.5}""")
+	@testset "type conversions" begin
+		j1 = JSON.parse("""{"a": "4"}""")
+		j2 = JSON.parse("""{"a": "11.5"}""")
+		j3 = JSON.parse("""{"a": 7}""")
+		j4 = JSON.parse("""{"a": 4.5}""")
 
-	sch = JsonGrinder.schema([j1,j2,j3,j4])
+		sch = JsonGrinder.schema([j1,j2,j3,j4])
 
-	ext = suggestextractor(sch)
+		ext = suggestextractor(sch)
 
-	@test ext(Dict("a"=>4)) == ext(Dict("a"=>4.0))
-	@test ext(Dict("a"=>4)) == ext(Dict("a"=>4f0))
-	@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4"))
-	@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4.0"))
-	# todo: add here metadata test
+		@test ext(Dict("a"=>4)) == ext(Dict("a"=>4.0))
+		@test ext(Dict("a"=>4)) == ext(Dict("a"=>4f0))
+		@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4"))
+		@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4.0"))
+		# todo: add here metadata test
+	end
 end
 
 @testset "ExtractString" begin
@@ -544,7 +609,7 @@ end
 	@test e("Hello").data isa NGramMatrix{String,Int64}
 end
 
-@testset "Extractor of keys as field" begin
+@testset "ExtractKeyAsField" begin
 	JsonGrinder.updatemaxkeys!(1000)
 	js = [Dict(randstring(5) => rand()) for _ in 1:1000]
 	sch = JsonGrinder.schema(js)
@@ -943,7 +1008,7 @@ end
 	@test e4["k"].data ≈ [0.5]
 end
 
-@testset "Missing extraction type stability" begin
+@testset "merging numeric scalars" begin
 	j1 = JSON.parse("""{"a": "1", "b":1}""")
 	j2 = JSON.parse("""{"a": 4, "b":2}""")
 	j3 = JSON.parse("""{"a": "3.1", "b":3}""")
@@ -960,7 +1025,7 @@ end
 	@test e1["M"].data ≈ [0]
 	@test e2["M"].data ≈ [1]
 	@test e3["M"].data ≈ [0.7]
-	@test e4["M"].data ≃ hcat(missing)
+	@test e4["M"].data ≃ fill(missing,1,1)
 	@test e1["U"].data ≈ [0]
 	@test e2["U"].data ≈ [1/3]
 	@test e3["U"].data ≈ [2/3]
@@ -1089,7 +1154,7 @@ end
 	#todo: add tests for all extractors for store_input=true
 end
 
-@testset "AuxiliaryExtractor HUtils" begin
+@testset "AuxiliaryExtractor" begin
 	e2 = ExtractCategorical(["a","b"])
 	e = AuxiliaryExtractor(e2, (ext, sample; store_input=false)->ext(String(sample); store_input))
 
@@ -1103,7 +1168,7 @@ end
       └── Categorical d = 3"""
 end
 
-@testset "Skipping single dict key" begin
+@testset "Not skipping single dict key" begin
 	j1 = JSON.parse("""{"a": []}""")
 	j2 = JSON.parse("""{"a": [1, 2]}""")
 	j3 = JSON.parse("""{"a": [1, 2, 3]}""")
