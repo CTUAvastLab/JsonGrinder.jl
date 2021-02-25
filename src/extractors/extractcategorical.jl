@@ -1,5 +1,10 @@
 import Mill: ArrayNode, MaybeHotMatrix
 """
+	struct ExtractCategorical{V,I} <: AbstractExtractor
+		keyvalemap::Dict{V,I}
+		n::Int
+		uniontypes::Bool
+	end
 	ExtractCategorical(s::Entry, uniontypes = true)
 	ExtractCategorical(s::UnitRange, uniontypes = true)
 	ExtractCategorical(s::Vector, uniontypes = true)

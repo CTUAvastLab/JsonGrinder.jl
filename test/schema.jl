@@ -1,5 +1,5 @@
 using Mill, JSON, BSON, Flux, JsonGrinder, Test, HierarchicalUtils
-using JsonGrinder: suggestextractor, schema, sample_synthetic
+using JsonGrinder: suggestextractor, schema, sample_synthetic, make_representative_sample
 using JsonGrinder: DictEntry, Entry, MultiEntry, ArrayEntry
 using Mill: reflectinmodel
 
@@ -349,7 +349,18 @@ end
 		ext = suggestextractor(sch)
 		@test !ext[:a].item[:a].uniontypes
 		@test !ext[:a].item[:b].uniontypes
-		# todo: add test that  empty_dict_vals=true does not return missing if samples were always full
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a, :b),
+			Tuple{BagNode{
+				ProductNode{NamedTuple{(:a, :b),
+					Tuple{
+						ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing},
+						ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}}
+					},Nothing},
+				AlignedBags{Int64},Nothing},
+			ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}}
+		}, Nothing}
 	end
 
 	@testset "basic with missing keys" begin
@@ -376,7 +387,17 @@ end
 		@test ext[:a].item[:a].uniontypes
 		@test ext[:a].item[:b].uniontypes
 		@test !ext[:b].uniontypes
-		# todo: add test that  empty_dict_vals=true does not return missing if samples were always full
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a, :b),
+			Tuple{BagNode{
+				ProductNode{NamedTuple{(:a, :b),
+					Tuple{
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing}}
+				},Nothing},AlignedBags{Int64},Nothing},
+			ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}
+		}},Nothing}
 	end
 
 	@testset "with missing keys in dict" begin
@@ -405,6 +426,18 @@ end
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
 		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}"""))).data isa Matrix{Float32}
 		@test m(ext(JSON.parse("""{"a": []}"""))).data isa Matrix{Float32}
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a,),
+			Tuple{BagNode{
+				ProductNode{NamedTuple{(:a, :b, :c),
+					Tuple{
+						ArrayNode{NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing},
+						ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}
+					}},
+				Nothing},
+			AlignedBags{Int64},Nothing}}},Nothing}
 	end
 
 	@testset "with missing nested dicts" begin
@@ -438,6 +471,20 @@ end
 		@test m(ext(JSON.parse("""{"a": [], "b": 1}"""))).data isa Matrix{Float32}
 		# the key b is always present, it should not be missing
 		@test_throws ErrorException m(ext(JSON.parse("""{"a": []}""")))
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a, :b),
+			Tuple{
+				ProductNode{NamedTuple{(:a, :b, :c),
+					Tuple{
+						ArrayNode{NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing}
+					}},
+				Nothing},
+				ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}
+			}},
+		Nothing}
 	end
 
 	@testset "with numbers and numeric strings" begin
@@ -445,25 +492,44 @@ end
 			:a=>MultiEntry([
 				Entry(Dict(2=>1,5=>1), 2),
 				Entry(Dict("4"=>1,"3"=>1), 2)],
-			4)),
+			4),
+			:b=>MultiEntry([
+				Entry(Dict(2=>1,5=>1), 2),
+				Entry(Dict("4"=>1), 1)],
+			3)),
 		4)
 
-		@test sample_synthetic(sch) == Dict(:a=>2)
+		@test sample_synthetic(sch) == Dict(:a=>2,:b=>2)
 
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
 		@test !ext[:a][1].uniontypes
+		@test ext[:b][1].uniontypes
 
 		s = ext(sample_synthetic(sch))
 		# this is wrong
 		@test s[:a][:e1].data ≃ [1 0 0 0 0]'
+		@test s[:b][:e1].data ≃ [1 0 0 0]'
 
 		m = reflectinmodel(sch, ext)
 		@test !(m[:a][:e1].m isa PostImputingDense)
+		@test m[:b][:e1].m isa PostImputingDense
 
 		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
 		@test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
 		@test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a, :b),
+			Tuple{
+				ProductNode{NamedTuple{(:e1,),
+					Tuple{ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}}},
+					Nothing},
+				ProductNode{NamedTuple{(:e1,),
+					Tuple{ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing}}
+					},Nothing}
+				}
+			},Nothing}
 	end
 
 

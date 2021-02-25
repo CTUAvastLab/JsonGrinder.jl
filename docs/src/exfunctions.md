@@ -6,8 +6,8 @@ Extractors of scalar values are arguably the most important, but also fortunatel
 
 Because mapping from JSON (or different hierarchical structure) to `Mill` structures can be non-trivial, extractors have keyword argument `store_input`, which, if `true`, causes input data to be stored as metadata of respective `Mill` structure. By default, it's false, because it can cause type-instability in case of irregular input data and thus suffer from performance loss. The `store_input` argument is propagated to leaves and is used to store primarily leaf values.
 
-Because JsonGrinder supports working with missing values, each leaf extractor has `uniontypes` field which determines if it can return missing values or not, and based on this field, extractor returns appropriate data type.
-By default, `uniontypes` is false but we advice to set it during extractor construction according to your data.
+Because `JsonGrinder` supports working with missing values, each leaf extractor has `uniontypes` field which determines if it can return missing values or not, and based on this field, extractor returns appropriate data type.
+By default, `uniontypes` is true, so it supports missing values of the shelf, but we advice to set it during extractor construction according to your data because it may create unnecessarily many parameters otherwise. [`suggestextractor`](@ref) takes into account where missing values can be observed and where not based on statistics in schema and provides sensible default extractor.
 
 Recall
 
@@ -27,7 +27,7 @@ end
 Extracts a numerical value, centered by subtracting `c` and scaled by multiplying by `s`.
 Strings are converted to numbers. The extractor returns `ArrayNode{Matrix{T}}` with a single row if `uniontypes` if `false`, and `ArrayNode{Matrix{Union{Missing, T}}}` with a single row if `uniontypes` if `true`.
 ```@example 1
-e = ExtractScalar(Float32, 0.5, 4.0)
+e = ExtractScalar(Float32, 0.5, 4.0, true)
 e("1").data
 ```
 
@@ -48,20 +48,28 @@ data remain unchanged
 e("1", store_input=true).data
 ```
 
-by default, metadata contains `nothing`
+by default, metadata contains `nothing`.
 
-```@example 1
-e("1").metadata
+And if `uniontypes` is false, it looks as follows
+
+```@repl 1
+e = ExtractScalar(Float32, 0.5, 4.0, true)
+e("1").data
+e("1", store_input_true=true).data
+e("1", store_input_true=true).metadata
+e(missing)
 ```
 
 ## Strings
 ```julia
-struct ExtractString{T} <: AbstractExtractor
+struct ExtractString <: AbstractExtractor
 	n::Int
 	b::Int
 	m::Int
+	uniontypes::Bool
 end
 ```
+
 Represents `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) with base `b` and modulo `m`.
 
 ```@example 1
@@ -84,11 +92,20 @@ it works the same also with missing values
 e(missing, store_input=true).metadata
 ```
 
+and if we know we won't have missing strings, we can disable `uniontypes`:
+```@repl 1
+e = ExtractString(false)
+e("Hello")
+e(missing)
+e("Hello", store_input=true).metadata
+```
+
 ## Categorical
 ```julia
 struct ExtractCategorical{V,I} <: AbstractExtractor
 	keyvalemap::Dict{V,I}
 	n::Int
+	uniontypes::Bool
 end
 ```
 Converts a single item to a one-hot encoded vector. For a safety, there is always an
@@ -107,6 +124,8 @@ Storing input in this case looks as follows
 ```@example 1
 e(["A","B","C","D"], store_input=true).metadata
 ```
+
+`uniontypes` settings works the same as with scalars or strings.
 
 ## Array (Lists / Sets)
 ```julia

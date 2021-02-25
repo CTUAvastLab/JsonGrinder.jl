@@ -61,7 +61,7 @@ function suggestextractor(e::MultiEntry, settings = NamedTuple(); path = "", chi
 	MultipleRepresentation(map(k -> suggestextractor(e.childs[k], settings,
 			path = path,
 			# in case of numberic strings and numbers I may have full samples so it should not be uniontype in such case
-			child_less_than_parent = length(e.childs) > 1
+			child_less_than_parent = child_less_than_parent || length(e.childs) > 1
 		),ks))
 end
 
