@@ -7,6 +7,7 @@ using Mill: ArrayNode, BagNode, ProductNode, catobs
 
 const FloatType = Float32
 
+include("switches.jl")
 include("schema/schema.jl")
 include("extractors/auxiliary.jl")
 include("extractors/extractarray.jl")
