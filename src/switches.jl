@@ -20,6 +20,11 @@ const _max_len = Ref(10_000)
 updatemaxlen!(n::Int) = _max_len[] = n
 max_len() = _max_len[]
 
-_merge_scalars = Ref(true)
-merge_scalars!(v::Bool) = _merge_scalars[] = v
-merge_scalars() = _merge_scalars[]
+_skip_single_key_dict = Ref(true)
+skip_single_key_dict!(v::Bool) = _skip_single_key_dict[] = v
+skip_single_key_dict() = _skip_single_key_dict[]
+
+_add_metadata2dicts = Ref(true)
+
+add_metadata2dicts!(n::Bool) = _add_metadata2dicts[] = n
+add_metadata2dicts() = _add_metadata2dicts[]

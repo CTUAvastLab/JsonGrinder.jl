@@ -1,9 +1,3 @@
-add_metadata2dicts = true
-
-function add_metadata2dicts!(n::Bool)
-	global add_metadata2dicts = n
-end
-
 """
 	struct ExtractDict
 		vec::Dict{String,Any}
@@ -40,16 +34,23 @@ function (s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Dict,V<:Dic
 	x = vcat([f(get(v,String(k),nothing), store_input=store_input) for (k,f) in s.vec]...)
 	o = [Symbol(k) => f(get(v,String(k),nothing), store_input=store_input) for (k,f) in s.other]
 	data = (; :scalars => x,o...)
-	add_metadata2dicts ? ProductNode(data, [collect(keys(s.vec))]) : ProductNode(data)
+	add_metadata2dicts() ? ProductNode(data, [collect(keys(s.vec))]) : ProductNode(data)
 end
 
-(s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Dict,V<:Nothing} =
-	vcat([f(get(v,String(k),nothing), store_input=store_input) for (k,f) in s.vec]...)
+function (s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Dict,V<:Nothing}
+	x = vcat([f(get(v,String(k),nothing), store_input=store_input) for (k,f) in s.vec]...)
+	if skip_single_key_dict()
+		x
+	else
+		data = (; :scalars => x)
+		add_metadata2dicts() ? ProductNode(data, [collect(keys(s.vec))]) : ProductNode(data)
+	end
+end
 
 function (s::ExtractDict{S,V})(v::Dict; store_input=false) where {S<:Nothing,V<:Dict}
 	# o = [f(get(v,k,nothing)) for (k,f) in s.other]
 	o = [Symbol(k) => f(get(v,String(k),nothing), store_input=store_input) for (k,f) in s.other]
-	if length(o) == 1 && merge_scalars()
+	if length(o) == 1 && skip_single_key_dict()
 		# return(o[1])
 		return o[1].second
 	else
