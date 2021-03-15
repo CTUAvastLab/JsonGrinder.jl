@@ -502,30 +502,30 @@ end
 
 	sch = JsonGrinder.schema([j1,j2,j3,j4,j5,j6])
 
-	@test JsonGrinder.prune_json(j1, sch) == Dict(
+	@test JsonGrinder.prune_json(j1, sch) == Dict{String, Any}(
 		"c" => Dict("a"=>Dict("b"=>[4.0, 5.0, 6.0],"a"=>[1.0, 2.0, 3.0])),
 		"b" => Dict("b"=>1.0,"a"=>[1.0, 2.0, 3.0]),
 		"a" => 4.0)
 
-	@test JsonGrinder.prune_json(j2, sch) == Dict(
+	@test JsonGrinder.prune_json(j2, sch) == Dict{String, Any}(
 		"c" => Dict("a"=>Dict("b"=>[5, 6],"a"=>[2, 3])),
 		"a" => 4)
 
 	delete!(sch.childs, :b)
 
-	@test JsonGrinder.prune_json(j1, sch) == Dict(
+	@test JsonGrinder.prune_json(j1, sch) == Dict{String, Any}(
   		"c" => Dict("a"=>Dict("b"=>[4.0, 5.0, 6.0],"a"=>[1.0, 2.0, 3.0])),
   		"a" => 4.0)
 
-	@test JsonGrinder.prune_json(j2, sch) == Dict(
+	@test JsonGrinder.prune_json(j2, sch) == Dict{String, Any}(
 		"c" => Dict("a"=>Dict("b"=>[5, 6],"a"=>[2, 3])),
 		"a" => 4)
 
 	delete!(sch.childs, :c)
 
-	@test JsonGrinder.prune_json(j1, sch) == Dict(
+	@test JsonGrinder.prune_json(j1, sch) == Dict{String, Any}(
   		"a" => 4.0)
 
-	@test JsonGrinder.prune_json(j2, sch) == Dict(
+	@test JsonGrinder.prune_json(j2, sch) == Dict{String, Any}(
 		"a" => 4)
 end

@@ -58,9 +58,5 @@ prune_json(json, sch::ArrayEntry) = map(json) do el
 end
 
 function prune_json(json, sch::DictEntry)
-    out = Dict()
-    for (k,v) in children(sch)
-        String(k) ∈ keys(json) && (out[String(k)] = prune_json(json[String(k)], v))
-    end
-    out
+    Dict(String(k) => prune_json(json[String(k)], v) for (k,v) in children(sch) if String(k) ∈ keys(json))
 end
