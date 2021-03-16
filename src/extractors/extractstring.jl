@@ -17,20 +17,20 @@ and always returns Mill structure of type Union{Missing, T} due to type stabilit
 # Example
 ```jldoctest
 julia> ExtractString(true)("hello")
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
  "hello"
 
 julia> ExtractString(true)(["hello", "world"])
-2053×2 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
+2053×2 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
  "hello"
  "world"
 
 julia> ExtractString(true)(["hello", missing])
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
  missing
 
 julia> ExtractString(true)(missing)
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
  missing
 
 julia> ExtractString(false)("hello")
@@ -88,7 +88,7 @@ extracts number subtracting `m` and multiplying by `s`
 # Example
 ```jldoctest
 julia> JsonGrinder.extractscalar(String, 3, 256, 2053, true)("5")
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
  "5"
 
 julia> JsonGrinder.extractscalar(Int32, 3, 256, true)("5")
@@ -96,7 +96,7 @@ julia> JsonGrinder.extractscalar(Int32, 3, 256, true)("5")
  512
 
 julia> JsonGrinder.extractscalar(String, 3, 256, 2053, false)("5")
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
  "5"
 
 julia> JsonGrinder.extractscalar(Int32, 3, 256, false)("5")

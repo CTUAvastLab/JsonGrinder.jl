@@ -588,10 +588,10 @@ end
 	@test all(e(missing).data.s .=== [missing])
 	@test all(e(nothing).data.s .=== [missing])
 	@test isequal(e(Dict(1=>2)), e(missing))
-	@test ehello isa ArrayNode{NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}
-	@test ehello.data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
-	@test e(missing).data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
-	@test e(nothing).data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+	@test ehello isa ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing}
+	@test ehello.data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
+	@test e(missing).data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
+	@test e(nothing).data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 	@test ehellos.metadata == ["Hello"]
 	@test nobs(e(extractempty)) == 0
 
@@ -602,8 +602,8 @@ end
 	@test_throws ErrorException e(missing)
 	@test_throws ErrorException e(nothing)
 	@test_throws ErrorException e(Dict(1=>2))
-	@test e("Hello") isa ArrayNode{NGramMatrix{String,Int64},Nothing}
-	@test e("Hello").data isa NGramMatrix{String,Int64}
+	@test e("Hello") isa ArrayNode{NGramMatrix{String,Vector{String},Int64},Nothing}
+	@test e("Hello").data isa NGramMatrix{String,Vector{String},Int64}
 end
 
 @testset "ExtractKeyAsField" begin
@@ -618,8 +618,6 @@ end
 	@test b.data[:item].data[1] ≈ (js[1][k] - ext.item.c) * ext.item.s
 	@test b.data[:key].data.s[1] == k
 
-	orig_emptyismissing = Mill.emptyismissing()
-
 	with_emptyismissing(true) do
 		b = ext(nothing)
 		@test nobs(b) == 1
@@ -632,11 +630,11 @@ end
 		b = ext(nothing)
 		@test nobs(b) == 1
 		@test nobs(b.data) == 0
-		@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+		@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 		b = ext(Dict())
 		@test nobs(b) == 1
 		@test nobs(b.data) == 0
-		@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+		@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 	end
 
 	b = ext(extractempty)
@@ -645,9 +643,9 @@ end
 	@test nobs(b.data[:item]) == 0
 	@test b.data[:item].data isa Matrix{Float32}
 	@test nobs(b.data[:key]) == 0
-	@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+	@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 
-	js = [Dict(randstring(5) => Dict(:a => rand(), :b => randstring(1))) for _ in 1:1000]
+	js = [Dict(randstring(5) => Dict("a" => rand(), "b" => randstring(1))) for _ in 1:1000]
 	sch = JsonGrinder.schema(js)
 	ext = JsonGrinder.suggestextractor(sch, (;key_as_field = 500))
 
@@ -671,8 +669,8 @@ end
 	b = ext(js[1], store_input=true)
 	k = only(keys(js[1]))
 	@test b.data[:key].metadata == [k]
-	@test b.data[:item][:a].metadata == fill(js[1][k][:a],1,1)
-	@test b.data[:item][:b].metadata == [js[1][k][:b]]
+	@test b.data[:item][:a].metadata == fill(js[1][k]["a"],1,1)
+	@test b.data[:item][:b].metadata == [js[1][k]["b"]]
 
 	b = ext(Dict(), store_input=true)
 	@test b.metadata == [Dict()]

@@ -116,8 +116,8 @@ Dict{String,Any} with 4 entries:
   "d" => 2
 
 julia> JsonGrinder.prune_json(j3, sch)
-Dict{Any,Any} with 2 entries:
-  "b" => Dict{Any,Any}("a"=>1)
+Dict{String,Any} with 2 entries:
+  "b" => Dict("a"=>1)
   "a" => 4
 ```
 so the `JsonGrinder.prune_json` removes keys `c` and `d`.

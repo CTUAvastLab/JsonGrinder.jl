@@ -21,7 +21,7 @@ using Mill: nobs
 		@test nobs(e[:e1]) == 0
 		@test e[:e1].data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
 		@test nobs(e[:e2]) == 0
-		@test e[:e2].data isa NGramMatrix{Union{Missing, String},Union{Missing, Int64}}
+		@test e[:e2].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 
 		ex2 = MultipleRepresentation((
 			ExtractCategorical(["Olda", "Tonda", "Milda"], true),
@@ -46,7 +46,7 @@ using Mill: nobs
 		@test e[:e1].data.data == [1 2]
 		@test e[:e2].data.s ≃ [missing]
 
-		
+
 	end
 	@testset "without uniontypes" begin
 		ex = MultipleRepresentation((
@@ -65,7 +65,7 @@ using Mill: nobs
 		@test nobs(e[:e1]) == 0
 		@test e[:e1].data isa MaybeHotMatrix{Int64,Int64,Bool}
 		@test nobs(e[:e2]) == 0
-		@test e[:e2].data isa NGramMatrix{String,Int64}
+		@test e[:e2].data isa NGramMatrix{String,Array{String,1},Int64}
 
 		ex2 = MultipleRepresentation((
 			ExtractCategorical(["Olda", "Tonda", "Milda"], false),

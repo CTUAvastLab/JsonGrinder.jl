@@ -40,8 +40,6 @@ function update!(s::DictEntry, d::Dict; path = "")
 	return true
 end
 
-# integration with BSON
-update!(s::DictEntry, d::BSONDict; path = "") = update!(s, d.d; path)
 """
 	suggestextractor(e::DictEntry, settings = NamedTuple())
 
