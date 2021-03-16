@@ -76,7 +76,7 @@ ProductNode with 1 obs
   └── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs
 
 julia> s2[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
  "hi"
 
 julia> s2[:e2]

@@ -432,7 +432,7 @@ end
 			Tuple{BagNode{
 				ProductNode{NamedTuple{(:a, :b, :c),
 					Tuple{
-						ArrayNode{NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing},
+						ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing},
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing},
 						ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}
 					}},
@@ -477,7 +477,7 @@ end
 			Tuple{
 				ProductNode{NamedTuple{(:a, :b, :c),
 					Tuple{
-						ArrayNode{NGramMatrix{Union{Missing, String},Union{Missing, Int64}},Nothing},
+						ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing},
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing},
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing}
 					}},

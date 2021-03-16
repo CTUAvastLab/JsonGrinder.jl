@@ -5,7 +5,6 @@ using BSON: BSONDict
 creates new entry describing json according to the type of v
 """
 newentry(v::Dict) = DictEntry()
-newentry(v::BSONDict) = newentry(v.d)
 newentry(v::A) where {A<:StringOrNumber} = Entry(v)
 newentry(v::Vector) = isempty(v) ? ArrayEntry(nothing) : ArrayEntry(newentry(v[1]))
 function newentry!(v)
