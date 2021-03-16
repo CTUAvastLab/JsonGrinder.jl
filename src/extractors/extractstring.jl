@@ -34,11 +34,11 @@ julia> ExtractString(true)(missing)
  missing
 
 julia> ExtractString(false)("hello")
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
  "hello"
 
 julia> ExtractString(false)(["hello", "world"])
-2053×2 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Int64},Nothing}:
+2053×2 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
  "hello"
  "world"
 ```
