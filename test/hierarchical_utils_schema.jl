@@ -1,4 +1,4 @@
-using Mill, JSON, BSON, Flux, JsonGrinder, Test
+using Mill, JSON, Flux, JsonGrinder, Test
 using HierarchicalUtils
 import HierarchicalUtils: printtree
 using JsonGrinder: DictEntry, suggestextractor, schema

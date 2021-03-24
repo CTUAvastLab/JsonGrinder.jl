@@ -1,4 +1,3 @@
-using BSON: BSONDict
 """
 	mutable struct DictEntry <: JSONEntry
 		childs::Dict{String,Any}
