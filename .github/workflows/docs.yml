@@ -23,7 +23,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
         with:
-          version: '1'
+#         enforcing julia 1.5 until the code is rewritten
+          version: '1.5'
       - name: Install dependencies
         run: julia --project=docs/ -e '
             using Pkg;
