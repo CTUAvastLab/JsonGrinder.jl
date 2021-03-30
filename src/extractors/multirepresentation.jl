@@ -37,7 +37,7 @@ ProductNode with 1 obs
   └── e2: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs
 
 julia> s2[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Int64}, Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "http"
 
 julia> s2[:e2]

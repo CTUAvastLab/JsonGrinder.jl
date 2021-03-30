@@ -22,28 +22,28 @@ If `uniontypes` is true, it allows extracting `missing` values and all extracted
 julia> e = ExtractCategorical(2:4, true);
 
 julia> e([2,3,1,4]).data
-4×4 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+4×4 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
   true  false  false  false
  false   true  false  false
  false  false  false   true
  false  false   true  false
 
 julia> e([1,missing,5]).data
-4×3 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+4×3 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
  false  missing  false
  false  missing  false
  false  missing  false
   true  missing   true
 
 julia> e(4).data
-4×1 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+4×1 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
  false
  false
   true
  false
 
 julia> e(missing).data
-4×1 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+4×1 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
  missing
  missing
  missing
@@ -52,14 +52,14 @@ julia> e(missing).data
 julia> e = ExtractCategorical(2:4, false);
 
 julia> e([2,3,1,4]).data
-4×4 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
+4×4 Mill.MaybeHotMatrix{{Int64, Int64, Bool}:
  1  0  0  0
  0  1  0  0
  0  0  0  1
  0  0  1  0
 
 julia> e(4).data
-4×1 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
+4×1 Mill.MaybeHotMatrix{{Int64, Int64, Bool}:
  0
  0
  1

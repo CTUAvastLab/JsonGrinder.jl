@@ -21,11 +21,11 @@ ProductNode with 1 obs
   └── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements) with 1 obs
 
 julia> res1[:a].data
-1×1 Array{Union{Missing, Float32},2}:
+1×1 Matrix{Union{Missing, Float32}}:
  -3.0f0
 
 julia> res1[:b].data
-6×1 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+6×1 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
   true
  false
  false
@@ -39,11 +39,11 @@ ProductNode with 1 obs
   └── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements) with 1 obs
 
 julia> res2[:a].data
-1×1 Array{Union{Missing, Float32},2}:
+1×1 Matrix{Union{Missing, Float32}}:
  -6.0f0
 
 julia> res2[:b].data
-6×1 Mill.MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}:
+6×1 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
  missing
  missing
  missing
