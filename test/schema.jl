@@ -355,11 +355,11 @@ end
 			Tuple{BagNode{
 				ProductNode{NamedTuple{(:a, :b),
 					Tuple{
-						ArrayNode{MaybeHotMatrix{{Int64, Int64, Bool},Nothing},
-						ArrayNode{MaybeHotMatrix{{Int64, Int64, Bool},Nothing}}
+						ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing},
+						ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}}
 					},Nothing},
 				AlignedBags{Int64},Nothing},
-			ArrayNode{MaybeHotMatrix{{Int64, Int64, Bool},Nothing}}
+			ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}}
 		}, Nothing}
 	end
 
@@ -396,7 +396,7 @@ end
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing},
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing}}
 				},Nothing},AlignedBags{Int64},Nothing},
-			ArrayNode{MaybeHotMatrix{{Int64, Int64, Bool},Nothing}
+			ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}
 		}},Nothing}
 	end
 
@@ -434,7 +434,7 @@ end
 					Tuple{
 						ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing},
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing},
-						ArrayNode{MaybeHotMatrix{{Int64, Int64, Bool},Nothing}
+						ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}
 					}},
 				Nothing},
 			AlignedBags{Int64},Nothing}}},Nothing}
@@ -482,7 +482,7 @@ end
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing}
 					}},
 				Nothing},
-				ArrayNode{MaybeHotMatrix{{Int64, Int64, Bool},Nothing}
+				ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}
 			}},
 		Nothing}
 	end
@@ -523,7 +523,7 @@ end
 		@test s isa ProductNode{NamedTuple{(:a, :b),
 			Tuple{
 				ProductNode{NamedTuple{(:e1,),
-					Tuple{ArrayNode{MaybeHotMatrix{{Int64, Int64, Bool},Nothing}}},
+					Tuple{ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}}},
 					Nothing},
 				ProductNode{NamedTuple{(:e1,),
 					Tuple{ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing}}

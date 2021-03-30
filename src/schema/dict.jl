@@ -1,6 +1,6 @@
 """
 	mutable struct DictEntry <: JSONEntry
-		childs::Dict{String,Any}
+		childs::Dict{String, Any}
 		updated::Int
 	end
 

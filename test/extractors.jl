@@ -374,11 +374,11 @@ end
 		a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=false)
 		a2 = br(Dict("b" => [2,3,4]), store_input=false)
 		a3 = br(Dict("a" => [2,3,4]), store_input=false)
-		a4 = br(Dict{String,Any}(), store_input=false)
+		a4 = br(Dict{String, Any}(), store_input=false)
 		a1s = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=true)
 		a2s = br(Dict("b" => [2,3,4]), store_input=true)
 		a3s = br(Dict("a" => [2,3,4]), store_input=true)
-		a4s = br(Dict{String,Any}(), store_input=true)
+		a4s = br(Dict{String, Any}(), store_input=true)
 
 		@test all(catobs(a1,a2).data[1].data.data .== [-3.0  0.0  3.0  6.0  0.0  3.0  6.0])
 		@test all(catobs(a1,a2).data[1].bags .== [1:4, 5:7])
@@ -507,14 +507,14 @@ end
 	@test e("z").data ≈ [0, 0, 1]
 	@test_throws ErrorException e(nothing)
 	@test_throws ErrorException e(missing)
-	@test typeof(e("a").data) == MaybeHotMatrix{{Int64, Int64, Bool}
-	@test e(extractempty).data isa MaybeHotMatrix{{Int64, Int64, Bool}
+	@test typeof(e("a").data) == MaybeHotMatrix{Int64, Int64, Bool}
+	@test e(extractempty).data isa MaybeHotMatrix{Int64, Int64, Bool}
 	@test nobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test_throws ErrorException e(["a", missing])
 	@test_throws ErrorException e(["a", missing, "x"])
-	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{{Int64, Int64, Bool}
+	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64, Int64, Bool}
 	@test_throws ErrorException e(["a", "b", nothing])
 
 	@test isnothing(ExtractCategorical([], false))

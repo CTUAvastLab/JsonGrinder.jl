@@ -28,7 +28,7 @@ julia> ExtractScalar(Float32, 2, 3, true)(missing)
  missing
 
 julia> ExtractScalar(Float32, 2, 3, false)(1)
-1×1 Mill.ArrayNode{Array{Float32,2},Nothing}:
+1×1 Mill.ArrayNode{Matrix{Float32}, Nothing}:
  -3.0
 
 ```
