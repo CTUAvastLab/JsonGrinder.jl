@@ -43,6 +43,25 @@ Manually creating extractors is boring and error-prone process. Function `sugges
 
 This is especially true for `Dict` and `Arrays`, while extractors for leaves can be tricky, as one needs to decide, if the leaf should be represented as a `Scalar` and `String` or as `Categorical` variable.
 
+The sample diagram below shows the various selections of variable representations. In the example, there are 42 different *TCP destination port* values, while the *TCP source port* has more variability in the data. Therefore, a `categorical variable` is selected for the *destination port*, while the *source port* is represented as `Float32`.
+```
+KeyAsField
+  ├── String
+  └── Array of
+        └── Dict
+              ├─── ip: Dict
+              │          ├── dst: Categorical d = 4416
+              │          └── src: Categorical d = 4
+              ├── tcp: Dict
+              │          ├────── dstport: Categorical d = 42
+              │          ├────── srcport: Float32
+              │          └── window_size: Float32
+              └── udp: Dict
+                         ├─────── udp.dstport: Float32
+                         ├──────── udp.length: Float32
+                         ├─────── udp.srcport: Float32
+```
+
 `suggestextractor(schema, settings)` uses a simple heuristic (described below) for choosing reasonable extractors, but it can make errors. It is therefore **highly recommended** to check the proposed extractor manually, if it makes sense. A typical error, especially if schema is created from a small number of samples, is that some variable is treated as a `Categorical`, while it should be `String` / `Scalar`.
 
 Extractor for `Dict` can be configured to use either `ExtractDict` or `ExtractKeyAsField` based on properties number of keys in schema.
