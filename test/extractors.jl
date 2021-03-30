@@ -117,7 +117,7 @@ end
 		ens = sc(nothing, store_input=true)
 		@test all(e234.data.data .== Matrix(1.0I, 4, 3))
 		@test nobs(en.data) == 0
-		@test en.data.data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+		@test en.data.data isa MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}
 		@test nobs(en.data.data) == 0
 		@test all(en.bags.bags .== [0:-1])
 
@@ -156,7 +156,7 @@ end
 		@test nobs(sc(extractempty).data.data) == 0
 		@test nobs(sc(extractempty).data) == 0
 		@test isempty(sc(extractempty).bags.bags)
-		@test sc(extractempty).data.data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+		@test sc(extractempty).data.data isa MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}
 		with_emptyismissing(true) do
 			@test nobs(sc(extractempty)) == 0
 		end
@@ -374,11 +374,11 @@ end
 		a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=false)
 		a2 = br(Dict("b" => [2,3,4]), store_input=false)
 		a3 = br(Dict("a" => [2,3,4]), store_input=false)
-		a4 = br(Dict{String,Any}(), store_input=false)
+		a4 = br(Dict{String, Any}(), store_input=false)
 		a1s = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=true)
 		a2s = br(Dict("b" => [2,3,4]), store_input=true)
 		a3s = br(Dict("a" => [2,3,4]), store_input=true)
-		a4s = br(Dict{String,Any}(), store_input=true)
+		a4s = br(Dict{String, Any}(), store_input=true)
 
 		@test all(catobs(a1,a2).data[1].data.data .== [-3.0  0.0  3.0  6.0  0.0  3.0  6.0])
 		@test all(catobs(a1,a2).data[1].bags .== [1:4, 5:7])
@@ -438,17 +438,17 @@ end
 	@test ez.data ≈ [0, 0, 1]
 	@test en.data ≃ [missing missing missing]'
 	@test em.data ≃ [missing missing missing]'
-	@test typeof(ea.data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
-	@test typeof(en.data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
-	@test typeof(em.data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
-	@test e(extractempty).data isa MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+	@test typeof(ea.data) == MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}
+	@test typeof(en.data) == MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}
+	@test typeof(em.data) == MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}
+	@test e(extractempty).data isa MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}
 	@test nobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test e(["a", missing]).data ≃ [true missing; false missing; false missing]
 	@test e(["a", missing, "x"]).data ≃ [true missing false; false missing false; false missing true]
-	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
-	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}}
+	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}
+	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}
 
 	@test isnothing(ExtractCategorical([], true))
 	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2), true)
@@ -507,14 +507,14 @@ end
 	@test e("z").data ≈ [0, 0, 1]
 	@test_throws ErrorException e(nothing)
 	@test_throws ErrorException e(missing)
-	@test typeof(e("a").data) == MaybeHotMatrix{Int64,Int64,Bool}
-	@test e(extractempty).data isa MaybeHotMatrix{Int64,Int64,Bool}
+	@test typeof(e("a").data) == MaybeHotMatrix{Int64, Int64, Bool}
+	@test e(extractempty).data isa MaybeHotMatrix{Int64, Int64, Bool}
 	@test nobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test_throws ErrorException e(["a", missing])
 	@test_throws ErrorException e(["a", missing, "x"])
-	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64,Int64,Bool}
+	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Int64, Int64, Bool}
 	@test_throws ErrorException e(["a", "b", nothing])
 
 	@test isnothing(ExtractCategorical([], false))

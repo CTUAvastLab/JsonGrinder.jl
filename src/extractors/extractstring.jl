@@ -17,28 +17,28 @@ and always returns Mill structure of type Union{Missing, T} due to type stabilit
 # Example
 ```jldoctest
 julia> ExtractString(true)("hello")
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  "hello"
 
 julia> ExtractString(true)(["hello", "world"])
-2053×2 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
+2053×2 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  "hello"
  "world"
 
 julia> ExtractString(true)(["hello", missing])
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  missing
 
 julia> ExtractString(true)(missing)
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  missing
 
 julia> ExtractString(false)("hello")
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "hello"
 
 julia> ExtractString(false)(["hello", "world"])
-2053×2 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
+2053×2 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "hello"
  "world"
 ```
@@ -88,19 +88,19 @@ extracts number subtracting `m` and multiplying by `s`
 # Example
 ```jldoctest
 julia> JsonGrinder.extractscalar(String, 3, 256, 2053, true)("5")
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  "5"
 
 julia> JsonGrinder.extractscalar(Int32, 3, 256, true)("5")
-1×1 Mill.ArrayNode{Array{Union{Missing, Int32},2},Nothing}:
+1×1 Mill.ArrayNode{Matrix{Union{Missing, Int32}}, Nothing}:
  512
 
 julia> JsonGrinder.extractscalar(String, 3, 256, 2053, false)("5")
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "5"
 
 julia> JsonGrinder.extractscalar(Int32, 3, 256, false)("5")
-1×1 Mill.ArrayNode{Array{Int32,2},Nothing}:
+1×1 Mill.ArrayNode{Matrix{Int32}, Nothing}:
  512
 ```
 """

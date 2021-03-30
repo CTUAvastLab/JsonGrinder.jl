@@ -14,8 +14,11 @@ const ≃ = isequal
 
 	# this must be first, because other tests include more imports which break string asserts on types
 	@testset "Doctests" begin
-    	DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
-    	doctest(JsonGrinder)
+	    # there are breaking changes in printing of things between julia 1.5 and 1.6, so we run tests only on 1.6
+	    @static if VERSION >= v"1.6.0-"
+        	DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
+        	doctest(JsonGrinder)
+    	end
 	end
 
 	@testset "Extractors" begin
