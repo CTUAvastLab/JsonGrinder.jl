@@ -21,11 +21,11 @@ ProductNode with 1 obs
   └── e2: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs
 
 julia> s1[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "tcp"
 
 julia> s1[:e2]
-4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Int64,Bool},Nothing}:
+4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64, Int64, Bool}, Nothing}:
  0
  1
  0
@@ -37,11 +37,11 @@ ProductNode with 1 obs
   └── e2: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs
 
 julia> s2[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Array{String,1},Int64},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "http"
 
 julia> s2[:e2]
-4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Int64,Bool},Nothing}:
+4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64, Int64, Bool}, Nothing}:
  0
  0
  0
@@ -63,11 +63,11 @@ ProductNode with 1 obs
   └── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs
 
 julia> s1[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  missing
 
 julia> s1[:e2]
-1×1 Mill.ArrayNode{Array{Union{Missing, Float32},2},Nothing}:
+1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
  9.0f0
 
 julia> s2 = e("hi")
@@ -76,11 +76,11 @@ ProductNode with 1 obs
   └── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs
 
 julia> s2[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String},Array{Union{Missing, String},1},Union{Missing, Int64}},Nothing}:
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  "hi"
 
 julia> s2[:e2]
-1×1 Mill.ArrayNode{Array{Union{Missing, Float32},2},Nothing}:
+1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
  missing
 
 ```

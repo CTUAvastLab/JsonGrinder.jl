@@ -355,11 +355,11 @@ end
 			Tuple{BagNode{
 				ProductNode{NamedTuple{(:a, :b),
 					Tuple{
-						ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing},
-						ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}}
+						ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing},
+						ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}}
 					},Nothing},
 				AlignedBags{Int64},Nothing},
-			ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}}
+			ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}}
 		}, Nothing}
 	end
 
@@ -393,10 +393,10 @@ end
 			Tuple{BagNode{
 				ProductNode{NamedTuple{(:a, :b),
 					Tuple{
-						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing}}
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing}}
 				},Nothing},AlignedBags{Int64},Nothing},
-			ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}
+			ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}
 		}},Nothing}
 	end
 
@@ -433,8 +433,8 @@ end
 				ProductNode{NamedTuple{(:a, :b, :c),
 					Tuple{
 						ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing},
-						ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing},
+						ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}
 					}},
 				Nothing},
 			AlignedBags{Int64},Nothing}}},Nothing}
@@ -478,11 +478,11 @@ end
 				ProductNode{NamedTuple{(:a, :b, :c),
 					Tuple{
 						ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing}
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing}
 					}},
 				Nothing},
-				ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}
+				ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}
 			}},
 		Nothing}
 	end
@@ -499,7 +499,7 @@ end
 			3)),
 		4)
 
-		@test sample_synthetic(sch) == Dict(:a=>2,:b=>2)
+		@test sample_synthetic(sch) == Dict(:a=>5,:b=>5)
 
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
@@ -508,7 +508,7 @@ end
 
 		s = ext(sample_synthetic(sch))
 		# this is wrong
-		@test s[:a][:e1].data ≃ [1 0 0 0 0]'
+		@test s[:a][:e1].data ≃ [0 0 0 0 1]'
 		@test s[:b][:e1].data ≃ [1 0 0 0]'
 
 		m = reflectinmodel(sch, ext)
@@ -523,10 +523,10 @@ end
 		@test s isa ProductNode{NamedTuple{(:a, :b),
 			Tuple{
 				ProductNode{NamedTuple{(:e1,),
-					Tuple{ArrayNode{MaybeHotMatrix{Int64,Int64,Bool},Nothing}}},
+					Tuple{ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}}},
 					Nothing},
 				ProductNode{NamedTuple{(:e1,),
-					Tuple{ArrayNode{MaybeHotMatrix{Union{Missing, Int64},Int64,Union{Missing, Bool}},Nothing}}
+					Tuple{ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing}}
 					},Nothing}
 				}
 			},Nothing}
@@ -545,10 +545,8 @@ end
 			4)),
 		4)
 
-		# todo: dodělat tohle, nalézt edgecasy a fixnout to
-		# ocheckovat kde je cyhba usample_synthetic a ávrhu modelu
 		@test sample_synthetic(sch) == Dict(
-			:a=>2
+			:a=>5
 		)
 		# this is not representative, but all information is inside types
 		ext = suggestextractor(sch)

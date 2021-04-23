@@ -178,6 +178,6 @@ end
 
     sch = schema([j1,j2,j3,j4,j5,j6])
 
-    @test repr(sch) == "DictEntry"
+    @test repr(sch) == "typename(DictEntry)"
     @test repr("text/plain", sch) == buf_printtree(sch; trav=false, htrunc=3)
 end
