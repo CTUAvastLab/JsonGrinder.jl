@@ -221,18 +221,19 @@ cb = () -&gt; begin
 end
 ps = Flux.params(model)
 loss = (x,y) -&gt; Flux.logitcrossentropy(model(x).data, y)</code></pre><pre class="documenter-example-output">#13 (generic function with 1 method)</pre><p>and then we can start trining</p><pre><code class="language-julia-repl">julia&gt; Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
-accuracy: train = 0.39, val = 0.22727272727272727, test = 0.3181818181818182
-accuracy: train = 0.82, val = 0.6818181818181818, test = 0.7727272727272727
-accuracy: train = 0.94, val = 0.7954545454545454, test = 0.8636363636363636
-accuracy: train = 0.97, val = 0.7954545454545454, test = 0.7954545454545454
-accuracy: train = 0.98, val = 0.7954545454545454, test = 0.8181818181818182
-accuracy: train = 0.98, val = 0.7954545454545454, test = 0.7954545454545454
-accuracy: train = 0.98, val = 0.7954545454545454, test = 0.7727272727272727
-accuracy: train = 0.98, val = 0.7954545454545454, test = 0.7727272727272727
-accuracy: train = 0.98, val = 0.7954545454545454, test = 0.7727272727272727</code></pre><p>We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on validation and test set we get over 70%.</p><p>Last part is inference on test data</p><pre><code class="language-julia-repl">julia&gt; probs = softmax(model(testset).data)
+accuracy: train = 0.61, val = 0.7727272727272727, test = 0.6818181818181818
+accuracy: train = 0.83, val = 0.6818181818181818, test = 0.75
+accuracy: train = 0.96, val = 0.6590909090909091, test = 0.7954545454545454
+accuracy: train = 0.98, val = 0.7045454545454546, test = 0.7954545454545454
+accuracy: train = 0.97, val = 0.6818181818181818, test = 0.7954545454545454
+accuracy: train = 0.99, val = 0.7045454545454546, test = 0.7954545454545454
+accuracy: train = 0.97, val = 0.6818181818181818, test = 0.7727272727272727
+accuracy: train = 0.99, val = 0.7272727272727273, test = 0.7954545454545454
+accuracy: train = 0.99, val = 0.7272727272727273, test = 0.7954545454545454
+accuracy: train = 0.99, val = 0.7272727272727273, test = 0.8181818181818182</code></pre><p>We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on validation and test set we get over 70%.</p><p>Last part is inference on test data</p><pre><code class="language-julia-repl">julia&gt; probs = softmax(model(testset).data)
 2×44 Matrix{Float32}:
- 1.0          1.0          0.998717    …  0.970912   1.57885f-7  1.0
- 6.95727f-27  3.85501f-10  0.00128276     0.0290878  1.0         2.95072f-16
+ 1.0          1.0          0.751695  …  0.933386   0.00125624  1.0
+ 4.51948f-20  3.69794f-10  0.248305     0.0666144  0.998744    7.22138f-18
 
 julia&gt; o = Flux.onecold(probs)
 44-element Vector{Int64}:
@@ -281,7 +282,7 @@ julia&gt; pred_classes = labelnames[o]
  1
 
 julia&gt; print(mean(pred_classes .== targets[test_indices]))
-0.7727272727272727</code></pre><p><code>pred_classes</code> contains the predictions for our test set.</p><p>We can look at individual samples. For instance, first sample in te <code>test_samples[2]</code> is</p><pre><code class="language-json">{
+0.8181818181818182</code></pre><p><code>pred_classes</code> contains the predictions for our test set.</p><p>We can look at individual samples. For instance, first sample in te <code>test_samples[2]</code> is</p><pre><code class="language-json">{
   &quot;ind1&quot;: 1,
   &quot;inda&quot;: 0,
   &quot;logp&quot;: 3.92,
@@ -314,4 +315,4 @@ julia&gt; print(mean(pred_classes .== targets[test_indices]))
 1</code></pre><p>if you want to see the probability distribution, it can be obtained by applying <code>softmax</code> to the output of the network.</p><pre><code class="language-julia-repl">julia&gt; softmax(model(testset[1]).data)
 2×1 Matrix{Float32}:
  1.0
- 6.9572655f-27</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p><p>This concludes a simple classifier for JSON data.</p><p>But keep in mind the framework is general and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 27 April 2021 07:24">Tuesday 27 April 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ 4.5194993f-20</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p><p>This concludes a simple classifier for JSON data.</p><p>But keep in mind the framework is general and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 28 April 2021 15:10">Wednesday 28 April 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
