@@ -499,7 +499,11 @@ end
 			3)),
 		4)
 
-		@test sample_synthetic(sch) == Dict(:a=>5,:b=>5)
+		@static if VERSION >= v"1.6.0-"
+			@test sample_synthetic(sch) == Dict(:a=>5,:b=>5)
+		else
+			@test sample_synthetic(sch) == Dict(:a=>2,:b=>2)
+		end
 
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
@@ -508,8 +512,13 @@ end
 
 		s = ext(sample_synthetic(sch))
 		# this is wrong
-		@test s[:a][:e1].data ≃ [0 0 0 1 0]'
-		@test s[:b][:e1].data ≃ [1 0 0 0]'
+		@static if VERSION >= v"1.6.0-"
+			@test s[:a][:e1].data ≃ [0 0 0 1 0]'
+			@test s[:b][:e1].data ≃ [0 0 1 0]'
+		else
+			@test s[:a][:e1].data ≃ [1 0 0 0 0]'
+			@test s[:b][:e1].data ≃ [1 0 0 0]'
+		end
 
 		m = reflectinmodel(sch, ext)
 		@test !(m[:a][:e1].m isa PostImputingDense)
@@ -545,10 +554,13 @@ end
 			4)),
 		4)
 
-		@test sample_synthetic(sch) == Dict(
-			:a=>5
-		)
 		# this is not representative, but all information is inside types
+		@static if VERSION >= v"1.6.0-"
+			@test sample_synthetic(sch) == Dict(:a=>5)
+		else
+			@test sample_synthetic(sch) == Dict(:a=>2)
+		end
+
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
 		@test ext[:a][1].uniontypes
@@ -557,7 +569,11 @@ end
 
 		s = ext(sample_synthetic(sch))
 		# this is wrong
-		@test s[:a][:e1].data ≃ [1 0 0]'
+		@static if VERSION >= v"1.6.0-"
+			@test s[:a][:e1].data ≃ [0 1 0]'
+		else
+			@test s[:a][:e1].data ≃ [1 0 0]'
+		end
 
 		m = reflectinmodel(sch, ext)
 		# this is wrong, it should not be postimputing
