@@ -832,8 +832,10 @@ end
 	  ├── d: ArrayModel(identity)
 	  ├── e: ArrayModel(Dense(4, 10))
 	  ├── f: ArrayModel(Dense(4, 10))
-	  └── g: ArrayModel(identity)"""
+	  └── g: ArrayModel(identity)
+	"""
 end
+
 # todo: add separate tests for reflectinmodel(sch, ext) to test behavior with various missing and non-missing stuff in schema
 # e.g. empty string, missing keys, irregular schema and MultiRepresentation
 
@@ -857,7 +859,8 @@ end
 	  ├── a: Float32 ["E"]
 	  ├── b: FeatureVector with 3 items ["U"]
 	  └── c: Array of ["k"]
-	           └── Categorical d = 6 ["s"]"""
+	           └── Categorical d = 6 ["s"]
+	"""
 
 	ext_j1 = ext(j1, store_input=false)
 	ext_j2 = ext(j2, store_input=false)
@@ -1047,7 +1050,8 @@ end
                ├── 3: [List] (updated = 1)
                │        └── [Scalar - Int64], 5 unique values, updated = 5
                └── 4: [Dict] (updated = 1)
-                        └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1"""
+                        └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1
+	"""
 
 	@test buf_printtree(ext, trav=true) ==
     """
@@ -1056,7 +1060,8 @@ end
 	           ├── e1: FeatureVector with 5 items ["c"]
 	           ├── e2: Dict ["k"]
 	           │         └── Sylvanas is the worst warchief ever: String ["o"]
-	           └── e3: Float32 ["s"]"""
+	           └── e3: Float32 ["s"]
+	"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
@@ -1075,7 +1080,8 @@ end
 	           ├── e1: ArrayNode(5×1 Array with Union{Missing, Float32} elements) with 1 obs
 	           ├── e2: ProductNode with 1 obs
 	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) with 1 obs
-	           └── e3: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs"""
+	           └── e3: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs
+	"""
 	@test ext[:a][1] == ext["c"]
 end
 
@@ -1096,7 +1102,8 @@ end
 	           ├── 1: [Scalar - String], 2 unique values, updated = 2
 	           ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
 	           └── 3: [List] (updated = 1)
-	                    └── [Scalar - Int64], 5 unique values, updated = 5"""
+	                    └── [Scalar - Int64], 5 unique values, updated = 5¨
+	"""
 
 	@test buf_printtree(ext) ==
 	"""
@@ -1104,7 +1111,8 @@ end
 	  └── a: MultiRepresentation
 	           ├── e1: String
 	           ├── e2: Float32
-	           └── e3: FeatureVector with 5 items"""
+	           └── e3: FeatureVector with 5 items
+	"""
 
 	e1 = ext(j1)
 	e2 = ext(j2)
@@ -1159,7 +1167,8 @@ end
     @test buf_printtree(e) ==
 	"""
     Auxiliary extractor with
-      └── Categorical d = 3"""
+      └── Categorical d = 3
+	"""
 end
 
 @testset "Not skipping single dict key" begin
@@ -1183,14 +1192,16 @@ end
     """
 	ProductNode with 1 obs
 	  └── a: BagNode with 1 obs
-	           └── ArrayNode(1×2 Array with Float32 elements) with 2 obs"""
+	           └── ArrayNode(1×2 Array with Float32 elements) with 2 obs
+	"""
 
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) ==
     """
 	ProductModel … ↦ ArrayModel(identity)
 	  └── a: BagModel … ↦ ⟨SegmentedMean(1), SegmentedMax(1)⟩ ↦ ArrayModel(Dense(3, 10))
-	           └── ArrayModel(identity)"""
+	           └── ArrayModel(identity)
+	"""
 end
 
 @testset "default_scalar_extractor" begin

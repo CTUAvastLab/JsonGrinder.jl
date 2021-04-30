@@ -499,7 +499,7 @@ end
 			3)),
 		4)
 
-		@test sample_synthetic(sch) == Dict(:a=>5,:b=>5)
+		@test sample_synthetic(sch) == Dict(:a=>2,:b=>2)
 
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
@@ -921,24 +921,28 @@ params_empty(m) = m |> params .|> size |> isempty
 	@test buf_printtree(ext12, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: Categorical d = 3 ["U"]"""
+	  └── a: Categorical d = 3 ["U"]
+	"""
 
 	@test buf_printtree(ext23, trav=true) ==
   	"""
 	Dict [""]
 	  └── a: MultiRepresentation ["U"]
-	           └── e1: Categorical d = 3 ["k"]"""
+	           └── e1: Categorical d = 3 ["k"]
+	"""
 
   	@test buf_printtree(ext34, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: Categorical d = 3 ["U"]"""
+	  └── a: Categorical d = 3 ["U"]
+	"""
 
   	@test buf_printtree(ext14, trav=true) ==
 	"""
 	Dict [""]
 	  └── a: MultiRepresentation ["U"]
-	           └── e1: Categorical d = 3 ["k"]"""
+	           └── e1: Categorical d = 3 ["k"]
+	"""
 
 	# but that's not problem, there are identity layers, so number of parameters is same
 
@@ -965,24 +969,28 @@ params_empty(m) = m |> params .|> size |> isempty
 	@test buf_printtree(ext12, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: Float32 ["U"]"""
+	  └── a: Float32 ["U"]
+	"""
 
 	@test buf_printtree(ext23, trav=true) ==
   	"""
 	Dict [""]
 	  └── a: MultiRepresentation ["U"]
-	           └── e1: Float32 ["k"]"""
+	           └── e1: Float32 ["k"]
+	"""
 
   	@test buf_printtree(ext34, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: Float32 ["U"]"""
+	  └── a: Float32 ["U"]
+	"""
 
   	@test buf_printtree(ext14, trav=true) ==
 	"""
 	Dict [""]
 	  └── a: MultiRepresentation ["U"]
-	           └── e1: Float32 ["k"]"""
+	           └── e1: Float32 ["k"]
+	"""
 
 	# but that's not problem, there are identity layers, so number of parameters is same
 

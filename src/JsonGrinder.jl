@@ -16,8 +16,9 @@ include("util.jl")
 export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString, AuxiliaryExtractor, ExtractKeyAsField
 export suggestextractor, schema, extractbatch, generate_html
 
-Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = show(io, Base.typename(T))
-Base.show(io::IO, ::MIME"text/plain", n::Union{JSONEntry, AbstractExtractor}) = HierarchicalUtils.printtree(io, n; trav=false, htrunc=3, vtrunc=20)
+Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = print(io, Base.nameof(T))
+Base.show(io::IO, ::MIME"text/plain", @nospecialize(n::Union{JSONEntry, AbstractExtractor})) = 
+    HierarchicalUtils.printtree(io, n; trav=false, htrunc=3, vtrunc=20, breakline=false)
 Base.getindex(n::Union{JSONEntry, AbstractExtractor}, i::AbstractString) = HierarchicalUtils.walk(n, i)
 
 end # module

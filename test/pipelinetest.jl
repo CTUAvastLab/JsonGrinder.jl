@@ -120,28 +120,32 @@ end
 	           └── [Dict] (updated = 5)
 	                 ├── a: [Scalar - Int64], 2 unique values, updated = 4
 	                 ├── b: [Scalar - Int64], 2 unique values, updated = 4
-	                 └── c: [Scalar - String], 3 unique values, updated = 3"""
+	                 └── c: [Scalar - String], 3 unique values, updated = 3
+	"""
 	@test buf_printtree(ext) == """
 	Dict
 	  └── a: Array of
 	           └── Dict
 	                 ├── a: Categorical d = 3
 	                 ├── b: Categorical d = 3
-	                 └── c: String"""
+	                 └── c: String
+	"""
 	@test buf_printtree(m) == """
 	ProductModel … ↦ ArrayModel(identity)
 	  └── a: BagModel … ↦ ⟨SegmentedMean(10), SegmentedMax(10)⟩ ↦ ArrayModel(Dense(21, 10, relu))
 	           └── ProductModel … ↦ ArrayModel(Dense(30, 10, relu))
 	                 ├── a: ArrayModel([post_imputing]Dense(3, 10, relu))
 	                 ├── b: ArrayModel([post_imputing]Dense(3, 10, relu))
-	                 └── c: ArrayModel([post_imputing]Dense(2053, 10, relu))"""
+	                 └── c: ArrayModel([post_imputing]Dense(2053, 10, relu))
+	"""
 	@test buf_printtree(ds) == """
 	ProductNode with 5 obs
 	  └── a: BagNode with 5 obs
 	           └── ProductNode with 5 obs
 	                 ├── a: ArrayNode(3×5 MaybeHotMatrix with Union{Missing, Bool} elements) with 5 obs
 	                 ├── b: ArrayNode(3×5 MaybeHotMatrix with Union{Missing, Bool} elements) with 5 obs
-	                 └── c: ArrayNode(2053×5 NGramMatrix with Union{Missing, Int64} elements) with 5 obs"""
+	                 └── c: ArrayNode(2053×5 NGramMatrix with Union{Missing, Int64} elements) with 5 obs
+	"""
 
 	@test m[""].m.m == identity
 

@@ -15,39 +15,39 @@ sch = schema([j1,j2,j3,j4,j5,j6])
 ext = suggestextractor(sch, testing_settings)
 
 @testset "printtree" begin
-    @test buf_printtree(ext, trav=true) ==
+    @test buf_printtree(ext, trav=true) == """
+    Dict [""]
+      ├── a: Float32 ["E"]
+      ├── b: Dict ["U"]
+      │        ├── a: Array of ["Y"]
+      │        │        └── Float32 ["a"]
+      │        └── b: Float32 ["c"]
+      └── c: Dict ["k"]
+               └── a: Dict ["s"]
+                        ├── a: Array of ["u"]
+                        │        └── Float32 ["v"]
+                        └── b: Array of ["w"]
+                                 └── Float32 ["x"]
     """
-	Dict [""]
-	  ├── a: Float32 ["E"]
-	  ├── b: Dict ["U"]
-	  │        ├── a: Array of ["Y"]
-	  │        │        └── Float32 ["a"]
-	  │        └── b: Float32 ["c"]
-	  └── c: Dict ["k"]
-	           └── a: Dict ["s"]
-	                    ├── a: Array of ["u"]
-	                    │        └── Float32 ["v"]
-	                    └── b: Array of ["w"]
-	                             └── Float32 ["x"]"""
     e = JsonGrinder.key_as_field(sch[:b], testing_settings, path = "b")
 	ext2 = deepcopy(ext)
 	ext2.dict[:b] = e
-	@test buf_printtree(ext2, trav=true) ==
+	@test buf_printtree(ext2, trav=true) == """
+    Dict [""]
+      ├── a: Float32 ["E"]
+      ├── b: KeyAsField ["U"]
+      │        ├── String ["Y"]
+      │        └── MultiRepresentation ["c"]
+      │              ├── e1: Array of ["d"]
+      │              │         └── Float32 ["dU"]
+      │              └── e2: Float32 ["e"]
+      └── c: Dict ["k"]
+               └── a: Dict ["s"]
+                        ├── a: Array of ["u"]
+                        │        └── Float32 ["v"]
+                        └── b: Array of ["w"]
+                                 └── Float32 ["x"]
     """
-	Dict [""]
-	  ├── a: Float32 ["E"]
-	  ├── b: KeyAsField ["U"]
-	  │        ├── String ["Y"]
-	  │        └── MultiRepresentation ["c"]
-	  │              ├── e1: Array of ["d"]
-	  │              │         └── Float32 ["dU"]
-	  │              └── e2: Float32 ["e"]
-	  └── c: Dict ["k"]
-	           └── a: Dict ["s"]
-	                    ├── a: Array of ["u"]
-	                    │        └── Float32 ["v"]
-	                    └── b: Array of ["w"]
-	                             └── Float32 ["x"]"""
 end
 
 @testset "nnodes" begin
@@ -115,7 +115,8 @@ end
 
 @testset "show" begin
     e = ExtractCategorical(["a","b"])
-    @test buf_printtree(e) == """Categorical d = 3"""
+    @test buf_printtree(e) == """Categorical d = 3
+    """
 
     dict = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
     br = ExtractDict(dict)
@@ -125,7 +126,8 @@ end
       ├── a: Array of ["E"]
       │        └── Float64 ["M"]
       └── b: Array of ["U"]
-               └── Float64 ["c"]"""
+               └── Float64 ["c"]
+    """
 
     dict = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64), "c" => ExtractArray(ExtractScalar(Float64,2,3)))
     br = ExtractDict(dict)
@@ -135,7 +137,8 @@ end
       ├── a: Float64 ["E"]
       ├── b: Float64 ["U"]
       └── c: Array of ["k"]
-               └── Float64 ["s"]"""
+               └── Float64 ["s"]
+    """
 
     other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
     br1 = ExtractDict(other1)
@@ -150,5 +153,6 @@ end
       │              │        └── Float64 ["P"]
       │              └── b: Array of ["Q"]
       │                       └── Float64 ["R"]
-      └── b: Float64 ["U"]"""
+      └── b: Float64 ["U"]
+    """
 end

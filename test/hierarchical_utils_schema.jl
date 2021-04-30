@@ -27,7 +27,8 @@ sch = schema([j1,j2,j3,j4,j5,j6])
                         ├── a: [List] (updated = 2) ["u"]
                         │        └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["v"]
                         └── b: [List] (updated = 2) ["w"]
-                                 └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["x"]"""
+                                 └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["x"]
+    """
 end
 
 @testset "nnodes" begin
@@ -114,7 +115,8 @@ end
       │                 └── b: [List] (updated = 2) ["g"]
       │                          └── [Scalar - Float64,Int64], 3 unique values, updated = 5 ["h"]
       └── d: [Empty List] (updated = 5) ["k"]
-               └── Nothing ["s"]"""
+               └── Nothing ["s"]
+    """
 end
 
 @testset "print with multi entry" begin
@@ -142,7 +144,8 @@ end
       │        └── 3: [List] (updated = 1) ["g"]
       │                 └── [Scalar - String], 3 unique values, updated = 3 ["i"]
       └── d: [Empty List] (updated = 5) ["k"]
-               └── Nothing ["s"]"""
+               └── Nothing ["s"]
+    """
 end
 
 @testset "print with multi entry 2" begin
@@ -164,7 +167,8 @@ end
                │        └── [MultiEntry] (updated = 3) ["o"]
                │              ├── 1: [Scalar - String], 2 unique values, updated = 2 ["p"]
                │              └── 2: [Scalar - Int64], 1 unique values, updated = 1 ["q"]
-               └── 3: [Scalar - Float64,Int64], 2 unique values, updated = 2 ["s"]"""
+               └── 3: [Scalar - Float64,Int64], 2 unique values, updated = 2 ["s"]
+    """
 end
 
 
@@ -177,7 +181,8 @@ end
     j6 = JSON.parse("""{"a": 4}""")
 
     sch = schema([j1,j2,j3,j4,j5,j6])
-
-    @test repr(sch) == "typename(DictEntry)"
-    @test repr("text/plain", sch) == buf_printtree(sch; trav=false, htrunc=3)
+    methods(printtree)
+    @test repr(sch) == "DictEntry"
+    @test repr("text/plain", sch) == buf_printtree(sch; trav=false, htrunc=3, vtrunc=20, breakline=false)
+    repr(Dict(1=>2))
 end
