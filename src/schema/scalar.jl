@@ -83,7 +83,9 @@ function merge(es::Entry...)
 	else
 		counts_merged = merge(+, counts.(es)...)
 		if length(counts_merged) > max_keys
-			counts_merged_list = sort(collect(counts_merged), by=x->x[2], rev=true)
+			# originally it was this version, but that lead to instable picking of keys based on version of julia, now I enforce sort withing same value
+			# counts_merged_list = sort(collect(counts_merged), by=x->x[2], rev=true)
+			counts_merged_list = sort(collect(counts_merged), by=x->(x[2], x[1]), rev=true)
 			counts_merged = Dict(counts_merged_list[1:max_keys])
 		end
 		Entry(counts_merged, updates_merged)
