@@ -1042,15 +1042,15 @@ end
 	ext = suggestextractor(sch, testing_settings)
 
 	@test buf_printtree(sch) ==
-    """
-    [Dict] (updated = 7)
-      └── a: [MultiEntry] (updated = 7)
-               ├── 1: [Scalar - String], 3 unique values, updated = 3
-               ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
-               ├── 3: [List] (updated = 1)
-               │        └── [Scalar - Int64], 5 unique values, updated = 5
-               └── 4: [Dict] (updated = 1)
-                        └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1
+	"""
+	[Dict] (updated = 7)
+	  └── a: [MultiEntry] (updated = 7)
+	           ├── 1: [Scalar - String], 3 unique values, updated = 3
+	           ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
+	           ├── 3: [List] (updated = 1)
+	           │        └── [Scalar - Int64], 5 unique values, updated = 5
+	           └── 4: [Dict] (updated = 1)
+	                    └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1
 	"""
 
 	@test buf_printtree(ext, trav=true) ==
@@ -1102,7 +1102,7 @@ end
 	           ├── 1: [Scalar - String], 2 unique values, updated = 2
 	           ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
 	           └── 3: [List] (updated = 1)
-	                    └── [Scalar - Int64], 5 unique values, updated = 5¨
+	                    └── [Scalar - Int64], 5 unique values, updated = 5
 	"""
 
 	@test buf_printtree(ext) ==
@@ -1166,8 +1166,8 @@ end
 
     @test buf_printtree(e) ==
 	"""
-    Auxiliary extractor with
-      └── Categorical d = 3
+	Auxiliary extractor with
+	  └── Categorical d = 3
 	"""
 end
 
@@ -1185,7 +1185,8 @@ end
 	"""
 	Dict
 	  └── a: Array of
-	           └── Float32"""
+	           └── Float32
+	"""
 
 	ext_j2 = ext(j2)
 	@test buf_printtree(ext_j2) ==

@@ -90,27 +90,31 @@ end
 	"""
 	MultiRepresentation [""]
 	  ├── e1: Categorical d = 4 ["E"]
-	  └── e2: String ["U"]"""
+	  └── e2: String ["U"]
+	"""
 
 	@test buf_printtree(e, trav=true) ==
 	"""
 	ProductNode with 1 obs [""]
 	  ├── e1: ArrayNode(4×1 MaybeHotMatrix with Union{Missing, Bool} elements) with 1 obs ["E"]
-	  └── e2: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) with 1 obs ["U"]"""
+	  └── e2: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) with 1 obs ["U"]
+	"""
 
 	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"], false),
   		JsonGrinder.ExtractString(false)))
   	e = ex("Olda")
 
   	@test buf_printtree(ex, trav=true) ==
-  	"""
-  	MultiRepresentation [""]
-  	  ├── e1: Categorical d = 4 ["E"]
-  	  └── e2: String ["U"]"""
+	"""
+	MultiRepresentation [""]
+	  ├── e1: Categorical d = 4 ["E"]
+	  └── e2: String ["U"]
+	"""
 
-  	@test buf_printtree(e, trav=true) ==
-  	"""
+	@test buf_printtree(e, trav=true) ==
+	"""
 	ProductNode with 1 obs [""]
 	  ├── e1: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs ["E"]
-	  └── e2: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs ["U"]"""
+	  └── e2: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs ["U"]
+	"""
 end

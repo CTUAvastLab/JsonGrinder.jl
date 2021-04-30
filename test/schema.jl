@@ -499,7 +499,7 @@ end
 			3)),
 		4)
 
-		@test sample_synthetic(sch) == Dict(:a=>2,:b=>2)
+		@test sample_synthetic(sch) == Dict(:a=>5,:b=>5)
 
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
@@ -508,7 +508,7 @@ end
 
 		s = ext(sample_synthetic(sch))
 		# this is wrong
-		@test s[:a][:e1].data ≃ [0 0 0 0 1]'
+		@test s[:a][:e1].data ≃ [0 0 0 1 0]'
 		@test s[:b][:e1].data ≃ [1 0 0 0]'
 
 		m = reflectinmodel(sch, ext)
