@@ -95,7 +95,6 @@ samples = Vector{Dict}(open(JSON.parse, "../data/mutagenesis/data.json"))
 
 metadata = open(JSON.parse, "data/mutagenesis/meta.json")
 labelkey = metadata["label"]
-val_num = metadata["val_samples"]
 test_num = metadata["test_samples"]
 minibatchsize = 100
 iterations = 1_000
@@ -104,8 +103,7 @@ neurons = 20 		# neurons per layer
 targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)
 
-train_indices = 1:length(samples)-val_num-test_num
-val_indices = length(samples)-val_num-test_num+1:length(samples)-test_num
+train_indices = 1:length(samples)-test_num
 test_indices = length(samples)-test_num+1:length(samples)
 
 #####
@@ -140,14 +138,12 @@ end
 accuracy(x,y) = mean(labelnames[Flux.onecold(model(x).data)] .== y)
 
 trainset = reduce(catobs, data[train_indices])
-valset = reduce(catobs, data[val_indices])
 testset = reduce(catobs, data[test_indices])
 
 cb = () -> begin
 	train_acc = accuracy(trainset, targets[train_indices])
-	val_acc = accuracy(valset, targets[val_indices])
 	test_acc = accuracy(testset, targets[test_indices])
-	println("accuracy: train = $train_acc, val = $val_acc, test = $test_acc")
+	println("accuracy: train = $train_acc, test = $test_acc")
 end
 ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
@@ -182,10 +178,9 @@ using Mill: reflectinmodel
 samples = Vector{Dict}(open(JSON.parse, "../../data/mutagenesis/data.json"))
 ```
 
-we load metadata, which store which class is to be predicted and how many samples to be used for validation and for testing
+we load metadata, which store which class is to be predicted and how many samples to be used for testing
 ```@example mutagenesis
 metadata = open(JSON.parse, "../../data/mutagenesis/meta.json")
-val_num = metadata["val_samples"]
 test_num = metadata["test_samples"]
 minibatchsize = 100
 iterations = 1_000
@@ -195,13 +190,12 @@ labelkey = metadata["label"]
 
 we see  that label to be predicted is `mutagenic`.
 
-We create labels and remove them from data, such that we do not use them as features. We also prepare indices of train, test and validation data here.
+We create labels and remove them from data, such that we do not use them as features. We also prepare indices of train and test data here.
 ```@example mutagenesis
 targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)
 
-train_indices = 1:length(samples)-val_num-test_num
-val_indices = length(samples)-val_num-test_num+1:length(samples)-test_num
+train_indices = 1:length(samples)-test_num
 test_indices = length(samples)-test_num+1:length(samples)
 ```
 
@@ -242,14 +236,12 @@ end
 accuracy(x,y) = mean(labelnames[Flux.onecold(model(x).data)] .== y)
 
 trainset = reduce(catobs, data[train_indices])
-valset = reduce(catobs, data[val_indices])
 testset = reduce(catobs, data[test_indices])
 
 cb = () -> begin
 	train_acc = accuracy(trainset, targets[train_indices])
-	val_acc = accuracy(valset, targets[val_indices])
 	test_acc = accuracy(testset, targets[test_indices])
-	println("accuracy: train = $train_acc, val = $val_acc, test = $test_acc")
+	println("accuracy: train = $train_acc, test = $test_acc")
 end
 ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
@@ -260,7 +252,7 @@ and then we can start trining
 Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
 ```
 
-We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on validation and test set we get over 70%.
+We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on test set we get over 70%.
 
 Last part is inference on test data
 ```@repl mutagenesis
