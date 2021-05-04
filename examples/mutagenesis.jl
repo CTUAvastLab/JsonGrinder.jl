@@ -12,7 +12,6 @@ JSON.print(samples[3],2)
 
 metadata = open(JSON.parse, "data/mutagenesis/meta.json")
 labelkey = metadata["label"]
-val_num = metadata["val_samples"]
 test_num = metadata["test_samples"]
 minibatchsize = 100
 iterations = 5_000
@@ -21,8 +20,7 @@ neurons = 20 		# neurons per layer
 targets = map(i -> i[labelkey], samples)
 foreach(i -> delete!(i, labelkey), samples)
 
-train_indices = 1:length(samples)-val_num-test_num
-val_indices = length(samples)-val_num-test_num+1:length(samples)-test_num
+train_indices = 1:length(samples)-test_num
 test_indices = length(samples)-test_num+1:length(samples)
 
 #####
@@ -57,14 +55,12 @@ end
 accuracy(x,y) = mean(labelnames[Flux.onecold(model(x).data)] .== y)
 
 trainset = reduce(catobs, data[train_indices])
-valset = reduce(catobs, data[val_indices])
 testset = reduce(catobs, data[test_indices])
 
 cb = () -> begin
 	train_acc = accuracy(trainset, targets[train_indices])
-	val_acc = accuracy(valset, targets[val_indices])
 	test_acc = accuracy(testset, targets[test_indices])
-	println("accuracy: train = $train_acc, val = $val_acc, test = $test_acc")
+	println("accuracy: train = $train_acc, test = $test_acc")
 end
 ps = Flux.params(model)
 loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
