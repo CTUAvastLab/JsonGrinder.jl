@@ -1,7 +1,7 @@
 name = "JsonGrinder"
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
 authors = ["pevnak <pevnak@gmail.com>", "Matej Racinsky <racinsky.matej@seznam.cz>"]
-version = "1.7.6"
+version = "1.7.7"
 
 [deps]
 BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
@@ -25,7 +25,7 @@ ThreadTools = "dbf13d8f-d36e-4350-8970-f3a99faba1a8"
 Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 
 [compat]
-BSON = "^0.2"
+BSON = "^0.3"
 DataStructures = "^0.17"
 FillArrays = "~0.6, ~0.7, ~0.8, ~0.9"
 Flux = "~0.11"
