@@ -19,7 +19,7 @@ lens2code(n::Union{AbstractExtractor, JSONEntry}, l::Lens) = HierarchicalUtils.f
 
 Base.reduce(::typeof(catobs), a::Vector{<:OneHotMatrix}) = _catobs(a[:])
 catobs(a::OneHotMatrix...) = _catobs(collect(a))
-_catobs(a::AbstractArray{<:OneHotMatrix}) = reduce(hcat, a))
+_catobs(a::AbstractArray{<:OneHotMatrix}) = reduce(hcat, a)
 
 # this is ~14x faster than original Flux implementation, but is much more specific
 Base.hcat(Xs::T...) where T <: OneHotMatrix = T(reduce(vcat, Flux._indices.(Xs)))
