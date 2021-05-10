@@ -1,4 +1,4 @@
-using Setfield
+using Setfield, Flux
 
 @testset "code2lens & lens2code" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2,"c":"oh"}]}""")
@@ -33,4 +33,16 @@ using Setfield
 	sch = schema([j1, j2, j3])
 	l_sch = code2lens(sch, "S") |> only
 	@test l_sch == (@lens _.childs[:a].childs[3].items)
+end
+
+@testset "onehot hcat" begin
+	X1 = Flux.onehotbatch([1,2,3,4,5], 1:10)
+	@test @which(hcat(X1,X1)).module == JsonGrinder
+	@test @which(reduce(hcat, [X1,X1])).module == JsonGrinder
+
+	@test hcat(X1,X1) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
+	@test reduce(hcat, [X1,X1]) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
+
+	X2 = Flux.onehotbatch([1,2,3,4,5,6], 1:12)
+	@test_throws DimensionMismatch hcat(X1,X2)
 end
