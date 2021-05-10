@@ -23,7 +23,7 @@ _catobs(a::AbstractArray{<:OneHotMatrix}) = reduce(hcat, a)
 
 # this is ~14x faster than original Flux implementation, but is much more specific
 Base.hcat(Xs::T...) where T <: OneHotMatrix = T(reduce(vcat, Flux._indices.(Xs)))
-Base.reduce(::typeof(hcat), Xs::Vector{<:T}) where T <: OneHotMatrix = T(reduce(vcat, Flux._indices.(Xs)))
+Base.reduce(::typeof(hcat), Xs::Vector{T}) where T <: OneHotMatrix = T(reduce(vcat, Flux._indices.(Xs)))
 
 # function schema_lens(model, lens::ComposedLens)
 #     outerlens = schema_lens(model, lens.outer)
