@@ -262,7 +262,8 @@ end
 	@test typeof(ea.data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
 	@test typeof(en.data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
 
-	@test e(["a", "b"]).data ≈ [1 0; 0 1; 0 0]
+	@test e(["a", "b"]).data ≈ [0, 0, 1]
+	@test mapreduce(e, catobs, ["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test typeof(e(["a", "b"]).data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
 
 	@test isnothing(ExtractCategorical([]))
