@@ -1,4 +1,4 @@
-using Setfield, Flux
+using Setfield, Flux, InteractiveUtils
 
 @testset "code2lens & lens2code" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2,"c":"oh"}]}""")

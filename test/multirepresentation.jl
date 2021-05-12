@@ -46,8 +46,22 @@ using Mill: nobs
 		@test e[:e1].data.data == [1 2]
 		@test e[:e2].data.s ≃ [missing]
 
+		ex = MultipleRepresentation([
+        	ExtractCategorical(["packer", "plain"], true),
+        	ExtractArray(ExtractString(true))
+        ])
 
+		@test ex(["sfx", "plain"]) ≃ ProductNode((;
+			:e1=>ArrayNode(MaybeHotMatrix([missing], 3)),
+			:e2=>BagNode(
+				ArrayNode(NGramMatrix(["sfx", "plain"])),
+				[1,1])
+		))
+
+		@test ex(["sfx", "plain"]) ≃ ex(Any["sfx", "plain"])
+		@test ex(["sfx", "plain"]) ≃ ex(String["sfx", "plain"])
 	end
+
 	@testset "without uniontypes" begin
 		ex = MultipleRepresentation((
 			ExtractCategorical(["Olda", "Tonda", "Milda"], false),
@@ -69,15 +83,21 @@ using Mill: nobs
 
 		ex2 = MultipleRepresentation((
 			ExtractCategorical(["Olda", "Tonda", "Milda"], false),
-			JsonGrinder.ExtractString(false)))
+			ExtractString(false)))
 		@test hash(ex) === hash(ex2)
 		@test ex == ex2
 
 		ex3 = MultipleRepresentation((
 			ExtractCategorical(["Polda", "Tonda", "Milada"], false),
-			JsonGrinder.ExtractString(false)))
+			ExtractString(false)))
 		@test hash(ex) !== hash(ex3)
 		@test ex != ex3
+
+		ex = MultipleRepresentation([
+        	ExtractCategorical(["packer", "plain"], false),
+        	ExtractArray(ExtractString(false))
+        ])
+		@test_throws ErrorException ex(["sfx", "plain"])
 	end
 end
 
