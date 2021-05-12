@@ -31,11 +31,6 @@ function (s::ExtractCategorical{V,I})(v::V; store_input=false) where {V,I}
     store_input ? ArrayNode(x, [v]) : ArrayNode(x)
 end
 
-function (s::ExtractCategorical{V,I})(vs::Vector{V}; store_input=false) where {V,I}
-	x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(get(s.keyvalemap, v, s.n), s.n) for v in vs])
-	store_input ? ArrayNode(x, [vs]) : ArrayNode(x)
-end
-
 function (s::ExtractCategorical)(v::Nothing; store_input=false)
 	x = Flux.OneHotMatrix(s.n,[Flux.OneHotVector(s.n, s.n)])
 	store_input ? ArrayNode(x, [v]) : ArrayNode(x)
