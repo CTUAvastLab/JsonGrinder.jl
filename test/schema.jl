@@ -355,11 +355,11 @@ end
 			Tuple{BagNode{
 				ProductNode{NamedTuple{(:a, :b),
 					Tuple{
-						ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing},
-						ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}}
+						ArrayNode{OneHotMatrix{Int64, 3, Vector{Int64}},Nothing},
+						ArrayNode{OneHotMatrix{Int64, 4, Vector{Int64}},Nothing}}
 					},Nothing},
 				AlignedBags{Int64},Nothing},
-			ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}}
+			ArrayNode{OneHotMatrix{Int64, 3, Vector{Int64}},Nothing}}
 		}, Nothing}
 	end
 
@@ -396,7 +396,7 @@ end
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing},
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing}}
 				},Nothing},AlignedBags{Int64},Nothing},
-			ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}
+			ArrayNode{OneHotMatrix{Int64, 3, Vector{Int64}},Nothing}
 		}},Nothing}
 	end
 
@@ -421,7 +421,7 @@ end
 		@test ext[:a].item[:a].uniontypes
 		@test ext[:a].item[:b].uniontypes
 		@test !ext[:a].item[:c].uniontypes
-# todo: add tests for extraction of synthetic samples and if they have correct types
+		# todo: add tests for extraction of synthetic samples and if they have correct types
 		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
 		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}"""))).data isa Matrix{Float32}
@@ -434,7 +434,7 @@ end
 					Tuple{
 						ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing},
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing},
-						ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}
+						ArrayNode{OneHotMatrix{Int64, 2, Vector{Int64}},Nothing}
 					}},
 				Nothing},
 			AlignedBags{Int64},Nothing}}},Nothing}
@@ -482,7 +482,7 @@ end
 						ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing}
 					}},
 				Nothing},
-				ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}
+				ArrayNode{OneHotMatrix{Int64, 2, Vector{Int64}},Nothing}
 			}},
 		Nothing}
 	end
@@ -532,7 +532,7 @@ end
 		@test s isa ProductNode{NamedTuple{(:a, :b),
 			Tuple{
 				ProductNode{NamedTuple{(:e1,),
-					Tuple{ArrayNode{MaybeHotMatrix{Int64, Int64, Bool},Nothing}}},
+					Tuple{ArrayNode{OneHotMatrix{Int64, 5, Vector{Int64}},Nothing}}},
 					Nothing},
 				ProductNode{NamedTuple{(:e1,),
 					Tuple{ArrayNode{MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}},Nothing}}

@@ -1,3 +1,4 @@
+import Flux: OneHotMatrix
 import Mill: ArrayNode, MaybeHotMatrix
 """
 	struct ExtractCategorical{V,I} <: AbstractExtractor
@@ -52,14 +53,14 @@ julia> e(missing).data
 julia> e = ExtractCategorical(2:4, false);
 
 julia> e([2,3,1,4]).data
-4×4 Mill.MaybeHotMatrix{Int64, Int64, Bool}:
+4×4 Flux.OneHotArray{4,2,Vector{Int64}}:
  1  0  0  0
  0  1  0  0
  0  0  0  1
  0  0  1  0
 
 julia> e(4).data
-4×1 Mill.MaybeHotMatrix{Int64, Int64, Bool}:
+4×1 Flux.OneHotArray{4,2,Vector{Int64}}:
  0
  0
  1
@@ -88,6 +89,11 @@ map_val(s, v) = get(s.keyvalemap, v, s.n)
 stabilize_types_categorical(s::ExtractCategorical{V,I}, x) where {V,I} = s.uniontypes ? Vector{Union{Missing, I}}(x) : x
 val2idx(s::ExtractCategorical{V,I}, v::V) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
 val2idx(s::ExtractCategorical{<:Number,I}, v::Number) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
+# https://github.com/FluxML/Flux.jl/pull/1595#discussion_r631067441 shows that we can have it faster if we specify type explicitly
+construct_onehot(x::Vector{I}, y) where I<:Integer = OneHotMatrix{I,y,Vector{I}}(x)
+# generic constructor, we should be hitting upper one all the time but to be super sure I keep it there to be generic
+construct_onehot(x, y) = OneHotMatrix(x, y)
+construct(s::ExtractCategorical, x, y) = s.uniontypes ? MaybeHotMatrix(x, y) : construct_onehot(x, y)
 
 make_missing_categorical(s::ExtractCategorical, v, store_input) =
     s.uniontypes ?
@@ -95,20 +101,20 @@ make_missing_categorical(s::ExtractCategorical, v, store_input) =
     error("This extractor does not support missing values")
 
 (s::ExtractCategorical{V,I})(v::V; store_input=false) where {V,I} =
-	_make_array_node(MaybeHotMatrix(val2idx(s, v), s.n), [v], store_input)
+	_make_array_node(construct(s, val2idx(s, v), s.n), [v], store_input)
 
 # following 2 methods are to let us extract float from int extractor and vice versa
 (s::ExtractCategorical{<:Number,I})(v::Number; store_input=false) where {I} =
-	_make_array_node(MaybeHotMatrix(val2idx(s, v), s.n), [v], store_input)
+	_make_array_node(construct(s, val2idx(s, v), s.n), [v], store_input)
 
 # following 2 methods are to let us extract numeric string from float or int extractor
 # I'm trying to parse as float because integer can be parsed as float so I assume all numbers we care about
 # are "floatable". Yes, this does not work for
 (s::ExtractCategorical{<:Number,I})(v::AbstractString; store_input=false) where {I} =
-	_make_array_node(MaybeHotMatrix(val2idx(s, tryparse(FloatType, v)), s.n), [v], store_input)
+	_make_array_node(construct(s, val2idx(s, tryparse(FloatType, v)), s.n), [v], store_input)
 (s::ExtractCategorical)(v::MissingOrNothing; store_input=false) = make_missing_categorical(s, v, store_input)
 (s::ExtractCategorical{V,I})(::ExtractEmpty; store_input=false) where {V,I} =
-	ArrayNode(MaybeHotMatrix(s.uniontypes ? Vector{Union{Missing, I}}() : Vector{I}(), s.n))
+	ArrayNode(construct(s, s.uniontypes ? Vector{Union{Missing, I}}() : Vector{I}(), s.n))
 
 (s::ExtractCategorical)(v; store_input=false) = make_missing_categorical(s, v, store_input)
 

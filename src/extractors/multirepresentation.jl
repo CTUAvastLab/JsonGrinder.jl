@@ -18,14 +18,14 @@ julia> e = MultipleRepresentation((ExtractString(false), ExtractCategorical(["tc
 julia> s1 = e("tcp")
 ProductNode with 1 obs
   ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs
-  └── e2: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs
+  └── e2: ArrayNode(4×1 OneHotArray with Bool elements) with 1 obs
 
 julia> s1[:e1]
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "tcp"
 
 julia> s1[:e2]
-4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64, Int64, Bool}, Nothing}:
+4×1 Mill.ArrayNode{Flux.OneHotArray{Int64, 4, 1, 2, Vector{Int64}}, Nothing}:
  0
  1
  0
@@ -34,14 +34,14 @@ julia> s1[:e2]
 julia> s2 = e("http")
 ProductNode with 1 obs
   ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs
-  └── e2: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs
+  └── e2: ArrayNode(4×1 OneHotArray with Bool elements) with 1 obs
 
 julia> s2[:e1]
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "http"
 
 julia> s2[:e2]
-4×1 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64, Int64, Bool}, Nothing}:
+4×1 Mill.ArrayNode{Flux.OneHotArray{Int64, 4, 1, 2, Vector{Int64}}, Nothing}:
  0
  0
  0

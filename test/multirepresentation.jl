@@ -77,7 +77,7 @@ using Mill: nobs
 		e = ex(extractempty)
 		@test nobs(e) == 0
 		@test nobs(e[:e1]) == 0
-		@test e[:e1].data isa MaybeHotMatrix{Int64, Int64, Bool}
+		@test e[:e1].data isa OneHotMatrix{Int64, 4, Vector{Int64}}
 		@test nobs(e[:e2]) == 0
 		@test e[:e2].data isa NGramMatrix{String,Array{String,1},Int64}
 
@@ -134,7 +134,7 @@ end
 	@test buf_printtree(e, trav=true) ==
 	"""
 	ProductNode with 1 obs [""]
-	  ├── e1: ArrayNode(4×1 MaybeHotMatrix with Bool elements) with 1 obs ["E"]
+	  ├── e1: ArrayNode(4×1 OneHotArray with Bool elements) with 1 obs ["E"]
 	  └── e2: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs ["U"]
 	"""
 end

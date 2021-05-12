@@ -3,6 +3,7 @@ using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict,
 using JsonGrinder: extractempty
 using Mill
 using Mill: catobs, nobs, MaybeHotMatrix
+using Flux: OneHotMatrix
 using LinearAlgebra
 
 function less_categorical_scalar_extractor()
@@ -514,8 +515,8 @@ end
 	@test e("z").data ≈ [0, 0, 1]
 	@test_throws ErrorException e(nothing)
 	@test_throws ErrorException e(missing)
-	@test typeof(e("a").data) == MaybeHotMatrix{Int64, Int64, Bool}
-	@test e(extractempty).data isa MaybeHotMatrix{Int64, Int64, Bool}
+	@test typeof(e("a").data) == OneHotMatrix{Int64, 3, Vector{Int64}}
+	@test e(extractempty).data isa OneHotMatrix{Int64, 3, Vector{Int64}}
 	@test nobs(e(extractempty)) == 0
 
 	@test mapreduce(e, catobs, ["a", "b"]).data ≈ [1 0; 0 1; 0 0]
@@ -523,7 +524,7 @@ end
 	@test_throws ErrorException e(["a", missing])
 	@test_throws ErrorException e(["a", missing, "x"])
 	@test_throws ErrorException typeof(e(["a", "b"]).data)
-	@test typeof(mapreduce(e, catobs, ["a", "b"]).data) == MaybeHotMatrix{Int64, Int64, Bool}
+	@test typeof(mapreduce(e, catobs, ["a", "b"]).data) == OneHotMatrix{Int64, 3, Vector{Int64}}
 	@test_throws ErrorException e(["a", "b", nothing])
 
 	@test isnothing(ExtractCategorical([], false))
