@@ -89,11 +89,7 @@ map_val(s, v) = get(s.keyvalemap, v, s.n)
 stabilize_types_categorical(s::ExtractCategorical{V,I}, x) where {V,I} = s.uniontypes ? Vector{Union{Missing, I}}(x) : x
 val2idx(s::ExtractCategorical{V,I}, v::V) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
 val2idx(s::ExtractCategorical{<:Number,I}, v::Number) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
-# https://github.com/FluxML/Flux.jl/pull/1595#discussion_r631067441 shows that we can have it faster if we specify type explicitly
-construct_onehot(x::Vector{I}, y) where I<:Integer = OneHotMatrix{I,y,Vector{I}}(x)
-# generic constructor, we should be hitting upper one all the time but to be super sure I keep it there to be generic
-construct_onehot(x, y) = OneHotMatrix(x, y)
-construct(s::ExtractCategorical, x, y) = s.uniontypes ? MaybeHotMatrix(x, y) : construct_onehot(x, y)
+construct(s::ExtractCategorical, x, y) = s.uniontypes ? MaybeHotMatrix(x, y) : OneHotMatrix(x, y)
 
 make_missing_categorical(s::ExtractCategorical, v, store_input) =
     s.uniontypes ?

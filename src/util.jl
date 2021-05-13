@@ -2,6 +2,7 @@ using Setfield: IdentityLens, PropertyLens, IndexLens, ComposedLens, Lens
 import Mill: pred_lens, code2lens, lens2code, _pred_lens, catobs
 using Flux: OneHotMatrix
 import Base
+import Flux: OneHotArray
 
 function _pred_lens(p::Function, n::T) where T <: Union{AbstractExtractor, JSONEntry}
     res = vcat([map(l -> PropertyLens{k}() ∘ l, _pred_lens(p, getproperty(n, k)))
@@ -23,6 +24,9 @@ _catobs(a::AbstractArray{<:OneHotMatrix}) = reduce(hcat, a)
 
 # this is ~14x faster than original Flux implementation, but is much more specific
 # basically it's taken from https://github.com/FluxML/Flux.jl/pull/1595
+# https://github.com/FluxML/Flux.jl/pull/1595#discussion_r631067441 shows that we can have it faster if we specify type explicitly
+OneHotArray(indices::T, L::Integer) where {T<:Integer} = OneHotArray{T, L, 0, 1, T}(indices)
+OneHotArray(indices::I, L::Integer) where {T, N, I<:AbstractArray{T, N}} = OneHotArray{T, L, N, N+1, I}(indices)
 Base.hcat(Xs::T...) where T <: OneHotMatrix = T(reduce(vcat, Flux._indices.(Xs)))
 Base.reduce(::typeof(hcat), Xs::Vector{T}) where T <: OneHotMatrix = T(reduce(vcat, Flux._indices.(Xs)))
 Base.hcat(xs::Flux.OneHotVector{T,L}...) where {T,L} = OneHotArray{T,L,1,Vector{T}}(reduce(vcat, Flux._indices.(xs)))
