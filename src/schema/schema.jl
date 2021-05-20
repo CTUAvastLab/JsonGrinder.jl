@@ -59,7 +59,7 @@ merge(::Nothing, e::JSONEntry) = e
 
 make_representative_sample(sch::JSONEntry, ex::AbstractExtractor) = ex(sample_synthetic(sch))
 
-function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.Dense(d, 10), fa=d->SegmentedMeanMax(d); fsm = Dict(), fsa = Dict(),
+function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, fm=d->Flux.Dense(d, 10), fa=d->BagCount(SegmentedMeanMax(d)); fsm = Dict(), fsa = Dict(),
 			   single_key_identity=true, single_scalar_identity=true)
 	# because we have type-stable extractors, we now have information about what is missing and what not inside types
 	# so I don't have to extract empty and missing samples, the logic is now part of suggestextractor
