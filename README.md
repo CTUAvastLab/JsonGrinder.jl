@@ -38,3 +38,13 @@ For citing, please use the following entry for the [original paper](https://arxi
       primaryClass={stat.ML}
 }
 ```
+
+and the following for this implementation (fill in the used `version`):
+```
+@software{jsongrinder2019,
+  author = {Tomas Pevny and Matej Racinsky},
+  title = {JsonGrinder.jl: a flexible library for automated feature engineering and conversion of JSONs to Mill.jl structures},
+  url = {https://github.com/CTUAvastLab/JsonGrinder.jl},
+  version = {...},
+}
+```
