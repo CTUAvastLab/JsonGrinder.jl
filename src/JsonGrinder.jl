@@ -18,7 +18,7 @@ export suggestextractor, schema, extractbatch, generate_html
 
 Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = print(io, Base.nameof(T))
 Base.show(io::IO, ::MIME"text/plain", @nospecialize(n::Union{JSONEntry, AbstractExtractor})) = 
-    HierarchicalUtils.printtree(io, n; trav=false, htrunc=3, vtrunc=20, breakline=false)
+    HierarchicalUtils.printtree(io, n; trav=false, htrunc=3, vtrunc=3, breakline=false)
 Base.getindex(n::Union{JSONEntry, AbstractExtractor}, i::AbstractString) = HierarchicalUtils.walk(n, i)
 
 end # module
