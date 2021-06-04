@@ -22,29 +22,29 @@ If `uniontypes` is true, it allows extracting `missing` values and all extracted
 ```jldoctest
 julia> e = ExtractCategorical(2:4, true);
 
-julia> e([2,3,1,4]).data
-4×4 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
+julia> mapreduce(e, catobs, [2,3,1,4]).data
+4×4 MaybeHotMatrix{Union{Missing, UInt32},UInt32,Union{Missing, Bool}}:
   true  false  false  false
  false   true  false  false
  false  false  false   true
  false  false   true  false
 
-julia> e([1,missing,5]).data
-4×3 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
+julia> mapreduce(e, catobs, [1,missing,5]).data
+4×3 MaybeHotMatrix{Union{Missing, UInt32},UInt32,Union{Missing, Bool}}:
  false  missing  false
  false  missing  false
  false  missing  false
   true  missing   true
 
 julia> e(4).data
-4×1 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
+4×1 MaybeHotMatrix{Union{Missing, UInt32},UInt32,Union{Missing, Bool}}:
  false
  false
   true
  false
 
 julia> e(missing).data
-4×1 Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}:
+4×1 MaybeHotMatrix{Union{Missing, UInt32},UInt32,Union{Missing, Bool}}:
  missing
  missing
  missing
@@ -52,15 +52,15 @@ julia> e(missing).data
 
 julia> e = ExtractCategorical(2:4, false);
 
-julia> e([2,3,1,4]).data
-4×4 Flux.OneHotArray{4,2,Vector{Int64}}:
+julia> mapreduce(e, catobs, [2,3,1,4]).data
+4×4 Flux.OneHotArray{4,2,Array{UInt32,1}}:
  1  0  0  0
  0  1  0  0
  0  0  0  1
  0  0  1  0
 
 julia> e(4).data
-4×1 Flux.OneHotArray{4,2,Vector{Int64}}:
+4×1 Flux.OneHotArray{4,2,Array{UInt32,1}}:
  0
  0
  1
@@ -69,7 +69,7 @@ julia> e(4).data
 """
 struct ExtractCategorical{V,I} <: AbstractExtractor
 	keyvalemap::Dict{V,I}
-	n::Int
+	n::UInt32
 	uniontypes::Bool
 end
 
@@ -81,7 +81,12 @@ function ExtractCategorical(ks::Vector, uniontypes = true)
 		return nothing
 	end
 	ks = sort(unique(ks))
-	ExtractCategorical(Dict(zip(ks, 1:length(ks))), length(ks) +1, uniontypes)
+	keys_len = length(ks)
+	if keys_len > typemax(UInt32)
+		@error "Dictionary is too big, we support uint32 types"
+	end
+	# keeping int32 indices, because it's faster than int64 and int64 is too big to be usable anyway
+	ExtractCategorical(Dict(zip(ks, UInt32(1):UInt32(keys_len))), UInt32(keys_len + 1), uniontypes)
 end
 
 map_val(s, v::MissingOrNothing) = s.uniontypes ? missing : error("This extractor does not support missing values")
