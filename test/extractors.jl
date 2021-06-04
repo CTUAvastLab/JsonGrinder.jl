@@ -864,7 +864,7 @@ end
 	@test ext[:a] isa ExtractScalar{Float32}
 	@test ext[:b] isa ExtractVector
 	@test ext[:b].n == 3
-	@test ext[:c] isa ExtractArray{ExtractCategorical{Number,Int64}}
+	@test ext[:c] isa ExtractArray{ExtractCategorical{Number,UInt32}}
 
 	@test buf_printtree(ext, trav=true) ==
 	"""
@@ -1213,7 +1213,7 @@ end
 	@test buf_printtree(m) ==
     """
 	ProductModel … ↦ ArrayModel(identity)
-	  └── a: BagModel … ↦ [SegmentedMean(1); SegmentedMax(1)] ↦ ArrayModel(Dense(2, 10))
+	  └── a: BagModel … ↦ BagCount([SegmentedMean(1); SegmentedMax(1)]) ↦ ArrayModel(Dense(3, 10))
 	           └── ArrayModel(identity)
 	"""
 end

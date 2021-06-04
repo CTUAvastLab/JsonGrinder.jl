@@ -19,7 +19,7 @@ using Mill: nobs
 		e = ex(extractempty)
 		@test nobs(e) == 0
 		@test nobs(e[:e1]) == 0
-		@test e[:e1].data isa MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}
+		@test e[:e1].data isa MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
 		@test nobs(e[:e2]) == 0
 		@test e[:e2].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 
@@ -77,7 +77,7 @@ using Mill: nobs
 		e = ex(extractempty)
 		@test nobs(e) == 0
 		@test nobs(e[:e1]) == 0
-		@test e[:e1].data isa OneHotMatrix{Int64, 4, Vector{Int64}}
+		@test e[:e1].data isa OneHotMatrix{UInt32, UInt32(4), Vector{UInt32}}
 		@test nobs(e[:e2]) == 0
 		@test e[:e2].data isa NGramMatrix{String,Array{String,1},Int64}
 

@@ -129,10 +129,10 @@ end
 	                 ├── a: Categorical d = 3
 	                 ├── b: Categorical d = 3
 	                 └── c: String
-	"""
+	"""                 
 	@test buf_printtree(m) == """
 	ProductModel … ↦ ArrayModel(identity)
-	  └── a: BagModel … ↦ ⟨SegmentedMean(10), SegmentedMax(10)⟩ ↦ ArrayModel(Dense(21, 10, relu))
+	  └── a: BagModel … ↦ BagCount([SegmentedMean(10); SegmentedMax(10)]) ↦ ArrayModel(Dense(21, 10, relu))
 	           └── ProductModel … ↦ ArrayModel(Dense(30, 10, relu))
 	                 ├── a: ArrayModel([post_imputing]Dense(3, 10, relu))
 	                 ├── b: ArrayModel([post_imputing]Dense(3, 10, relu))
