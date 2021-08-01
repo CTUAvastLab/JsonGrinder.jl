@@ -17,6 +17,8 @@
 It provides schema estimation from data, extraction of various data types to numeric representation with
 reasonable defaults, and suggestion of NN model structure based on data. For more details, see [the documentation](https://CTUAvastLab.github.io/JsonGrinder.jl/stable).
 
+[**Watch our introductory talk from JuliaCon 2021** ](https://www.youtube.com/watch?v=Bf0CvltIDbE)
+
 ## Installation
 
 Run the following in REPL:
