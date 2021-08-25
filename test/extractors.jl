@@ -1,6 +1,6 @@
 using JsonGrinder, JSON, Test, SparseArrays, Flux, Random, HierarchicalUtils
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
-using Mill: catobs, nobs
+using Mill: catobs, nobs, BagNode
 using LinearAlgebra
 
 @testset "Testing scalar conversion" begin
@@ -729,4 +729,32 @@ end
     """
     BagNode with 1 bag(s)
       └── ArrayNode(1, 2)"""
+end
+
+@testset "complex slicing bug" begin
+	# this is the MWE of a bug, maybe we can shrink it down
+	broken_json = Dict("main" => [
+ 		Dict(
+			"maybe_arr" => "0003840cfc486058c7e6de0d7e14d3683982e37a61e0d4a883409a22f980ef13",
+		),
+		Dict(),
+ 	])
+	ok_json = Dict("main" => [
+		Dict(),
+		Dict(),
+	])
+	ok2_json = Dict("main" => [
+		Dict(
+			"maybe_arr" => [
+				"00007e505d70eb35413b0b13a2bf8a25464551407989f6e65ef6f0b1e08c9d6e", 
+				"00b984721b4912fbc2611fd7146c9d3864c53368b518f8cd0dc63544b9b1ba91",
+			],
+		)
+	])
+	a_schema = schema([broken_json, ok_json, ok2_json])
+	ext = suggestextractor(a_schema)
+	broken_sample = ext(broken_json)
+	ok_sample = ext(ok_json)
+	@test ok_sample[1] isa BagNode
+	@test_throws BoundsError broken_sample[1]
 end
