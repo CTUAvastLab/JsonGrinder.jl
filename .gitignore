@@ -2,4 +2,8 @@
 *.jl.*.cov
 *.jl.mem
 .DS_store
+docs/build
 Manifest.toml
+!docs/Manifest.toml
+!benchmarks/**/Manifest.toml
+!examples/Manifest.toml
