@@ -4,7 +4,7 @@ using JSON
 import JsonGrinder: generate_html
 
 #load all samples
-samples_str = open("examples/recipes.json") do fid
+samples_str = open("data/recipes.json") do fid
 	read(fid, String)
 end;
 

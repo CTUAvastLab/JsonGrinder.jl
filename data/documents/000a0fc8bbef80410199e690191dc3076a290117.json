@@ -1,0 +1,4198 @@
+{
+    "paper_id": "000a0fc8bbef80410199e690191dc3076a290117",
+    "metadata": {
+        "title": "PfSWIB, a potential chromatin regulator for var gene regulation and parasite development in Plasmodium falciparum",
+        "authors": [
+            {
+                "first": "Wei-Feng",
+                "middle": [],
+                "last": "Wang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Second Military Medical University",
+                    "location": {
+                        "postCode": "200433",
+                        "settlement": "Shanghai",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Yi-Long",
+                "middle": [],
+                "last": "Zhang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Second Military Medical University",
+                    "location": {
+                        "postCode": "200433",
+                        "settlement": "Shanghai",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Background: Various transcription factors are involved in the process of mutually exclusive expression and clonal variation of the Plasmodium multigene (var) family. Recent studies revealed that a P. falciparum SWI/SNF-related matrix-associated actin-dependent regulator of chromatin (PfSWIB) might trigger stage-specific programmed cell death (PCD), and was not only crucial for the survival and development of parasite, but also had profound effects on the parasite by interacting with other unknown proteins. However, it remains unclear whether PfSIWB is involved in transcriptional regulation of this virulence gene and its functional properties.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Methods: A conditional knockdown system \"PfSWIB-FKBP-LID\" was introduced to the parasite clone 3D7, and an integrated parasite line \"PfSWIB-HA-FKBP-LID\" was obtained by drug cycling and clone screening. Growth curve analysis (GCA) was performed to investigate the growth and development of different parasite lines during 96 h in vitro culturing, by assessing parasitemia. Finally, we performed qPCR assays to detect var gene expression profiling in various comparison groups, as well as the mutually exclusive expression pattern of the var genes within a single 48 h life-cycle of P. falciparum in different parasite lines. In addition, RNA-seq was applied to analyze the var gene expression in different lines.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Results: GCA revealed that conditional knockdown of PfSWIB could interfere with the growth and development of P. falciparum. The parasitemia of PfSWIB\u2206 showed a significant decline at 96 h during in vitro culture compared with the PfSWIB and 3D7 lines (P < 0.0001). qPCR and RNA-seq analysis confirmed that depletion of PfSWIB not only silences upsA, upsC and partial upsB var genes, as well as removes the silencing of partial upsB var genes at the ring stage in PfSWIB\u2206 line, but also leads to aberrant expression of upsA and partial upsB/upsC var genes at the mature stage of P. falciparum, during a single 48-h life-cycle.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "We demonstrated that PfSWIB was involved in the process of clonal variation in var gene expression, and crucial for the survival and development of Plasmodium parasite. These findings could provide better understanding of the mechanism and function of PfSWIB contributing to the pathogenesis in malaria parasites.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Plasmodium falciparum, which causes malignant malaria such as cerebral malaria (CM) or pregnancy-associated malaria (PAM) [1, 2] , is the cause of death to 435,000 individuals annually [3] . Plasmodium falciparum erythrocyte membrane protein 1 (PfEMP1), which is encoded by the var gene family comprising approximately 60 members, is the major virulence factor involved in the antigenic variation and clinical pathogenicity of falciparum malaria [4, 5] . It is remarkable that the expression of var family members is mutually exclusive. For each parasite at a time, only one or a few var genes are expressed, while the remaining members are silenced [6, 7] . In each generation, P. falciparum is able to express different var genes, and the switches in var gene expression lead to antigenic variation of PfEMP1, which results in immune evasion and chronic infection [8] [9] [10] [11] . This process has proven to be mediated by epigenetic mechanisms, including chromatin modification, nuclear architecture and gene relocation [12, 13] .",
+            "cite_spans": [
+                {
+                    "start": 122,
+                    "end": 125,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 126,
+                    "end": 128,
+                    "text": "2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 185,
+                    "end": 188,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 446,
+                    "end": 449,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 450,
+                    "end": 452,
+                    "text": "5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 650,
+                    "end": 653,
+                    "text": "[6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 654,
+                    "end": 656,
+                    "text": "7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 866,
+                    "end": 869,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 870,
+                    "end": 873,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 874,
+                    "end": 878,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 879,
+                    "end": 883,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1026,
+                    "end": 1030,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1031,
+                    "end": 1034,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Background"
+        },
+        {
+            "text": "It has been shown that the single active var gene is enriched in euchromatic modifications, such as histone 3 lysine 9 acetylation (H3K9ac) and histone 3 lysine 4 trimethylation (H3K4me3), particularly near the transcriptional start site (TSS) [14] , while the silent var genes are usually enriched in the heterochromatin marker (histone 3 lysine9 trimethylation, H3K9me3) in the 5'UTR or the coding sequence [14] [15] [16] [17] . In this process, histone modifying enzymes such as PfMYST, PfGCN5, PfSIR2 and PfSET, have been considered important for epigenetic control of reversible histone modifications, according to previous studies [12, 13] . PfMYST, a putative histone acetyltransferases (HATs) in P. falciparum, is capable of acetylating multiple lysines on H4 [18, 19] , while an orthologue of the yeast HAT PfGCN5 influences acetylation of H3K9 and K14, both are essential marks of gene activation [18, 20] . Two paralogues of the class III HDAC (histone deacetylases) Sir2, play key roles in maintaining heterochromatin and mutually exclusive var gene expression [15, 21, 22] . PfSir2A deacetylates H3K9ac, H3K14ac and H4K16ac [23] , and is more important in silencing subtelomeric var genes such as upsA-, upsEand upsC-subtype vars. In contrast, PfSir2B silences upsB vars [22] . Furthermore, a total of ten P. falciparum histone lysine methyltransferases (HKMTs) belonging to the SET domain family have been found in P. falciparum [18, 24, 25] . PfSET10 localizes to a specialized region at the nuclear periphery with the active vars such as H3K4me4 transferase [26] .",
+            "cite_spans": [
+                {
+                    "start": 244,
+                    "end": 248,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 409,
+                    "end": 413,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 414,
+                    "end": 418,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 419,
+                    "end": 423,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 424,
+                    "end": 428,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 637,
+                    "end": 641,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 642,
+                    "end": 645,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 768,
+                    "end": 772,
+                    "text": "[18,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 773,
+                    "end": 776,
+                    "text": "19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 907,
+                    "end": 911,
+                    "text": "[18,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 912,
+                    "end": 915,
+                    "text": "20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1073,
+                    "end": 1077,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1078,
+                    "end": 1081,
+                    "text": "21,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1082,
+                    "end": 1085,
+                    "text": "22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1137,
+                    "end": 1141,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1284,
+                    "end": 1288,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1443,
+                    "end": 1447,
+                    "text": "[18,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1448,
+                    "end": 1451,
+                    "text": "24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1452,
+                    "end": 1455,
+                    "text": "25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 1574,
+                    "end": 1578,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Background"
+        },
+        {
+            "text": "Plasmodium falciparum variant-silencing SET gene (PfSETvs) controls the H3K36me3 on var genes (silencing var genes) [27] . Moreover, subnuclear architecture contributes to the regulation of var gene expression [13] .",
+            "cite_spans": [
+                {
+                    "start": 116,
+                    "end": 120,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 210,
+                    "end": 214,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Background"
+        },
+        {
+            "text": "var genes are by default silent since they are located at the nuclear periphery [28] . However, active var promoters seem to occupy a privileged expression site of this region, making it permissive to transcribe [21] . PF11_0091, an ApiAP2 member, binds a conserved motif in var introns, mediates episomal anchoring towards the nuclear periphery, and recruiting an actin protein complex and polymerized nuclear actin de-represses silent var genes [29] .",
+            "cite_spans": [
+                {
+                    "start": 80,
+                    "end": 84,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 212,
+                    "end": 216,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 447,
+                    "end": 451,
+                    "text": "[29]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Background"
+        },
+        {
+            "text": "On the other hand, various trans factors are intimately involved in regulating chromatin structure and gene activity. PfAlbas contribute to heterochromatin structure and regulation of var gene expression [30] . PfSIP2, another ApiAP2 member, is involved in the recruitment and organization of subtelomeric heterochromatin through binding to SPE2 [31] , and induces a comprehensive silencing of a var promoter. Particularly, four major classes of ATP-dependent chromatin remodelers had been found in P. falciparum, facilitating the spatial and temporal remodeling of chromatin [13] . All these remodeler families consist of a SWI2/SNF2family ATPase subunit featuring an ATPase domain [32, 33] , which includes an HSA (helicase-SANT), a post-HSA, and a C-terminal bromodomain. Some other conserved subunits carry extra conserved domains, such as hBAF155/170 (SANT, SWIRM), hBAF60 (SWIB) and human polybromo (multiple bromodomains). BAF60b is generally known as SWI-B or SWIB, an alternative form of the SWI/SNF complex (Complex B) [34] , while human BAF60a protein of SWI/SNF complex is responsible for facilitating cell cycle halting and has the ability to tune the balance between repair and apoptosis induction [35] [36] [37] . Recently, a SWI/ SNF-related matrix-associated actin-dependent regulator of chromatin, PfSWIB (GenBank: PF3D7_0611400), which is characterized by its SWIB/MDM2 domain (SWI complex, BAF60b domain), has been identified in P. falciparum. PfSWIB might trigger stage-specific PCD by which transient nuclear localization causes removal of these parasites [38] . Further studies revealed that PfSWIB was not only crucial for the survival and growth of the parasite, but also had profound effects on the parasite by interacting with other unknown proteins [38] [39] [40] . However, it remains unclear whether PfSWIB is involved in transcriptional regulation of virulence gene, especially vars, and its functional properties.",
+            "cite_spans": [
+                {
+                    "start": 204,
+                    "end": 208,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 346,
+                    "end": 350,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 576,
+                    "end": 580,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 683,
+                    "end": 687,
+                    "text": "[32,",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 688,
+                    "end": 691,
+                    "text": "33]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 1029,
+                    "end": 1033,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1212,
+                    "end": 1216,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 1217,
+                    "end": 1221,
+                    "text": "[36]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 1222,
+                    "end": 1226,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 1578,
+                    "end": 1582,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1777,
+                    "end": 1781,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1782,
+                    "end": 1786,
+                    "text": "[39]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 1787,
+                    "end": 1791,
+                    "text": "[40]",
+                    "ref_id": "BIBREF41"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Background"
+        },
+        {
+            "text": "To address the molecular mechanism of PfSWIB, we propose a new conditional knockdown system to study the function and mechanism of chromatin remodeler PfSWIB in regulating var gene expression. We found that the dysfunction of PfSWIB might lead to a significant downregulation of upsA, upsC and partial upsB var genes at the ring stage in a PfSWIB-knockdown line, as well as the aberrant expression of certain var genes at the mature stage in a single 48-h life-cycle of P. falciparum, which was characterized by the reversion of transcriptional downregulation of upsA and partial upsB/ upsC var genes, suggesting that PfSWIB might play a key role on var gene regulating. In addition, PfSWIB knockdown could affect the growth and development of parasite. This study provides a better understanding of the regulatory function of chromatin remodeling complexes (CRCs) in regulating the clonal variation of var genes, and an essential insight into the regulation of the major virulence gene family contributing to the pathogenesis in malaria parasites.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Background"
+        },
+        {
+            "text": "Plasmodium falciparum lines 3D7, PfSWIB and PfSWIB\u2206 were first thawed and established for continuous cultivation in vitro according to standard procedures [41] . The cultivation was as follows: thawed isolates were cultured in RPMI 1640 medium (Invitrogen/Thermo Fisher Scientific, Carlsbad, CA, USA) containing 25 mM Hepes, 2 mM l-glutamine, 0.1 mM hypoxanthine (Sigma-Aldrich, Shanghai, China), 20 mg/ml gentamicin (Sigma-Aldrich, Shanghai, China), 0.5% Albumax II (Invitrogen/Thermo Fisher Scientific) and 2% human serum (type AB+; Changhai Hospital, The Second Military Medical University, Shanghai, China). Cultures were grown in media with type O+ erythrocytes at a 3% hematocrit under 2% O 2 , 5.5% CO 2 , 92.5% N 2 at 37 \u00b0C. To obtain tightly synchronized ring stage parasites, a standard percoll/sorbitol synchronization method was performed [42, 43] . In brief, schizonts were isolated over a 40 and 60% percoll cushion and allowed to invade fresh RBCs for 0 to 6 h. The resulting rings were subjected to 5% sorbitol treatment for 5 min at 37 \u00b0C. This process was repeated twice. The culture was washed and re-suspended in complete medium containing 2% RBC after the final sorbitol treatment.",
+            "cite_spans": [
+                {
+                    "start": 155,
+                    "end": 159,
+                    "text": "[41]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 851,
+                    "end": 855,
+                    "text": "[42,",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 856,
+                    "end": 859,
+                    "text": "43]",
+                    "ref_id": "BIBREF44"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parasite culture"
+        },
+        {
+            "text": "All transfected parasite lines originated from the 3D7 clone. DNA extraction was performed using the QIAamp DNA Mini Kit (Qiagen, Hilden, Germany). The high fidelity KOD-plus-Neo enzyme (Toyobo, Osaka, Japan) was used for PCR amplification to detect the endogenous PfSWIB locus or integration of the PfSWIB locus (PfSWIB-HA-FKBP-LID). PCR amplification reaction conditions are as follows: 95 \u00b0C for 3 min, followed by 32 cycles of 95 \u00b0C for 30 s, 50 \u00b0C for 30 s, 62 \u00b0C for 1 min, and a final extension cycle of 65 \u00b0C for 10 min. The specific primers used for PCR are listed in Additional file 1: Table S1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 596,
+                    "end": 604,
+                    "text": "Table S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "DNA isolation and transfection efficiency detection of PfSWIB modified locus in 3D7 and transfected lines"
+        },
+        {
+            "text": "pLN-ENR-GFP [44] (GenBank: DQ813653.3) was modified by deleting the whole pfenr-gfp cassette, which was then used to clone various DNA fragments in ApaI/BamHI multicloning site. For the pLN-HA-FKBP-LID construct (6900 bp), the calmodulin promoter (5' CaM fragment) was initially substituted by a 1.5 kb C terminus of PfSWIB in the ApaI/ASCI multicloning site. Three duplicates of HA tag (YPYDVPDYA) and FKBP-LID tag were ligated towards the C terminus of PfSWIB via a linker sequence (AAAAVDAAAA). The resulting vector pLN-PfSWIB-HA-FKBP-LID was used to transfect the 3D7 clone. The HA tag consists of three tandem repeat sequences of influenza hemagglutinin, whereas the FKBP-LID tag is comprised of the FK506-and rapamycin-binding protein and a 19-amino-acid degron fused towards the C terminus of FKBP ( Fig. 1a ) [45] .",
+            "cite_spans": [
+                {
+                    "start": 12,
+                    "end": 16,
+                    "text": "[44]",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 817,
+                    "end": 821,
+                    "text": "[45]",
+                    "ref_id": "BIBREF46"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 807,
+                    "end": 814,
+                    "text": "Fig. 1a",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Construction of recombination fusion system PfSWIB-HA-FKBP-LID"
+        },
+        {
+            "text": "Transfections were performed on synchronized ringstage parasites of 3D7 in a 2 mm BioRad Gene Pulser \u00ae cuvettes (Bio-Rad Laboratories, Hercules, CA 94547, USA). A minimum of 100 \u03bcg recombinated plasmid DNA was initially purified and used for electroporation using the Bio-Rad GenePulse Xcell \u2122 electroporator (BioRad Laboratories, Hercules, CA 94547, USA), at 310 V, with a resistance of 950 \u03bcF and a transfection time of less than 15 ms. Positive BSD drug selection at the final concentration of 2 nM, was subsequently applied and maintained after the first growth cycle. Those parasites that adopted the pLN-PfSWIB-HA-FKBP-LID construct carrying the bsd gene would offer a level of resistance to the drug. The transfected parasites were subjected to in vitro culturing for 25 to 40 days and subsequent BSD drug cycling to select stable single-crossover parasites. The initial obtained transfected parasite line was a mixture of the episomal and integrated form. Therefore, a \"3 + 2\" mode of drug screening process was subsequently introduced to enrich the integrated lines. In this process, the original transfected parasites were first cultured in vitro in the absence of BSD for 3 weeks, followed by 2 weeks of culture with BSD (2.5 \u00b5g/ml), therefore integrated lines of PfSWIB-HA-FKBP-LID could possibly be further sorted after 2-3 rounds of drug cycling (Fig. 1b) . After two cycles of BSD \"off \" (3 weeks) and BSD \"on\" (2 weeks), PCR was applied to detect the integration events of PfSWIB-HA-FKBP-LID in transfected parasites lines by using specific primers (Additional file 1: Table S1 ). Primers P2, P4 and P5 are specific to 3'UTR of endogenous PfSWIB, the upstream sequence of PfSWIB C-terminus and downstream plasmid sequence of HA-FKBP-LID fusion expression system, respectively, while Fn is the forward primer used for PCR amplification of PfSWIB C-terminus.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1360,
+                    "end": 1369,
+                    "text": "(Fig. 1b)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1585,
+                    "end": 1593,
+                    "text": "Table S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Transgenosis and drug screening"
+        },
+        {
+            "text": "In order to obtain purified integrated parasites clones, we utilized a clone screening assay by serial dilution of parasites in 96-well plates, as detailed previously [46] . Two stable transfections of PfSWIB-FKBP-LID integrated parasites clones, PfSWIB-C2 and PfSWIB-B10 were obtained. The integration events were detected on screened clones after extended the culture to 24-well plates. The primers used for testing the clones are described above (see also Additional file 1: Table S1 ). PCR amplification reaction conditions were as follows: 94 \u00b0C for 5 min, followed by 32 cycles of 94 \u00b0C for 30 s, 54 \u00b0C for 30 s, 65 \u00b0C for 2 min, and a final extension cycle of 65 \u00b0C for 10 min.",
+            "cite_spans": [
+                {
+                    "start": 167,
+                    "end": 171,
+                    "text": "[46]",
+                    "ref_id": "BIBREF47"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 478,
+                    "end": 486,
+                    "text": "Table S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Screening of integrated parasites clones"
+        },
+        {
+            "text": "To analyze the expression of the PfSWIB fusion system in integrated parasites lines, total parasite extracts were prepared by treatment with 0.15% saponin and re-suspended in SDS-loading buffer (Bio-Rad), then separated on a 12% SDS-PAGE gel (Bio-Rad) and subjected to western blot analysis. Total proteins from the 3D7 clone were used as controls. An antibody to aldolase (1:1000 dilution; Roche, Indianapolis, USA) was used as a positive control. Rabbit anti-HA (1:1000 dilution; Abcam, Cambridge, UK) was used to identify PfSWIB fusion proteins in different parasite lines. An enhanced chemiluminescence (ECL) western blotting kit (GE Healthcare, Uppsala, Sweden) was used to develop western blots. The theoretical molecular weight of endogenous PfSWIB, HA tag and HA-FKBP-LID tag is 92kD, 3.5kD and 22kD, respectively. The graylevel image analysis procedure was implemented with ImageJ software. Statistical significance was determined (*P < 0.05, **P < 0.01).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Western blotting"
+        },
+        {
+            "text": "Synchronized ring parasites (0-6 h after re-invasion) of the PfSWIB integrated clone (PfSWIB-HA-FKBP-LID) and the 3D7 clone were collected and diluted to 0.2% parasitemia. Each diluted parasite clone was divided into two wells of parasite cultures in the 24-well plate (50 \u00b5l RBC pellets/1 ml medium). Shield1 (0.5 mM (diluted in ethanol); Clontech, Mountain View, USA) was added into one of the two wells (final concentration: 0.5 \u03bcM). Consequently, four parasite lines including PfSWIB, PfSWIB\u0394, 3D7 (shield1 induced) and 3D7 sh\u2212 (shield1 not induced) were subject to in vitro culture for 4-5 days. The parasitemia of each parasite line was counted every 12 h up to 96 h and repeated twice. The rate of parasitemia (%) of different lines were compared statistically by a one-way ANOVA followed by Bonferroni's multiple comparison test (*P < 0.05, **P < 0.01). Growth curve analysis was performed in triplicate.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Growth curve analysis"
+        },
+        {
+            "text": "For the transcription level assay of individual var genes, we used the var primer pairs published elsewhere [47] and listed in Additional file 2: Table S2 . qPCR assays were performed as described previously [10] . In brief, total RNA of synchronous parasite culture was extracted using TRIzol reagent (Invitrogen/Thermo Fisher Scientific, Carlsbad, CA, USA) [48] . cDNA was prepared in accordance with the manufacturer's recommendations (Thermofisher Scientific, Carlsbad, CA, USA). The fold change between the experimental and reference groups was calculated as 2 \u2212\u0394\u0394Cq . qPCR was performed on a QuantStudio 6 Flex Real-Time PCR System (Applied Biosystems, Singapore) using a program of 1 cycle of 15 s at 95 \u00b0C and 40 cycles of 30 s at 95 \u00b0C, 30 s at 54 \u00b0C, 30 s at 60 \u00b0C. Seryl-tRNA synthetase was applied as an endogenous control gene and to normalize the transcriptional level of each var gene. For the qPCR data, statistical significance was determined with the two-tailed Student's t-test (*P < 0.05, **P < 0.01).",
+            "cite_spans": [
+                {
+                    "start": 108,
+                    "end": 112,
+                    "text": "[47]",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 208,
+                    "end": 212,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 359,
+                    "end": 363,
+                    "text": "[48]",
+                    "ref_id": "BIBREF49"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 146,
+                    "end": 154,
+                    "text": "Table S2",
+                    "ref_id": null
+                }
+            ],
+            "section": "RNA extraction and quantitative real-time PCR"
+        },
+        {
+            "text": "RNA-seq was used to screen differentially expressed genes in three parasite lines and was carried out in duplicate. The reference genome and transcript information (P. falciparum 3D7) were obtained from PlasmoDB (http://plasm odb.org/). The RNA-seq aligner STAR v2.5.3a [49] was used to create a genome catalog, based on two data files including a genome sequence fasta file and GFF3 annotation file (PlasmoDB-34_Pfalcipa-rum3D7_Genome.fasta, PlasmoDB-34_Pfalciparum3D7. gff ). FastQC v0.11.5 was subsequently used to analyze the quality of the RNA-seq reads. The qualified reads were subsequently mapped and aligned to the reference genome. Reads with a minimum mapping quality of 20 (\u2212 q 20) were further screened out by using SAM tools. Heatmaps of gene expression profiles in different lines were created by using the R package edgeR [50] . Hierarchical clustering was performed by using one minus Pearson's correlation metric and average linkage method. Line plots were generated with ggplot2 [51] . In order to carry out an analysis of variance (ANOVA)-like differential gene expression analysis, a statistical analysis of summarized read counts per genomic feature obtained from feature Counts function [52] was performed by using the R package ALDEx2 [53, 54] . A fold change greater than 1.5 or lower than \u2212 1.5, FDR < 0.05, and P < 0.05 were selected as filters for defining the sets of differentially expressed genes. [44] , which harbored an antibiotic selection marker (bsd for Blasticidin S resistance, pink). HA tags (red) and FKBP-LID tag (blue and green) were ligated towards the 1.5 kb C terminus of PfSWIB. b Drug screening of the PfSWIB fusion expression system. The integration events and expression of PfSWIB modified locus were identified by PCR. 'BSD+' and 'BSD-' indicate that the transfected parasites were cultured in the presence or absence of BSD. Day 24: in vitro culturing in the absence of BSD for 24 days. Day 5, 10 and 15: in vitro culturing in the presence of BSD for 5, 10 and 15 days, respectively. The details of specific primers used for detecting the endogenous, episomal and integrated PfSWIB locus are provided in \"Methods\"",
+            "cite_spans": [
+                {
+                    "start": 270,
+                    "end": 274,
+                    "text": "[49]",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 838,
+                    "end": 842,
+                    "text": "[50]",
+                    "ref_id": "BIBREF51"
+                },
+                {
+                    "start": 998,
+                    "end": 1002,
+                    "text": "[51]",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 1210,
+                    "end": 1214,
+                    "text": "[52]",
+                    "ref_id": "BIBREF53"
+                },
+                {
+                    "start": 1259,
+                    "end": 1263,
+                    "text": "[53,",
+                    "ref_id": "BIBREF54"
+                },
+                {
+                    "start": 1264,
+                    "end": 1267,
+                    "text": "54]",
+                    "ref_id": "BIBREF55"
+                },
+                {
+                    "start": 1429,
+                    "end": 1433,
+                    "text": "[44]",
+                    "ref_id": "BIBREF45"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RNA-seq data analysis"
+        },
+        {
+            "text": "Due to the low transfection proficiency after inserting the full-length PfSWIB gene, we subsequently selected a 1.5 kb C terminal sequence of PfSWIB and cloned this into the modified recombinant plasmids pLN-ENR-GFP forming fusion gene expression system pLN-PfSWIB (C-terminus)-HA-FKBP-LID. Through homologous recombination caused by a single crossover event, a transfected parasite clone known as PfSWIB-HA-FKBP-LID was obtained by transfecting the recombinant plasmid pLN-PfSWIB (C-terminus)-HA-FKBP-LID into the 3D7 strain, which was selected by Blasticidin S deaminase (BSD). The HA tag contains three tandem repeat sequences of influenza hemagglutinin, whereas FKBP-LID tag is comprised of the FK506and rapamycin-binding protein and a 19-amino-acid degron (ligand-induced degradation domain) fused to the C terminus of FKBP (Fig. 1a) [45] . A drug cycling process was subsequently introduced to enrich the integrated lines. The integration events and expression of PfSWIB-HA-FKBP-LID fusion gene were first identified by PCR (Fig. 1b) . The specific primers designed for detecting the transfection proficiency of the PfSWIB modified locus are listed in Additional file 1: Table S1 . Additional file 3: Figure S1 shows the screening of integrated clones which were performed by serial dilution and identification of integration events by PCR. Stable transfections of PfSWIB-FKBP-LID integrated parasites clones PfSWIB-C2 and PfSWIB-B10 were finally obtained from the cloning and screening process in 96-well plates. Since the PfSWIB-C2 clone exhibited stability and reproducibility in the subsequent assays, such as PCR detection and qPCR analysis, we selected clone PfSWIB-C2 rather than clone PfSWIB-B10 for the present study.",
+            "cite_spans": [
+                {
+                    "start": 839,
+                    "end": 843,
+                    "text": "[45]",
+                    "ref_id": "BIBREF46"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 829,
+                    "end": 838,
+                    "text": "(Fig. 1a)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1030,
+                    "end": 1039,
+                    "text": "(Fig. 1b)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1177,
+                    "end": 1185,
+                    "text": "Table S1",
+                    "ref_id": null
+                },
+                {
+                    "start": 1207,
+                    "end": 1216,
+                    "text": "Figure S1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Transfection and drug screening of the PfSWIB fusion expression system"
+        },
+        {
+            "text": "Western blotting was subsequently performed to detect the expression of PfSWIB-HA-FKBP-LID fusion protein in the presence and absence of shield1 (1:2000, 0.5 \u03bcM). According to the previous study, PfSWIB is theoretically stable in the absence of the small molecule shield1 [45] . Alternatively, shield1 binds tightly to FKBP thereby substituting the degron and triggering rapid, continuous degradation of the LID domain and PfSWIB [45] . As shield1 may take time to exert its inhibition function, we selected the in vitro culturing ring and trophozoite parasite stage within their third life-cycle (> 96 h) as testing samples, according to the GCA results (Fig. 2a) . The results indicated that although the PfSWIB-HA-FKBP-LID (114 kDa) fusion gene could be successfully expressed in both stages in the presence or absence of shield1 (Fig. 2b , Additional file 4: Figure S2a) , there was still a significant difference of PfSWIB fusion protein expression between PfSWIB\u2206 and PfSWIB lines in the trophozoite stage, the expression of PfSWIB fusion protein decreased in PfSWIB\u2206 line (t (2) = 4.890, P = 0.0394). In contrast, no significant difference had been found in the ring stage parasite (t (2) = 1.006, P = 0.4205) (Fig. 2b, Additional file 4: Figure S2b) .",
+            "cite_spans": [
+                {
+                    "start": 272,
+                    "end": 276,
+                    "text": "[45]",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 430,
+                    "end": 434,
+                    "text": "[45]",
+                    "ref_id": "BIBREF46"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 655,
+                    "end": 664,
+                    "text": "(Fig. 2a)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 833,
+                    "end": 841,
+                    "text": "(Fig. 2b",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 863,
+                    "end": 874,
+                    "text": "Figure S2a)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1217,
+                    "end": 1257,
+                    "text": "(Fig. 2b, Additional file 4: Figure S2b)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Transfection and drug screening of the PfSWIB fusion expression system"
+        },
+        {
+            "text": "To study the specific functions of PfSWIB, we subsequently analyzed the growth curve by counting parasitemia of different groups within 96 h (Fig. 2 , Additional file 5: Table S3 ). Both PfSWIB-C2 and 3D7 parasite clones were initially synchronized into 0-6 h ring stage parasites and equally divided into two groups. One group contained shield1 in the culture medium, whereas the other group was lacking shield1. Thus, four groups of lines including PfSWIB\u2206 (PfSWIB shield1 induced), PfSWIB (PfSWIB sh\u2212 shield1 not induced), 3D7 sh+ and 3D7 sh\u2212 were subject into the in vitro culture, with exactly the same preliminary parasitemia of 0.2%.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 141,
+                    "end": 148,
+                    "text": "(Fig. 2",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 170,
+                    "end": 178,
+                    "text": "Table S3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Conditional knockdown of PfSWIB interferes with parasite growth and development"
+        },
+        {
+            "text": "The results of GCA revealed no significant difference in parasitemia between these lines during the first 48 h life-cycle (F (3, 6) ",
+            "cite_spans": [
+                {
+                    "start": 125,
+                    "end": 128,
+                    "text": "(3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 129,
+                    "end": 131,
+                    "text": "6)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conditional knockdown of PfSWIB interferes with parasite growth and development"
+        },
+        {
+            "text": "Based on the GCA result, we subsequently performed RNA-seq analysis in duplicate with synchronized 0-6 h ring stage parasites of three P. falciparum lines within their third life-cycle, to study the change of expression profiling when knocking down PfSWIB. The scatter plot illustrates the comparison of screening of differentially expressed genes in three parasite lines, including 3D7, PfSWIB and PfSWIB\u2206 (Additional file 6: Figure S3a ). Among all differentially expressed genes, 112 and 450 were upregulated in the PfSWIB\u2206 line when compared with the PfSWIB and 3D7 line, respectively, whereas 1 and 616 genes were downregulated (fold change, FC > 1.5, P < 0.05, FDR < 0.05). We further performed hierarchical clustering of the individual gene expression profiles by using the R package edgeR. RNA-seq data were normalized for sequencing depth and gene length using log 2 -transformed FPKM values (Additional file 6: Figure  S3b ). According to the special characteristics of differentially expressed proteins in each line, we further screened out transcription factors such as PfApiAP2 family and PfSir2B, as well as certain histone modification enzymes, which proved to be involved in regulating on var gene transcription. These genes were significantly upregulated in the PfSWIB\u2206 line, suggesting the existence of their different transcription profiling when knocking down PfSWIB. In addition, a number of vars also exhibited differential expression among different lines (Additional file 2: Table S2 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 427,
+                    "end": 437,
+                    "text": "Figure S3a",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 921,
+                    "end": 932,
+                    "text": "Figure  S3b",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1499,
+                    "end": 1507,
+                    "text": "Table S2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Conditional knockdown of PfSWIB leads to a change in mutually exclusive var gene transcription"
+        },
+        {
+            "text": "To further study the transcription patterns of upsA-, upsB-and upsC-subtype var genes in different parasite lines, we first selected 44 differentially expressed vars among different lines based on the RNA-seq results (fold change, FC > 1.5, P < 0.05, FDR < 0.05), and tested the expression patterns of these preferred vars in each comparison group at the ring stage (0-10 h after re-invasion in 3rd life-cycle, > 96 h) by real-time PCR (Additional file 2: Table S2 ). upsB or upsA corresponds to subtelomeric and upsC corresponds to chromosome internal var gene members [55, 56] . Figure 3 shows the fold change of var gene expression profiling between shield1 pre-and post-induced lines PfSWIB\u2206 vs PfSWIB. Most upsA-and upsC-type vars were significantly downregulated in the PfSWIB\u2206 line, especially the upsA vars, when compared to the PfSWIB line (Fig. 3 , Additional file 7: Figure S4 ). However, the expression pattern of partial upsB vars presented a distinct change in the PfSWIB\u2206 line. A group of 9 upsB vars exhibited a high level of expression (Fig. 3 , red asterisk) (fold change \u2265 2.0, P < 0.05), while 5 upsB vars present an extremely low expression level (Fig. 3 , black asterisk) (fold change \u2264 \u2212 2.0, P < 0.05), when compared the PfSWIB\u2206 line to other lines.",
+            "cite_spans": [
+                {
+                    "start": 570,
+                    "end": 574,
+                    "text": "[55,",
+                    "ref_id": "BIBREF56"
+                },
+                {
+                    "start": 575,
+                    "end": 578,
+                    "text": "56]",
+                    "ref_id": "BIBREF57"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 456,
+                    "end": 464,
+                    "text": "Table S2",
+                    "ref_id": null
+                },
+                {
+                    "start": 581,
+                    "end": 589,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 849,
+                    "end": 856,
+                    "text": "(Fig. 3",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 878,
+                    "end": 887,
+                    "text": "Figure S4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1053,
+                    "end": 1060,
+                    "text": "(Fig. 3",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1168,
+                    "end": 1175,
+                    "text": "(Fig. 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Conditional knockdown of PfSWIB leads to a change in mutually exclusive var gene transcription"
+        },
+        {
+            "text": "We subsequently re-analyzed the RNA-seq results of vars in these lines by using the R package edgeR, to identify similarities and differences in expression patterns for different var variants. The heatmap representing the hierarchical clustering of the var genes is shown in Fig. 4 and Additional file 8: Figure S5 . Figure 4 indicates two major clusters of 44 selected vars in relation to the expression pattern: one major cluster consisting of 37 var variants covered most of upsA, upsB and all upsC vars, while the other cluster covered only 5 upsB and 2 upsA vars. In addition, there were 24 and 20 vars variants showed an expression maximum in the 3D7 line and PfSWIB\u2206 line, respectively (red box). Additional linear regression analysis of the correlation between qPCR and RNA-seq data was performed to investigate the transcriptome data accuracy on 44 var genes (Additional file 9: Figure S6 , Additional file 10: Table S4 ). In the PfSWIB vs PfSWIB\u2206 comparison, the qPCR data showed a significant linear correlation with the RNA-seq data (r (44) = 0.6281, P < 0.0001). The RNA-seq results of 9 upregulated and 5 downregulated upsB vars (described above by qPCR analysis in the PfSWIB\u2206 line), were also re-analyzed by computing the log 2 fold change of FPKM values in different lines. Of these, 5 out of 9 upregulated upsB vars (except for PF3D7_1300100, PF3D7_1200100, PF3D7_0900100 and PF3D7_0712300) (Fig. 4, red arrow) , and 4 out of 5 downregulated (except for PF3D7_1240300) (Fig. 4 , black arrow) showed consistency with the qPCR results. Additional file 8: Figure S5 shows the expression pattern and hierarchical clustering of all the 60 vars in the three lines.",
+            "cite_spans": [
+                {
+                    "start": 1048,
+                    "end": 1052,
+                    "text": "(44)",
+                    "ref_id": "BIBREF45"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 275,
+                    "end": 281,
+                    "text": "Fig. 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 305,
+                    "end": 314,
+                    "text": "Figure S5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 317,
+                    "end": 325,
+                    "text": "Figure 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 888,
+                    "end": 897,
+                    "text": "Figure S6",
+                    "ref_id": null
+                },
+                {
+                    "start": 920,
+                    "end": 928,
+                    "text": "Table S4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1409,
+                    "end": 1428,
+                    "text": "(Fig. 4, red arrow)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1487,
+                    "end": 1494,
+                    "text": "(Fig. 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1571,
+                    "end": 1580,
+                    "text": "Figure S5",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Conditional knockdown of PfSWIB leads to a change in mutually exclusive var gene transcription"
+        },
+        {
+            "text": "According to previous studies, var genes were highly expressed in the ring stage, while drastically downregulated in the trophozoite stage [6, 10, 11] . To confirm this, we initially collected RNA samples from the ring and trophozoite stages of the 3D7 clone within the third . Approximately all of the var genes, were downregulated at the mature stage of 3D7 sh+ and 3D7 sh\u2212 parasite lines, except for PF3D7-0632500 (upsA), and PF3D7_1219300 and PF3D7_0712900 (upsB), suggesting that shield1 may have no influence on the expression of most var genes in a single 48 hour-life cycle of P. falciparum (Additional file 11: Figure S7) .",
+            "cite_spans": [
+                {
+                    "start": 139,
+                    "end": 142,
+                    "text": "[6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 143,
+                    "end": 146,
+                    "text": "10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 147,
+                    "end": 150,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 620,
+                    "end": 630,
+                    "text": "Figure S7)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Conditional knockdown of PfSWIB leads to a change in mutually exclusive var gene transcription in a single 48 hour life-cycle"
+        },
+        {
+            "text": "We subsequently analyzed the log 2 ratio of T/R in invitro cultured PfSWIB\u2206 and PfSWIB lines within their third life-cycle after collecting RNA samples from their synchronized ring and trophozoite parasites. Among these parasite lines, PfSWIB exhibited a quite similar log 2 ratio of T/R to 3D7, which was characterized by the downregulation of most var genes at the mature stage (Fig. 5) . In contrast, approximately all of the upsA vars, as well as partial upsB (PF3D7_1200400, PF3D7_0632500, PF3D7_1219300, PF3D7_1240300 and PF3D7_1240400) and upsC (PF3D7_0412900, PF3D7_0420900 and PF3D7_0617400) vars were activated at the mature stage of P. falciparum in the PfSWIB\u2206 line (Fig. 5 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 380,
+                    "end": 388,
+                    "text": "(Fig. 5)",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 678,
+                    "end": 685,
+                    "text": "(Fig. 5",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Conditional knockdown of PfSWIB leads to a change in mutually exclusive var gene transcription in a single 48 hour life-cycle"
+        },
+        {
+            "text": "The interplay between altered histone modification, chromatin modifying machinery, and general or sequence-specific transcription factors results in var gene regulation by modulating chromatin structure [57] . In this process, ATP-dependent chromatin remodeling complexes (CRCs) play a key role in chromatin remodeling through removal and movements of nucleosomes and deposition of alternative histones [13] . There are at least 11 proteins containing putative SWI2/SNF2 ATPase catalytic domains in P. falciparum [58] , seven of which are predicted to be chromatin-modifying proteins, including ISWI, Swr1, CHD1, SNF2L, MAL8P1.65, PFB0730w, PFF0225w and PF13_0308 [18] . However, it remains unclear how these PfCRCs regulate var gene expression by remodeling certain chromatin and therefore resulting in a high level of antigenic variation, immunity evasion and pathopoiesis.",
+            "cite_spans": [
+                {
+                    "start": 203,
+                    "end": 207,
+                    "text": "[57]",
+                    "ref_id": "BIBREF58"
+                },
+                {
+                    "start": 403,
+                    "end": 407,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 513,
+                    "end": 517,
+                    "text": "[58]",
+                    "ref_id": "BIBREF59"
+                },
+                {
+                    "start": 664,
+                    "end": 668,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The SWI/SNF complex, originally revealed in yeasts, allows for transcriptional activation by remodeling chromatin [59] . It has also been demonstrated previously that mammalian SWI/SNF homologs complexes, also known as BRG1-associated factors (BAFs), can be found in multiple forms which consist of 9-12 proteins. Among these BAFs, BAF60b exists in an alternative form of the SWI/ SNF complex (Complex B), which is generally known as SWI-B or SWIB [34] . In humans, the BAF60a protein of the SWI/SNF complex is responsible for p53 binding and regulates its activities via an N-terminal region of the SWIB/MDM2 domain [35] , as well as facilitating cell cycle halting and tune the balance between repair and apoptosis induction [35] [36] [37] . SWIB/MDM2 domains have in fact been shown to participate in protein-protein [60] and chromatin-related interactions [61] , but their functional roles in other species are poorly understood. Similarly, the SWI/SNF complex is composed of constant units and includes the Swp73p/SNF12 protein comprising a SWIB/MDM2 domain, proposed to facilitate specificity and/or functionality to some extent [38, 62] . According to recent studies, the P. falciparum genome encodes two putative SWIB/MDM2 domain-containing proteins: PfMDM2 (PF3D70518200, SWIB/MDM2 domaincontaining protein) and PfSWIB (PF3D70611400, SWI/ SNF-related matrix-associated actin-dependent regulator of chromatin) [38] , and PfSWIB was not only crucial for the survival and growth of the parasite, but additionally had profound effects on the parasite by interacting with other unknown proteins [38] [39] [40] . Bioinformatics analysis demonstrated that PfSWIB is characterized by its SWIB domain (BAF60b domain, PlasmoDB, http://plasm odb. org/). Bonger et al. [45] have recently developed a new technique by which the degradation of a specific protein is definitely induced by way of a small molecule, shield1. Hence, an in-depth functional analysis of PfSWIB based on the conditional knock-down assay was implemented in the present study. By using a transgenic assay, drug screening and subsequent screening of the clones, we obtained two integrated parasite clones PfSWIB-C2 and B10, with a stable transfection of the modified locus PfSWIB-FKBP-LID into the Plasmodium parasites (Fig. 1 , Additional file 3: Figure S1 ). Western blot analysis confirmed that the fusion expression protein was successfully expressed in the transfected parasite lines, and there was a significant decrease of PfSWIB fusion protein expression in the PfSWIB\u2206 line (t (2) = 4.890, P = 0.0394), at its trophozoite stage within third life-cycle of P. falciparum. However, it should be noted that no significant change was detected in the protein expression level of PfSWIB fusion system during the ring stage, either in the presence or absence of drug pressure (t (2) = 1.006, P = 0.4205) (Fig. 2b , Additional file 4: Figure S2 ). This could be due to at least two reasons. First, it takes time for shield1 to work at full capacity through binding to LID, therefore, a portion or slight loss of fused PfSWIB protein could not be identified. Secondly, this protein might be expressed predominantly at the mature stage of P. falciparum.",
+            "cite_spans": [
+                {
+                    "start": 114,
+                    "end": 118,
+                    "text": "[59]",
+                    "ref_id": "BIBREF60"
+                },
+                {
+                    "start": 448,
+                    "end": 452,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 617,
+                    "end": 621,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 727,
+                    "end": 731,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 732,
+                    "end": 736,
+                    "text": "[36]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 737,
+                    "end": 741,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 820,
+                    "end": 824,
+                    "text": "[60]",
+                    "ref_id": "BIBREF61"
+                },
+                {
+                    "start": 860,
+                    "end": 864,
+                    "text": "[61]",
+                    "ref_id": "BIBREF62"
+                },
+                {
+                    "start": 1135,
+                    "end": 1139,
+                    "text": "[38,",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1140,
+                    "end": 1143,
+                    "text": "62]",
+                    "ref_id": "BIBREF63"
+                },
+                {
+                    "start": 1418,
+                    "end": 1422,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1599,
+                    "end": 1603,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1604,
+                    "end": 1608,
+                    "text": "[39]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 1609,
+                    "end": 1613,
+                    "text": "[40]",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 1766,
+                    "end": 1770,
+                    "text": "[45]",
+                    "ref_id": "BIBREF46"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 2287,
+                    "end": 2294,
+                    "text": "(Fig. 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 2316,
+                    "end": 2325,
+                    "text": "Figure S1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 2873,
+                    "end": 2881,
+                    "text": "(Fig. 2b",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 2903,
+                    "end": 2912,
+                    "text": "Figure S2",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "It is worth noting that PfSWIB may lead to stage-specific PCD, in the same way as BAF60a of the mammalian SWI/SNF complex induces p53-directed apoptosis, by which transient nuclear localization results in removal of these parasites, as previously described [35] . Vieira et al. [38] further demonstrated that PfSWIB could have a stage-specific, pro-survival function and takes part in the heat stress response of the Plasmodium parasite. They discovered that PfSWIB and PfARK3 participate in preventing p53-mediated apoptosis within the nucleus in reaction to heat stress [38] . Alternatively, human Aurora kinase B and its yeast homologue play key roles during gene transcription through histone H3 phosphorylation [39, 40] . Likewise, PfSWIB could also have an effect on parasite survival through transcriptional regulation by guiding the PfARK3's phosphorylation activities [39, 40] . In our study, growth curve analysis of P. falciparum revealed that a relatively low parasitemia was observed in the PfSWIB knockdown line (PfSWIB\u2206) when compared to other parasite lines during their second life-cycle. Significant change was observed after 96 hours, when the parasites developed into the third life-cycle. The parasitemia of PfSWIB\u2206 showed a sharp decline (Fig. 2a) , suggesting that PfSWIB might play a key role in the proliferation and survival of P. falciparum.",
+            "cite_spans": [
+                {
+                    "start": 257,
+                    "end": 261,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 278,
+                    "end": 282,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 572,
+                    "end": 576,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 716,
+                    "end": 720,
+                    "text": "[39,",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 721,
+                    "end": 724,
+                    "text": "40]",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 877,
+                    "end": 881,
+                    "text": "[39,",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 882,
+                    "end": 885,
+                    "text": "40]",
+                    "ref_id": "BIBREF41"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1260,
+                    "end": 1269,
+                    "text": "(Fig. 2a)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "On the other hand, Jiang et al. [27] proved that knocking out the P. falciparum variant-silencing SET gene, which encodes an ortholog of Drosophila melanogaster ASH1 and controls histone H3 lysine 36 trimethylation (H3K36me3) on var genes, leads to expression of all vars. In another study focused on a novel chromatin-associated exoribonuclease, termed PfRNase II, Zhang et al. [63] revealed that this PfRNase II controls the silencing of upsA var genes, by marking their transcription start site and intron promoter regions leading to short-lived cryptic RNA. Depletion of PfRNase II specifically removes the silencing of upsA vars. Similarly, in the present study, knocking down of PfSWIB results in the silencing of upsA, upsC and partial upsB var genes, as well as removes the silencing of partial upsB vars (Fig. 3 , Additional file 7: Figure S4 ). Therefore, PfSWIB might be one of the trans factors activating var genes, especially the upsA vars, and silencing partial upsB vars. In addition, a few var genes exhibited inconsistent RNA-seq results with qPCR, especially the upsA vars. They are more likely to be conditionally activated in the PfSWIB knockdown line, according to the RNA-seq analysis (Fig. 4 , Additional file 8: Figure  S5 ). The minor inconsistency between the RNA-seq and the qPCR results for partial vars could be due to false positives/negatives resulting from either of these two methods, or experimental variation caused by different parasite lines or other unidentified factors. Nevertheless, by comparing the log 2 fold change data from qPCR and RNA-seq on 44 var genes, we confirmed that the linear regression and linear correlation analysis showed a significant linear correlation between the two methods (r (44) =v0.6281, P < 0.0001) (Additional file 9: Figure S6) .",
+            "cite_spans": [
+                {
+                    "start": 32,
+                    "end": 36,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 379,
+                    "end": 383,
+                    "text": "[63]",
+                    "ref_id": "BIBREF64"
+                },
+                {
+                    "start": 1743,
+                    "end": 1747,
+                    "text": "(44)",
+                    "ref_id": "BIBREF45"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 813,
+                    "end": 820,
+                    "text": "(Fig. 3",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 842,
+                    "end": 851,
+                    "text": "Figure S4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1208,
+                    "end": 1215,
+                    "text": "(Fig. 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1237,
+                    "end": 1247,
+                    "text": "Figure  S5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1790,
+                    "end": 1800,
+                    "text": "Figure S6)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "Furthermore, previous studies have demonstrated that var genes were highly expressed in the ring stage of P. falciparum, while drastically downregulated in the trophozoite stage. The var transcriptional levels in trophozoites are usually 10-100 times less than those in rings [6, 7, 10, 11] . A single P. falciparum parasite simultaneously transcribes multiple var genes but selects only one PfEMP-1 to attain the surface of the host cell by way of a developmentally regulated process [6, 7] . In order to test whether the transcription pattern had been disrupted when knocking down PfSWIB, we subsequently compared the transcription level of selected var genes between ring and trophozoite stage parasites, by testing the log 2 fold change of T/R in each group during a single life-cycle of P. falciparum (Fig. 5 , Additional file 11: Figure S7 ). Strikingly, we discovered that most of the upsA, upsB and upsC vars were downregulated in PfSWIB and 3D7 lines, while virtually all the upsA vars and partial upsB/upsC vars were significantly upregulated at the trophozoite-stage of the PfSWIB\u2206 line within the third life-cycle of P. falciparum (Fig. 5) , suggesting that PfSWIB might be involved in temporal regulation of var genes, particularly group A vars. The dysfunction of PfSWIB could disrupt the interactions between PfSWIB and other transcription factors which are essential for gene silencing or inhibit PfSWIB activity through unknown mechanisms.",
+            "cite_spans": [
+                {
+                    "start": 276,
+                    "end": 279,
+                    "text": "[6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 280,
+                    "end": 282,
+                    "text": "7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 283,
+                    "end": 286,
+                    "text": "10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 287,
+                    "end": 290,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 485,
+                    "end": 488,
+                    "text": "[6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 489,
+                    "end": 491,
+                    "text": "7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 806,
+                    "end": 813,
+                    "text": "(Fig. 5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 836,
+                    "end": 845,
+                    "text": "Figure S7",
+                    "ref_id": null
+                },
+                {
+                    "start": 1143,
+                    "end": 1151,
+                    "text": "(Fig. 5)",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "As we mentioned previously, P. falciparum varies its surface protein expression, particularly the var gene family-encoded clonally variant surface protein expression, to evade host immune responses [6] . In the process of monoallelic expression, specific silent var genes are usually retained at unique perinuclear sites and relocated to transcriptionally active zones [21, 28] . Nuclear actin has been discovered complexed with PfSET10, which has been suggested to play a role in the movement of the locus during activation and heterochromatic silencing [26, 29] . Actin and actin-related proteins (Arps) are common components of chromatin remodeling complexes and are involved in nuclear positioning. According to biological characteristics, PfSWIB may be involved in the process of relocating episomes, as an actin-dependent regulator of chromatin. Further studies regarding the possible role of PfSWIB and actin interaction would be worthwhile.",
+            "cite_spans": [
+                {
+                    "start": 198,
+                    "end": 201,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 369,
+                    "end": 373,
+                    "text": "[21,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 374,
+                    "end": 377,
+                    "text": "28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 555,
+                    "end": 559,
+                    "text": "[26,",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 560,
+                    "end": 563,
+                    "text": "29]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "In the present study, we revealed that actin-related chromatin remodeling factor PfSWIB is involved in the process of clonal variation in var gene expression, and is crucial for the survival and growth of the Plasmodium parasite. Depletion of PfSWIB not only silences upsA, upsC and partial upsB var genes and removes the silencing of partial upsB var genes, but also leads to the aberrant expression of upsA and partial upsB/upsC var genes at the mature stage of P. falciparum, during a single 48-hour life-cycle. These findings could provide a better understanding of the regulatory function of PfCRCs in regulating the clonal variation of the var gene family contributing to the pathogenesis in malaria parasites.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The pathogenic basis of malaria",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Miller",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Baruch",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Marsh",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Doumbo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Nature",
+            "volume": "415",
+            "issn": "",
+            "pages": "673--682",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Variant surface antigens, virulence, genes and the pathogenesis of malaria",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Deitsch",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Hviid",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Trends Parasitol",
+            "volume": "20",
+            "issn": "",
+            "pages": "562--568",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "WHO Global Malaria Programme. Geneva: World Health Organization",
+            "authors": [],
+            "year": 2018,
+            "venue": "WHO. World Malaria Report",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The large diverse gene family var encodes proteins involved in cytoadherence and antigenic variation of Plasmodium falciparum infected erythrocytes",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Heatwole",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Wertheimer",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Guinet",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Herrfeldt",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Peterson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Cell",
+            "volume": "82",
+            "issn": "",
+            "pages": "89--100",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Receptorspecific adhesion and clinical disease in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Newbold",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Warn",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Black",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Berendt",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Craig",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Snow",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Am J Trop Med Hyg",
+            "volume": "57",
+            "issn": "",
+            "pages": "389--98",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Developmental selection of var gene expression in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Fernandez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sundstr\u00f6m",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schlichtherle",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Datta",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Hagblom",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "Nature",
+            "volume": "394",
+            "issn": "",
+            "pages": "392--397",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Antigenic variation in malaria: in situ switching, relaxed and mutually exclusive transcription of var genes during intra-erythrocytic development in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Scherf",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hernandez-Rivas",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Buffet",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Bottius",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Benatar",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Pouvelle",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "EMBO J",
+            "volume": "17",
+            "issn": "",
+            "pages": "5418--5444",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Switches in expression of Plasmodium falciparumvar genes correlate with changes in antigenic and cytoadherent phenotypes of infected erythrocytes",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Chitnis",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Craig",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Roberts",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hudson-Taylor",
+                    "middle": [],
+                    "last": "De",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Peterson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Cell",
+            "volume": "82",
+            "issn": "",
+            "pages": "101--111",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A highly conserved segmental duplication in the subtelomeres of Plasmodium falciparum chromosomes varies in copy number",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Mok",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Ribacke",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Sherwood",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wahlgren",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Malar J",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "A well-conserved Plasmodium falciparumvar gene shows an unusual stagespecific transcript pattern",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kyes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Christodoulou",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Raza",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Horrocks",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Pinches",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Rowe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Mol Microbiol",
+            "volume": "48",
+            "issn": "",
+            "pages": "1339--1387",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "A study of var gene transcription in vitro using universal var gene primers",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Taylor",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kyes",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Harris",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kriek",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Newbold",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Mol Biochem Parasitol",
+            "volume": "105",
+            "issn": "",
+            "pages": "13--23",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Chromatin-mediated epigenetic regulation in the malaria parasite Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Miao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Eukaryot Cell",
+            "volume": "9",
+            "issn": "",
+            "pages": "1138--1187",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "The role of chromatin in Plasmodium gene expression",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Duffy",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Selvarajah",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Josling",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Petter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Cell Microbiol",
+            "volume": "14",
+            "issn": "",
+            "pages": "819--847",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "5' flanking region of var genes nucleate histone modification patterns linked to phenotypic inheritance of virulence traits in malaria parasites",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Lopez-Rubio",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Gontijo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Nunes",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Issar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hernandez",
+                    "middle": [],
+                    "last": "Rivas",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Scherf",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Mol Microbiol",
+            "volume": "66",
+            "issn": "",
+            "pages": "1296--305",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Telomeric heterochromatin propagation and histone acetylation control mutually exclusive expression of antigenic variation genes in malaria parasites",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Freitas-Junior",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hernandez-Rivas",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Ralph",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Montiel-Condado",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Ruvalcaba-Salazar",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Rojas-Meza",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Cell",
+            "volume": "121",
+            "issn": "",
+            "pages": "25--36",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Epigenetic memory at malaria virulence genes",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Chookajorn",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Dzikowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Frank",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Jiwani",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hartl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Proc Natl Acad Sci USA",
+            "volume": "104",
+            "issn": "",
+            "pages": "899--902",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Plasmodium falciparum heterochromatin protein 1 marks genomic loci linked to phenotypic variation of exported virulence factors",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Flueck",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Bartfai",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Volz",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Niederwieser",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Salcedo-Amaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Alako",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "PLoS Pathog",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "In silico and biological survey of transcriptionassociated proteins implicated in the transcriptional machinery during the erythrocytic development of Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Bischoff",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Vaquero",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "BMC Genomics",
+            "volume": "11",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "The MYST family histone acetyltransferase regulates gene expression and cell cycle in malaria parasite Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Miao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Ning",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Mol Microbiol",
+            "volume": "78",
+            "issn": "",
+            "pages": "883--902",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "PfGCN5-mediated histone H3 acetylation plays a key role in gene expression in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Miao",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Furuya",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Eukaryot Cell",
+            "volume": "6",
+            "issn": "",
+            "pages": "1219--1246",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Heterochromatin silencing and locus repositioning linked to regulation of virulence genes in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Duraisingh",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Voss",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Marty",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Duffy",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Good",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Thompson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Cell",
+            "volume": "121",
+            "issn": "",
+            "pages": "13--24",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Sir2 paralogues cooperate to regulate virulence genes and antigenic variation in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Tonkin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Carret",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Duraisingh",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Voss",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Ralph",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hommel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "PLoS Biol",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Plasmodium falciparum Sir2 is an NAD+-dependent deacetylase and an acetyllysine-dependent and acetyllysineindependent NAD+ glycohydrolase",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "French",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Cen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Sauve",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Biochemistry",
+            "volume": "47",
+            "issn": "",
+            "pages": "10227--10266",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Histone lysine methyltransferases and demethylases in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Miao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Int J Parasitol",
+            "volume": "38",
+            "issn": "",
+            "pages": "1083--97",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Potential epigenetic regulatory proteins localise to distinct nuclear subcompartments in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Volz",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Carvalho",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Ralph",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Gilson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Tonkin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Int J Parasitol",
+            "volume": "40",
+            "issn": "",
+            "pages": "109--130",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Plasmodium falciparum methyltransferase, maintains the active var gene in a poised state during parasite division",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Volz",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "B\u00e1rtfai",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Petter",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Langer",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Josling",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Tsuboi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Cell Host Microbe",
+            "volume": "11",
+            "issn": "",
+            "pages": "7--18",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "PfSETvs methylation of histone H3K36 represses virulence genes in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ni",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Srinivasan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Rayavara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Nature",
+            "volume": "499",
+            "issn": "",
+            "pages": "223--230",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Dynamic histone H3 epigenome marking during the intraerythrocytic cycle of Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Salcedo-Amaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Van Driel",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Alako",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Trelle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Van Den Elzen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Cohen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Proc Natl Acad Sci",
+            "volume": "106",
+            "issn": "",
+            "pages": "9655--60",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "A critical role of perinuclear fliamentous actin in spatial repositioning and mutually exclusive expression of virulence genes in malaria parasites",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Claes",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Duchateau",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Cell Host Microbe",
+            "volume": "10",
+            "issn": "",
+            "pages": "451--63",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Identification and molecular characterization of an Alba-family protein from human malaria parasite Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Goyal",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Alam",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Iqbal",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Dey",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bindu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Pal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nucleic Acids Res",
+            "volume": "40",
+            "issn": "",
+            "pages": "1174--90",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "A major role for the Plasmodium falciparum ApiAP2 protein PfSIP2 in chromosome end biology",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Flueck",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Bartfai",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Niederwieser",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Witmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Alako",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Moes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "PLoS Pathog",
+            "volume": "6",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Control of gene expression in Plasmodium falciparum-ten years on",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Horrocks",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Emes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Mol Biochem Parasitol",
+            "volume": "164",
+            "issn": "",
+            "pages": "9--25",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Composition and functional specificity of SWI2/ SNF2 class chromatin remodeling complexes",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Mohrmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Verrijzer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Biochim Biophys Acta",
+            "volume": "1681",
+            "issn": "",
+            "pages": "59--73",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Gene structure of rat BAF60b, a component of mammalian SWI/SNF complexes, and its physical linkage to the growth hormone gene and transcription factor SUG/proteasome p45 gene",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Nomoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Nakazato",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kazahari",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ono",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Gene",
+            "volume": "202",
+            "issn": "",
+            "pages": "157--65",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "BAF60a interacts with p53 to recruit the SWI/SNF complex",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Oh",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Sohn",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ko",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Chung",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Jeon",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Seong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "J Biol Chem",
+            "volume": "283",
+            "issn": "",
+            "pages": "11924--11958",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Mammalian SWI/SNF chromatin remodeling complexes are required to prevent apoptosis after DNA damage",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Hur",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kwon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "DNA Repair",
+            "volume": "8",
+            "issn": "",
+            "pages": "29--39",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "SWI/SNF complex interacts with tumor suppressor p53 and is necessary for the activation of p53-mediated transcription",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Seo",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Hwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Choi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Choe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "J Biol Chem",
+            "volume": "277",
+            "issn": "",
+            "pages": "22330--22337",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Localization and interactions of Plasmodium falciparum SWIB/MDM2 homologues",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Vieira",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Coetzer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Malar J",
+            "volume": "15",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "convenient online submission \u2022 thorough peer review by experienced researchers in your field \u2022 rapid publication on acceptance \u2022 support for research data, including large and complex data types \u2022 gold Open Access which fosters wider collaboration and increased citations maximum visibility for your research: over 100M website views per year",
+            "authors": [
+                {
+                    "first": "\u2022",
+                    "middle": [],
+                    "last": "Fast",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Ready to submit your research ? Choose BMC and benefit from",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Mitotic phosphorylation of histone H3 Is governed by Ipl1/aurora kinase and Glc7/PP1 phosphatase in budding yeast and nematodes",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Hsu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Reuben",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Tatchell",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Bishop",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Cell",
+            "volume": "102",
+            "issn": "",
+            "pages": "279--91",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Aurora-B phosphorylates Histone H3 at serine28 with regard to the mitotic chromosome condensation",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Goto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yasui",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Nigg",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Inagaki",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Genes Cells",
+            "volume": "7",
+            "issn": "",
+            "pages": "11--18",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Human malaria parasites in continuous culture",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Trager",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Jensen",
+                    "suffix": ""
+                }
+            ],
+            "year": 1976,
+            "venue": "Science",
+            "volume": "193",
+            "issn": "",
+            "pages": "673--678",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Synchronization of Plasmodium falciparum erythrocytic stages in culture",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Lambros",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Vanderberg",
+                    "suffix": ""
+                }
+            ],
+            "year": 1979,
+            "venue": "J Parasitol",
+            "volume": "65",
+            "issn": "",
+            "pages": "418--438",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "An alternative protocol for Plasmodium falciparum culture synchronization and a new method for synchrony confirmation",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Childs",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Miao",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gowda",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Malar J",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Efficient site-specific integration in Plasmodium falciparum chromosomes mediated by mycobacteriophage Bxb1 integrase",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Nkrumah",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Muhle",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Moura",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ghosh",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Hatfull",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Jacobs",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jr",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Nat Methods",
+            "volume": "3",
+            "issn": "",
+            "pages": "615--636",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Small-molecule displacement of a cryptic degron causes conditional protein degradation",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Bonger",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wandless",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nat Chem Biol",
+            "volume": "7",
+            "issn": "",
+            "pages": "531--538",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Cloning of naturally occurring mixed infections of malaria parasites",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Rosario",
+                    "suffix": ""
+                }
+            ],
+            "year": 1981,
+            "venue": "Science",
+            "volume": "212",
+            "issn": "",
+            "pages": "1037--1045",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Selective upregulation of a single distinctly structured var gene in chondroitin sulphate A-adhering Plasmodium falciparum involved in pregnancyassociated malaria",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Salanti",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Staalsoe",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Lavstsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Jensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Sowa",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Arnot",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Mol Microbiol",
+            "volume": "49",
+            "issn": "",
+            "pages": "179--91",
+            "other_ids": {}
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "A simple RNA analysis method shows var and rif multigene family expression patterns in Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kyes",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Pinches",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Newbold",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Mol Biochem Parasitol",
+            "volume": "105",
+            "issn": "",
+            "pages": "311--316",
+            "other_ids": {}
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "STAR: ultrafast universal RNA-seq aligner",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dobin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Davis",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Schlesinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Drenkow",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zaleski",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Jha",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Bioinformatics",
+            "volume": "29",
+            "issn": "",
+            "pages": "15--21",
+            "other_ids": {}
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Complex heatmaps reveal patterns and correlations in multidimensional genomic data",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Gu",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Eils",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schlesner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Bioinformatics",
+            "volume": "32",
+            "issn": "",
+            "pages": "2847--2856",
+            "other_ids": {}
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Ggplot2: elegant graphics for data analysis",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wickham",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "featureCounts: an efficient general purpose program for assigning sequence reads to genomic features",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Smyth",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Bioinformatics",
+            "volume": "30",
+            "issn": "",
+            "pages": "923--953",
+            "other_ids": {}
+        },
+        "BIBREF54": {
+            "ref_id": "b54",
+            "title": "ANOVA like differential expression (ALDEx) analysis for mixed population RNAseq",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Fernandes",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Macklaim",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Linn",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Reid",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Gloor",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "PLoS ONE",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "Unifying the analysis of high-throughput sequencing datasets: characterizing RNA-seq, 16S rRNA gene sequencing and selective growth experiments by compositional data analysis",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Fernandes",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Reid",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Macklaim",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Mcmurrough",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Edgell",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Gloor",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Microbiome",
+            "volume": "2",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF56": {
+            "ref_id": "b56",
+            "title": "Sub-grouping of Plasmodium falciparum 3D7 var genes based on sequence analysis of coding and non-coding regions",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Lavstsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Salanti",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Jensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Arnot",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Theander",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Malar J",
+            "volume": "2",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "Genome sequence of the human malaria parasite Plasmodium falciparum",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Gardner",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hall",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Fung",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "White",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Berriman",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Hyman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Nature",
+            "volume": "419",
+            "issn": "",
+            "pages": "498--511",
+            "other_ids": {}
+        },
+        "BIBREF58": {
+            "ref_id": "b58",
+            "title": "Chromatin modifications, epigenetics, and how protozoan parasites regulate their lives",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Croken",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Nardelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Trends Parasitol",
+            "volume": "28",
+            "issn": "",
+            "pages": "202--215",
+            "other_ids": {}
+        },
+        "BIBREF59": {
+            "ref_id": "b59",
+            "title": "Comparative analysis of apicomplexa and genomic diversity in eukaryotes",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Templeton",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Iyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Anantharaman",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Enomoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Abrahante",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Subramanian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Genome Res",
+            "volume": "14",
+            "issn": "",
+            "pages": "1686--95",
+            "other_ids": {}
+        },
+        "BIBREF60": {
+            "ref_id": "b60",
+            "title": "Diversity and specialization of mammalian SWI/SNF complexes",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xue",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kuo",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Cairns",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Crabtree",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Genes Dev",
+            "volume": "10",
+            "issn": "",
+            "pages": "2117--2147",
+            "other_ids": {}
+        },
+        "BIBREF61": {
+            "ref_id": "b61",
+            "title": "The SWIB and the MDM2 domains are homologous and share a common fold",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Bennett-Lovsey",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Hart",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Shirai",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mizuguchi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Bioinformatic",
+            "volume": "18",
+            "issn": "",
+            "pages": "626--656",
+            "other_ids": {}
+        },
+        "BIBREF62": {
+            "ref_id": "b62",
+            "title": "The core of chloroplast nucleoids contains architectural SWIB domain proteins",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Melonek",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Matros",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Trosch",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Mock",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Krupinska",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Plant Cell",
+            "volume": "24",
+            "issn": "",
+            "pages": "3060--73",
+            "other_ids": {}
+        },
+        "BIBREF63": {
+            "ref_id": "b63",
+            "title": "SWI/SNF nucleosome remodellers and cancer",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Wilson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cwm",
+                    "middle": [],
+                    "last": "Roberts",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Nat Rev Cancer",
+            "volume": "11",
+            "issn": "",
+            "pages": "481--92",
+            "other_ids": {}
+        },
+        "BIBREF64": {
+            "ref_id": "b64",
+            "title": "Exonucleasemediated degradation of nascent RNA silences genes linked to severe malaria",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Siegel",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Martins",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Nature",
+            "volume": "513",
+            "issn": "",
+            "pages": "431--436",
+            "other_ids": {}
+        },
+        "BIBREF65": {
+            "ref_id": "b65",
+            "title": "Publisher's Note",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF66": {
+            "ref_id": "b66",
+            "title": "Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Transfection and drug screening of the PfSWIB fusion expression system. a Schematic illustration of conditional PfSWIB knockdown strategy in the 3D7 clone. The pLN-HA-FKBP-LID construct was derived from plasmid pLN-ENR-GFP",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "= 1.000, P = 0.4547). Nevertheless, the PfSWIB\u2206 line showed a relatively low parasitemia during 48-84 h when compared with other lines (48 h: F (3, 6) = 5.071, P = 0.0439; 72 h: F (3, 6) = 7.775, P = 0.0172). Significant change was observed at 96 h (ring stage parasites within the 3rd life-cycle), the parasitemia of the PfSWIB\u2206 line showed a great decline compared to other lines (F (3, 6) = 154.3, P < 0.0001). Conditional knockdown of PfSWIB could affect parasite growth and development, suggesting that PfSWIB might play a key role in the proliferation of P. falciparum.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Conditional knockdown of PfSWIB interferes with the growth and development of parasite. a Growth curve analysis (GCA) during 96-h in vitro culturing. Data are presented as the rate of parasitemia (%) in the four parasite lines, PfSWIB sh+ , PfSWIB sh\u2212 , 3D7 sh+ and 3D7 sh\u2212 . All parasite lines were initially synchronized into 0-6 h ring-stage parasites, with exactly the same preliminary parasitemia of 0.2%. Data were collected every 12 h up to 96 h. The survival curves are drawn using GraphPad Prism \u00ae (version 5.0). The error bars represent the mean \u00b1 SD of three independent experiments determined by counting the rate of parasitemia. Key: sh+, parasite lines cultured in the presence of shield1 (1:2000); sh\u2212, lines cultured in the absence of shield1. The rate of parasitemia (%) of different lines were compared statistically by a one-way ANOVA followed by Bonferroni\u02bcs multiple comparison post-hoc tests (*P < 0.05, **P < 0.01). b Western blot assay of PfSWIB fusion protein levels in three lines at the ring and trophozoite-stages within the third life-cycle of P. falciparum. An antibody to aldolase (Roche) was used as a positive control. Rabbit anti-HA (Abcam) was used to identify fusion PfSWIB proteins in different lines. Key: +, parasite lines cultured in the presence of shield1; \u2212, lines cultured in the absence of shield1. Significance and different expression of PfSWIB fusion protein were calculated by the gray-level image analysis using ImageJ software. The error bars represent the mean \u00b1 SD of two independent western blot experiments. 'R' and 'T' denote the ring and trophozoite stage of P. falciparum, respectively. Statistical significance was determined with the two-tailed Student's t-test (*P < 0.05, **P < 0.01)(See figure on next page.) life-cycle of P. falciparum, and analyzed the var gene expression pattern by observing the log 2 fold change of trophozoite to ring in the absence and presence of shield1 (1:2000, 0.5 \u03bcM)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Conditional knockdown of PfSWIB leads to a change in mutually exclusive var gene transcription. qPCR analysis of the transcription level of individual var genes in two parasite lines, PfSWIB and PfSWIB\u2206. The data are presented as a log 2 fold change of var gene transcription levels in the PfSWIB\u2206 line (shield1 induced) with respect to the PfSWIB line (shield1 not induced), using the seryl-tRNA synthetase gene (PF3D7_0717700) as an endogenous control. The error bars represent the mean \u00b1 SD of three independent experiments. The red, green and blue bars in the histogram represent upsA-, upsB-and upsC-type vars. Red asterisks: 9 upregulated upsB vars (log 2 fold change \u2265 1.0, P < 0.05), black asterisks: 5 downregulated upsB vars (log 2 fold change \u2264 \u2212 1.0, P < 0.05) Fig. 4 Conditional knockdown of PfSWIB leads to a change in expression profiles of 44 vars in different lines. Hierarchical clustering heatmap of log 2 transformed fragments per kilobase of transcript per million (FPKM) gene expression values for 44 var genes after re-invasion in the 3rd life-cycle of P. falciparum. The color scale ranges from green to red, showing a range from minimum (\u2264 \u2212 0.4) to maximum (\u2265 \u2212 0.4) log 2 FPKM gene expression values for each var variant. Row labels with red and black arrows denote 9 upregulated and 5 downregulated upsB vars detected by qPCR analysis, respectively. Different var gene subtypes are shown in differently colored boxes",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Conditional knockdown of PfSWIB leads to a change in mutually exclusive var gene transcription in a single 48-h life-cycle. qPCR analysis of the transcription level of individual var genes in three lines during a single 48-h life-cycle of P. falciparum. The data are presented as log 2 fold change of trophozoite to ring within the third life-cycle, using the seryl-tRNA synthetase gene (PF3D7_0717700) as an endogenous control. The error bars represent the mean \u00b1 SD of three independent experiments. The red, green and blue bars in the histogram represent upsA-, upsB-and upsC-type vars, respectively",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We thank the staff at the Department of Tropical Diseases, Second Military Medical University, Shanghai, China. We are also grateful to Qingfeng Zhang for offering useful advice and support during the study.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        },
+        {
+            "text": "Supplementary information accompanies this paper at https ://doi. org/10.1186/s1307 1-020-3918-5.Additional file 1: Table S1 . Specific primers used for detecting integration events.Additional file 2: Table S2 . Primer sets used in qPCR assays specifically to amplify 44 var genes.Additional file 3: Figure S1 . Identification of integration events and clone screening of integrated clones. a Clone screening was performed by a serial dilution of parasites in 96-well plates. b Identification of integration events by PCR. Authors' contributions YLZ conceived and designed the study and critically revised the manuscript. YLZ and WFW performed the experiments. YLZ analyzed the data and drafted the manuscript. YLZ and WFW contributed reagents, materials, and analysis tools. Both authors read and approved the final manuscript.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 116,
+                    "end": 124,
+                    "text": "Table S1",
+                    "ref_id": null
+                },
+                {
+                    "start": 201,
+                    "end": 209,
+                    "text": "Table S2",
+                    "ref_id": null
+                },
+                {
+                    "start": 300,
+                    "end": 309,
+                    "text": "Figure S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Supplementary information"
+        },
+        {
+            "text": "This study was supported by the National Natural Science Foundation of China (Grant no. 31601002).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Funding"
+        },
+        {
+            "text": "Data supporting the conclusions of this article are included within the article and its additional files. The datasets generated and/or analysed during the present study are available in the GEO repository: https ://www.ncbi.nlm.nih. gov/geo/query /acc.cgi?acc=GSE14 1155 with accession number GSE141155, and https ://www.ncbi.nlm.nih.gov/geo/query /acc.cgi?acc=GSE14 1404, with accession number GSE141404. The above two subseries are linked to the SuperSeries GSE141959 (https ://www.ncbi.nlm.nih.gov/geo/query /acc. cgi?acc=GSE14 1959). The raw datasets used and/or analysed during this study are available from the corresponding author upon reasonable request.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Availability of data and materials"
+        },
+        {
+            "text": "Not applicable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ethics approval and consent to participate"
+        },
+        {
+            "text": "Not applicable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Consent for publication"
+        },
+        {
+            "text": "The authors declare that they have no competing interests. 1 Central Laboratory, Shanghai Tenth People's Hospital, Tongji University,",
+            "cite_spans": [
+                {
+                    "start": 59,
+                    "end": 60,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Competing interests"
+        }
+    ]
+}

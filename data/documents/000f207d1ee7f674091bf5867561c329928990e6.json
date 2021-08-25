@@ -1,0 +1,1144 @@
+{
+    "paper_id": "000f207d1ee7f674091bf5867561c329928990e6",
+    "metadata": {
+        "title": "",
+        "authors": []
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "Extracorporeal membrane oxygenation or ECMO is a resource-intensive therapy that provides cardiopulmonary support in refractory cardiac and respiratory failure. It serves as a recourse in patients with severe acute respiratory distress syndrome (ARDS) who fail to respond to optimal mechanical ventilation and medical management in the intensive care unit (ICU). At the time of writing this article, the world is dealing with a global pandemic of coronavirus disease 2019 (COVID-19) resulting from the novel human RNA coronavirus named severe acute respiratory syndrome coronavirus-2 (SARS COV-2). COVID-19 is a multi-system disease with the respiratory system being the most commonly involved. Patients with COVID-19 display a wide spectrum of symptoms that ranges from asymptomatic infection to fever, cough, flu-like illness, ARDS, multi-organ failure, and death. 1 The management of critical patients with COVID-19 is challenging. We report a case of a young male patient with severe ARDS from COVID-19 who successfully recovered with ECMO and was discharged home after a hospital stay of 47 days. This case was also the first case at our institution to be initiated on ECMO for COVID-19-related ARDS.",
+            "cite_spans": [
+                {
+                    "start": 867,
+                    "end": 868,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "A 32-year-old male with a past medical history of diabetes mellitus presented to the emergency department (ED) of our hospital with worsening shortness of breath for a few days. He was known to be COVID-19 positive from an outside clinic just 4 days before presentation. He denied any other symptoms including chills, fever, and sweats. On examination, he was diaphoretic, tachycardic, tachypneic, anxious, and lung sounds were notable for crackles. The patient was severely hypoxemic with oxygen saturation of 25% on room air. He was placed on a non-rebreather mask, following which the SpO 2 (oxygen saturation) had increased to 60% to 70%. Other vital signs were a blood pressure of 176/96 mm Hg, heart rate of 134/min, respiratory rate of 34/min, and temperature of 38.1 \u00b0C. Initial laboratory tests were significant for C-reactive protein of 34 mg/dL, lactic acid of 9 mmol/L, white blood cells of 16 \u00d7 10 6 /\u00b5L without lymphopenia, blood glucose of 643 mg/dL, procalcitonin of 2.44 ng/mL, and troponin of 0.04 ng/mL. Venous blood gas revealed a pH of 7.31, pCO 2 (partial pressure of carbon dioxide) of 26 mm Hg, and HCO 3 (bicarbonate) of 13 mmol/L. An electrocardiogram showed a sinus rhythm without ST changes or T wave changes. His initial chest X-ray (CXR) showed mild diffuse bilateral pulmonary consolidations ( Figure 1 ). He was intubated in the ED and transferred to the COVID-19 ICU. His nasopharyngeal swab was positive for COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1325,
+                    "end": 1333,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Case Presentation"
+        },
+        {
+            "text": "The patient was provided the standard ARDS treatment with lung-protective ventilation, pronation, neuromuscular blockade with rocuronium, and inhaled epoprostenol. His initial ventilator settings were pressure-regulated volume control mode of ventilation with a tidal volume (V t ) of 360 mL (6 mL/kg of ideal body weight), respiratory rate (RR) of 24 breaths per minute, and positive end-expiratory pressure (PEEP) of 14 cm H 2 O. He was sedated with hydromorphone, midazolam, and propofol continuous intravenous infusions. His chest computed tomography scan post-intubation revealed extensive multifocal ground-glass opacities bilaterally, pneumomediastinum with subcutaneous emphysema up to the base of the neck, without any pulmonary embolism ( Figure 2 ). The blood cultures on admission and respiratory pathogen panel were negative, and the sputum culture grew few Staphylococcus aureus.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 749,
+                    "end": 757,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Case Presentation"
+        },
+        {
+            "text": "On day 5 to 6 of hospitalization, the patient developed worsening oxygenation and hypercarbia despite an increasing fraction of inspired oxygen (FiO 2 ) to 1.0, PEEP to 20 cm H 2 O, RR to 34 breaths per minute, and V t to 380 mL (6.3 mL/kg of ideal body weight). His plateau pressures were around 34 cm H 2 O with inspiratory pressures around 40 cm H 2 O. CXR showed worsening diffuse bilateral pulmonary opacities ( Figure 3 ). Arterial blood gas revealed a pH of 7.37, pCO 2 of 70 mm Hg, PaO 2 of 85 mm Hg, and HCO 3 of 39 mmol/L, with PaO 2 : FiO 2 (P/F) ratio of 8:5. The ability to both oxygenate and ventilate him was further complicated by his known pneumomediastinum, which we speculated he had developed with persistent coughing due to COVID-19 before admission. The pneumomediastinum was treated conservatively without chest tube placement, but there were concerns regarding the safety of increasing his PEEP and TV.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 417,
+                    "end": 425,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Case Presentation"
+        },
+        {
+            "text": "Due to the refractory hypoxemia despite maximal conventional medical management for ARDS, he was evaluated by a multidisciplinary team for VV ECMO selection. Transthoracic echocardiogram revealed normal biventricular function with no valvular abnormalities. His Respiratory ECMO Survival Prediction (RESP) score was 5, giving him an estimated in-hospital survival of 70% to 90%. He received 1 point for mechanical ventilation for 6 days prior to initiation of ECMO, he received 3 points for viral pneumonia (COVID-19), and he received 1 point for neuromuscular blockade before ECMO (Table 1) . He had a prediction of survival on ECMO therapy (PRESET) score of 3 giving him estimated ICU mortality of around 26%. The patient received 1 point for mean arterial pressure between 91 and 100 mm Hg, 1 point for lactate between 1.51 and 3 mmol/L, and 1 point for 6 hospital days pre-ECMO (Table 2 ). On day 6 of hospitalization (approximately day 10-11 of the disease process), he was initiated on VV ECMO. Bifemoral cannulation was performed with ultrasound guidance at the bedside in the patient's room. The ECMO configuration was as follows: Cardiohelp device, Quadrox-ID adult oxygenator, 19 Fr single-stage right femoral venous outflow/oxygenated cannula, and 25 Fr multi-stage left femoral venous inflow/deoxygenated cannula. The initial ECMO settings were a blood flow at 4.5 L/min, sweep gas at 2 L/min, with a FiO 2 of 1. After the initiation of ECMO, improvement in his oxygenation and hypercarbia was noticed with arterial blood gas showing a pH of 7.46, pCO 2 of 54 mm Hg, paO 2 of 86 mm Hg, and HCO 3 of 38 mmol/L, thus his mechanical ventilator settings were decreased to a V t of 270 mL, RR of 10 breaths per minute, PEEP of 12 cm H 2 O, and FiO 2 of 0.6 to promote further lung protection. Additionally, on the day of admission up until day 10 of hospitalization, he was placed in an institutional review board-approved multicenter, randomized, blinded controlled trial where he received either remdesivir or placebo.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 582,
+                    "end": 591,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 882,
+                    "end": 890,
+                    "text": "(Table 2",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Case Presentation"
+        },
+        {
+            "text": "The patient's ECMO course was complicated. He suffered from acute blood loss anemia from hematuria, epistaxis, and oropharyngeal bleeding, requiring frequent blood transfusions while on a continuous heparin infusion as anticoagulation for the ECMO circuit. Despite growing concerns regarding the possible development of a hypercoagulable state in patients with COVID-19, we elected to decrease the patient's heparin infusion initially to a lower PTT goal of 45 to 60 seconds and then eventually discontinued all anticoagulation for 5 days. A venous duplex was performed on hospital day 27 as the patient was completely immobile while on bifemoral VV ECMO, off all anticoagulation, and at high risk for thrombus formation. The duplex was found to be negative for acute or chronic venous thrombus in all 4 extremities. Additionally, we had difficulty maintaining full ECMO flows of 4 to 5 LPM while also trying to prevent volume overload in the setting of severe ARDS and ultimately decreased his ECMO flows to around 3 to 3.5 LPM with the sweep around 4 to 6 LPM for the majority of his ECMO course.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Case Presentation"
+        },
+        {
+            "text": "On hospital day 19 (13 days of VV ECMO), we began noticing an improvement in his lung function and lung compliance. We started daily challenges of weaning sweep and FiO 2 on ECMO while subsequently increasing his ventilator support. He underwent tracheostomy on day 20 of hospitalization as we wanted to get the tracheostomy performed before ECMO decannulation. On day 23 of hospitalization (day 17 on ECMO and approximately day 27-28 of the disease process), he was successfully decannulated at the bedside, and VV ECMO was removed. The hospital course included a total of 35 days of mechanical ventilation. Our ability to wean him from mechanical ventilation was delayed due to ventilator-associated pneumonia secondary to Staphylococcus aureus and Klebsiella pneumoniae. The patient required tracheostomy for 26 days that included 15 days on mechanical ventilation. On hospital day 39, his tracheal aspirate was negative for COVID-19 by polymerase chain reaction. He underwent aggressive rehabilitation with physical therapy and occupational therapy while hospitalized. He was discharged home after 47 days of hospitalization without the need for supplemental oxygen or support devices and was decannulated from his tracheostomy. His CXR before discharge revealed an interval improvement in multifocal pulmonary opacities (Figure 4) . Despite a complicated and prolonged hospitalization, including 40 days in the ICU and the development of 3 nosocomial infections, he was able to avoid a multi-organ failure during his entire hospitalization.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1325,
+                    "end": 1335,
+                    "text": "(Figure 4)",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Case Presentation"
+        },
+        {
+            "text": "The majority of patients with COVID-19 have mild illness and can be cured with supportive management and oxygen supplementation. Although rates vary, among hospitalized COVID-19 patients, up to 30% make their way to the ICU. Among those who are critically ill, acute hypoxemic respiratory failure from ARDS is the dominant finding, which may require invasive mechanical ventilation. 2 In up to 98% of nonsurvivors from COVID-19, high mortality was associated with severe respiratory failure from viral pneumonia. 3, 4 The conventional management of patients with ARDS requiring invasive mechanical ventilation includes lung-protective ventilation with low tidal volume, high PEEP, deep sedation, prone positioning, neuromuscular blockade with the use of paralytics, steroids, and inhaled nitric oxide or epoprostenol. 5, 6 Although robust evidence in support of benefit with the use of ECMO for ARDS is lacking, it serves as a rescue therapy with a mortality benefit in patients with severe reversible acute respiratory failure when the conventional therapies have failed. 7-9 ECMO is not a disease-modifying therapy and does not cure lung disease, rather it serves as a bridge to lung recovery by allowing \"lung rest\" to the damaged alveoli in ARDS. It allows the use of lung-protective ventilation strategies by reducing mechanical power and driving pressure. 7,10 ECMO therapy has been used in patients with ARDS since 1970, however, it has become more popular in the last decade due to remarkable progress in the ECMO circuit components, increased safety, and availability. Improvement in mortality with ECMO was reported in the non-randomized studies during the influenza A H1N1 epidemic in 2009 and the Middle East respiratory syndrome coronavirus epidemic in 2014, supporting the use of ECMO for refractory hypoxemia. [11] [12] [13] As the world is currently facing the COVID-19 pandemic, the role of ECMO in ARDS secondary to COVID-19 is being explored. Early reports from China on the use of ECMO for COVID-19 suggested a high mortality rate of around 80% to 90% in adult patients with ARDS. 14, 15 There is some encouraging evidence in the form of case reports and series suggesting clinical benefit with the use of ECMO in COVID-19. [16] [17] [18] In a recent case series of 6 patients by Osho and colleagues, 19 5 patients survived severe ARDS due to COVID-19 with VV ECMO. The median duration of VV ECMO in these patients was 12 days (4-18 days). Jacobs and colleagues published an analysis of 32 patients with COVID-19 supported with ECMO. They demonstrated that 22 of 32 patients were alive (68%), with 17 of 32 (53.1%) alive on ECMO at the time of publication. Five out of 15 (33.3%) who had been decannulated survived post-ECMO removal. 20 With our case report, we attempt to highlight a case of a young otherwise healthy male, who developed severe ARDS and completely recovered with the use of ECMO therapy.",
+            "cite_spans": [
+                {
+                    "start": 383,
+                    "end": 384,
+                    "text": "2",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 513,
+                    "end": 515,
+                    "text": "3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 516,
+                    "end": 517,
+                    "text": "4",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 818,
+                    "end": 820,
+                    "text": "5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 821,
+                    "end": 822,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1825,
+                    "end": 1829,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1830,
+                    "end": 1834,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1835,
+                    "end": 1839,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 2101,
+                    "end": 2104,
+                    "text": "14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 2105,
+                    "end": 2107,
+                    "text": "15",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 2244,
+                    "end": 2248,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 2249,
+                    "end": 2253,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 2254,
+                    "end": 2258,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 2321,
+                    "end": 2323,
+                    "text": "19",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 2754,
+                    "end": 2756,
+                    "text": "20",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "There are 2 main types of ECMO circuits: venoarterial (VA) and VV. VV ECMO provides respiratory support within an extracorporeal circuit and is meant to treat hypercarbia and hypoxemia. VV is by far the most common convention used in the management of refractory ARDS. VV ECMO could be performed either via a single dual-lumen catheter usually in the neck, or via dual-site cannulation, which draws blood from the femoral vein and reinfuses it in the internal jugular vein or the contralateral femoral vein. 10 Dual-site cannulation could be performed at the bedside without the requirement for transesophageal echocardiogram and fluoroscopy. Therefore, for patients with COVID-19, dual-site cannulation is preferable for respiratory support as it reduces the potential exposure of the health care workers and utilization of resources. 11 Most of the reported experience with ECMO for COVID-19 is with VV ECMO. VA ECMO is used to provide both mechanical circulatory and respiratory support. COVID-19 is a multisystem disorder that is also associated with cardiovascular complications such as acute myocarditis, cardiogenic shock, and heart failure. However, the experience with VA ECMO in COVID-19 patients is extremely limited. To date, only 1 case of fulminant myocarditis in a patient with COVID-19 has been reported who was successfully rescued with VA ECMO as a bridge to recovery. 21 ECMO could act as potentially life-saving therapy in COVID-19 patients with refractory hypoxemia and terminal respiratory failure. However, ECMO therapy in COVID-19 patients poses a lot of additional challenges that could affect how ECMO is delivered for ARDS patients. 11 ECMO facility is available in specialized centers. It requires a team of expert personnel experienced in initiating, maintaining, and discontinuing ECMO and managing its related complications. Due to the worldwide pandemic, there is a huge burden on the health care resources for the management of patients with COVID-19. The use of ECMO for COVID-19 also involves ethical challenges. It diverts the already overwhelmed health care resources from the other critically ill patients. ECMO is a high resource-intensive and prolonged mode of treatment. Additionally, ECMO management enhances the potential exposure of health care workers to SARS COV-2, which is a highly transmissible disease, especially with the limited personal protective equipment across many hospitals. ECMO therapy is also inherently associated with complications that increase morbidity and mortality such as the increased risk of hemorrhage due to the use of anticoagulant, and systemic thrombosis among many others. 10 At this time, there are no defined guidelines for selecting patients with COVID-19 patients for ECMO therapy. Based on the experience gained during the management of patients with SARS COV (2003), H1N1 influenza A, and Middle East respiratory syndrome coronavirus, patients who are young and have fewer or no comorbidities are expected to have the highest probability of survival and should be given preference for consideration for ECMO in COVID-19 patients. Patients with advanced age, terminal diseases such as advanced malignancy, severe multiorgan failure, severe neurologic damage such as anoxic brain injury, inability to receive blood transfusions, or anticoagulation would be some of the absolute contraindications to ECMO therapy in COVID-19 patients. 7, 11 To ensure the ethical distribution of resources, the relative and absolute contraindications may vary with time as the health care resources get overburdened due to the progressing COVID-19 pandemic. Although not prospectively validated in COVID-19 patients, the pulmonary and extrapulmonary predictive survival models such as RESP and PRESET might serve as decision support in COVID-19 patients with ARDS to be placed on ECMO therapy. 22, 23 The RESP score was developed in 2014 by Schmidt and colleagues 22 through a multi-center retrospective cohort study with 2355 patients from the Extracorporeal Life Support Organization (ELSO) registry. It was created as a predictor of survival to hospital discharge for adult patients receiving ECMO for acute respiratory failure. 22 The tool includes 12 different patient variables that add up to a final score between \u22656 and \u2264\u22126 with each score being associated with 6 different risk classes of in-hospital survival. The higher the score, the lower the risk class for ECMO candidacy, and subsequently the higher the predicted in-hospital survival. The PRESET score was developed in 2017 through a derivation cohort study of 108 ARDS patients receiving VV ECMO at a single center in Germany. 23 It was created as a predictor of ICU survival for ARDS patients receiving ECMO. The tool includes 5 different patient variables, all of which are extrapulmonary. The total score ranges from 0 to 15 and each score places the patient in 1 of the 3 risk classes. The higher the score, the higher the risk class, and subsequently the higher the expected ICU mortality.",
+            "cite_spans": [
+                {
+                    "start": 508,
+                    "end": 510,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 836,
+                    "end": 838,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1387,
+                    "end": 1389,
+                    "text": "21",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1660,
+                    "end": 1662,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 2651,
+                    "end": 2653,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 3416,
+                    "end": 3418,
+                    "text": "7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 3419,
+                    "end": 3421,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 3858,
+                    "end": 3861,
+                    "text": "22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 3862,
+                    "end": 3864,
+                    "text": "23",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 4196,
+                    "end": 4198,
+                    "text": "22",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 4658,
+                    "end": 4660,
+                    "text": "23",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "We suggest that early referral to specialized tertiary care centers equipped with resources, expertise, and standardized ECMO protocols should be considered for patients with severe respiratory failure from COVID-19. The patient selection, timing, and management should be determined on a case-by-case basis by a multidisciplinary team of intensivists, cardiac surgeons, critical care nurses, respiratory therapists, pharmacists, and perfusionists. ECMO could improve patient outcomes in optimally selected patients with COVID-19; however, as mentioned above, its use is limited by its availability, cost, increased exposure to health care providers to infection, and limited resources and staff during the global pandemic of COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Presently, the utility of ECMO in COVID-19-related ARDS remains controversial. However, the data reported so far suggest that ECMO could be associated with positive outcomes in severe respiratory failure due to COVID-19 in highly selected patients in specialized centers. Therefore, it is important to develop algorithms that would guide us in initiating ECMO on patients with COVID-19 who are expected to benefit the most from this rescue therapy. At the same time, health care institutions should take appropriate measures to ensure the safety of the staff, prevent the spread of infection, and not divert critical care resources from the other COVID-19 patients who are not on ECMO. A lot still needs to be learned about the role of ECMO in patients suffering from refractory respiratory failure.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "The author(s) declared no potential conflicts of interest with respect to the research, authorship, and/or publication of this article.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Declaration of Conflicting Interests"
+        },
+        {
+            "text": "The author(s) received no financial support for the research, authorship, and/or publication of this article.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Funding"
+        },
+        {
+            "text": "Informed consent was obtained from the patient for the publication of this manuscript.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Informed Consent"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Clinical characteristics of coronavirus disease 2019 (COVID-19) in China: a systematic review and meta-analysis",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Infect",
+            "volume": "80",
+            "issn": "",
+            "pages": "656--665",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Imaging and clinical features of patients with 2019 novel coronavirus SARS-CoV-2: a systematic review and meta-analysis",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Med Virol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/jmv.25822"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Successful COVID-19 rescue therapy by extracorporeal membrane oxygenation (ECMO) for respiratory failure: a case report",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Firstenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Stahel",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hanna",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Kotaru",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Crossno",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jr",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Forrester",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Patient Saf Surg",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Clinical course and outcomes of critically ill patients with SARS-CoV-2 pneumonia in Wuhan, China: a single-centered, retrospective, observational study",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Respir Med",
+            "volume": "8",
+            "issn": "20",
+            "pages": "30079--30084",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S2213-2600"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Guidelines on the management of acute respiratory distress syndrome",
+            "authors": [
+                {
+                    "first": "Mjd",
+                    "middle": [],
+                    "last": "Griffiths",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Mcauley",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Perkins",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "BMJ Open Respir Res",
+            "volume": "6",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1136/bmjresp-2019-000420"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Formal guidelines: management of acute respiratory distress syndrome",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Papazian",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Aubron",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Brochard",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Ann Intensive Care",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s13613-019-0540-9"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Delivering extracorporeal membrane oxygenation for patients with COVID-19: what, who, when and how?",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Zochios",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Brodie",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Charlesworth",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Parhar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Anaesthesia",
+            "volume": "75",
+            "issn": "",
+            "pages": "997--1001",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/anae.15099"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Extracorporeal membrane oxygenation for severe acute respiratory distress syndrome",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Combes",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hajage",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Capellier",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "N Engl J Med",
+            "volume": "378",
+            "issn": "",
+            "pages": "1965--1975",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Efficacy and economic assessment of conventional ventilatory support versus extracorporeal membrane oxygenation for severe adult respiratory failure (CESAR): a multicentre randomised controlled trial",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Peek",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Mugford",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tiruvoipati",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Lancet",
+            "volume": "374",
+            "issn": "",
+            "pages": "61069--61071",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(09"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Extra corporeal membrane oxygenation (ECMO) review of a lifesaving technology",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Makdisi",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "J Thorac Dis",
+            "volume": "7",
+            "issn": "",
+            "pages": "166--176",
+            "other_ids": {
+                "DOI": [
+                    "10.3978/j.issn.2072-1439.2015.07.17"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Utility of extracorporeal membrane oxygenation in COVID-19",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Anandamurthy",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mccurry",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Krishnan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cleve Clin J Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3949/ccjm.87a.ccc014"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Extracorporeal membrane oxygenation for 2009 Influenza A(H1N1) acute respiratory distress syndrome",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Davies",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Jones",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "JAMA",
+            "volume": "302",
+            "issn": "",
+            "pages": "1888--1895",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2009.1535"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Extracorporeal membrane oxygenation for severe Middle East respiratory syndrome coronavirus",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Alshahrani",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sindi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Alshamsi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Ann Intensive Care",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "ECMO for ARDS due to COVID-19",
+            "authors": [
+                {
+                    "first": "\u00d1amendys-Silva",
+                    "middle": [],
+                    "last": "Sa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Heart Lung",
+            "volume": "49",
+            "issn": "",
+            "pages": "348--349",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.hrtlng.2020.03.012"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Poor survival with extracorporeal membrane oxygenation in acute respiratory distress syndrome (ARDS) due to coronavirus disease 2019 (COVID-19): pooled analysis of early reports",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Henry",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lippi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Crit Care",
+            "volume": "58",
+            "issn": "",
+            "pages": "27--28",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jcrc.2020.03.011"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "A sporadic COVID-19 pneumonia treated with extracorporeal membrane oxygenation in Tokyo, Japan: a case report",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Nakamura",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hikone",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Shimizu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Infect Chemother",
+            "volume": "26",
+            "issn": "",
+            "pages": "759--761",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jiac.2020.03.018"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Veno-venous extracorporeal membrane oxygenation for severe pneumonia: COVID-19 case in Japan",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Taniguchi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ogawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Honzawa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Acute Med Surg",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/ams2.509"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Extracorporeal membrane oxygenation as treatment of severe COVID-19 infection: a case report",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Douedi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Alshami",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Costanzo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cureus",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7759/cureus.7714"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Veno-venous extracorporeal membrane oxygenation for respiratory failure in COVID-19 patients: early experience from a major academic medical center in North America",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Osho",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Moonsamy",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hibbert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Ann Surg",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1097/SLA.0000000000004084"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Extracorporeal membrane oxygenation in the treatment of severe pulmonary and cardiac compromise in COVID-19: experience with 32 patients",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Jacobs",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Stammers",
+                    "suffix": ""
+                },
+                {
+                    "first": "St",
+                    "middle": [],
+                    "last": "Louis",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "ASAIO J",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1097/MAT.0000000000001185"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Cardiovascular collapse in COVID-19 infection: the role of veno-arterial extracorporeal membrane oxygenation (VA-ECMO)",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chow",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Alhussaini",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Calvillo-Arg\u00fcelles",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "CJC Open",
+            "volume": "2",
+            "issn": "",
+            "pages": "273--277",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cjco.2020.04.003"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Predicting survival after extracorporeal membrane oxygenation for severe acute respiratory failure. The Respiratory Extracorporeal Membrane Oxygenation Survival Prediction (RESP) score",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schmidt",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bailey",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sheldrake",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Am J Respir Crit Care Med",
+            "volume": "189",
+            "issn": "",
+            "pages": "1374--1382",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Comparison of mortality prediction models in acute respiratory distress syndrome undergoing extracorporeal membrane oxygenation and development of a novel prediction score: the PREdiction of Survival on ECMO Therapy-Score (PRESET-Score)",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hilder",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Herbstreit",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Adamzik",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Crit Care",
+            "volume": "21",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Initial chest x-ray (CXR) on admission showed diffuse bilateral pulmonary consolidations.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Initial computed tomography (CT) post-intubation showing extensive multifocal ground-glass opacities bilaterally, and pneumomediastinum with subcutaneous emphysema.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Chest X-ray (CXR) on day 5 of hospitalization showing worsening diffuse bilateral pulmonary opacities.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Chest X-ray (CXR) prior to discharge revealed an interval improvement in multifocal pulmonary opacities.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "The Table Shows the PRESET Score for Our Patient. The Patient Received a Total of 3 Points, Giving Him an Estimated ICU Mortality of 26%.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "The Table Shows the RESP Score for Our Patient. The Patient Received a Total of 5 Points, Giving Him an Estimated In-Hospital Survival of 70-90%.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Our institution does not require ethical approval for reporting individual cases or case series.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ethical Approval"
+        }
+    ]
+}

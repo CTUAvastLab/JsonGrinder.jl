@@ -1,0 +1,3430 @@
+{
+    "paper_id": "0000fcce604204b1b9d876dc073eb529eb5ce305",
+    "metadata": {
+        "title": "",
+        "authors": [
+            {
+                "first": "Miguel",
+                "middle": [],
+                "last": "Montserrat",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Barcons",
+                "middle": [],
+                "last": "Marqu\u00e9s",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Servicio de Geriatr\u00eda. Hospital Universitario",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Blanca",
+                "middle": [],
+                "last": "Chaparro Jim\u00e9nez",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Servicio de Geriatr\u00eda. Hospital Universitario",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Carolina",
+                "middle": [],
+                "last": "Figueroa",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Poblete",
+                "middle": [],
+                "last": "Teresa",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Alarc\u00f3n",
+                "middle": [],
+                "last": "Francisco",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Javier",
+                "middle": [],
+                "last": "Mart\u00ednez",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Peromingo",
+                "middle": [],
+                "last": "Juan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Ignacio",
+                "middle": [],
+                "last": "Gonz\u00e1lez-Montalvo",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Roc\u00edo",
+                "middle": [],
+                "last": "Men\u00e9ndez-Colino",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Servicio de Geriatr\u00eda. Hospital Universitario",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Francesca",
+                "middle": [],
+                "last": "Argentina",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Servicio de Geriatr\u00eda. Hospital Universitario",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Ana",
+                "middle": [],
+                "last": "Merello De Miguel",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Servicio de Geriatr\u00eda. Hospital Universitario",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Carolina",
+                "middle": [],
+                "last": "Figueroa Poblete",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Servicio de Geriatr\u00eda. Hospital Universitario",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Teresa",
+                "middle": [],
+                "last": "Alarc\u00f3n",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Servicio de Geriatr\u00eda. Hospital Universitario",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Francisco",
+                "middle": [],
+                "last": "Javier",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Mart\u00ednez",
+                "middle": [],
+                "last": "Peromingo",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Juan",
+                "middle": [],
+                "last": "Ignacio Gonz\u00e1lez-Montalvo",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Servicio de Geriatr\u00eda. Hospital Universitario",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "La",
+                "middle": [],
+                "last": "Paz",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Madrid",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Madrid",
+                "middle": [],
+                "last": "Autor",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Roc\u00edo",
+                "middle": [],
+                "last": "Men\u00e9ndez",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Colino",
+                "middle": [],
+                "last": "Servicio De Geriatr\u00eda",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Contribuci\u00f3n de los autores: Roc\u00edo Men\u00e9ndez Colino y Juan Ignacio Gonz\u00e1lez Montalvo han contribuido de manera equitativa en este trabajo.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "A Cristina Reyes L\u00f3pez por el inestimable trabajo administrativo A todos los Servicios del Hospital la Paz sin cuyo apoyo la actividad de la Unidad de Geriatr\u00eda de Enlace no hubiera sido posible Page 2 of 26 J o u r n a l P r e -p r o o f 2",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Los autores declaran no tener ning\u00fan conflicto de intereses en relaci\u00f3n con este trabajo La Geriatr\u00eda de Enlace con residencias en la \u00e9poca de la Covid-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Un nuevo modelo de coordinaci\u00f3n que ha llegado para quedarse. (Liaison Geriatrics with nursing homes in Covid time. A new coordination model arrived to stay) Page 3 of 26 J o u r n a l P r e -p r o o f 3",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Las personas mayores residentes en instituciones cumplen criterios de pacientes geri\u00e1tricos complejos, pero con frecuencia no tienen resueltas sus necesidades sanitarias. La pandemia de Covid-19 ha hecho evidentes los d\u00e9ficits existentes en la atenci\u00f3n sanitaria a estas personas. Como respuesta a ello surge la necesidad de mejorar la coordinaci\u00f3n entre hospitales y residencias, lo que en Madrid se ha materializado en la implantaci\u00f3n de equipos o unidades de Geriatr\u00eda de Enlace en los hospitales p\u00fablicos. Respecto a las acciones frente a la pandemia por Covid-19, la Sociedad Espa\u00f1ola de Geriatr\u00eda y Gerontolog\u00eda ha definido el papel de los geriatras en esta funci\u00f3n y ha dado directrices sobre prevenci\u00f3n, detecci\u00f3n precoz, aislamiento y sectorizaci\u00f3n, formaci\u00f3n, clasificaci\u00f3n de las residencias, coordinaci\u00f3n de las derivaciones y papel de los diferentes niveles asistenciales, entre otras. Estas unidades tambi\u00e9n deben dirigir su actividad hacia otras \u00e1reas de atenci\u00f3n actualmente deficitarias como la coordinaci\u00f3n, las visitas presenciales en los centros, las sesiones de telemedicina, la valoraci\u00f3n geri\u00e1trica en los servicios de urgencias y la coordinaci\u00f3n con Atenci\u00f3n Primaria y Salud P\u00fablica. En este art\u00edculo se describe la generaci\u00f3n del concepto y la implantaci\u00f3n de la Geriatr\u00eda de Enlace en la Comunidad de Madrid a ra\u00edz de la pandemia de Covid-19 y se ilustra con los datos de actividad de una unidad cuyo hospital tiene en su \u00e1rea un elevado n\u00famero de residencias. El objetivo es ayudar a comprender la necesidad de esta actividad, que para evitar la fragmentaci\u00f3n de cuidados existente en la actualidad entre hospitales y residencias. Actividad que deber\u00eda consolidarse y mantenerse en el futuro.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Abstract:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Se calcula que en Espa\u00f1a existen cerca de 367.000 plazas residenciales para personas mayores (PPMM) con una ocupaci\u00f3n del 80%, con lo que casi 300.000 personas viven en ellas 1 . Respecto a sus caracter\u00edsticas cl\u00ednicas, el estudio de la Fundaci\u00f3n Edad y Vida, sobre casi 20.000 personas, residentes en 111 centros de 15 CCAA 2 , las describe con una elevada pluripatolog\u00eda (76% de los casos tienen \u22653 diagn\u00f3sticos activos) y polifarmacia (el 66% toman \u22657 f\u00e1rmacos), inestabilidad cl\u00ednica (cada a\u00f1o el 38% son derivadas a urgencias) y terminalidad (el 43% fallecen durante el a\u00f1o). Al ingreso, 63% padecen deterioro cognitivo, 45% dependencia severa para las actividades b\u00e1sicas de la vida diaria, 55% malnutrici\u00f3n o riesgo de ella y 18% \u00falceras por presi\u00f3n. Perfiles similares han sido descritos en otros pa\u00edses 3 .",
+            "cite_spans": [
+                {
+                    "start": 175,
+                    "end": 176,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 812,
+                    "end": 813,
+                    "text": "3",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introducci\u00f3n: Las residencias de personas mayores en Espa\u00f1a."
+        },
+        {
+            "text": "La atenci\u00f3n a estas personas institucionalizadas, dista mucho de ser la ideal. En el Informe del Defensor del Pueblo de 2019 4 se afirma que resultan necesarias reformas normativas de calado que garanticen a los mayores el ejercicio sus derechos y que se preste una mayor atenci\u00f3n presupuestaria, formativa, dotacional e inspectora en los centros residenciales. Se destacan en este Informe, la dispersi\u00f3n normativa sobre los requisitos que deben reunir los centros, la escasez del n\u00famero de plazas p\u00fablicas, la necesidad de un aumento presupuestario y de incrementar los ratios de personal y su cualificaci\u00f3n, as\u00ed como la falta de regulaci\u00f3n de un modelo sociosanitario, con atenci\u00f3n m\u00e9dica y de enfermer\u00eda m\u00e1s amplia.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introducci\u00f3n: Las residencias de personas mayores en Espa\u00f1a."
+        },
+        {
+            "text": "La financiaci\u00f3n del sistema de cuidados de larga estancia es deficitario en Espa\u00f1a en comparaci\u00f3n con el resto de pa\u00edses de Europa, ya que es uno de los pa\u00edses que menos porcentaje del producto interior bruto dedica a los cuidados de larga duraci\u00f3n 5 .",
+            "cite_spans": [
+                {
+                    "start": 249,
+                    "end": 250,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introducci\u00f3n: Las residencias de personas mayores en Espa\u00f1a."
+        },
+        {
+            "text": "Es notable, adem\u00e1s, la heterogeneidad de los centros residenciales. En un aparente mismo sistema, coexisten centros p\u00fablicos y privados (con y sin \u00e1nimo de lucro), residencias grandes frente a peque\u00f1as, instituciones (y empresas) con vocaci\u00f3n de atenci\u00f3n integral (social y sanitaria) frente a otros que rechazan cualquier \"medicalizaci\u00f3n\" y prefieren no ser m\u00e1s que \"hogares\", centros dotados de personal suficiente para abordar problemas de salud comunes e incluso algunos agudos frente a otros que no disponen de profesionales sanitarios, \u2026 y as\u00ed en otros aspectos. Por ello, el generalizar con el t\u00e9rmino de \"residencias\" lleva el riesgo de incluir en el mismo saco a instalaciones que no tienen en com\u00fan m\u00e1s que el hecho de alojar a PPMM.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introducci\u00f3n: Las residencias de personas mayores en Espa\u00f1a."
+        },
+        {
+            "text": "As\u00ed pues, el panorama residencial es el de un nivel de atenci\u00f3n que, asiste a un n\u00famero muy importante de PPMM con necesidades sociales y sanitarias, pero que no goza de la regulaci\u00f3n, financiaci\u00f3n, provisi\u00f3n, capacitaci\u00f3n de personal, ni de los sistemas de inspecci\u00f3n que precisar\u00eda, situaci\u00f3n que parece similar en otros pa\u00edses 6 . La atenci\u00f3n m\u00e9dica especializada se encuentra en un punto que necesita muchas mejoras 7 . Siendo as\u00ed la en condiciones habituales, sus carencias se agudizar\u00e1n mucho m\u00e1s ante cualquier amenaza externa.",
+            "cite_spans": [
+                {
+                    "start": 330,
+                    "end": 331,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introducci\u00f3n: Las residencias de personas mayores en Espa\u00f1a."
+        },
+        {
+            "text": "La situaci\u00f3n sanitaria que provoc\u00f3 la pandemia de Covid-19 gener\u00f3 en el mundo una tensi\u00f3n que estuvo a punto de colapsar los servicios de salud y que puso en evidencia sus puntos d\u00e9biles 8 .",
+            "cite_spans": [
+                {
+                    "start": 187,
+                    "end": 188,
+                    "text": "8",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "La crisis de la Covid-19 y el cambio ocurrido en la Geriatr\u00eda de Madrid"
+        },
+        {
+            "text": "Las personas mayores residentes en instituciones fueron v\u00edctimas frecuentes del nuevo virus. Incidieron en ellas una serie de coincidencias (institucionalizaci\u00f3n, fragilidad, dependencia de cuidados, enfermedades importantes) que los hicieron m\u00e1s vulnerables. Pronto se supo que el aislamiento de los casos sintom\u00e1ticos no era suficiente, sino que hab\u00eda que hacer test, a mayores asintom\u00e1ticos muy escasos entonces 9 . Adem\u00e1s, las personas mayores presentaban manifestaciones cl\u00ednicas diferentes de las t\u00edpicas, que dificultaban el diagn\u00f3stico 10, 11 . Las tasas de contagio nosocomial se dispararon en algunos centros y, a\u00fan peor, la letalidad de la infecci\u00f3n tambi\u00e9n lo hizo [12] [13] [14] [15] .",
+            "cite_spans": [
+                {
+                    "start": 415,
+                    "end": 416,
+                    "text": "9",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 544,
+                    "end": 547,
+                    "text": "10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 548,
+                    "end": 550,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 677,
+                    "end": 681,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 682,
+                    "end": 686,
+                    "text": "[13]",
+                    "ref_id": null
+                },
+                {
+                    "start": 687,
+                    "end": 691,
+                    "text": "[14]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 692,
+                    "end": 696,
+                    "text": "[15]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "La crisis de la Covid-19 y el cambio ocurrido en la Geriatr\u00eda de Madrid"
+        },
+        {
+            "text": "En la Comunidad de Madrid, en un intento de reforzar la asistencia y de mejorar la coordinaci\u00f3n con los hospitales, se activ\u00f3 el 13 de marzo un dispositivo, denominado Geriatr\u00eda de Enlace. Se designaron geriatras de referencia en los hospitales y se estableci\u00f3 una conexi\u00f3n directa con los centros residenciales. Los geriatras de enlace recibieron multitud de llamadas de sus colegas de las residencias comentando la situaci\u00f3n cl\u00ednica de los pacientes, evaluaron la posibilidad de derivaci\u00f3n hospitalaria, coordinaron la provisi\u00f3n de medicaci\u00f3n de uso hospitalario y concentradores de ox\u00edgeno, realizaron el seguimiento tanto en las residencias como en los hospitales y, cuando fue posible, iniciaron visitas presenciales en los centros.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "La crisis de la Covid-19 y el cambio ocurrido en la Geriatr\u00eda de Madrid"
+        },
+        {
+            "text": "Este art\u00edculo no analiza esa fase de la asistencia, que fue \"reactiva\" a la situaci\u00f3n generada, sino que pretende describir la fase posterior, \"proactiva\", puesta en marcha una vez superada la primera ola. Durante ese periodo inicial se produjo una sensibilizaci\u00f3n del sistema sanitario hacia las necesidades cl\u00ednicas de las PPMM institucionalizadas, se establecieron v\u00ednculos entre los profesionales de ambos entornos asistenciales y, las autoridades sanitarias dieron instrucciones dirigidas a mejorar la coordinaci\u00f3n y suprimir la fragmentaci\u00f3n de los cuidados previa. A finales de mayo, desde la Direcci\u00f3n General de Coordinaci\u00f3n Sociosanitaria dependiente de la Consejer\u00eda de Sanidad se reforz\u00f3 a los servicios de Geriatr\u00eda con la incorporaci\u00f3n de nuevos geriatras (53 especialistas en 19 hospitales p\u00fablicos) cuya misi\u00f3n fue mejorar la atenci\u00f3n a las PPMM institucionalizadas mediante la coordinaci\u00f3n y la continuidad asistencial entre los hospitales y las residencias. La Sociedad Espa\u00f1ola de Geriatr\u00eda y Gerontolog\u00eda (SEGG) defini\u00f3 el modelo de coordinaci\u00f3n a seguir 16 . La propia presidenta de la Comunidad afirm\u00f3 en una entrevista que \"se abre un momento en el que tenemos que dejar ya perpetuado un sistema nuevo de trabajo con las residencias\".",
+            "cite_spans": [
+                {
+                    "start": 1075,
+                    "end": 1077,
+                    "text": "16",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "La crisis de la Covid-19 y el cambio ocurrido en la Geriatr\u00eda de Madrid"
+        },
+        {
+            "text": "Desde el a\u00f1o 2014 se hab\u00eda iniciado en el servicio de Geriatr\u00eda un Programa de Coordinaci\u00f3n con 15 residencias del \u00e1rea (en las que resid\u00edan 3.500 personas) con la dedicaci\u00f3n a tiempo parcial de una de las autoras (RMC) 17 . La actividad en el \u00faltimo a\u00f1o consisti\u00f3, entre otras, en 476 contactos telef\u00f3nicos, 165 pacientes consultados o seguidos mediante correo electr\u00f3nico, provisi\u00f3n de medicaci\u00f3n de uso hospitalario para 24 pacientes (que supuso 158 estancias hospitalarias evitadas) y 17 pacientes ingresados de forma programada.",
+            "cite_spans": [
+                {
+                    "start": 220,
+                    "end": 222,
+                    "text": "17",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Actividad previa a la pandemia por Covid-19 en el Hospital La Paz"
+        },
+        {
+            "text": "M\u00e1s importante que el volumen de actividad fueron, 1) el conocimiento de la localizaci\u00f3n y la catalogaci\u00f3n de todas las residencias del \u00e1rea, que fue de gran ayuda en la pandemia y 2) el convencimiento de la necesidad de evitar la fragmentaci\u00f3n de cuidados y el compromiso del servicio con esta coordinaci\u00f3n",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Actividad previa a la pandemia por Covid-19 en el Hospital La Paz"
+        },
+        {
+            "text": "En este trabajo se describen las \u00e1reas reforzadas tras la primera ola y, para ilustrar la experiencia, se describe la actividad de una Unidad de Geriatr\u00eda de Enlace en un hospital terciario en cuya \u00e1rea existen 41 centros residenciales. En ellos viv\u00edan antes de la pandemia 3.420 residentes en residencias privadas o concertadas y 1.535 en residencias p\u00fablicas. Para su atenci\u00f3n cl\u00ednica, las residencias dispon\u00edan de 57 m\u00e9dicos y 135 enfermeras.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Actividad de Geriatr\u00eda de Enlace en el Hospital Universitario La Paz en la pandemia por Covid-19"
+        },
+        {
+            "text": "Durante la fase inicial (13 de marzo al 31 de mayo) los geriatras de enlace del Hospital Universitario La Paz, en horario de 8h a 22h los 7 d\u00edas de la semana, atendieron 1.810 llamadas de m\u00e9dicos de residencias, fueron consultados por 1.157 residentes de los que el 47% fueron hospitalizados, se respondieron 1.016 consultas no cl\u00ednicas y se proporcionaron 519 tratamientos de uso hospitalario y 199 concentradores de ox\u00edgeno. Se realiz\u00f3 un cribado con PCR a 2.115 residentes, en el que se detectaron 225 casos positivos que fueron aislados y sus centros sectorizados, hasta su negativizaci\u00f3n. Se elabor\u00f3 un \"mapa de residencias\" preliminar, se elabor\u00f3 un Plan de Contingencia ante la posibilidad de nuevos brotes, se inici\u00f3 la coordinaci\u00f3n con Atenci\u00f3n Primaria y, en cuanto se dispuso de personal, se iniciaron las visitas a las residencias.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Actividad de Geriatr\u00eda de Enlace en el Hospital Universitario La Paz en la pandemia por Covid-19"
+        },
+        {
+            "text": "A partir de aqu\u00ed, cuando se hace referencia a la actividad, se refiere a la realizada desde el 1 de junio, fecha a partir de la cual se pudo contar con el refuerzo espec\u00edfico de 3 geriatras y una enfermera, coordinadas por una geriatra de la plantilla del servicio, hasta el 31 de octubre de 2020, que desde el inicio de la segunda ola estuvieron operativas de 8 a 18 horas los 7 d\u00edas de la semana.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Actividad de Geriatr\u00eda de Enlace en el Hospital Universitario La Paz en la pandemia por Covid-19"
+        },
+        {
+            "text": "En la tabla 1, se muestra un breve listado de las actividades realizadas.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Actividades de la Geriatr\u00eda de Enlace tras la primera ola de la pandemia"
+        },
+        {
+            "text": "Pronto fue reconocido a nivel mundial el papel de los geriatras en la atenci\u00f3n a las PPMM con Covid-19 y la necesidad de reorganizar los sistemas de salud hacia un abordaje integral de la enfermedad en los ancianos 10, [18] [19] [20] . En Espa\u00f1a, la SEGG emiti\u00f3 documentos con propuestas para el manejo de la epidemia y el papel de la especialidad en la coordinaci\u00f3n con las residencias 16, 21 . Posteriormente, public\u00f3 un documento para el manejo de los rebrotes, con directrices sobre prevenci\u00f3n y detecci\u00f3n precoz, diagn\u00f3stico, aislamiento y sectorizaci\u00f3n, formaci\u00f3n, clasificaci\u00f3n de los centros, coordinaci\u00f3n de las derivaciones, papel de los diferentes niveles, provisi\u00f3n de tratamientos de uso hospitalario, elaboraci\u00f3n de planes de contingencia y transparencia 22 . M\u00e1s recientemente, la Organizaci\u00f3n M\u00e9dica Colegial ha definido tambi\u00e9n una serie de propuestas de l\u00edneas de mejora de respuesta a la pandemia en residencias y centros sociosanitarios 23 .",
+            "cite_spans": [
+                {
+                    "start": 215,
+                    "end": 218,
+                    "text": "10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 219,
+                    "end": 223,
+                    "text": "[18]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 224,
+                    "end": 228,
+                    "text": "[19]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 229,
+                    "end": 233,
+                    "text": "[20]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 387,
+                    "end": 390,
+                    "text": "16,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 391,
+                    "end": 393,
+                    "text": "21",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Actividad espec\u00edfica sobre Covid-19 en las residencias"
+        },
+        {
+            "text": "Tras la primera fase los puntos d\u00e9biles detectados: falta de equipos de protecci\u00f3n individual, falta de pruebas diagn\u00f3sticas, desconocimiento sobre la sectorizaci\u00f3n en los centros, desajustes en la derivaci\u00f3n de pacientes, escasez de medicalizaci\u00f3n de los centros y la descoordinaci\u00f3n entre niveles debieron ser corregidos 16, [24] [25] [26] .",
+            "cite_spans": [
+                {
+                    "start": 323,
+                    "end": 326,
+                    "text": "16,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 327,
+                    "end": 331,
+                    "text": "[24]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 332,
+                    "end": 336,
+                    "text": "[25]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 337,
+                    "end": 341,
+                    "text": "[26]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Actividad espec\u00edfica sobre Covid-19 en las residencias"
+        },
+        {
+            "text": "Las principales actividades desarrolladas sobre este aspecto en la unidad de Geriatr\u00eda de Enlace del Hospital La Paz durante los primeros 5 meses se resumen en los siguientes apartados.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Actividad espec\u00edfica sobre Covid-19 en las residencias"
+        },
+        {
+            "text": "Por encargo de la Direcci\u00f3n General de Coordinaci\u00f3n Sociosanitaria se elabor\u00f3 el mapa de las residencias del \u00e1rea seg\u00fan los criterios de la SEGG 20 . Su finalidad es poder estimar la capacidad de respuesta de cada centro ante la pandemia, lo que resulta de gran ayuda ante la aparici\u00f3n de nuevos brotes. Adem\u00e1s, se complet\u00f3 la informaci\u00f3n con observaciones sobre la capacidad de la gesti\u00f3n de los aislamientos, la capacidad arquitect\u00f3nica para una sectorizaci\u00f3n adecuada y la capacidad de obtenci\u00f3n de material de protecci\u00f3n. La visi\u00f3n general del mapa se muestra en la Tabla 2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Realizaci\u00f3n del Mapa de Residencias del \u00e1rea"
+        },
+        {
+            "text": "La aparici\u00f3n de un caso positivo para Covid-19 en una residencia define la aparici\u00f3n de un brote 28 . La Unidad de Geriatr\u00eda de Enlace del Hospital La Paz, ante la aparici\u00f3n de cada nuevo caso, realiza: 1) activaci\u00f3n del brote mediante comunicaci\u00f3n inmediata y simult\u00e1nea a la Direcci\u00f3n de la residencia, Direcci\u00f3n Asistencial de Atenci\u00f3n Primaria, servicio de Salud P\u00fablica del \u00c1rea, Direcci\u00f3n del Hospital y Direcci\u00f3n General de Coordinaci\u00f3n Sociosanitaria, 2) atenci\u00f3n cl\u00ednica al/los pacientes diagnosticados, si es preciso mediante visita presencial en colaboraci\u00f3n con Atenci\u00f3n Primaria, 3) coordinaci\u00f3n de las pruebas diagn\u00f3sticas necesarias, incluyendo el cribado de contactos estrechos, y 4) seguimiento telef\u00f3nico y/o presencial de los casos hasta su resoluci\u00f3n. Las visitas se coordinan con las Unidades de Atenci\u00f3n a Residencias (UAR) de Atenci\u00f3n Primaria. El servicio de Salud P\u00fablica asesora y supervisa a la residencia sobre la sectorizaci\u00f3n, aislamientos, y otros aspectos epidemiol\u00f3gicos.",
+            "cite_spans": [
+                {
+                    "start": 97,
+                    "end": 99,
+                    "text": "28",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "-Atenci\u00f3n a los nuevos brotes"
+        },
+        {
+            "text": "Entre el 1 de junio y el 31 de octubre se activaron brotes en 20 residencias del \u00e1rea, en los que se diagnosticaron 195 casos de Covid-19. Cien (63%) fueron casos graves que precisaron hospitalizaci\u00f3n. Se realiz\u00f3 el cribado de 742 residentes por ser contactos estrechos. Se produjeron 24 exitus (15% de los diagnosticados), 19 en el Hospital y 5 en sus residencias.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Atenci\u00f3n a los nuevos brotes"
+        },
+        {
+            "text": "Los pacientes diagnosticados fueron seguidos telef\u00f3nica, telem\u00e1ticamente o de forma presencial, hasta la resoluci\u00f3n o el exitus. En los casos leves se realiz\u00f3 seguimiento telef\u00f3nico con el m\u00e9dico y la enfermera de la residencia, o con profesionales de Atenci\u00f3n Primaria. En los casos graves que requirieron hospitalizaci\u00f3n, se mantuvo comunicaci\u00f3n con los m\u00e9dicos de las plantas y coordinaci\u00f3n entre ellos y los profesionales de las residencias.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Seguimiento de los pacientes Covid-19"
+        },
+        {
+            "text": "Una geriatra y una enfermera dedicaron su actividad a la realizaci\u00f3n diaria de visitas presenciales. Se realizaron 84 visitas programadas y 18 visitas urgentes motivadas por aparici\u00f3n de brotes. Sus principales tareas fueron no s\u00f3lo la valoraci\u00f3n cl\u00ednica de pacientes (175 residentes por sospecha de Covid y 21 por otras causas) sino tambi\u00e9n la evaluaci\u00f3n de las condiciones y organizaci\u00f3n de cada centro. Los aspectos evaluados se muestran en la tabla 3.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Visitas a las residencias"
+        },
+        {
+            "text": "La coordinaci\u00f3n con estos estamentos ha sido uno de los cambios cualitativos m\u00e1s notables desde la puesta en marcha de la Unidad de Geriatr\u00eda de Enlace. Muy pronto se percibi\u00f3 la necesidad de organizar reuniones telem\u00e1ticas con los t\u00e9cnicos de Atenci\u00f3n Primaria del \u00c1rea, de las que se mantuvieron 28 en los 5 meses auditados. En ellas 1) se coordina la actividad del equipo de visitas de la Unidad con la de las UAR de Atenci\u00f3n Primaria, 2) se colabora en la apertura y seguimiento de los brotes y 3) se reparten las cargas de extracci\u00f3n de pruebas.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Coordinaci\u00f3n con Atenci\u00f3n Primaria y Salud P\u00fablica"
+        },
+        {
+            "text": "Cuando la situaci\u00f3n epidemiol\u00f3gica lo permiti\u00f3 se realizaron visitas conjuntas de la UAR, Unidad de Geriatr\u00eda de Enlace y Salud P\u00fablica a residencias para la evaluaci\u00f3n conjunta de las mismas y formaci\u00f3n de sus profesionales.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Coordinaci\u00f3n con Atenci\u00f3n Primaria y Salud P\u00fablica"
+        },
+        {
+            "text": "La implicaci\u00f3n de los m\u00e9dicos de la Direcci\u00f3n de Salud P\u00fablica del \u00c1rea 5-Norte ha sido tambi\u00e9n fundamental a la hora del abordaje epidemiol\u00f3gico de cada brote, dando instrucciones y coordinando las acciones de su \u00e1mbito de competencias.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Coordinaci\u00f3n con Atenci\u00f3n Primaria y Salud P\u00fablica"
+        },
+        {
+            "text": "La Consejer\u00eda de Sanidad de la Comunidad de Madrid acometi\u00f3 un estudio de seroprevalencia, mediante obtenci\u00f3n de niveles de IgG y PCR, que se ofreci\u00f3 a todos los residentes y profesionales de las residencias e instituciones para discapacitados de la Comunidad Aut\u00f3noma y fue coordinado por la Direcci\u00f3n General de Salud P\u00fablica y la Direcci\u00f3n General de Coordinaci\u00f3n Socio-Sanitaria. Probablemente se trate del estudio m\u00e1s amplio en esta poblaci\u00f3n, pues incluy\u00f3 517 centros sociosanitarios en los que se analiz\u00f3 a 55.542 personas.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Estudio de seroprevalencia: el Proyecto SeroSOS"
+        },
+        {
+            "text": "Los geriatras de enlace de cada hospital coordinaron la log\u00edstica de obtenci\u00f3n de muestras en el \u00e1rea de su hospital. El esfuerzo fue grande. A ellos hubo que sumar la colaboraci\u00f3n de 200 enfermeras y la utilizaci\u00f3n de 20 veh\u00edculos. Por parte de la Consejer\u00eda de Sanidad participaron 12 investigadores, 12 t\u00e9cnicos de laboratorio, 2 administrativos y 25 encuestadores. Las muestras se analizaron en el Laboratorio Regional de Salud P\u00fablica de la Consejer\u00eda de Sanidad.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Estudio de seroprevalencia: el Proyecto SeroSOS"
+        },
+        {
+            "text": "Los resultados globales arrojaron una tasa de seroprevalencia (IgG positiva) del 53% entre los residentes y del 37% entre los trabajadores. Se clasific\u00f3 a los centros en tres categor\u00edas: Inmunidad Alta (>70% de residentes seropositivos) el 26% de los centros, Inmunidad Media (del 50% al 70% de residentes seropositivos) el 28% de los centros e Inmunidad baja (\u226450% de residentes seropositivos) el 46% restante. Los resultados de este proyecto, adem\u00e1s de su inter\u00e9s epidemiol\u00f3gico, fueron de utilidad ante la aparici\u00f3n posterior de casos. Para esta tarea la Unidad de Geriatr\u00eda de Enlace del Hospital La Paz tuvo que coordinar 60 visitas de obtenci\u00f3n de muestras y su transporte al Laboratorio Regional. A las residencias habituales se a\u00f1adieron 19 centros m\u00e1s entre peque\u00f1os n\u00facleos de convivencia y centros de discapacitados de adultos. El esfuerzo de organizaci\u00f3n fue notable al tener que gestionar los tiempos de desplazamiento y obtenci\u00f3n de muestras del equipo de extracciones a una serie numerosa de centros distantes entre 1 y 48 Km y con un n\u00famero de residentes variable entre 26 y 220. Para la recogida de muestras, se cont\u00f3, adem\u00e1s de los recursos propios, con el apoyo de 5 enfermeras de otros servicios del hospital, con las UAR de Atenci\u00f3n Primaria, 1 conductor y 1 veh\u00edculo del Hospital, un contrato con una empresa de recogida de muestras, y personal administrativo espec\u00edfico que operaron de forma continuada durante 6 semanas (17 de julio al 28 de agosto).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Estudio de seroprevalencia: el Proyecto SeroSOS"
+        },
+        {
+            "text": "La participaci\u00f3n en el estudio fue voluntaria. En el \u00e1rea del Hospital La Paz se obtuvieron muestras de 2.006 residentes y 1.648 trabajadores. Result\u00f3 una tasa de seropositividad del 53% entre los residentes y del 30% entre los trabajadores, aunque la tasa fue enormemente variable, con una horquilla entre centros del 0% al 87%.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Estudio de seroprevalencia: el Proyecto SeroSOS"
+        },
+        {
+            "text": "Antes del inicio de la pandemia ya exist\u00edan sobradas razones para la mejora de la atenci\u00f3n especializada geri\u00e1trica en las residencias. La British Geriatrics Society, en 2.016, destacaba 3 : las caracter\u00edsticas cl\u00ednicas y la situaci\u00f3n funcional y mental de los residentes, las peculiaridades de sus enfermedades y sus tratamientos que requieren un conocimiento geri\u00e1trico especializado, la insuficiente accesibilidad al sistema sanitario y la necesidad de un abordaje integrado entre los diferentes proveedores en el que la contribuci\u00f3n del geriatra mejora la eficacia y la eficiencia. No es suficiente con un enfoque \"reactivo\", es necesario un modelo de atenci\u00f3n centrada en la persona que incluya planes individualizados de cuidados.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Actividad preferentemente no-Covid"
+        },
+        {
+            "text": "Las necesidades de atenci\u00f3n sanitaria de los residentes son elevadas. En un estudio se ha contabilizado que cada residente mantiene contacto con los servicios sanitarios una vez al mes de promedio 29 . Estos contactos no siempre tienen la canalizaci\u00f3n adecuada. Es habitual el hecho de la derivaci\u00f3n a los servicios de urgencias cuando no se encuentra otra v\u00eda m\u00e1s resolutiva. Como consecuencia, un porcentaje importante de los pacientes geri\u00e1tricos derivados a los servicios de urgencias desde residencias pueden ser derivaciones innecesarias 30 .",
+            "cite_spans": [
+                {
+                    "start": 197,
+                    "end": 199,
+                    "text": "29",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 544,
+                    "end": 546,
+                    "text": "30",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Actividad preferentemente no-Covid"
+        },
+        {
+            "text": "Entre las posibles razones y situaciones que se asocian con las hospitalizaciones no programadas (a veces evitables y a veces no) desde las residencias 31-33 se han mencionado algunas dependientes de la instituci\u00f3n, como la falta de capacidad para proveer tratamiento ante las agudizaciones no graves o proporcionar tratamiento paliativo, la imposibilidad de realizar pruebas diagn\u00f3sticas, tratamientos o monitorizaci\u00f3n o la categor\u00eda de la residencia como \"con \u00e1nimo de lucro\". Otras son dependientes del personal, como la falta de disponibilidad de m\u00e9dico o la valoraci\u00f3n insuficiente por la plantilla de la residencia. Tambi\u00e9n existen situaciones relacionadas con el residente o su familia como la falta de directrices avanzadas o su insistencia en la derivaci\u00f3n, la presencia de ciertas patolog\u00edas (enfermedad pulmonar cr\u00f3nica, insuficiencia cardiaca y diabetes), ser portador de cat\u00e9teres, e incluso el deterioro funcional. Otros han expuesto como razones no programables para generar el traslado otras como el cambio agudo en la situaci\u00f3n cl\u00ednica de un residente o la insistencia familiar 34 . Las residencias menos dotadas que no disponen del personal sanitario para valorar s\u00edntomas, cambios en el estado de los residentes o administrar tratamientos utilizan a veces la hospitalizaci\u00f3n como una forma de trasladar el problema a otro lugar 31 . De todo ello surge una de las razones para la tan importante coordinaci\u00f3n entre las residencias con Atenci\u00f3n Primaria y con el servicio de Geriatr\u00eda.",
+            "cite_spans": [
+                {
+                    "start": 1095,
+                    "end": 1097,
+                    "text": "34",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 1347,
+                    "end": 1349,
+                    "text": "31",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Actividad preferentemente no-Covid"
+        },
+        {
+            "text": "Algunas \"barreras\" que dificultan el \u00e9xito de los programas de coordinaci\u00f3n pueden ser la infradotaci\u00f3n del personal de las residencias junto con su elevada tasa de rotaci\u00f3n, as\u00ed como el aumento de costes que puede suponer el manejo de ciertas situaciones en el propio centro 35 .",
+            "cite_spans": [
+                {
+                    "start": 276,
+                    "end": 278,
+                    "text": "35",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Actividad preferentemente no-Covid"
+        },
+        {
+            "text": "Los beneficios de la colaboraci\u00f3n de los geriatras en las residencias son, para los propios residentes, mejoras en el manejo de los s\u00edndromes geri\u00e1tricos y sus complicaciones, prevenci\u00f3n de eventos agudos como infecciones o broncoaspiraciones, minimizaci\u00f3n de la progresi\u00f3n cl\u00ednica de procesos cr\u00f3nicos, reducci\u00f3n de efectos adversos a f\u00e1rmacos mediante la deprescripci\u00f3n de tratamientos innecesarios, mayor autonom\u00eda en la toma de decisiones y mejora en la experiencia en situaciones de terminalidad para el paciente y sus familiares 3 . Aunque por su extensi\u00f3n quedan fuera de este art\u00edculo, las mejoras percibidas por el sistema sanitario y por las propias residencias tambi\u00e9n son notables 3, 36 . Globalmente, se considera que deber\u00eda haber una mayor implicaci\u00f3n de los geriatras en el manejo de los residentes en instituciones 37 .",
+            "cite_spans": [
+                {
+                    "start": 693,
+                    "end": 695,
+                    "text": "3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 696,
+                    "end": 698,
+                    "text": "36",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Actividad preferentemente no-Covid"
+        },
+        {
+            "text": "Los programas de comunicaci\u00f3n y coordinaci\u00f3n con las residencias parecen reducir de manera importante las hospitalizaciones programadas y urgentes de ancianos residentes en instituciones 38, 39 . Acciones desde Geriatr\u00eda como las sesiones conjuntas con el personal de la residencia, las visitas a los centros, la comunicaci\u00f3n telef\u00f3nica, la provisi\u00f3n de medicaci\u00f3n de uso hospitalario o de tratamiento paliativo reducen significativamente el n\u00famero de ingresos hospitalarios evitables y acercan el tratamiento al paciente, con la comodidad que supone 40, 41 .",
+            "cite_spans": [
+                {
+                    "start": 187,
+                    "end": 190,
+                    "text": "38,",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 191,
+                    "end": 193,
+                    "text": "39",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 551,
+                    "end": 554,
+                    "text": "40,",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 555,
+                    "end": 557,
+                    "text": "41",
+                    "ref_id": "BIBREF38"
+                }
+            ],
+            "ref_spans": [],
+            "section": "-Teleconsulta sobre patolog\u00eda habitual y coordinaci\u00f3n telef\u00f3nica"
+        },
+        {
+            "text": "En la Tabla 4 se presenta un resumen de los tratamientos pautados por la Unidad de Geriatr\u00eda de Enlace del hospital La Paz en el periodo estudiado. Cada tratamiento, adem\u00e1s de la consulta inicial, genera controles posteriores.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Teleconsulta sobre patolog\u00eda habitual y coordinaci\u00f3n telef\u00f3nica"
+        },
+        {
+            "text": "La coordinaci\u00f3n telef\u00f3nica fue el principal canal de comunicaci\u00f3n durante la primera ola y sus posibilidades se vieron potenciadas en la fase posterior. En el periodo aqu\u00ed analizado (junio a octubre de 2020) se mantuvieron 4.163 conversaciones telef\u00f3nicas (27 llamadas diarias de media), en las que se consultaron 2.976 pacientes. En 279 (9%) se recomend\u00f3 la derivaci\u00f3n a Urgencias y en los restantes 2.697 (91%) seguimiento en la residencia en colaboraci\u00f3n con los m\u00e9dicos de la misma. Se proporcion\u00f3 tratamiento de uso hospitalario en 78 casos y concentradores de ox\u00edgeno en 20 (que supuso un ahorro de 462 estancias hospitalarias).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Teleconsulta sobre patolog\u00eda habitual y coordinaci\u00f3n telef\u00f3nica"
+        },
+        {
+            "text": "Adem\u00e1s de las consultas cl\u00ednicas, se solicit\u00f3 otro tipo de asesoramiento o coordinaci\u00f3n en 5.347 ocasiones, tanto de patolog\u00eda Covid cono no Covid (consultas sobre la aplicaci\u00f3n de protocolos vigentes, coordinaci\u00f3n de visitas a residencias. seguimiento semanal de la situaci\u00f3n de todas las residencias, coordinaci\u00f3n de ingresos y altas programados, solicitud y resultados de pruebas complementarias entre otras )",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Teleconsulta sobre patolog\u00eda habitual y coordinaci\u00f3n telef\u00f3nica"
+        },
+        {
+            "text": "Los programas de coordinaci\u00f3n entre geriatr\u00eda y residencias que incluyen la revisi\u00f3n de medicaci\u00f3n suelen obtener una mejora en la adecuaci\u00f3n de la prescripci\u00f3n 42, 43 . Las geriatras de la unidad realizaron dicha revisi\u00f3n en 92 pacientes, en los que se llev\u00f3 a cabo una deprescripci\u00f3n de 81 f\u00e1rmacos innecesarios.",
+            "cite_spans": [
+                {
+                    "start": 161,
+                    "end": 164,
+                    "text": "42,",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 165,
+                    "end": 167,
+                    "text": "43",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "-Revisi\u00f3n de medicaci\u00f3n"
+        },
+        {
+            "text": "La telemedicina es la comunicaci\u00f3n remota entre un paciente en su entorno habitual y los profesionales sanitarios para su diagn\u00f3stico o seguimiento 44 . Ha cobrado una importancia especial durante la pandemia [45] [46] [47] , pero tambi\u00e9n tiene y tendr\u00e1 su funci\u00f3n fuera de ella 48 . Entre sus ventajas figura que soslaya las necesidades de transporte del paciente y mitiga inconvenientes sociales o de incomodidad que pueden conducir al rechazo de su traslado. Tambi\u00e9n puede mejorar la eficiencia de la asistencia reduciendo derivaciones a consultas (programadas o urgentes) e ingresos evitables, minimizando costes. La actividad de telemedicina tiene como funciones la monitorizaci\u00f3n de enfermedades cr\u00f3nicas, formaci\u00f3n y educaci\u00f3n sanitaria, acceso al especialista para decisiones diagn\u00f3sticas o terap\u00e9uticas y valoraci\u00f3n cl\u00ednica en tiempo real 49 . Existen evidencias de que la Telemedicina puede tener aplicabilidad, aceptabilidad y eficacia en poblaci\u00f3n mayor 22,50 .",
+            "cite_spans": [
+                {
+                    "start": 148,
+                    "end": 150,
+                    "text": "44",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 209,
+                    "end": 213,
+                    "text": "[45]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 214,
+                    "end": 218,
+                    "text": "[46]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 219,
+                    "end": 223,
+                    "text": "[47]",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 279,
+                    "end": 281,
+                    "text": "48",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 848,
+                    "end": 850,
+                    "text": "49",
+                    "ref_id": "BIBREF46"
+                }
+            ],
+            "ref_spans": [],
+            "section": "-Telemedicina"
+        },
+        {
+            "text": "La TeleDermatolog\u00eda tiene entidad propia dentro de la TeleMedicina 51 , especialmente para consultas sobre valoraci\u00f3n de lesiones malignas, eccemas y \u00falceras por presi\u00f3n 52 y ha demostrado mejoras en la atenci\u00f3n y una mayor eficiencia frente al cuidado convencional en residencias [53] [54] [55] .",
+            "cite_spans": [
+                {
+                    "start": 281,
+                    "end": 285,
+                    "text": "[53]",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 286,
+                    "end": 290,
+                    "text": "[54]",
+                    "ref_id": "BIBREF51"
+                },
+                {
+                    "start": 291,
+                    "end": 295,
+                    "text": "[55]",
+                    "ref_id": "BIBREF52"
+                }
+            ],
+            "ref_spans": [],
+            "section": "-Telemedicina"
+        },
+        {
+            "text": "La unidad de Geriatr\u00eda de Enlace del Hospital La Paz, en 9 semanas de funcionamiento ha mantenido 16 sesiones de Telemedicina en las que se han consultado 68 pacientes (4,3 pacientes/sesi\u00f3n) en los que se evit\u00f3 su desplazamiento al hospital. Los motivos m\u00e1s frecuentes de consulta han sido el deterioro cognitivo y el ajuste de tratamiento en pacientes con pluripatolog\u00eda (se ha hecho deprescripci\u00f3n de 47 f\u00e1rmacos, 0,7 por paciente). Respecto a la Teledermatolog\u00eda, se han mantenido 3 sesiones en las que se han consultado 11 pacientes. La patolog\u00eda m\u00e1s frecuente fue la sospecha tumoral, en la que los casos sospechosos fueron citados directamente para la realizaci\u00f3n de biopsia.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Telemedicina"
+        },
+        {
+            "text": "Se mantuvieron por este medio 1188 contactos por motivos cl\u00ednicos. Algunos de los m\u00e1s frecuentes fueron relacionados con patolog\u00eda Covid, adem\u00e1s de muchos otros como comunicaci\u00f3n de resultados de pruebas diagn\u00f3sticas, consultas cl\u00ednicas de pacientes en residencias, informes de medicaci\u00f3n que precisan visado por el especialista y material ortoprot\u00e9sico as\u00ed como de los seguimientos de pacientes valorados en telemedicina.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "-Contactos por correo electr\u00f3nico"
+        },
+        {
+            "text": "Las caracter\u00edsticas cl\u00ednicas y funcionales de los residentes en instituciones les convierten en un tipo de paciente especialmente vulnerable en los servicios de urgencias hospitalarios y el reconocimiento de ello debe generar su adaptaci\u00f3n a la atenci\u00f3n de estos usuarios.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Coordinaci\u00f3n y valoraci\u00f3n geri\u00e1trica en el servicio urgencias hospitalario."
+        },
+        {
+            "text": "Tanto en el documento del Defensor del Pueblo de 2019 como en el Plan Director del Servicio Madrile\u00f1o de Salud 2016-2019 se recomienda la mejora de la coordinaci\u00f3n entre los servicios de urgencias hospitalarios y los centros sociosanitarios y las residencias, tanto para optimizar el funcionamiento del sistema sanitario como para minimizar los efectos disfuncionales que las urgencias tienen en estos pacientes. Esto requiere que en los servicios de urgencia se cuente con profesionales formados espec\u00edficamente en el tratamiento y la asistencia a estas personas 56, 57 .",
+            "cite_spans": [
+                {
+                    "start": 564,
+                    "end": 567,
+                    "text": "56,",
+                    "ref_id": "BIBREF53"
+                },
+                {
+                    "start": 568,
+                    "end": 570,
+                    "text": "57",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Coordinaci\u00f3n y valoraci\u00f3n geri\u00e1trica en el servicio urgencias hospitalario."
+        },
+        {
+            "text": "La SEGG 16 propone diferentes actividades en la coordinaci\u00f3n de los pacientes de residencias en urgencias, como 1) la valoraci\u00f3n en el servicio de Urgencias de los ancianos derivados desde las residencias con el objetivo de disminuir su estancia en Urgencias haci\u00e9ndola m\u00e1s eficiente, 2) si el cuadro cl\u00ednico lo permite, evitar el ingreso facilitando medicaci\u00f3n que pueda ser administrada en la residencia, 3) si el paciente requiere ingreso hacerlo en el servicio de Geriatr\u00eda, si la patolog\u00eda as\u00ed lo aconseja, para asegurar la continuidad de cuidados.",
+            "cite_spans": [
+                {
+                    "start": 8,
+                    "end": 10,
+                    "text": "16",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Coordinaci\u00f3n y valoraci\u00f3n geri\u00e1trica en el servicio urgencias hospitalario."
+        },
+        {
+            "text": "En el terreno pr\u00e1ctico, existen experiencias previas que han demostrado la eficacia y la eficiencia de la valoraci\u00f3n geri\u00e1trica en urgencias. Los programas de este tipo en el \u00e1rea de urgencias han demostrado evitar un n\u00famero significativo de ingresos innecesarios [58] [59] [60] [61] . Otro modelo, consistente en una unidad de observaci\u00f3n en urgencias dedicada a pacientes de residencias ha contribuido a mejorar la humanizaci\u00f3n de su asistencia y demostr\u00f3 una importante reducci\u00f3n de estancias y de costes 62 .",
+            "cite_spans": [
+                {
+                    "start": 264,
+                    "end": 268,
+                    "text": "[58]",
+                    "ref_id": "BIBREF54"
+                },
+                {
+                    "start": 269,
+                    "end": 273,
+                    "text": "[59]",
+                    "ref_id": "BIBREF55"
+                },
+                {
+                    "start": 274,
+                    "end": 278,
+                    "text": "[60]",
+                    "ref_id": "BIBREF56"
+                },
+                {
+                    "start": 279,
+                    "end": 283,
+                    "text": "[61]",
+                    "ref_id": "BIBREF57"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Coordinaci\u00f3n y valoraci\u00f3n geri\u00e1trica en el servicio urgencias hospitalario."
+        },
+        {
+            "text": "Los objetivos de la Geriatr\u00eda de Enlace en el servicio de urgencias podr\u00edan resumirse en dos tipos: 1) Optimizar y agilizar la asistencia urgente y ajustar la adecuaci\u00f3n de los ingresos de los residentes y 2) contribuir a la humanizaci\u00f3n de dicha asistencia mediante una atenci\u00f3n centrada en las caracter\u00edsticas de este grupo de poblaci\u00f3n reduciendo el impacto de su paso por el SUH.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Coordinaci\u00f3n y valoraci\u00f3n geri\u00e1trica en el servicio urgencias hospitalario."
+        },
+        {
+            "text": "En el \u00e1rea sanitaria del hospital La Paz existen 4.400 habitualmente plazas de personas mayores institucionalizadas, de las que aproximadamente un tercio son derivadas anualmente al servicio de Urgencias, lo que supone una ocupaci\u00f3n media de 5-6 camas en urgencias/d\u00eda. En la Tabla 5 se muestra la actividad de la unidad de Geriatr\u00eda de Enlace en el servicio de Urgencias. De los pacientes no-Covid-19 a los que se realiz\u00f3 valoraci\u00f3n geri\u00e1trica el 25% pudieron volver de nuevo a su residencia para continuar su tratamiento en ella. Se trata de un \u00e1rea en la que claramente, una vez disminuya la presi\u00f3n de pacientes COVID, deber\u00e1 aumentar la presencia de los geriatras de enlace.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Coordinaci\u00f3n y valoraci\u00f3n geri\u00e1trica en el servicio urgencias hospitalario."
+        },
+        {
+            "text": "Si se asume, como es en el caso de los autores de este art\u00edculo, que la Geriatr\u00eda de Enlace es una actividad necesaria en los servicios de Geriatr\u00eda y que es necesario su desarrollo en todos los hospitales que tengan en su \u00e1rea un n\u00famero importante de residencias, ser\u00eda deseable que los m\u00e9dicos residentes de Geriatr\u00eda iniciaran rotaciones docentes en estos equipos y unidades, como ocurre ya en algunos hospitales.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Docencia e investigaci\u00f3n"
+        },
+        {
+            "text": "Tambi\u00e9n, el campo que se abre para la investigaci\u00f3n es grande, tanto para incrementar la inclusi\u00f3n de residentes en instituciones en ensayos cl\u00ednicos, como para, por medio del conocimiento que aporta el an\u00e1lisis de los datos de campo, mejorar la asistencia a este importante y heterog\u00e9neo grupo de pacientes. Desde la puesta en marcha de la Unidad en nuestro hospital, los geriatras forman parte del comit\u00e9 cient\u00edfico del ensayo cl\u00ednico fase III adaptativo PanCOVID EudraCT2020-01156-18, promovido por la Fundaci\u00f3n para la Investigaci\u00f3n Biom\u00e9dica del Hospital la Paz y se han recibido otras propuestas de estudios de investigaci\u00f3n tanto de instituciones p\u00fablicas como de la industria farmac\u00e9utica.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Docencia e investigaci\u00f3n"
+        },
+        {
+            "text": "Aunque ya se conoc\u00edan algunos de los d\u00e9ficits existentes en la atenci\u00f3n sanitaria en las residencias, la pandemia de Covid-19 los ha hecho m\u00e1s evidentes y ha provocado que su atenci\u00f3n sea m\u00e1s urgente. Desde el sistema sanitario, y en concreto desde la geriatr\u00eda, la Geriatr\u00eda de Enlace no aporta la soluci\u00f3n de todos los problemas, pero s\u00ed que supone un paso adelante definido en un modelo sobre el terreno del que ya podemos ir obteniendo datos sobre su actividad y eficacia. Esta actividad es multidimensional, que habr\u00e1 que testar e ir definiendo pero que a\u00f1ade un plus a la situaci\u00f3n previa en la que la desconexi\u00f3n entre niveles y la fragmentaci\u00f3n de cuidados constitu\u00edan la pr\u00e1ctica habitual.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusiones."
+        },
+        {
+            "text": "Este nivel asistencial funcional aporta una utilidad clara ante una situaci\u00f3n como la pandemia de Covid-19 como parece quedar claro en el abordaje a esta segunda ola, pero tambi\u00e9n presenta un enorme campo de actuaci\u00f3n en otras actividades que mejoran la atenci\u00f3n a las personas mayores institucionalizadas mediante el acercamiento y la redirecci\u00f3n de los recursos hospitalarios a la medida de dichas personas.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusiones."
+        },
+        {
+            "text": "A medida que se reduzca la presi\u00f3n de la actividad Covid, el objetivo de la Geriatr\u00eda de Enlace debe ser consolidar el conocimiento adquirido en tan dif\u00edciles circunstancias, estar preparados para futuras situaciones de estr\u00e9s del sistema sanitario y expandir el foco de su actividad hacia el resto de \u00e1reas de atenci\u00f3n que por el momento son deficitarias, como la coordinaci\u00f3n telef\u00f3nica, el aumento de las visitas presenciales en los centros, las sesiones de telemedicina y la presencia en urgencias, sin perder el terreno ganado en coordinaci\u00f3n con Atenci\u00f3n Primaria y Salud P\u00fablica.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusiones."
+        },
+        {
+            "text": "Por todo ello, los hospitales deben plantearse la implantaci\u00f3n de equipos y unidades con este cometido, no s\u00f3lo para que no se repitan algunas situaciones vividas durante la pandemia, sino con el convencimiento de que es una de las acciones m\u00e1s \u00fatiles, de las muchas que quedan por hacer, para mejorar la atenci\u00f3n al sector de la poblaci\u00f3n mayor institucionalizada. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusiones."
+        },
+        {
+            "text": "Tabla 2: Un ejemplo pr\u00e1ctico de Mapa de Residencias, cuyo objeto es clasificar los centros, en este caso del \u00e1rea de referencia del Hospital Universitario La Paz, para poder estimar su capacidad de respuesta a la pandemia de Covid-19. (Los centros han sido anonimizados para evitar su identificaci\u00f3n) Tabla 3: Lista de aspectos que se eval\u00faan en la visita a las residencias por la Unidad de Geriatr\u00eda de Enlace en relaci\u00f3n a la pandemia por Covid-19 y cuyo resultado se detalla en un informe de cada visita.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Docencia e Investigaci\u00f3n"
+        },
+        {
+            "text": "N\u00famero de residentes actuales: Covid y no-Covid ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Situaci\u00f3n actual"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Un perfil de las personas mayores en Espa\u00f1a",
+            "authors": [
+                {
+                    "first": "Abell\u00e1n",
+                    "middle": [],
+                    "last": "Garc\u00eda",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aceituno",
+                    "middle": [],
+                    "last": "Nieto",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "P\u00e9rez",
+                    "middle": [],
+                    "last": "D\u00edaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ramiro",
+                    "middle": [],
+                    "last": "Fari\u00f1as",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ayala",
+                    "middle": [],
+                    "last": "Garc\u00eda",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pujol",
+                    "middle": [],
+                    "last": "Rodr\u00edguez",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Indicadores estad\u00edsticos b\u00e1sicos. Madrid, Informes Envejecimiento en red n\u00ba 22",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Perfil sanitario de las personas ingresadas en centros residenciales",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Fundaci\u00f3n Instituto Edad Y Vida",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Effective healthcare for older people living in care homes. Guidance on commissioning and providing healthcare services across the UK",
+            "authors": [],
+            "year": 2016,
+            "venue": "British Geriatrics Society",
+            "volume": "",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Separata sobre la atenci\u00f3n residencial a las personas mayores. Centros residenciales. Defensor del Pueblo",
+            "authors": [
+                {
+                    "first": "Oficina",
+                    "middle": [],
+                    "last": "Del Defensor Del Pueblo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Informe Anual",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Health at a Glance: Europe 2018: State of Health in the EU Cycle",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Oecd/Eu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1787/health_glance_eur-2018-en"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Covid-19: why we need a national health and social care service. Neglect of social care during the pandemic shames the UK",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pollock",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Clements",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Harding-Edgar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMJ",
+            "volume": "369",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1136/bmj.m1465"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "What is the case for care home medicine? The geriatrician's perspective",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Gordon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "J R Coll Physicians Edinb",
+            "volume": "45",
+            "issn": "",
+            "pages": "148--53",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Impacto de COVID-19 en el sistema hospitalario de Madrid",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Condes",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Arribas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Enferm Infecc Microbiol Clin",
+            "volume": "",
+            "issn": "20",
+            "pages": "30236--30242",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.eimc.2020.06.005"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Presymptomatic SARS-CoV-2 Infections and Transmission in a Skilled Nursing Facility",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Arons",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Hatfield",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Reddy",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kimball",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "James",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Jacobs",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "22",
+            "pages": "2081--90",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2008457"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Coronavirus Disease 2019 in Geriatrics and Long-Term Care: The ABCDs of COVID-19",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "D&apos;adamo",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yoshikawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Ouslander",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Am Geriatr Soc",
+            "volume": "68",
+            "issn": "",
+            "pages": "912--919",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Atypical covid 10 presentations in older people: the need for continued vigilance",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Solanki",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BGS Newsletter",
+            "volume": "761",
+            "issn": "",
+            "pages": "22--25",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Mortality associated with COVID-19 outbreaks in care homes: early international evidence. Article in LTCcovid.org, International Long-Term Care Policy Network",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Comas-Herrera",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zalaka\u00edn",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Litwin",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Hsu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lane",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Fern\u00e1ndez",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "COVID-19, adulto mayor y edadismo: errores que nunca han de volver a ocurrir",
+            "authors": [],
+            "year": 2020,
+            "venue": "Rev Esp Geriatr Gerontol",
+            "volume": "55",
+            "issn": "4",
+            "pages": "191--193",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.regg.2020.04.001"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Death risk stratification in elderly patients with covid-19. A comparative cohort study in nursing homes outreaks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bernabeu-Wittel",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Ternero-Vega",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "D\u00edaz-Jim\u00e9nez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Conde-Guzm\u00e1n",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Nieto-Mart\u00edn",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Moreno-Gavi\u00f1o",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Arch Gerontol Geriatr",
+            "volume": "91",
+            "issn": "",
+            "pages": "104240--104240",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.archger.2020.104240"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Clinical Characterisitics, frailtyand mortalityof residents with COVID-19 in nursing homes of a region of Madrid",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Bielza",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sanz",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Zambrana",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Arias",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Malmierca",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Portillo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Am Med Dir Assoc",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jamda.2020.12.003"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Papel de la Geriatr\u00eda en la Coordinaci\u00f3n con el medio Residencial. Madrid, 4 de mayo de 2020",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sociedad Espa\u00f1ola De Geriatr\u00eda Y Gerontolog\u00eda",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Coordinaci\u00f3n sociosanitaria entre un hospital terciario y las residencias de PPMM de su \u00e1rea Asistencial",
+            "authors": [
+                {
+                    "first": "Men\u00e9ndez",
+                    "middle": [],
+                    "last": "Colino",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ram\u00edrez",
+                    "middle": [],
+                    "last": "Mart\u00edn",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mart\u00edn",
+                    "middle": [],
+                    "last": "Maestre",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Mu\u00f1oz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Amengual",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ramos",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Rev Esp Geriatr Gerontol",
+            "volume": "52",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "The New Challenge of Geriatrics: Saving Frail Older People from the SARS-COV-2 Pandemic Infection",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Landi",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Barillaro",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bellieni",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Brandi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Carf\u00ec",
+                    "suffix": ""
+                },
+                {
+                    "first": "D&apos;",
+                    "middle": [],
+                    "last": "Angelo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Nutr Health Aging",
+            "volume": "24",
+            "issn": "5",
+            "pages": "466--70",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s12603-020-1356-x"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Long-Term Care Facilities and the COVID-19 Pandemic: Lessons Learned in Madrid",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mart\u00ednez-Peromingo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Serra-Rexach",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "J Am Geriatr Soc",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jgs.16665"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Age, complexity, and crisis. A prescription for progress in pandemic",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Aronson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Eng J Med",
+            "volume": "383",
+            "issn": "1",
+            "pages": "4--6",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMp2006115"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Preventing more deaths in care homes in a second pandemic surge",
+            "authors": [
+                {
+                    "first": "David",
+                    "middle": [],
+                    "last": "Oliver",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMJ",
+            "volume": "369",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1136/bmj.m2461"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "An aspirational approach to nursing home operations during the covid-19 pandemic",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wasserman",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Wolk",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Lam",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Nursing Home Res",
+            "volume": "6",
+            "issn": "",
+            "pages": "24--33",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Infection prevention and control guidance for long-term care facilities in the context of COVID-19. Interim Guidance",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Implementation of an Algorithm of Cohort Classification to Prevent the Spread of COVID-19 in Nursing Homes",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gonz\u00e1lez De Villaumbrosia",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mart\u00ednez",
+                    "middle": [],
+                    "last": "Peromingo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ortiz",
+                    "middle": [],
+                    "last": "Imedio",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "\u00c1lvarez",
+                    "middle": [],
+                    "last": "De Espejo Montiel",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Garc\u00eda",
+                    "middle": [],
+                    "last": "Puente",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Navas",
+                    "middle": [],
+                    "last": "Clemente",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Am Med Dir Assoc",
+            "volume": "21",
+            "issn": "12",
+            "pages": "1811--1814",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jamda.2020.10.023"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Procedimiento de diagn\u00f3stico, vigilancia y control de casos covid-19 en centros sociosanitarios. Madrid",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Health status of UK care home residents: a cohort study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Gordon",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Franklin",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Bradshaw",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Logan",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Elliott",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jrf",
+                    "middle": [],
+                    "last": "Gladman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Age Ageing",
+            "volume": "43",
+            "issn": "1",
+            "pages": "97--103",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/ageing/aft077"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Evaluaci\u00f3n de las derivaciones al servicio de urgencias y hospitalizaciones en mayores institucionalizados",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Rold\u00e1n-Plaza",
+                    "suffix": ""
+                },
+                {
+                    "first": "Vaquero",
+                    "middle": [],
+                    "last": "Pinto",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "P\u00e9rez",
+                    "middle": [],
+                    "last": "Panizo",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "D\u00e9niz",
+                    "middle": [],
+                    "last": "Gonz\u00e1lez",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mart\u00edn",
+                    "middle": [],
+                    "last": "Rodrigo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Montero",
+                    "middle": [],
+                    "last": "Errasquin",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cruz",
+                    "middle": [],
+                    "last": "Jentoft",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Rev Esp Geriatr Gerontol",
+            "volume": "53",
+            "issn": "S1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "On assisted living, are we hitting the mark or missing the boat?",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Levenson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "J Am Med Dir Assoc",
+            "volume": "13",
+            "issn": "",
+            "pages": "314--319",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jamda.2012.01.004"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Unplanned transfer to emergency departments for frail elderly residents of aged care facilities: a review of patient and organizational factors",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Dwyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Stoelwinder",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Gabbe",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lowthian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "J Am Med Dir Assoc",
+            "volume": "16",
+            "issn": "",
+            "pages": "551--62",
+            "other_ids": {
+                "DOI": [
+                    "doi.org/10.1016/j.jamda.2015.03.007"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Potentially avoidable hospitalizations for elderly long-stay residents in nursing homes",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Spector",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Limcangco",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Williams",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Rhodes",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hurd",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Med Care",
+            "volume": "51",
+            "issn": "8",
+            "pages": "673--81",
+            "other_ids": {
+                "DOI": [
+                    "10.1097/MLR.0b013e3182984bff"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Avoidability of Hospital Transfers of Nursing Home Residents: Perspectives of Frontline Staff",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lamb",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tappen",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Diaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Herndon",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Ouslander",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "J Am Geriatr Soc",
+            "volume": "59",
+            "issn": "",
+            "pages": "1665--1672",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/j.1532-5415.2011.03556.x"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "this really an emergency? reducing potentially preventable emergency department visits among nursing home residents",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Ouslander",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Schnelle",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hanis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "J Am Med Dir Assoc",
+            "volume": "16",
+            "issn": "",
+            "pages": "354--361",
+            "other_ids": {
+                "DOI": [
+                    "doi.org/10.1016/j.jamda.2015.01.096"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Optimizaci\u00f3n del coste en la atenci\u00f3n al anciano institucionalizado a trav\u00e9s de un programa de atenci\u00f3n geri\u00e1trica residencial",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "G\u00f3mez Pav\u00f3n",
+                    "suffix": ""
+                },
+                {
+                    "first": "Valverde",
+                    "middle": [],
+                    "last": "Moyar",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Villar",
+                    "middle": [],
+                    "last": "Bad\u00eda",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fern\u00e1ndez",
+                    "middle": [],
+                    "last": "De La Puente",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Valle Mart\u00edn",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fern\u00e1ndez",
+                    "middle": [],
+                    "last": "Rodr\u00edguez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Rev Esp Geriatr Gerontol",
+            "volume": "50",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Geriatricians and care homes: perspectives from geriatric medicine departments and primary care trusts",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Steves",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Schiff",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Martin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Clinical Medicine",
+            "volume": "9",
+            "issn": "6",
+            "pages": "528--561",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Impact of geriatric teleconsultations on hospitalization of elderly living in nursing homes. Geriatr Psychol Neuropsychiatr Vieil",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Troudet",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Mignen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Boureau",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Berrut",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Georgeton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "17",
+            "issn": "",
+            "pages": "261--70",
+            "other_ids": {
+                "DOI": [
+                    "10.1684/pnv.2019.0808"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Reducing potentially avoidable hospitalizations of nursing home residents: results of a pilot quality improvement project",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Ouslander",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Perloe",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Givens",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Kluge",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Rutland",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lamb",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "J Am Med Dir Assoc",
+            "volume": "10",
+            "issn": "9",
+            "pages": "644--52",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jamda.2009.07.001"
+                ]
+            }
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Geriatrician input into nursing homes reduces emergency hospital admissions",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Lisk",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Yeong",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Nasim",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baxter",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Mandal",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nari",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Arch Gerontol Geriatr",
+            "volume": "55",
+            "issn": "",
+            "pages": "331--338",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.archger.2011.10.014"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Is geriatric care associated with reduced emergency department use?",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "D&apos;arcy",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Stearns",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Domino",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Hanson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Weinberger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "J Am Geriatr Soc",
+            "volume": "61",
+            "issn": "1",
+            "pages": "4--11",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jgs.12039"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "An outreach geriatric medication advisory service in residential aged care: a randomized controlled trial of case conferencing",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Crotty",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Halbert",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Rowett",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Giles",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Birks",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Williams",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Age and Ageing",
+            "volume": "33",
+            "issn": "",
+            "pages": "612--619",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Optimisation of medications used in residential aged care facilities: a systematic review and meta-analysis of randomized controlled trials",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Almutairi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Stafford",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Etherton-Beer",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Flicker",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMC Geriatr",
+            "volume": "20",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s12877-020-01634-4"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Telehealth and 'assistive technology' What it means and how it might affect the way that care is delivered",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Barker",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "British Geriatrics Society Resources",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "COVID-19 in Older Adults: Key Points for Emergency Department Providers",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Malone",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Hogan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Perry",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Biese",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bonner",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pagel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Geriatr Em Med",
+            "volume": "1",
+            "issn": "4",
+            "pages": "1--11",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Telemedicine in nursing homes during the COVID-19 outbreak: A star is born (again)",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Cormi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chrusciel",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Laplanche",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Dram\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sanchez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Geriatr Gerontol Int",
+            "volume": "20",
+            "issn": "6",
+            "pages": "646--653",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/ggi.13934"
+                ]
+            }
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Capturing beneficial change from the COVID-19 pandemic. Response from the British Geriatrics Society",
+            "authors": [],
+            "year": null,
+            "venue": "British Geriatrics Society",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "The new normal: key considerations for effective serious illness communication over video or telephone during the Coronavirus Disease 2019 (COVID-19) pandemic",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Flint",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kotwal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Ann Intern Med",
+            "volume": "173",
+            "issn": "6",
+            "pages": "486--494",
+            "other_ids": {
+                "DOI": [
+                    "10.7326/M20-1982"
+                ]
+            }
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Interactive telemedicine: effects on professional practice and health care outcomes",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Flodgren",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rachas",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Farmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Inzitari",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Shepperd",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Cochrane Database of Systematic Reviews",
+            "volume": "",
+            "issn": "9",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/14651858.CD002098.pub2"
+                ]
+            }
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Effectiveness of Ambulatory Telemedicine Care in Older Adults: A Systematic Review",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Batsis",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Dimilia",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Seo",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Fortuna",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kennedy",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Blunt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "J Am Geriatr Soc",
+            "volume": "67",
+            "issn": "8",
+            "pages": "1737--1786",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jgs.15959"
+                ]
+            }
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Telemedicine in dermatology: findings and experiences worldwide -a systematic literature review",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Trettel",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Eissing",
+                    "suffix": ""
+                },
+                {
+                    "first": "Augustin",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "J Eur Acad Dermatol Venereol",
+            "volume": "32",
+            "issn": "2",
+            "pages": "215--239",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jdv.14341"
+                ]
+            }
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Dermatologic care of institutionalized elderly patients:a survey among dermatologists in the Netherlands",
+            "authors": [
+                {
+                    "first": "Sfk",
+                    "middle": [],
+                    "last": "Lubeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Van Der Geer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mmhj",
+                    "middle": [],
+                    "last": "Van Gelder",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pcm",
+                    "middle": [],
+                    "last": "Van De Kerkhof",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mjp",
+                    "middle": [],
+                    "last": "Gerritsen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Eur J Dermatol",
+            "volume": "25",
+            "issn": "6",
+            "pages": "606--618",
+            "other_ids": {
+                "DOI": [
+                    "10.1684/ejd.2015.2657"
+                ]
+            }
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "A pilot study on the potential of remote support to enhance wound care for nursing-home patients",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Vowden",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Vowden",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "J Wound Care",
+            "volume": "22",
+            "issn": "9",
+            "pages": "481--489",
+            "other_ids": {
+                "DOI": [
+                    "10.12968/jowc.2013.22.9.481"
+                ]
+            }
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Expert advice provided through telemedicine improves healing of chronic wounds: prospective cluster controlled study",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Zarchi",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Haugaard",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Dufour",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gbe",
+                    "middle": [],
+                    "last": "Jemec",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "J Invest Dermatol",
+            "volume": "135",
+            "issn": "3",
+            "pages": "895--900",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/jid.2014.441.Epub"
+                ]
+            }
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Uso de nuevas tecnolog\u00edas en atenci\u00f3n geri\u00e1trica domiciliaria y residencias: Teledermatolog\u00eda m\u00f3vil geri\u00e1trica",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "G\u00f3mez Pav\u00f3n",
+                    "suffix": ""
+                },
+                {
+                    "first": "S\u00e1nchez",
+                    "middle": [],
+                    "last": "Del Corral",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Guarino",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Barrio",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Bazt\u00e1n",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pi\u00f1uel",
+                    "middle": [],
+                    "last": "Gonz\u00e1lez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Rev Esp Geroatr Gerontol",
+            "volume": "50",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "Estudio conjunto de los defensores del pueblo",
+            "authors": [],
+            "year": 2015,
+            "venue": "Oficina del Defensor del Pueblo. Las urgencias hospitalarias en el Sistema Nacional de Salud. Derechos y Garant\u00edas de los pacientes",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF54": {
+            "ref_id": "b54",
+            "title": "Efectividad de la revaloraci\u00f3n de ingresos de pacientes con mala situaci\u00f3n funcional",
+            "authors": [
+                {
+                    "first": "Alonso",
+                    "middle": [],
+                    "last": "Bouz\u00f3n",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Petidier",
+                    "middle": [],
+                    "last": "Torregrosa",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mart\u00edn",
+                    "middle": [],
+                    "last": "Larra\u00edn",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rodr\u00edguez",
+                    "middle": [],
+                    "last": "Ma\u00f1as",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Rev Esp Geriatr Gerontol",
+            "volume": "45",
+            "issn": "1",
+            "pages": "19--21",
+            "other_ids": {}
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "Uso de una unidad de observaci\u00f3n en urgencias por geriatras",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "C\u00e1mara",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Saavedra",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Berm\u00fadez",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Valle",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Pe\u00f1a",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Solano",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Garc\u00eda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Rev Esp Geriatr Gerontol",
+            "volume": "53",
+            "issn": "S1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF56": {
+            "ref_id": "b56",
+            "title": "Valoraci\u00f3n geri\u00e1trica en los pacientes mayores de 75 a\u00f1os ingresados en la unidad de observaci\u00f3n de urgencias",
+            "authors": [
+                {
+                    "first": "Mart\u00edn",
+                    "middle": [],
+                    "last": "S\u00e1nchez",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Fern\u00e1ndez",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gonz\u00e1lez-Armengol",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ribera",
+                    "middle": [],
+                    "last": "Casado",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Rev Esp Geriatr Gerontol",
+            "volume": "45",
+            "issn": "6",
+            "pages": "358--367",
+            "other_ids": {}
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "desaprender y reaprender para asistir ancianos en urgencias: el secreto del cambio",
+            "authors": [
+                {
+                    "first": "Puig",
+                    "middle": [],
+                    "last": "Campmany",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bl\u00e1zquez Andi\u00f3n",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ris",
+                    "middle": [],
+                    "last": "Romeu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Aprender",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Emergencias",
+            "volume": "32",
+            "issn": "",
+            "pages": "122--152",
+            "other_ids": {}
+        },
+        "BIBREF58": {
+            "ref_id": "b58",
+            "title": "Reducci\u00f3n de costes mediante un programa de coordinaci\u00f3n entre m\u00e9dicos de urgencias y m\u00e9dicos de residencias",
+            "authors": [
+                {
+                    "first": "Bermejo",
+                    "middle": [],
+                    "last": "Boixareu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Saavedra",
+                    "middle": [],
+                    "last": "Quir\u00f3s",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guti\u00e9rrez",
+                    "middle": [],
+                    "last": "Parr\u00e9s",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "N\u00fa\u00f1ez",
+                    "middle": [],
+                    "last": "Gonz\u00e1lez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "G\u00f3mez",
+                    "middle": [],
+                    "last": "Rodrigo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Rev Esp Geriatr Gerontol",
+            "volume": "52",
+            "issn": "5",
+            "pages": "295--301",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Visitas a las residencias por motivos no-Covid -Provisi\u00f3n a las residencias de tratamientos de uso hospitalario -Prescripci\u00f3n de material ortoprot\u00e9sico y medicaci\u00f3n que precise visado -Sesi\u00f3n diaria de coordinaci\u00f3n de la Unidad y con el resto del servicio 3. Coordinaci\u00f3n en Urgencias -Sesi\u00f3n diaria en Urgencias de revisi\u00f3n de los ingresos -Coordinaci\u00f3n con la urgencia de las derivaciones hospitalarias -Valoraci\u00f3n de pacientes en el servicio de Urgencias -Coordinaci\u00f3n del alta de pacientes desde el servicio de Urgencias -Provisi\u00f3n a las residencias de tratamientos de uso hospitalario",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Listado de actividades de la Unidad de Geriatr\u00eda de Enlace. 1. Actividad espec\u00edfica sobre Covid-19 en las residencias -Realizaci\u00f3n del Mapa de Residencias del \u00e1rea -Activaci\u00f3n y atenci\u00f3n a los nuevos brotes -Actualizaci\u00f3n del parte diario de brotes -Seguimiento de los pacientes Covid-19 -Coordinaci\u00f3n de las altas hospitalarias entre las unidades Covid y las residencias -Visitas a las residencias -Coordinaci\u00f3n con Atenci\u00f3n Primaria y Salud P\u00fablica -Estudio de seroprevalencia: el Proyecto SeroSOS 2. Actividad preferentemente no-Covid",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Total de fallecimientos por Covid y por otras patolog\u00edas Control de constantes y cuestionario cl\u00ednico a la entrada Desinfecci\u00f3n a la entrada y en lugares estrat\u00e9gicos Uniformidad permanente con lavado en el propio centro Personal externo y mantenimiento V\u00eda de acceso independiente del personal propio Control epidemiol\u00f3gico del personal externo Limpieza, mobiliario y decoraci\u00f3n Desinfecci\u00f3n de suelos, superficie y entornos Desinfecci\u00f3n de aparataje cl\u00ednico Bolsas hidrosolubles para ropa de zona contaminada Contenedores clase III, papeleras con tapa y pedal. Manteler\u00eda y menaje desechable Retirada de mobiliario y material decorativo prescindibles Recursos ante la pandemia Material: EPIs, guantes, hidroalcohol, mascarillas Coordinaci\u00f3n del acceso a pruebas PCR Provisi\u00f3n de medicaci\u00f3n de uso hospitalario y ox\u00edgeno Plan de contingencia Existencia de un Plan de Contingencia Disponibilidad de stock de material para dos semanas Sectorizaci\u00f3n Capacidad de sectorizaci\u00f3n geogr\u00e1fica en diferentes zonas Sectorizaci\u00f3n del personal Optimizaci\u00f3n circuito limpio-sucio. de familiares Pol\u00edtica de visitas ajustada al protocolo vigente Otros Grado de conocimiento de los protocolos vigentes Comunicaci\u00f3n con la unidad de geriatr\u00eda de enlace Compromiso de continuidad de la colaboraci\u00f3n Tabla 5: Residentes atendidos en el Servicio de Urgencias por la Unidad de Geriatr\u00eda de Enlace entre el 1 de junio y el 31 de octubre de 2020 (d\u00edas laborables). Pacientes valorados diagnosticados de Covid-19",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Cumplimiento de las observaciones en las visitas previas.EPIs: Equipos de protecci\u00f3n individual.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Grado de recepci\u00f3n de las sugerencias aportadas"
+        },
+        {
+            "text": "Resumen de los tratamientos iniciados en pacientes de residencias por los componentes de la unidad de Geriatr\u00eda de Enlace entre el 1-6-2020 y el 31-10-2020.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Tabla 4:"
+        },
+        {
+            "text": "N\u00famero de casos",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Tratamiento"
+        },
+        {
+            "text": "Antibioterapia oral 45",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Antibioterapia intravenosa 19"
+        },
+        {
+            "text": "Concentradores de ox\u00edgeno 20",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sueroterapia intravenosa 17"
+        },
+        {
+            "text": "Anticoagulantes 122Broncodilatadores 21Otros tratamientos (Anticolinester\u00e1sicos, antidepresivos\u2026) 95Suplementaci\u00f3n nutricional oral 9Material ortoprot\u00e9sico",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Tratamientos neurol\u00e9pticos 29"
+        }
+    ]
+}

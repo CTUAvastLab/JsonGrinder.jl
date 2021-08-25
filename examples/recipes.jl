@@ -5,7 +5,7 @@ import Mill: mapdata, sparsify, reflectinmodel
 ###############################################################
 # start by loading all samples
 ###############################################################
-samples = open("examples/recipes.json","r") do fid
+samples = open("data/recipes.json","r") do fid
 	Vector{Dict}(JSON.parse(read(fid, String)))
 end
 JSON.print(samples[1],2)
@@ -82,6 +82,7 @@ ps = Flux.params(m)
 mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 
 @info "testing the gradient"
+loss(data, target)
 gs = gradient(() -> loss(data, target), ps)
 Flux.Optimise.update!(opt, ps, gs)
 
