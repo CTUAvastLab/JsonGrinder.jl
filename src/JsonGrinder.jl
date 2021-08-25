@@ -7,6 +7,7 @@ using Mill: ArrayNode, BagNode, ProductNode, catobs, NGramMatrix
 
 const FloatType = Float32
 
+include("switches.jl")
 include("schema/schema.jl")
 include("extractors/extractors.jl")
 include("html_show_tools.jl")

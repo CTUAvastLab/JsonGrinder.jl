@@ -46,7 +46,7 @@ end
 * `updated` counts how many times the leaf in a given position in JSON was observed,
 * `counts` counts how many times a particular value of that leaf was observed.
 
-To keep `counts` dictionary from becoming too large, once its length exceeds `JsonGrinder.max_keys` (default is `10_000`), then the new values will be dropped. This value can be changed by `JsonGrinder.updatemaxkeys!(some_higher_value)`, but of course the new limit will be applied only to newly processed values, so it's advised to set it in the beginning of your scripts.
+To keep `counts` dictionary from becoming too large, once its length exceeds `JsonGrinder.max_keys()` (default is `10_000`), then the new values will be dropped. This value can be changed by `JsonGrinder.updatemaxkeys!(some_higher_value)`, but of course the new limit will be applied only to newly processed values, so it's advised to set it in the beginning of your scripts.
 
 ### ArrayEntry
 ```julia
