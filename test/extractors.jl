@@ -1,6 +1,6 @@
 using JsonGrinder, JSON, Test, SparseArrays, Flux, Random, HierarchicalUtils
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
-using Mill: catobs, nobs, BagNode
+using Mill: catobs, nobs, ProductNode
 using LinearAlgebra
 
 @testset "Testing scalar conversion" begin
@@ -732,6 +732,9 @@ end
 end
 
 @testset "complex slicing bug" begin
+	orig_skip = JsonGrinder.skip_single_key_dict()
+	JsonGrinder.skip_single_key_dict!(false)
+
 	# this is the MWE of a bug, maybe we can shrink it down
 	broken_json = Dict("main" => [
  		Dict(
@@ -755,6 +758,55 @@ end
 	ext = suggestextractor(a_schema)
 	broken_sample = ext(broken_json)
 	ok_sample = ext(ok_json)
-	@test ok_sample[1] isa BagNode
-	@test_throws BoundsError broken_sample[1]
+	ok2_sample = ext(ok2_json)
+	@test ok_sample[1] isa ProductNode
+	@test_broken broken_sample[1]
+
+	ok_sample == ok_sample[1]
+	broken_sample == broken_sample[1]
+	ok2_sample == ok2_sample[1]
+	ok2_sample[:main].data[:maybe_arr][:e1].metadata
+	ok2_sample[:main].data[:maybe_arr][:e2].metadata
+
+	JsonGrinder.skip_single_key_dict!(orig_skip)
+end
+
+@testset "scalars slicing bug 2" begin
+	orig_skip = JsonGrinder.skip_single_key_dict()
+	JsonGrinder.skip_single_key_dict!(false)
+	# this is the MWE of a bug, maybe we can shrink it down
+	broken_json = Dict(
+		"parent_id"    => nothing,
+		"package"      => "",
+		"ended"        => "2019-12-01 11:50:33",
+		"duration"     => 133,
+		"shrike_refer" => nothing,
+		"id"           => 254405,
+		"shrike_sid"   => nothing,
+		"version"      => "1.3-NG",
+		"shrike_msg"   => nothing,
+		"shrike_url"   => nothing,
+		"hostname"     => "cuckoo-09-30100",
+		"started"      => "2019-12-01 11:48:20",
+		"custom"       => "",
+		"category"     => "file",
+		"machine"      => Dict(
+			"shutdown_on" => "2019-12-01 11:50:33",
+			"label"       => "31118,default",
+			"name"        => "win7-x86-3-118",
+			"id"          => 252344,
+			"started_on"  => "2019-12-01 11:48:26",
+			"manager"     => "Proxmox",
+		),
+		"options"      => Dict("basic_report"=>1,"vpn"=>"disabled"),
+		"timeout"      => true,
+		"source"       => "cuckoo",
+	)
+
+	a_schema = schema([broken_json])
+	ext = suggestextractor(a_schema)
+	broken_sample = ext(broken_json)
+	# this is broken in Mill 1 and JsonGrinder 1, but may be fixed in JsonGrinder 2
+	@test_broken broken_sample == broken_sample[1]
+	JsonGrinder.skip_single_key_dict!(orig_skip)
 end
