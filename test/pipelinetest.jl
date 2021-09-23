@@ -49,12 +49,39 @@ end
 	j5 = JSON.parse("""{}""")
 
 	sch = JsonGrinder.schema([j1,j2,j3])
-	extractor = suggestextractor(sch)
-	dss = map(s-> extractor(s), [j1,j2,j3,j4,j5])
-	ds = reduce(catobs, dss)
-	m = reflectinmodel(ds, k -> Dense(k,10, relu));
-	o = m(ds).data
-	for i in 1:length(dss)
-		@test o[:,i] ≈ m(dss[i]).data
+	with_merge_scalars(false) do
+		extractor = suggestextractor(sch)
+		dss = map(s-> extractor(s), [j1,j2,j3,j4,j5])
+		ds = reduce(catobs, dss)
+		m = reflectinmodel(ds, k -> Dense(k,10, relu))
+		@test ds.data isa ProductNode
+		@test ds.data[:a] isa ArrayNode
+		@test ds.data[:b] isa ArrayNode
+		@test buf_printtree(ds) == 
+		"""
+		BagNode with 5 bag(s)
+		  └── ProductNode
+		        ├── a: ArrayNode(1, 5)
+		        └── b: ArrayNode(1, 5)"""
+		o = m(ds).data
+		for i in 1:length(dss)
+			@test o[:,i] ≈ m(dss[i]).data
+		end
+	end
+	
+	with_merge_scalars(true) do
+		extractor = suggestextractor(sch)
+		dss = map(s-> extractor(s), [j1,j2,j3,j4,j5])
+		ds = reduce(catobs, dss)
+		m = reflectinmodel(ds, k -> Dense(k,10, relu))
+		@test ds.data isa ArrayNode
+		@test buf_printtree(ds) == 
+		"""
+		BagNode with 5 bag(s)
+		  └── ArrayNode(2, 5)"""
+		o = m(ds).data
+		for i in 1:length(dss)
+			@test o[:,i] ≈ m(dss[i]).data
+		end
 	end
 end

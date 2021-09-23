@@ -29,6 +29,13 @@ function with_emptyismissing(f::Function, a)
     Mill.emptyismissing(orig_val)
 end
 
+function with_merge_scalars(f::Function, a)
+    orig_val = JsonGrinder.merge_scalars()
+	JsonGrinder.merge_scalars!(a)
+    f()
+	JsonGrinder.merge_scalars!(orig_val)
+end
+
 @testset "Testing scalar conversion" begin
 	sc = ExtractScalar(Float64,2,3)
 	@test all(sc("5").data .== [9])
@@ -114,13 +121,14 @@ end
 	@test all(en.bags.bags .== [0:-1])
 	@test nobs(sc(Dict(1=>1)).data) == 0
 
-	@test en.data isa ArrayNode
+	@test en.data.data isa Matrix{Float32}
 	@test e234s.data.data == e234.data.data
 	@test e234s.data.metadata == [2 3 4]
 	@test e234s.data[1].metadata == fill(2,1,1)
 	@test e234s.data[2].metadata == fill(3,1,1)
 	@test e234s.data[3].metadata == fill(4,1,1)
 	@test ens.data.data ≃ en.data.data
+	@test isnothing(en.data.metadata)
 	@test isnothing(e234.data.metadata)
 end
 
@@ -132,17 +140,8 @@ end
 	n1 = sc1(missing, store_input=false)
 	n1s = sc1(missing, store_input=true)
 	@test e1.data == [1 2 2 3 4]'
-	@test e1.data isa Array{Float32, 2}
 	@test e1.data == e1s.data
-	@test e1s.metadata == [[1, 2, 2, 3, 4]]
-	@test catobs(e1s, e1s).data == [1 1; 2 2; 2 2; 3 3; 4 4]
-	@test catobs(e1s, e1s).metadata == [[1, 2, 2, 3, 4], [1, 2, 2, 3, 4]]
-	@test catobs(e1s, e1s)[1].data == [1 2 2 3 4]'
-	@test catobs(e1s, e1s)[1].metadata == [[1, 2, 2, 3, 4]]
-	@test isequal(n1s.metadata, [missing])
-	@test isequal(catobs(e1s, n1s).metadata, [[1, 2, 2, 3, 4], missing])
-	@test e2s.data == [1 2 2 3 0]'
-	@test e2s.metadata == [[1, 2, 2, 3]]
+	@test e1.data isa Matrix{Float32}
 
 	sc2 = ExtractVector{Int64}(5)
 	e12234 = sc2([1, 2, 2, 3, 4], store_input=false)
@@ -150,7 +149,7 @@ end
 	en = sc2(nothing, store_input=false)
 	ens = sc2(nothing, store_input=true)
 	@test e12234.data ≈ [1, 2, 2, 3, 4]
-	@test e12234.data isa Array{Int64, 2}
+	@test e12234.data isa Matrix{Int64}
 	@test e12234s.data ≈ e12234.data
 	@test ens.data ≃ en.data
 	@test en.data isa Matrix{Int64}
@@ -167,8 +166,9 @@ end
 	@test sc12345.data isa Matrix{Float32}
 	e56 = sc3([5, 6], store_input=false)
 	e56s = sc3([5, 6], store_input=true)
-	@test sc122345s.data ≈ sc122345.data
 	@test e56.data ≈ [5, 6, 0, 0, 0]
+	@test e56s.data ≃ e56.data
+	@test sc122345s.data ≈ sc122345.data
 	@test sc3(Dict(1=>2)).data ≈ zeros(5)
 
 	@testset "store_input" begin
@@ -190,8 +190,9 @@ end
 	end
 end
 
-@testset "Testing ExtractDict" begin
-	vector = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64))
+@testset "ExtractDict" begin
+	vector = Dict("a" => ExtractScalar(Float64,2,3),
+	              "b" => ExtractScalar(Float64))
 	other = Dict("c" => ExtractArray(ExtractScalar(Float64,2,3)))
 	br = ExtractDict(vector,other)
 	a1 = br(Dict("a" => 5, "b" => 7, "c" => [1,2,3,4]), store_input=false)
@@ -202,37 +203,37 @@ end
 	a3s = br(Dict("a" => 5, "c" => [1,2,3,4]), store_input=true)
 	a4s = br(Dict("c" => [1,2,3,4]), store_input=true)
 	a5s = br(Dict("a" => "hello", "b" => "world", "c" => [1,2,3,4]), store_input=true)
-
-	@test all(catobs(a1,a1).data[1].data .==[7 7; 9 9])
-	@test all(catobs(a1,a1).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a1,a1).data[2].bags .== [1:4,5:8])
+	
+	@test catobs(a1,a1)[:scalars].data ≈ [7 7; 9 9]
+	@test catobs(a1,a1)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
+	@test all(catobs(a1,a1)[:c].bags .== [1:4,5:8])
 	@test all(catobs(a1,a1).metadata .== [["b", "a"], ["b", "a"]])
 
-	@test all(catobs(a1,a2).data[1].data .==[7 7; 9 9])
-	@test all(catobs(a1,a2).data[2].data.data .== [-3 0 3 6])
-	@test all(catobs(a1,a2).data[2].bags .== [1:4,0:-1])
+	@test catobs(a1,a2)[:scalars].data ≈ [7 7; 9 9]
+	@test catobs(a1,a2)[:c].data.data ≈ [-3 0 3 6]
+	@test all(catobs(a1,a2)[:c].bags .== [1:4,0:-1])
 	@test all(catobs(a1,a2).metadata .== [["b", "a"], ["b", "a"]])
 
-	@test all(catobs(a2,a3).data[1].data .==[7 0; 9 9])
-	@test all(catobs(a2,a3).data[2].data.data .== [-3 0 3 6])
-	@test all(catobs(a2,a3).data[2].bags .== [0:-1,1:4])
+	@test all(catobs(a2,a3)[:scalars].data .==[7 0; 9 9])
+	@test all(catobs(a2,a3)[:c].data.data .== [-3 0 3 6])
+	@test all(catobs(a2,a3)[:c].bags .== [0:-1,1:4])
 	@test all(catobs(a2,a3).metadata .== [["b", "a"], ["b", "a"]])
 
-	@test all(catobs(a1,a3).data[1].data .==[7 0; 9 9])
-	@test all(catobs(a1,a3).data[2].data.data .== [-3 0 3 6 -3 0 3 6])
-	@test all(catobs(a1,a3).data[2].bags .== [1:4,5:8])
-	@test all(catobs(a1,a3).metadata .== [["b", "a"], ["b", "a"]])
+	@test catobs(a1,a3)[:scalars].data ≈ [7 0; 9 9]
+	@test catobs(a1,a3)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
+	@test all(catobs(a1,a3)[:c].bags .== [1:4,5:8])
+	@test catobs(a1,a3).metadata ≃ [["b", "a"], ["b", "a"]]
+	
+	@test catobs(a1,a1)[:scalars].data == catobs(a1s,a1s)[:scalars].data
+	@test catobs(a1,a1)[:c].data.data == catobs(a1s,a1s)[:c].data.data
+	@test catobs(a1s,a1s)[:scalars].metadata == [7 7; 5 5]
+	@test catobs(a1s,a1s)[:c].data.metadata == [1 2 3 4 1 2 3 4]
 
-	@test catobs(a1,a1).data[1].data == catobs(a1s,a1s).data[1].data
-	@test catobs(a1,a1).data[2].data.data == catobs(a1s,a1s).data[2].data.data
-	@test catobs(a1s,a1s).data[1].metadata == [7 7; 5 5]
-	@test catobs(a1s,a1s).data[2].data.metadata == [1 2 3 4 1 2 3 4]
-
-	@test a1s.data.c.data.metadata == [1 2 3 4]
-	@test a1s.data.c.data[1].metadata == fill(1,1,1)
-	@test a1s.data.c.data[2].metadata == fill(2,1,1)
-	@test a1s.data.c.data[3].metadata == fill(3,1,1)
-	@test a1s.data.c.data[4].metadata == fill(4,1,1)
+	@test a1s[:c].data.metadata == [1 2 3 4]
+	@test a1s[:c].data[1].metadata == fill(1,1,1)
+	@test a1s[:c].data[2].metadata == fill(2,1,1)
+	@test a1s[:c].data[3].metadata == fill(3,1,1)
+	@test a1s[:c].data[4].metadata == fill(4,1,1)
 
 	@test a3s.data.scalars.metadata == reshape([nothing 5],2,1)
 	@test a4s.data.scalars.metadata == fill(nothing, 2,1)
@@ -272,48 +273,49 @@ end
 	@test all(a1.data .== [9; 7])
 	@test all(a2.data .== [9; 7])
 	@test all(a3.data .== [9; 0])
-end
 
-@testset "Testing Nested Missing Arrays" begin
-	other = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),"b" => ExtractArray(ExtractScalar(Float32,2,3)));
-	br = ExtractDict(nothing,other)
-	a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=false)
-	a2 = br(Dict("b" => [2,3,4]), store_input=false)
-	a3 = br(Dict("a" => [2,3,4]), store_input=false)
-	a4 = br(Dict{String,Any}(), store_input=false)
-	a1s = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=true)
-	a2s = br(Dict("b" => [2,3,4]), store_input=true)
-	a3s = br(Dict("a" => [2,3,4]), store_input=true)
-	a4s = br(Dict{String,Any}(), store_input=true)
+    @testset "Nested Missing Arrays" begin
+    	other = Dict("a" => ExtractArray(ExtractScalar(Float32,2,3)),
+    	    "b" => ExtractArray(ExtractScalar(Float32,2,3)))
+    	br = ExtractDict(nothing,other)
+    	a1 = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=false)
+    	a2 = br(Dict("b" => [2,3,4]), store_input=false)
+    	a3 = br(Dict("a" => [2,3,4]), store_input=false)
+    	a4 = br(Dict{String,Any}(), store_input=false)
+    	a1s = br(Dict("a" => [1,2,3], "b" => [1,2,3,4]), store_input=true)
+    	a2s = br(Dict("b" => [2,3,4]), store_input=true)
+    	a3s = br(Dict("a" => [2,3,4]), store_input=true)
+    	a4s = br(Dict{String,Any}(), store_input=true)
 
-	@test all(catobs(a1,a2).data[1].data.data .== [-3.0  0.0  3.0  6.0  0.0  3.0  6.0])
-	@test all(catobs(a1,a2).data[1].bags .== [1:4, 5:7])
-	@test all(catobs(a1,a2).data[2].data.data .== [-3.0  0.0  3.0])
-	@test all(catobs(a1,a2).data[2].bags .== [1:3, 0:-1])
+    	@test all(catobs(a1,a2).data[1].data.data .== [-3.0  0.0  3.0  6.0  0.0  3.0  6.0])
+    	@test all(catobs(a1,a2).data[1].bags .== [1:4, 5:7])
+    	@test all(catobs(a1,a2).data[2].data.data .== [-3.0  0.0  3.0])
+    	@test all(catobs(a1,a2).data[2].bags .== [1:3, 0:-1])
 
-	@test all(catobs(a2,a3).data[1].data.data .== [0.0  3.0  6.0])
-	@test all(catobs(a2,a3).data[1].bags .== [1:3, 0:-1])
-	@test all(catobs(a2,a3).data[2].data.data .== [0 3 6])
-	@test all(catobs(a2,a3).data[2].bags .== [0:-1, 1:3])
+    	@test all(catobs(a2,a3).data[1].data.data .== [0.0  3.0  6.0])
+    	@test all(catobs(a2,a3).data[1].bags .== [1:3, 0:-1])
+    	@test all(catobs(a2,a3).data[2].data.data .== [0 3 6])
+    	@test all(catobs(a2,a3).data[2].bags .== [0:-1, 1:3])
 
-	@test all(catobs(a1,a4).data[1].data.data .== [-3.0  0.0  3.0  6.0])
-	@test all(catobs(a1,a4).data[1].bags .== [1:4, 0:-1])
-	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
-	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
+    	@test all(catobs(a1,a4).data[1].data.data .== [-3.0  0.0  3.0  6.0])
+    	@test all(catobs(a1,a4).data[1].bags .== [1:4, 0:-1])
+    	@test all(catobs(a1,a4).data[2].data.data .== [-3.0  0.0  3.0])
+    	@test all(catobs(a1,a4).data[2].bags .== [1:3, 0:-1])
 
-	@test all(a4.data[2].data.data isa Array{Float32,2})
+    	@test all(a4.data[2].data.data isa Matrix{Float32})
 
-	@test catobs(a1,a4).data[1].data.data == catobs(a1s,a4s).data[1].data.data
-	@test catobs(a1,a4).data[1].bags == catobs(a1s,a4s).data[1].bags
-	@test catobs(a1,a4).data[2].data.data == catobs(a1s,a4s).data[2].data.data
-	@test catobs(a1,a4).data[2].bags == catobs(a1,a4).data[2].bags
+    	@test catobs(a1,a4).data[1].data.data == catobs(a1s,a4s).data[1].data.data
+    	@test catobs(a1,a4).data[1].bags == catobs(a1s,a4s).data[1].bags
+    	@test catobs(a1,a4).data[2].data.data == catobs(a1s,a4s).data[2].data.data
+    	@test catobs(a1,a4).data[2].bags == catobs(a1,a4).data[2].bags
 
-	@test catobs(a1s,a4s).data[1].data.metadata == [1 2 3 4]
-	@test catobs(a1s,a4s).data[2].data.metadata == [1 2 3]
-	@test a1s.data[1].data.metadata == [1 2 3 4]
-	@test a1s.data[2].data.metadata == [1 2 3]
-	@test a4s.data[1].data.metadata == zeros(1,0)
-	@test a4s.data[2].data.metadata == zeros(1,0)
+    	@test catobs(a1s,a4s).data[1].data.metadata == [1 2 3 4]
+    	@test catobs(a1s,a4s).data[2].data.metadata == [1 2 3]
+    	@test a1s.data[1].data.metadata == [1 2 3 4]
+    	@test a1s.data[2].data.metadata == [1 2 3]
+    	@test a4s.data[1].data.metadata == zeros(1,0)
+    	@test a4s.data[2].data.metadata == zeros(1,0)
+    end
 end
 
 @testset "ExtractOneHot" begin
@@ -353,8 +355,8 @@ end
 	@test ez.data[:] ≈ [0, 0, 1]
 	@test en.data[:] ≈ [0, 0, 1]
 	@test em.data[:] ≈ [0, 0, 1]
-	@test typeof(ea.data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
-	@test typeof(en.data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
+	@test typeof(ea.data) == Flux.OneHotMatrix{Vector{Flux.OneHotVector}}
+	@test typeof(en.data) == Flux.OneHotMatrix{Vector{Flux.OneHotVector}}
 
 	@test e(["a", "b"]).data ≈ [0, 0, 1]
 	@test mapreduce(e, catobs, ["a", "b"]).data ≈ [1 0; 0 1; 0 0]
@@ -368,15 +370,99 @@ end
 	@test e2(nothing).data[:] ≈ [0, 0, 1]
 
 	@test catobs(ea, eb).data ≈ [1 0; 0 1; 0 0]
-	@test catobs(ea.data, eb.data) ≈ [1 0; 0 1; 0 0]
+	@test reduce(catobs, [ea.data, eb.data]) ≈ [1 0; 0 1; 0 0]
+	@test hcat(ea.data, eb.data) ≈ [1 0; 0 1; 0 0]
 	@test e(Dict(1=>2)).data[:] ≈ [0, 0, 1]
 
 	@test catobs(eas, ebs).data == catobs(ea, eb).data
-	@test catobs(eas.data, ebs.data) == catobs(eas.data, ebs.data)
+	@test reduce(catobs, [eas.data, ebs.data]) == reduce(catobs, [ea.data, eb.data])
 	@test e(Dict(1=>2)).data[:] ≈ [0, 0, 1]
 
 	@test catobs(eas, ebs).metadata == ["a", "b"]
 	@test e(Dict(1=>2), store_input=true).metadata == [Dict(1=>2)]
+
+	@test nobs(ea) == 1
+	@test nobs(eb) == 1
+	@test nobs(ez) == 1
+	@test nobs(en) == 1
+	@test nobs(em) == 1
+	@test nobs(em.data) == 1
+	@test nobs(e([missing, nothing])) == 1
+	@test nobs(mapreduce(e, catobs, [missing, nothing])) == 2
+	@test nobs(e([missing, nothing, "a"])) == 1
+	@test nobs(mapreduce(e, catobs, [missing, nothing, "a"])) == 3
+
+	@test isnothing(ExtractCategorical([]))
+	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2))
+	@test e2("a").data ≈ [1, 0, 0]
+	@test e2("c").data ≈ [0, 1, 0]
+	@test e2("b").data ≈ [0, 0, 1]
+	@test e2(nothing).data ≈ [0, 0, 1]
+	@test e2(missing).data ≈ [0, 0, 1]
+
+	e3 = ExtractCategorical(JsonGrinder.Entry(Dict(1=>1,2=>1), 2))
+	@test e3(1).data ≈ [1, 0, 0]
+	@test e3(2).data ≈ [0, 1, 0]
+	@test e3(4).data ≈ [0, 0, 1]
+	@test e3(1.).data ≈ [0, 0, 1]
+	@test e3(2.).data ≈ [0, 0, 1]
+	@test e3(4.).data ≈ [0, 0, 1]
+	@test e3([]).data ≈ [0, 0, 1]
+
+	e4 = ExtractCategorical(JsonGrinder.Entry(Dict(1.0=>1,2.0=>1), 2))
+	@test e4(1).data ≈ [0, 0, 1]
+	@test e4(2).data ≈ [0, 0, 1]
+	@test e4(4).data ≈ [0, 0, 1]
+	@test e4(1.).data ≈ [1, 0, 0]
+	@test e4(2.).data ≈ [0, 1, 0]
+	@test e4(4.).data ≈ [0, 0, 1]
+	@test e4([]).data ≈ [0, 0, 1]
+
+	e = ExtractCategorical(["a","b"])
+	@test e("a").data ≈ [1, 0, 0]
+	@test e("b").data ≈ [0, 1, 0]
+	@test e("z").data ≈ [0, 0, 1]
+	@test e(nothing).data ≈ [0, 0, 1]
+	@test e(missing).data ≈ [0, 0, 1]
+	@test typeof(e("a").data) == OneHotMatrix{Vector{Flux.OneHotVector}}
+	
+	@test mapreduce(e, catobs, ["a", "b"]).data ≈ [1 0; 0 1; 0 0]
+	@test e(["a", "b"]).data ≈ [0, 0, 1]
+	@test e(["a", missing]).data ≈ [0, 0, 1]
+	@test e(["a", missing, "x"]).data ≈ [0, 0, 1]
+	@test typeof(e(["a", "b"]).data) == OneHotMatrix{Vector{Flux.OneHotVector}}
+	@test typeof(mapreduce(e, catobs, ["a", "b"]).data) == OneHotMatrix{Vector{Flux.OneHotVector}}
+	@test e(["a", "b", nothing]).data ≈ [0, 0, 1]
+
+	@test catobs(e("a"), e("b")).data ≈ [1 0; 0 1; 0 0]
+	@test reduce(catobs, [e("a").data, e("b").data]) ≈ [1 0; 0 1; 0 0]
+	@test hcat(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
+	@test e(Dict(1=>2)).data ≈ [0, 0, 1]
+
+	@test nobs(e("a")) == 1
+	@test nobs(e("b")) == 1
+	@test nobs(e("z")) == 1
+	@test nobs(e(nothing)) == 1
+	@test nobs(e(missing)) == 1
+	@test nobs(e([missing, nothing])) == 1
+	@test nobs(e([missing, nothing, "a"])) == 1
+
+	@testset "type conversions" begin
+		j1 = JSON.parse("""{"a": "4"}""")
+		j2 = JSON.parse("""{"a": "11.5"}""")
+		j3 = JSON.parse("""{"a": 7}""")
+		j4 = JSON.parse("""{"a": 4.5}""")
+
+		sch = JsonGrinder.schema([j1,j2,j3,j4])
+
+		ext = suggestextractor(sch)
+
+		@test ext(Dict("a"=>4)) == ext(Dict("a"=>4.0))
+		@test ext(Dict("a"=>4)) == ext(Dict("a"=>4f0))
+		@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4"))
+		@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4.0"))
+		# todo: add here metadata test
+	end
 end
 
 @testset "equals and hash test" begin
@@ -790,7 +876,7 @@ end
 	@test e == e2
 end
 
-@testset "AuxiliaryExtractor HUtils" begin
+@testset "AuxiliaryExtractor" begin
 	e2 = ExtractCategorical(["a","b"])
 	e = AuxiliaryExtractor(e2, (ext, sample; store_input=false)->ext(String(sample), store_input=store_input))
 
