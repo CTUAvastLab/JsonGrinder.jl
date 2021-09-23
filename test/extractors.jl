@@ -59,12 +59,12 @@ end
 end
 
 @testset "Testing feature vector conversion" begin
-	sc = ExtractVector(5)
-	e1 = sc([1, 2, 2, 3, 4], store_input=false)
-	e1s = sc([1, 2, 2, 3, 4], store_input=true)
-	e2s = sc([1, 2, 2, 3], store_input=true)
-	n1 = sc(missing, store_input=false)
-	n1s = sc(missing, store_input=true)
+	sc1 = ExtractVector(5)
+	e1 = sc1([1, 2, 2, 3, 4], store_input=false)
+	e1s = sc1([1, 2, 2, 3, 4], store_input=true)
+	e2s = sc1([1, 2, 2, 3], store_input=true)
+	n1 = sc1(missing, store_input=false)
+	n1s = sc1(missing, store_input=true)
 	@test e1.data == [1 2 2 3 4]'
 	@test e1.data isa Array{Float32, 2}
 	@test e1.data == e1s.data
@@ -78,16 +78,16 @@ end
 	@test e2s.data == [1 2 2 3 0]'
 	@test e2s.metadata == [[1, 2, 2, 3]]
 
-	sc = ExtractVector{Int64}(5)
-	@test sc([1, 2, 2, 3, 4]).data ≈ [1, 2, 2, 3, 4]
-	@test sc([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
-	@test sc([1, 2, 2, 3, 4], store_input=true).data ≈ sc([1, 2, 2, 3, 4], store_input=false).data
-	@test sc([1, 2, 2, 3, 4], store_input=true).metadata == [[1, 2, 2, 3, 4]]
-	@test sc(nothing).data ≈ [0, 0, 0, 0, 0]
-	@test sc(nothing, store_input=true).data ≈ sc(nothing, store_input=false).data
-	@test sc(nothing, store_input=true).metadata == [nothing]
+	sc2 = ExtractVector{Int64}(5)
+	@test sc2([1, 2, 2, 3, 4]).data ≈ [1, 2, 2, 3, 4]
+	@test sc2([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
+	@test sc2([1, 2, 2, 3, 4], store_input=true).data ≈ sc2([1, 2, 2, 3, 4], store_input=false).data
+	@test sc2([1, 2, 2, 3, 4], store_input=true).metadata == [[1, 2, 2, 3, 4]]
+	@test sc2(nothing).data ≈ [0, 0, 0, 0, 0]
+	@test sc2(nothing, store_input=true).data ≈ sc2(nothing, store_input=false).data
+	@test sc2(nothing, store_input=true).metadata == [nothing]
 
-	@test !JsonGrinder.extractsmatrix(sc)
+	@test !JsonGrinder.extractsmatrix(sc2)
 
 	# feature vector longer than expected
 	sc = ExtractVector(5)
@@ -763,7 +763,7 @@ end
 	@test_broken broken_sample[1]
 
 	ok_sample == ok_sample[1]
-	broken_sample == broken_sample[1]
+	@test_broken broken_sample == broken_sample[1]
 	ok2_sample == ok2_sample[1]
 	ok2_sample[:main].data[:maybe_arr][:e1].metadata
 	ok2_sample[:main].data[:maybe_arr][:e2].metadata

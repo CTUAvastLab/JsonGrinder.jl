@@ -29,7 +29,7 @@ end
 extractsmatrix(s::ExtractArray) = false
 
 function (s::ExtractArray)(v::V; store_input=false) where {V<:Union{Missing, Nothing}}
-	Mill._emptyismissing[] && return(BagNode(missing, [0:-1]))
+	Mill._emptyismissing[] && return BagNode(missing, [0:-1])
 	ds = s.item(nothing, store_input=store_input)[1:0]
 	BagNode(ds, [0:-1])
 end
