@@ -110,19 +110,17 @@ end
 	e234s = sc([2,3,4], store_input=true)
 	ens = sc(nothing, store_input=true)
 	@test all(e234.data.data .== [2 3 4])
-	@test isnothing(nobs(en.data))
+	@test nobs(en.data) == 0
 	@test all(en.bags.bags .== [0:-1])
-	@test isnothing(nobs(sc(Dict(1=>1)).data))
+	@test nobs(sc(Dict(1=>1)).data) == 0
 
-	@test en.data isa Missing
+	@test en.data isa ArrayNode
 	@test e234s.data.data == e234.data.data
 	@test e234s.data.metadata == [2 3 4]
 	@test e234s.data[1].metadata == fill(2,1,1)
 	@test e234s.data[2].metadata == fill(3,1,1)
 	@test e234s.data[3].metadata == fill(4,1,1)
-	@test ens.data ≃ en.data
-	@test ismissing(en.data)
-	@test ismissing(ens.data)
+	@test ens.data.data ≃ en.data.data
 	@test isnothing(e234.data.metadata)
 end
 
@@ -170,8 +168,8 @@ end
 	e56 = sc3([5, 6], store_input=false)
 	e56s = sc3([5, 6], store_input=true)
 	@test sc122345s.data ≈ sc122345.data
-	@test sc([5, 6]).data ≈ [5, 6, 0, 0, 0]
-	@test sc(Dict(1=>2)).data ≈ zeros(5)
+	@test e56.data ≈ [5, 6, 0, 0, 0]
+	@test sc3(Dict(1=>2)).data ≈ zeros(5)
 
 	@testset "store_input" begin
 		@test e1s.metadata == [[1, 2, 2, 3, 4]]
@@ -490,12 +488,12 @@ end
 	sch = JsonGrinder.schema([j1, j2, j3, j4, j5_200...])
 	ext = suggestextractor(sch)
 
-	@test ext[:a].datatype <: Float32
-	@test ext[:b].datatype <: String
-	@test ext[:c].datatype <: Float32
-	@test ext[:d].datatype <: Float32
-	@test ext[:e].datatype <: Float32
-	@test ext[:f].datatype <: Float32
+	@test ext[:a] isa ExtractCategorical
+	@test ext[:b] isa ExtractString
+	@test ext[:c] isa ExtractCategorical
+	@test ext[:d] isa ExtractScalar{Float32}
+	@test ext[:e] isa ExtractCategorical
+	@test ext[:f] isa ExtractCategorical
 
 	ext_j1 = ext(j1, store_input=false)
 	ext_j2 = ext(j2, store_input=false)
@@ -507,25 +505,27 @@ end
 	@test eltype(ext_j3[:scalars].data) <: Float32
 	@test eltype(ext_j4[:scalars].data) <: Float32
 
-	@test ext_j1["U"].data ≈ [0, 0, 0, 0, 0]
-	@test ext_j2["U"].data ≈ [0.5, 1/3, 3/13, 0.5, 3/13]
-	@test ext_j3["U"].data ≈ [1, 2/3, 4/13, 1, 4/13]
-	@test ext_j4["U"].data ≈ [1, 1, 1, 1, 1]
+	printtree(ext_j1, trav=true)
+
+	@test ext_j1["k"].data ≈ [0, 0]
+	@test ext_j2["k"].data ≈ Float32[(2-1.1)/(25-1.1), (2-1)/(200-1)]
+	@test ext_j3["k"].data ≈ Float32[(2.3-1.1)/(25-1.1), (3-1)/(200-1)]
+	@test ext_j4["k"].data ≈ Float32[(5-1.1)/(25-1.1), (4-1)/(200-1)]
 
 	ext_j1s = ext(j1, store_input=true)
 	ext_j2s = ext(j2, store_input=true)
 	ext_j3s = ext(j3, store_input=true)
 	ext_j4s = ext(j4, store_input=true)
 
-	@test ext_j1["U"].data == ext_j1s["U"].data
-	@test ext_j2["U"].data == ext_j2s["U"].data
-	@test ext_j3["U"].data == ext_j3s["U"].data
-	@test ext_j4["U"].data == ext_j4s["U"].data
+	@test ext_j1["k"].data == ext_j1s["k"].data
+	@test ext_j2["k"].data == ext_j2s["k"].data
+	@test ext_j3["k"].data == ext_j3s["k"].data
+	@test ext_j4["k"].data == ext_j4s["k"].data
 
-	@test ext_j1s["U"].metadata == reshape([1 "1" 1.1 "1.2" "1.1"], 5, 1)
-	@test ext_j2s["U"].metadata == reshape([2 "2" 2 "1.3" "2"], 5, 1)
-	@test ext_j3s["U"].metadata == reshape([3 "3" 2.3 "1.4" "2.3"], 5, 1)
-	@test ext_j4s["U"].metadata == reshape([3 "4" 5 "1.4" "5"], 5, 1)
+	@test ext_j1s["k"].metadata == reshape([1.1 "1"], 2, 1)
+	@test ext_j2s["k"].metadata == reshape([2 "2"], 2, 1)
+	@test ext_j3s["k"].metadata == reshape([2.3 "3"], 2, 1)
+	@test ext_j4s["k"].metadata == reshape([5 "4"], 2, 1)
 end
 
 @testset "Suggest feature vector extraction" begin
