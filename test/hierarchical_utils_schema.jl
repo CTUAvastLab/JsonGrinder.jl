@@ -178,13 +178,12 @@ end
     Base.show(buf, sch)
     str_repr = String(take!(buf))
     @test str_repr == "DictEntry"
+    @test repr(sch) == "DictEntry"
 
     buf = IOBuffer()
     Base.show(buf, "text/plain", sch)
     str_repr = String(take!(buf))
 
-    buf = IOBuffer()
-    HierarchicalUtils.printtree(buf, sch; trav=false, htrunc=3)
-    str_repr2 = String(take!(buf))
-    @test str_repr == str_repr2
+    @test str_repr == buf_printtree(sch; trav=false, htrunc=3)
+    @test repr("text/plain", sch) == buf_printtree(sch; trav=false, htrunc=3)
 end

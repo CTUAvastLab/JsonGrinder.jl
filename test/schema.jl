@@ -1,5 +1,4 @@
-using Mill, JSON, BSON, Flux, JsonGrinder, Test
-using HierarchicalUtils
+using Mill, JSON, BSON, Flux, JsonGrinder, Test, HierarchicalUtils
 using JsonGrinder: suggestextractor, schema
 using JsonGrinder: DictEntry, Entry, MultiEntry, ArrayEntry
 using Mill: reflectinmodel

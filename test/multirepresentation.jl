@@ -1,12 +1,14 @@
-using JsonGrinder, JSON, Test, SparseArrays, Mill
-using HierarchicalUtils
+using JsonGrinder, JSON, Test, SparseArrays, Mill, HierarchicalUtils
 import HierarchicalUtils: printtree
+using Mill: nobs
 
 @testset "ExtractMultipleRepresentation" begin
-	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
-		JsonGrinder.ExtractString(String)))
+	ex = MultipleRepresentation((
+		ExtractCategorical(["Olda", "Tonda", "Milda"]),
+		ExtractString(String)))
 	e = ex("Olda")
 
+    @test nobs(e) == 1
 	@test length(e.data) == 2
 	@test size(e.data[1].data) == (4, 1)
 	@test e.data[1].data[:] ≈ [0, 1, 0, 0]
@@ -16,33 +18,34 @@ import HierarchicalUtils: printtree
 
 	@test !JsonGrinder.extractsmatrix(ex)
 
-	ex2 = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
-		JsonGrinder.ExtractString(String)))
+	ex2 = MultipleRepresentation((
+	    ExtractCategorical(["Olda", "Tonda", "Milda"]),
+		ExtractString(String)))
 	@test hash(ex) === hash(ex2)
 	@test ex == ex2
 
-	ex3 = MultipleRepresentation((ExtractCategorical(["Polda", "Tonda", "Milada"]),
-		JsonGrinder.ExtractString(String)))
+	ex3 = MultipleRepresentation((
+	    ExtractCategorical(["Polda", "Tonda", "Milada"]),
+		ExtractString(String)))
 	@test hash(ex) !== hash(ex3)
 	@test ex != ex3
 end
 
 @testset "show" begin
-	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"]),
-		JsonGrinder.ExtractString(String)))
+	ex = MultipleRepresentation((
+		ExtractCategorical(["Olda", "Tonda", "Milda"]),
+		ExtractString(String)))
 	e = ex("Olda")
 
-	buf = IOBuffer()
-	printtree(buf, ex, trav=true)
-	str_repr = String(take!(buf))
-	@test str_repr ==
-"""
-MultiRepresentation [""]
-  ├── e1: Categorical d = 4 ["E"]
-  └── e2: String ["U"]"""
+	@test buf_printtree(ex, trav=true) ==
+	"""
+	MultiRepresentation [""]
+	  ├── e1: Categorical d = 4 ["E"]
+	  └── e2: String ["U"]"""
 
-	buf = IOBuffer()
-	printtree(buf, e, trav=true)
-	str_repr = String(take!(buf))
-	@test str_repr == "ProductNode [\"\"]\n  ├── e1: ArrayNode(4, 1) [\"E\"]\n  └── e2: ArrayNode(2053, 1) [\"U\"]"
+	@test buf_printtree(e, trav=true) ==
+	"""
+	ProductNode [""]
+	  ├── e1: ArrayNode(4, 1) ["E"]
+	  └── e2: ArrayNode(2053, 1) ["U"]"""
 end

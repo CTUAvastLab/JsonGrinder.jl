@@ -1,43 +1,108 @@
 using JsonGrinder, JSON, Test, SparseArrays, Flux, Random, HierarchicalUtils
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
+using Mill
 using Mill: catobs, nobs, ProductNode
+using Flux: OneHotMatrix
 using LinearAlgebra
+
+function less_categorical_scalar_extractor()
+	[
+	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.5 && length(keys(e)) <= 10 && JsonGrinder.is_numeric_or_numeric_string(e)),
+		e -> ExtractCategorical(keys(e))),
+	(e -> JsonGrinder.is_intable(e),
+		e -> JsonGrinder.extractscalar(Int32, e)),
+	(e -> JsonGrinder.is_floatable(e),
+	 	e -> JsonGrinder.extractscalar(JsonGrinder.FloatType, e)),
+	# it's important that condition here would be lower than maxkeys
+	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !JsonGrinder.is_numeric_or_numeric_string(e)),
+		e -> ExtractCategorical(keys(e))),
+	(e -> true,
+		e -> JsonGrinder.extractscalar(JsonGrinder.unify_types(e), e)),]
+end
+
+testing_settings = (; scalar_extractors = less_categorical_scalar_extractor())
+
+function with_emptyismissing(f::Function, a)
+    orig_val = Mill._emptyismissing[]
+    Mill.emptyismissing(a)
+    f()
+    Mill.emptyismissing(orig_val)
+end
 
 @testset "Testing scalar conversion" begin
 	sc = ExtractScalar(Float64,2,3)
 	@test all(sc("5").data .== [9])
 	@test all(sc(5).data .== [9])
 	@test all(sc(nothing).data .== [0])
+	@test all(sc(missing).data .== [0])
+	@test nobs(sc(missing)) == 1
+	@test nobs(sc(nothing)) == 1
+	@test nobs(sc(5)) == 1
 
-	@test sc("5", store_input=true).data == sc("5", store_input=false).data
-	@test sc("5", store_input=true).metadata == fill("5",1,1)
-	@test isnothing(sc("5", store_input=false).metadata)
-	@test sc(5, store_input=true).data == sc(5, store_input=false).data
-	@test sc(5, store_input=true).metadata == fill(5,1,1)
-	@test isnothing(sc(5, store_input=false).metadata)
-	@test sc(nothing, store_input=true).data == sc(nothing, store_input=false).data
-	@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
-	@test isnothing(sc(nothing, store_input=false).metadata)
+	sc = ExtractScalar(Float32, 0.5, 4.0)
+	@test sc(1).data isa Matrix{Float64}
+
+	sc = JsonGrinder.extractscalar(Float32)
+	@test sc(1).data isa Matrix{Float32}
+	@test sc(Dict(1=>1)).data isa Matrix{Float32}
+	@test length(sc) == 1
+
+	@testset "store_input" begin
+		@test sc("5", store_input=true).data == sc("5", store_input=false).data
+		@test sc("5", store_input=true).metadata == fill("5",1,1)
+		@test isnothing(sc("5", store_input=false).metadata)
+		@test sc(5, store_input=true).data == sc(5, store_input=false).data
+		@test sc(5, store_input=true).metadata == fill(5,1,1)
+		@test isnothing(sc(5, store_input=false).metadata)
+		@test sc(nothing, store_input=true).data ≃ sc(nothing, store_input=false).data
+		@test sc(nothing, store_input=true).metadata == fill(nothing,1,1)
+		@test isnothing(sc(nothing, store_input=false).metadata)
+	end
 end
 
-@testset "Testing array conversion" begin
+@testset "ExtractArray" begin
 	sc = ExtractArray(ExtractCategorical(2:4))
-	e234 = sc([2,3,4], store_input=false)
-	en = sc(nothing, store_input=false)
-	e234s = sc([2,3,4], store_input=true)
-	ens = sc(nothing, store_input=true)
-	@test all(e234.data.data .== Matrix(1.0I, 4, 3))
-	@test nobs(en.data) == 0
-	@test all(en.bags.bags .== [0:-1])
-	@test e234s.data.data == e234.data.data
-	@test e234s.data.metadata == [2,3,4]
-	@test e234s.data[1].metadata == [2]
-	@test e234s.data[2].metadata == [3]
-	@test e234s.data[3].metadata == [4]
-	@test ens.data.data == en.data.data
-	@test ens.data.metadata == []
-	@test isnothing(e234.data.metadata)
-	@test isnothing(en.data.metadata)
+	with_emptyismissing(false) do
+		e234 = sc([2,3,4], store_input=false)
+		en = sc(nothing, store_input=false)
+		e234s = sc([2,3,4], store_input=true)
+		ens = sc(nothing, store_input=true)
+		@test all(e234.data.data .== Matrix(1.0I, 4, 3))
+		@test nobs(en.data) == 0
+		@test en.data.data isa OneHotMatrix{Array{Flux.OneHotVector,1}}
+		@test nobs(en.data.data) == 0
+		@test all(en.bags.bags .== [0:-1])
+
+		@testset "store_input" begin
+			@test e234s.data.data == e234.data.data
+			@test e234s.data.metadata == [2,3,4]
+			@test e234s.data[1].metadata == [2]
+			@test e234s.data[2].metadata == [3]
+			@test e234s.data[3].metadata == [4]
+			@test ens.data.data == en.data.data
+			@test isnothing(ens.metadata)
+			@test isnothing(en.metadata)
+			@test ens.data.metadata == Nothing[]
+			@test isnothing(e234.data.metadata)
+			@test isnothing(en.data.metadata)
+		end
+	end
+	with_emptyismissing(true) do
+		en = sc(nothing, store_input=false)
+		ens = sc(nothing, store_input=true)
+		em = sc(missing, store_input=false)
+		ems = sc(missing, store_input=true)
+		@test en.data isa Missing
+		@test en.data ≃ em.data
+		@test ens.data isa Missing
+		@test ens.data ≃ ems.data
+		@test isnothing(en.metadata)
+		@test isnothing(em.metadata)
+		@test isnothing(ens.metadata)
+		@test isnothing(ems.metadata)
+		@test all(en.bags.bags .== [0:-1])
+		@test all(em.bags.bags .== [0:-1])
+	end
 
 	sc = ExtractArray(ExtractScalar(Float32))
 	e234 = sc([2,3,4], store_input=false)
@@ -45,20 +110,23 @@ end
 	e234s = sc([2,3,4], store_input=true)
 	ens = sc(nothing, store_input=true)
 	@test all(e234.data.data .== [2 3 4])
-	@test nobs(en.data) == 0
+	@test isnothing(nobs(en.data))
 	@test all(en.bags.bags .== [0:-1])
+	@test isnothing(nobs(sc(Dict(1=>1)).data))
+
+	@test en.data isa Missing
 	@test e234s.data.data == e234.data.data
 	@test e234s.data.metadata == [2 3 4]
 	@test e234s.data[1].metadata == fill(2,1,1)
 	@test e234s.data[2].metadata == fill(3,1,1)
 	@test e234s.data[3].metadata == fill(4,1,1)
-	@test ens.data.data == en.data.data
-	@test ens.data.metadata == zeros(1,0)
+	@test ens.data ≃ en.data
+	@test ismissing(en.data)
+	@test ismissing(ens.data)
 	@test isnothing(e234.data.metadata)
-	@test isnothing(en.data.metadata)
 end
 
-@testset "Testing feature vector conversion" begin
+@testset "ExtractVector" begin
 	sc1 = ExtractVector(5)
 	e1 = sc1([1, 2, 2, 3, 4], store_input=false)
 	e1s = sc1([1, 2, 2, 3, 4], store_input=true)
@@ -79,23 +147,49 @@ end
 	@test e2s.metadata == [[1, 2, 2, 3]]
 
 	sc2 = ExtractVector{Int64}(5)
-	@test sc2([1, 2, 2, 3, 4]).data ≈ [1, 2, 2, 3, 4]
-	@test sc2([1, 2, 2, 3, 4]).data isa Array{Int64, 2}
-	@test sc2([1, 2, 2, 3, 4], store_input=true).data ≈ sc2([1, 2, 2, 3, 4], store_input=false).data
-	@test sc2([1, 2, 2, 3, 4], store_input=true).metadata == [[1, 2, 2, 3, 4]]
-	@test sc2(nothing).data ≈ [0, 0, 0, 0, 0]
-	@test sc2(nothing, store_input=true).data ≈ sc2(nothing, store_input=false).data
-	@test sc2(nothing, store_input=true).metadata == [nothing]
+	e12234 = sc2([1, 2, 2, 3, 4], store_input=false)
+	e12234s = sc2([1, 2, 2, 3, 4], store_input=true)
+	en = sc2(nothing, store_input=false)
+	ens = sc2(nothing, store_input=true)
+	@test e12234.data ≈ [1, 2, 2, 3, 4]
+	@test e12234.data isa Array{Int64, 2}
+	@test e12234s.data ≈ e12234.data
+	@test ens.data ≃ en.data
+	@test en.data isa Matrix{Int64}
+	@test en.data ≈ [0, 0, 0, 0, 0]
 
 	@test !JsonGrinder.extractsmatrix(sc2)
 
+	sc3 = ExtractVector{Float32}(5)
 	# feature vector longer than expected
-	sc = ExtractVector(5)
-	@test all(sc([1, 2, 2, 3, 4, 5]).data .== [1, 2, 2, 3, 4])
-	@test sc([1, 2, 2, 3, 4, 5], store_input=true).data ≈ sc([1, 2, 2, 3, 4, 5], store_input=false).data
-	@test sc([1, 2, 2, 3, 4, 5], store_input=true).metadata == [[1, 2, 2, 3, 4, 5]]
+	sc122345 = sc3([1, 2, 2, 3, 4, 5], store_input=false)
+	sc122345s = sc3([1, 2, 2, 3, 4, 5], store_input=true)
+	sc12345 = sc3([1, 2, 3, 4, 5])
+	@test sc122345.data == [1f0 2f0 2f0 3f0 4f0]'
+	@test sc12345.data isa Matrix{Float32}
+	e56 = sc3([5, 6], store_input=false)
+	e56s = sc3([5, 6], store_input=true)
+	@test sc122345s.data ≈ sc122345.data
 	@test sc([5, 6]).data ≈ [5, 6, 0, 0, 0]
 	@test sc(Dict(1=>2)).data ≈ zeros(5)
+
+	@testset "store_input" begin
+		@test e1s.metadata == [[1, 2, 2, 3, 4]]
+		@test isnothing(e1.metadata)
+		@test catobs(e1s, e1s).data == [1 1; 2 2; 2 2; 3 3; 4 4]
+		@test catobs(e1s, e1s).metadata == [[1, 2, 2, 3, 4], [1, 2, 2, 3, 4]]
+		@test catobs(e1s, e1s)[1].data == [1 2 2 3 4]'
+		@test catobs(e1s, e1s)[1].metadata == [[1, 2, 2, 3, 4]]
+		@test n1s.metadata ≃ [missing]
+		@test catobs(e1s, n1s).metadata ≃ [[1, 2, 2, 3, 4], missing]
+		@test e2s.data ≃ [1 2 2 3 0]'
+		@test e2s.metadata == [[1, 2, 2, 3]]
+		@test e12234s.metadata == [[1, 2, 2, 3, 4]]
+		@test ens.metadata == [nothing]
+		@test sc122345s.metadata == [[1, 2, 2, 3, 4, 5]]
+		@test isnothing(e56.metadata)
+		@test e56s.metadata == [[5, 6]]
+	end
 end
 
 @testset "Testing ExtractDict" begin
@@ -251,6 +345,7 @@ end
 	eb = e("b", store_input=false)
 	ez = e("z", store_input=false)
 	en = e(nothing, store_input=false)
+	em = e(missing, store_input=false)
 	eas = e("a", store_input=true)
 	ebs = e("b", store_input=true)
 	ezs = e("z", store_input=true)
@@ -259,6 +354,7 @@ end
 	@test eb.data[:] ≈ [0, 1, 0]
 	@test ez.data[:] ≈ [0, 0, 1]
 	@test en.data[:] ≈ [0, 0, 1]
+	@test em.data[:] ≈ [0, 0, 1]
 	@test typeof(ea.data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
 	@test typeof(en.data) == Flux.OneHotMatrix{Array{Flux.OneHotVector,1}}
 
@@ -386,12 +482,12 @@ end
 end
 
 @testset "Extractor of numbers as strings" begin
-	j1 = JSON.parse("""{"a": "1", "b": "a", "c": "1.1", "d": 1.1, "e": "1.2", "f": 1}""")
-	j2 = JSON.parse("""{"a": "2", "b": "b", "c": "2", "d": 2, "e": "1.3", "f": 2}""")
-	j3 = JSON.parse("""{"a": "3", "b": "c", "c": "2.3", "d": 2.3, "e": "1.4", "f": 3}""")
-	j4 = JSON.parse("""{"a": "4", "b": "c", "c": "5", "d": 5, "e": "1.4", "f": 3}""")
-
-	sch = JsonGrinder.schema([j1, j2, j3, j4])
+	j1 = JSON.parse("""{"a": "1", "b": "a", "c": "1.1", "d": 1.1, "e": "1.2", "f": 1, "g": "1"}""")
+	j2 = JSON.parse("""{"a": "2", "b": "b", "c": "2",   "d": 2, "e": "1.3", "f": 2, "g": "2"}""")
+	j3 = JSON.parse("""{"a": "3", "b": "c", "c": "2.3", "d": 2.3, "e": "1.4", "f": 3, "g": "3"}""")
+	j4 = JSON.parse("""{"a": "4", "b": "c", "c": "5",   "d": 5, "e": "1.4", "f": 3, "g": "4"}""")
+	j5_200 = [JSON.parse("""{"a": "5", "b": "$("c"^i)", "c": "5", "d": $(5+i/10), "e": "1.4", "f": 3, "g": "$i"}""") for i in 5:200]
+	sch = JsonGrinder.schema([j1, j2, j3, j4, j5_200...])
 	ext = suggestextractor(sch)
 
 	@test ext[:a].datatype <: Float32
