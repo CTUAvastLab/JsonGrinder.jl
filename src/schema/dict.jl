@@ -66,7 +66,11 @@ function suggestextractor(e::DictEntry, settings = NamedTuple(); path = "")
 	c = filter(s -> s[2] != nothing, c)
 	isempty(c) && return nothing
 	mask = map(i -> extractsmatrix(i[2]), c)
-	ExtractDict(Dict(c[mask]),Dict(c[.! mask]))
+	if merge_scalars()
+		ExtractDict(Dict(c[mask]),Dict(c[.! mask]))
+	else
+		ExtractDict(nothing, Dict(c))
+	end
 end
 
 function key_as_field(e::DictEntry, settings; path = "")

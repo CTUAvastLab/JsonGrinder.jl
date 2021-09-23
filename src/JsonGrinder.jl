@@ -9,16 +9,7 @@ const FloatType = Float32
 
 include("switches.jl")
 include("schema/schema.jl")
-include("extractors/auxiliary.jl")
-include("extractors/extractarray.jl")
-include("extractors/extractdict.jl")
-include("extractors/extractcategorical.jl")
-include("extractors/extractscalar.jl")
-include("extractors/extractstring.jl")
-include("extractors/extractvector.jl")
-include("extractors/extractonehot.jl")
-include("extractors/extract_keyasfield.jl")
-include("extractors/multirepresentation.jl")
+include("extractors/extractors.jl")
 include("html_show_tools.jl")
 include("hierarchical_utils.jl")
 
