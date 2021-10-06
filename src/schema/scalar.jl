@@ -114,7 +114,7 @@ function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "", 
 end
 
 # todo: here add argument and decide if it should be full or not
-function default_scalar_extractor()
+function default_scalar_extractor(categorical_min_occurences=10, categorical_max_dimension=min(10000, max_keys()))
 	[
 	(e -> length(keys(e)) <= 100 && is_numeric_or_numeric_string(e),
 		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),
@@ -123,7 +123,7 @@ function default_scalar_extractor()
 	(e -> is_floatable(e),
 	 	(e, uniontypes) -> extractscalar(FloatType, e, uniontypes)),
 	# it's important that condition here would be lower than maxkeys
-	(e -> (keys_len = length(keys(e)); keys_len / sum(values(e.counts)) < 0.1 && keys_len < 10000 && !is_numeric_or_numeric_string(e)),
+	(e -> (keys_len = length(keys(e)); categorical_min_occurences * keys_len <= sum(values(e.counts)) && keys_len < categorical_max_dimension && !is_numeric_or_numeric_string(e)),
 		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),
 	(e -> true,
 		(e, uniontypes) -> extractscalar(unify_types(e), e, uniontypes)),]
