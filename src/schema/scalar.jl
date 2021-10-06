@@ -103,13 +103,13 @@ function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "")
 	t = unify_types(e::Entry)
 	t == Any && @error "$(path): JSON does not have a fixed type scheme, quitting"
 
-	for (c, ex) in get(settings, :scalar_extractors, default_scalar_extractor())
+	for (c, ex) in get(settings, :scalar_extractors, basic_scalar_extractor())
 		c(e) && return ex(e)
 	end
 end
 
-function default_scalar_extractor()
-	[(e -> (keys_len = length(keys(e)); keys_len / sum(values(e.counts)) < 0.1 && keys_len < min(10000, max_keys())),
+function basic_scalar_extractor(categorical_min_occurences=10, categorical_max_dimension=min(10000, max_keys()))
+	[(e -> (keys_len = length(keys(e)); categorical_min_occurences * keys_len <= sum(values(e.counts)) && keys_len < categorical_max_dimension,
 		e -> ExtractCategorical(keys(e))),
 	 (e -> is_intable(e),
 		e -> extractscalar(Int32, e)),
