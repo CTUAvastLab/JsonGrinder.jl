@@ -108,8 +108,8 @@ function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "")
 	end
 end
 
-function default_scalar_extractor()
-	[(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len <= 10000),
+function default_scalar_extractor(categorical_min_occurences=10, categorical_max_dimension=min(10000, max_keys()))
+	[(e -> (keys_len = length(keys(e)); categorical_min_occurences * keys_len <= sum(values(e.counts)) && keys_len < categorical_max_dimension),
 		e -> ExtractCategorical(keys(e))),
 	 (e -> is_intable(e),
 		e -> extractscalar(Int32, e)),
