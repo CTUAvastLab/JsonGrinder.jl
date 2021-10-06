@@ -123,7 +123,7 @@ function default_scalar_extractor()
 	(e -> is_floatable(e),
 	 	(e, uniontypes) -> extractscalar(FloatType, e, uniontypes)),
 	# it's important that condition here would be lower than maxkeys
-	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !is_numeric_or_numeric_string(e)),
+	(e -> (keys_len = length(keys(e)); keys_len / sum(values(e.counts)) < 0.1 && keys_len < 10000 && !is_numeric_or_numeric_string(e)),
 		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),
 	(e -> true,
 		(e, uniontypes) -> extractscalar(unify_types(e), e, uniontypes)),]
