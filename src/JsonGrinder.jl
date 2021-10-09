@@ -1,7 +1,6 @@
 module JsonGrinder
 using Mill, JSON, Printf, Flux
 using HierarchicalUtils
-import HierarchicalUtils: NodeType, children, InnerNode, LeafNode, printtree, noderepr
 
 using Mill: ArrayNode, BagNode, ProductNode, catobs, NGramMatrix
 
@@ -17,7 +16,7 @@ include("util.jl")
 export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString, AuxiliaryExtractor, ExtractKeyAsField
 export suggestextractor, schema, extractbatch, generate_html
 
-Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = print(io, Base.nameof(T))
+Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = print(io, nameof(T))
 Base.show(io::IO, ::MIME"text/plain", @nospecialize(n::Union{JSONEntry, AbstractExtractor})) = 
     HierarchicalUtils.printtree(io, n; trav=false, htrunc=3, vtrunc=3, breakline=false)
 Base.getindex(n::Union{JSONEntry, AbstractExtractor}, i::AbstractString) = HierarchicalUtils.walk(n, i)

@@ -79,11 +79,11 @@ julia> j1 = JSON.parse("{\\"a\\": 4, \\"b\\": {\\"a\\":1, \\"b\\": 1}}");
 julia> j2 = JSON.parse("{\\"a\\": 4, \\"b\\": {\\"a\\":1}}");
 
 julia> sch = JsonGrinder.schema([j1,j2])
-[Dict] (updated = 2)
-  ├── a: [Scalar - Int64], 1 unique values, updated = 2
-  └── b: [Dict] (updated = 2)
-           ├── a: [Scalar - Int64], 1 unique values, updated = 2
-           └── b: [Scalar - Int64], 1 unique values, updated = 1
+[Dict]        # updated = 2
+  ├── a: [Scalar - Int64], 1 unique values    # updated = 2
+  └── b: [Dict]       # updated = 2
+           ├── a: [Scalar - Int64], 1 unique values   # updated = 2
+           └── b: [Scalar - Int64], 1 unique values   # updated = 1
 
 julia> j3 = Dict("a" => 4, "b" => Dict("a"=>1), "c" => 1, "d" => 2)
 Dict{String, Any} with 4 entries:

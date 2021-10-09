@@ -16,16 +16,18 @@ and always returns Mill structure of type Union{Missing, T} due to type stabilit
 
 # Example
 ```jldoctest
+julia> using Mill: catobs
+
 julia> ExtractString(true)("hello")
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  "hello"
 
-julia> ExtractString(true)(["hello", "world"])
+julia> mapreduce(ExtractString(true), catobs, (["hello", "world"]))
 2053×2 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  "hello"
  "world"
-
-julia> ExtractString(true)(["hello", missing])
+ 
+ julia> ExtractString(true)(["hello", missing])
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  missing
 
@@ -37,10 +39,14 @@ julia> ExtractString(false)("hello")
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "hello"
 
-julia> ExtractString(false)(["hello", "world"])
+julia> mapreduce(ExtractString(false), catobs, (["hello", "world"]))
 2053×2 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "hello"
  "world"
+
+julia> ExtractString(false)(["hello", "world"])
+ERROR: This extractor does not support missing values
+
 ```
 """
 struct ExtractString <: AbstractExtractor

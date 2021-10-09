@@ -37,14 +37,14 @@ julia> mapreduce(e, catobs, [1,missing,5]).data
   true  missing   true
 
 julia> e(4).data
-4×1 MaybeHotMatrix{Union{Missing, UInt32},UInt32,Union{Missing, Bool}}:
+4×1 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
  false
  false
   true
  false
 
 julia> e(missing).data
-4×1 MaybeHotMatrix{Union{Missing, UInt32},UInt32,Union{Missing, Bool}}:
+4×1 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
  missing
  missing
  missing
@@ -60,11 +60,11 @@ julia> mapreduce(e, catobs, [2,3,1,4]).data
  0  0  1  0
 
 julia> e(4).data
-4×1 Flux.OneHotArray{4,2,Array{UInt32,1}}:
- 0
- 0
+4×1 OneHotArray{4,2,Array{UInt32,1}}:
+ .
+ .
  1
- 0
+ .
 ```
 """
 struct ExtractCategorical{V,I} <: AbstractExtractor
