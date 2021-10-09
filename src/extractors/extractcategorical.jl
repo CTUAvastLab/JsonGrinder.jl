@@ -20,17 +20,19 @@ If `uniontypes` is true, it allows extracting `missing` values and all extracted
 # Examples
 
 ```jldoctest
+julia> using Mill: catobs
+
 julia> e = ExtractCategorical(2:4, true);
 
 julia> mapreduce(e, catobs, [2,3,1,4]).data
-4×4 MaybeHotMatrix{Union{Missing, UInt32},UInt32,Union{Missing, Bool}}:
+4×4 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
   true  false  false  false
  false   true  false  false
  false  false  false   true
  false  false   true  false
 
 julia> mapreduce(e, catobs, [1,missing,5]).data
-4×3 MaybeHotMatrix{Union{Missing, UInt32},UInt32,Union{Missing, Bool}}:
+4×3 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
  false  missing  false
  false  missing  false
  false  missing  false
@@ -53,18 +55,18 @@ julia> e(missing).data
 julia> e = ExtractCategorical(2:4, false);
 
 julia> mapreduce(e, catobs, [2,3,1,4]).data
-4×4 Flux.OneHotArray{4,2,Array{UInt32,1}}:
- 1  0  0  0
- 0  1  0  0
- 0  0  0  1
- 0  0  1  0
+4×4 OneHotMatrix(::Vector{UInt32}) with eltype Bool:
+ 1  ⋅  ⋅  ⋅
+ ⋅  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1
+ ⋅  ⋅  1  ⋅
 
 julia> e(4).data
-4×1 OneHotArray{4,2,Array{UInt32,1}}:
- .
- .
+4×1 OneHotMatrix(::Vector{UInt32}) with eltype Bool:
+ ⋅
+ ⋅
  1
- .
+ ⋅
 ```
 """
 struct ExtractCategorical{V,I} <: AbstractExtractor

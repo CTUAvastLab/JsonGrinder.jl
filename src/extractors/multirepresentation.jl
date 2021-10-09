@@ -42,9 +42,9 @@ julia> s2[:e1]
 
 julia> s2[:e2]
 4×1 Mill.ArrayNode{OneHotArray{UInt32, 0x00000004, 1, 2, Vector{UInt32}}, Nothing}:
- 0
- 0
- 0
+ ⋅
+ ⋅
+ ⋅
  1
 ```
 

@@ -34,7 +34,7 @@ julia> res1[:b].data
  false
 
 julia> res2 = e(Dict("a"=>0))
-ProductNode   # 1 obs, 24 bytes
+ProductNode\t# 1 obs, 24 bytes
   ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements)   # 1 obs, 53 bytes
   └── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements)     # 1 obs, 77 bytes
 

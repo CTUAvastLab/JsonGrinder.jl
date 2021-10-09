@@ -27,8 +27,9 @@ julia> mapreduce(ExtractString(true), catobs, (["hello", "world"]))
  "hello"
  "world"
  
- julia> ExtractString(true)(["hello", missing])
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+julia> mapreduce(ExtractString(true), catobs, ["hello", missing])
+2053×2 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+ "hello"
  missing
 
 julia> ExtractString(true)(missing)
