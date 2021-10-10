@@ -434,7 +434,7 @@ end
 					Tuple{
 						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
 						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
-						ArrayNode{OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
+						ArrayNode{Flux.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
 					}},
 				Nothing},
 			AlignedBags{Int64}, Nothing}}}, Nothing}
@@ -482,7 +482,7 @@ end
 						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing}
 					}},
 				Nothing},
-				ArrayNode{OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
+				ArrayNode{Flux.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
 			}},
 		Nothing}
 	end
