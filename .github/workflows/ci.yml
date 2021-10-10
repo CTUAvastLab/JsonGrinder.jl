@@ -63,6 +63,8 @@ jobs:
         env:
           PYTHON: ""
       - uses: julia-actions/julia-runtest@v1
+        with:
+          prefix: julia --color=yes --project=. -e 'using Pkg; pkg"add Mill#master"'
         env:
           PYTHON: ""
       - run: julia --color=yes --project=./examples -e 'using Pkg; Pkg.instantiate()'
