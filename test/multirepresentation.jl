@@ -40,11 +40,11 @@ using Mill: nobs
 			ExtractString(true)))
 		e = ex("Olda")
 		@test e[:e1].data.data == fill(1,1,0)
-		@test e[:e2].data.s == ["Olda"]
+		@test e[:e2].data.S == ["Olda"]
 
 		e = ex([1,2])
 		@test e[:e1].data.data == [1 2]
-		@test e[:e2].data.s ≃ [missing]
+		@test e[:e2].data.S ≃ [missing]
 
 		ex = MultipleRepresentation([
         	ExtractCategorical(["packer", "plain"], true),
