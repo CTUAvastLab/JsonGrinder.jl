@@ -115,9 +115,9 @@ end
 
 	@test buf_printtree(e, trav=true) ==
 	"""
-	ProductNode with 1 obs [""]
-	  ├── e1: ArrayNode(4×1 MaybeHotMatrix with Union{Missing, Bool} elements) with 1 obs ["E"]
-	  └── e2: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) with 1 obs ["U"]
+	ProductNode [""] \t# 1 obs, 48 bytes
+	  ├── e1: ArrayNode(4×1 MaybeHotMatrix with Union{Missing, Bool} elements) ["E"] \t# 1 obs, 77 bytes
+	  └── e2: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) ["U"] \t# 1 obs, 124 bytes
 	"""
 
 	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"], false),
@@ -133,8 +133,8 @@ end
 
 	@test buf_printtree(e, trav=true) ==
 	"""
-	ProductNode with 1 obs [""]
-	  ├── e1: ArrayNode(4×1 OneHotArray with Bool elements) with 1 obs ["E"]
-	  └── e2: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs ["U"]
+	ProductNode [""] \t# 1 obs, 40 bytes
+	  ├── e1: ArrayNode(4×1 OneHotArray with Bool elements) ["E"] \t# 1 obs, 60 bytes
+	  └── e2: ArrayNode(2053×1 NGramMatrix with Int64 elements) ["U"] \t# 1 obs, 124 bytes
 	"""
 end
