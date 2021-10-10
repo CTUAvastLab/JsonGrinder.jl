@@ -12,7 +12,7 @@ by `item`. The entire array is assumed to be a single bag.
 julia> ec = ExtractArray(ExtractCategorical(2:4));
 
 julia> ec([2,3,1,4]).data
-4×4 Mill.ArrayNode{Mill.MaybeHotMatrix{Union{Missing, Int64}, Int64, Union{Missing, Bool}}, Nothing}:
+4×4 Mill.ArrayNode{Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing}:
   true  false  false  false
  false   true  false  false
  false  false  false   true
@@ -21,8 +21,8 @@ julia> ec([2,3,1,4]).data
 julia> es = ExtractArray(ExtractScalar());
 
 julia> es([2,3,4])
-BagNode with 1 obs
-  └── ArrayNode(1×3 Array with Union{Missing, Float32} elements) with 3 obs
+BagNode \t# 1 obs, 80 bytes
+  └── ArrayNode(1×3 Array with Union{Missing, Float32} elements) \t# 3 obs, 63 bytes
 
 julia> es([2,3,4]).data
 1×3 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:

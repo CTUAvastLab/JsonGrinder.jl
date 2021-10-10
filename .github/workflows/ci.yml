@@ -26,9 +26,9 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.5' # Replace this with the minimum Julia version that your package supports.
+          - '1.6' # Replace this with the minimum Julia version that your package supports.
           - '1' # Leave this line unchanged. '1' will automatically expand to the latest stable 1.x release of Julia.
-          # - '1.6.0-nightly'
+          - '1.7.0-rc1'
         os:
           - ubuntu-latest
           # - windows-latest
@@ -59,6 +59,7 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
+      - run: julia --color=yes --project=. -e 'using Pkg; pkg"add Mill#master"'
       - uses: julia-actions/julia-buildpkg@v1
         env:
           PYTHON: ""

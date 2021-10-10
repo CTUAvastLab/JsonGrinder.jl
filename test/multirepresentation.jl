@@ -40,11 +40,11 @@ using Mill: nobs
 			ExtractString(true)))
 		e = ex("Olda")
 		@test e[:e1].data.data == fill(1,1,0)
-		@test e[:e2].data.s == ["Olda"]
+		@test e[:e2].data.S == ["Olda"]
 
 		e = ex([1,2])
 		@test e[:e1].data.data == [1 2]
-		@test e[:e2].data.s ≃ [missing]
+		@test e[:e2].data.S ≃ [missing]
 
 		ex = MultipleRepresentation([
         	ExtractCategorical(["packer", "plain"], true),
@@ -115,9 +115,9 @@ end
 
 	@test buf_printtree(e, trav=true) ==
 	"""
-	ProductNode with 1 obs [""]
-	  ├── e1: ArrayNode(4×1 MaybeHotMatrix with Union{Missing, Bool} elements) with 1 obs ["E"]
-	  └── e2: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) with 1 obs ["U"]
+	ProductNode [""] \t# 1 obs, 48 bytes
+	  ├── e1: ArrayNode(4×1 MaybeHotMatrix with Union{Missing, Bool} elements) ["E"] \t# 1 obs, 77 bytes
+	  └── e2: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) ["U"] \t# 1 obs, 124 bytes
 	"""
 
 	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"], false),
@@ -133,8 +133,8 @@ end
 
 	@test buf_printtree(e, trav=true) ==
 	"""
-	ProductNode with 1 obs [""]
-	  ├── e1: ArrayNode(4×1 OneHotArray with Bool elements) with 1 obs ["E"]
-	  └── e2: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs ["U"]
+	ProductNode [""] \t# 1 obs, 40 bytes
+	  ├── e1: ArrayNode(4×1 OneHotArray with Bool elements) ["E"] \t# 1 obs, 60 bytes
+	  └── e2: ArrayNode(2053×1 NGramMatrix with Int64 elements) ["U"] \t# 1 obs, 124 bytes
 	"""
 end

@@ -37,7 +37,7 @@ end
 
 @testset "onehot hcat" begin
 	X1 = Flux.onehotbatch([1,2,3,4,5], 1:10)
-	@test @which(hcat(X1,X1)).module == JsonGrinder
+	@test @which(hcat(X1,X1)).module == Flux
 	@test @which(reduce(hcat, [X1,X1])).module == JsonGrinder
 
 	@test hcat(X1,X1) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)

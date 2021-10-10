@@ -591,14 +591,14 @@ end
 	e = ExtractString(true)
 	ehello = e("Hello", store_input=false)
 	ehellos = e("Hello", store_input=true)
-	@test ehello.data.s == ["Hello"]
+	@test ehello.data.S == ["Hello"]
 	@test ehello.data == ehellos.data
-	@test e(Symbol("Hello")).data.s == ["Hello"]
-	@test e(["Hello", "world"]).data.s ≃ [missing]
-	@test mapreduce(e, catobs, ["Hello", "world"]).data.s == ["Hello", "world"]
+	@test e(Symbol("Hello")).data.S == ["Hello"]
+	@test e(["Hello", "world"]).data.S ≃ [missing]
+	@test mapreduce(e, catobs, ["Hello", "world"]).data.S == ["Hello", "world"]
 
-	@test e(missing).data.s ≃ [missing]
-	@test e(nothing).data.s ≃ [missing]
+	@test e(missing).data.S ≃ [missing]
+	@test e(nothing).data.S ≃ [missing]
 	@test isequal(e(Dict(1=>2)), e(missing))
 	@test ehello isa ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing}
 	@test ehello.data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
@@ -608,10 +608,10 @@ end
 	@test nobs(e(extractempty)) == 0
 
 	e = ExtractString(false)
-	@test e("Hello").data.s == ["Hello"]
-	@test e(Symbol("Hello")).data.s == ["Hello"]
-	@test_throws ErrorException e(["Hello", "world"]).data.s
-	@test mapreduce(e, catobs, ["Hello", "world"]).data.s == ["Hello", "world"]
+	@test e("Hello").data.S == ["Hello"]
+	@test e(Symbol("Hello")).data.S == ["Hello"]
+	@test_throws ErrorException e(["Hello", "world"]).data.S
+	@test mapreduce(e, catobs, ["Hello", "world"]).data.S == ["Hello", "world"]
 	@test_throws ErrorException e(missing)
 	@test_throws ErrorException e(nothing)
 	@test_throws ErrorException e(Dict(1=>2))
@@ -629,7 +629,7 @@ end
 	b = ext(js[1])
 	k = only(keys(js[1]))
 	@test b.data[:item].data[1] ≈ (js[1][k] - ext.item.c) * ext.item.s
-	@test b.data[:key].data.s[1] == k
+	@test b.data[:key].data.S[1] == k
 
 	with_emptyismissing(true) do
 		b = ext(nothing)
@@ -667,7 +667,7 @@ end
 	i = ext.item(js[1][k])
 	@test b.data[:item][:a].data == i[:a].data
 	@test b.data[:item][:b].data == i[:b].data
-	@test b.data[:key].data.s[1] == k
+	@test b.data[:key].data.S[1] == k
 	@test isnothing(b.data[:key].metadata)
 	@test isnothing(b.data[:item][:a].metadata)
 	@test isnothing(b.data[:item][:b].metadata)
@@ -838,13 +838,13 @@ end
 
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) == """
-	ProductModel … ↦ ArrayModel(Dense(52, 10))
-	  ├── a: ArrayModel(Dense(6, 10))
-	  ├── b: ArrayModel(Dense(2053, 10))
-	  ├── c: ArrayModel(Dense(5, 10))
+	ProductModel ↦ ArrayModel(Dense(52, 10)) \t# 2 arrays, 530 params, 2.148 KiB
+	  ├── a: ArrayModel(Dense(6, 10)) \t# 2 arrays, 70 params, 360 bytes
+	  ├── b: ArrayModel(Dense(2053, 10)) \t# 2 arrays, 20_540 params, 80.312 KiB
+	  ├── c: ArrayModel(Dense(5, 10)) \t# 2 arrays, 60 params, 320 bytes
 	  ├── d: ArrayModel(identity)
-	  ├── e: ArrayModel(Dense(4, 10))
-	  ├── f: ArrayModel(Dense(4, 10))
+	  ├── e: ArrayModel(Dense(4, 10)) \t# 2 arrays, 50 params, 280 bytes
+	  ├── f: ArrayModel(Dense(4, 10)) \t# 2 arrays, 50 params, 280 bytes
 	  └── g: ArrayModel(identity)
 	"""
 end
@@ -990,7 +990,7 @@ end
 	ext = suggestextractor(sch, testing_settings)
 	a = ext(j1)
 	@test a[:a][:e1].data[1] == 0.5
-	@test ismissing(a[:a][:e2].data[:a].data.s[1])
+	@test ismissing(a[:a][:e2].data[:a].data.S[1])
 	@test nobs(a[:a][:e3]) == 1
 	@test nobs(a[:a][:e3].data) == 1
 end
@@ -1056,14 +1056,14 @@ end
 
 	@test buf_printtree(sch) ==
 	"""
-	[Dict] (updated = 7)
-	  └── a: [MultiEntry] (updated = 7)
-	           ├── 1: [Scalar - String], 3 unique values, updated = 3
-	           ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
-	           ├── 3: [List] (updated = 1)
-	           │        └── [Scalar - Int64], 5 unique values, updated = 5
-	           └── 4: [Dict] (updated = 1)
-	                    └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values, updated = 1
+	[Dict] \t# updated = 7
+	  └── a: [MultiEntry] \t# updated = 7
+	           ├── 1: [Scalar - String], 3 unique values \t# updated = 3
+	           ├── 2: [Scalar - Float64,Int64], 2 unique values \t# updated = 2
+	           ├── 3: [List] \t# updated = 1
+	           │        └── [Scalar - Int64], 5 unique values \t# updated = 5
+	           └── 4: [Dict] \t# updated = 1
+	                    └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values \t# updated = 1
 	"""
 
 	@test buf_printtree(ext, trav=true) ==
@@ -1088,12 +1088,12 @@ end
 	@test e5["s"].data ≈ [0.875]
 	@test buf_printtree(e1) ==
 	"""
-	ProductNode with 1 obs
-	  └── a: ProductNode with 1 obs
-	           ├── e1: ArrayNode(5×1 Array with Union{Missing, Float32} elements) with 1 obs
-	           ├── e2: ProductNode with 1 obs
-	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) with 1 obs
-	           └── e3: ArrayNode(1×1 Array with Union{Missing, Float32} elements) with 1 obs
+	ProductNode \t# 1 obs, 48 bytes
+	  └── a: ProductNode \t# 1 obs, 48 bytes
+	           ├── e1: ArrayNode(5×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 73 bytes
+	           ├── e2: ProductNode \t# 1 obs, 32 bytes
+	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) \t# 1 obs, 112 bytes
+	           └── e3: ArrayNode(1×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 53 bytes
 	"""
 	@test ext[:a][1] == ext["c"]
 end
@@ -1110,12 +1110,12 @@ end
 
 	@test buf_printtree(sch) ==
 	"""
-	[Dict] (updated = 5)
-	  └── a: [MultiEntry] (updated = 5)
-	           ├── 1: [Scalar - String], 2 unique values, updated = 2
-	           ├── 2: [Scalar - Float64,Int64], 2 unique values, updated = 2
-	           └── 3: [List] (updated = 1)
-	                    └── [Scalar - Int64], 5 unique values, updated = 5
+	[Dict] \t# updated = 5
+	  └── a: [MultiEntry] \t# updated = 5
+	           ├── 1: [Scalar - String], 2 unique values \t# updated = 2
+	           ├── 2: [Scalar - Float64,Int64], 2 unique values \t# updated = 2
+	           └── 3: [List] \t# updated = 1
+	                    └── [Scalar - Int64], 5 unique values \t# updated = 5
 	"""
 
 	@test buf_printtree(ext) ==
@@ -1155,7 +1155,7 @@ end
 	@test c == ""
 	ext = JsonGrinder.extractscalar(AbstractString)
 	@test SparseMatrixCSC(ext(c).data) == SparseMatrixCSC(ext(e).data)
-	@test all(ext(f).data.s .=== ext(nothing).data.s)
+	@test all(ext(f).data.S .=== ext(nothing).data.S)
 
 	@test ext(f, store_input=true) != ext(nothing, store_input=true)
 	@test ext(f, store_input=true).data ≃ ext(nothing, store_input=true).data
@@ -1204,16 +1204,16 @@ end
 	ext_j2 = ext(j2)
 	@test buf_printtree(ext_j2) ==
     """
-	ProductNode with 1 obs
-	  └── a: BagNode with 1 obs
-	           └── ArrayNode(1×2 Array with Float32 elements) with 2 obs
+	ProductNode \t# 1 obs, 16 bytes
+	  └── a: BagNode \t# 1 obs, 80 bytes
+	           └── ArrayNode(1×2 Array with Float32 elements) \t# 2 obs, 56 bytes
 	"""
 
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) ==
     """
-	ProductModel … ↦ ArrayModel(identity)
-	  └── a: BagModel … ↦ BagCount([SegmentedMean(1); SegmentedMax(1)]) ↦ ArrayModel(Dense(3, 10))
+	ProductModel ↦ ArrayModel(identity)
+	  └── a: BagModel ↦ BagCount([SegmentedMean(1); SegmentedMax(1)]) ↦ ArrayModel(Dense(3, 10)) \t# 4 arrays, 42 params, 328 bytes
 	           └── ArrayModel(identity)
 	"""
 end
