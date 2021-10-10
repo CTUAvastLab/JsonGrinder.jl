@@ -674,6 +674,16 @@ end
 	@test sch.childs[:k].counts == Dict("a"=>2, "b"=>2)
 end
 
+function with_max_keys(f::Function, a)
+    orig_val = JsonGrinder.max_keys()
+    JsonGrinder.updatemaxkeys!(a)
+	try
+    	f()
+	finally
+	    JsonGrinder.updatemaxkeys!(orig_val)
+	end
+end
+
 @testset "Merge inplace" begin
 	j1 = JSON.parse("""{"a": 1}""")
 	j2 = JSON.parse("""{"a": 2}""")
@@ -685,8 +695,7 @@ end
 	# todo: test how newentry works with array with multiple elements
 	sch1 = JsonGrinder.schema([j1,j2,j3])
 	sch2 = JsonGrinder.schema([j4,j5,j6])
-	sch1[:a]
-	sch2[:a]
+	
 	@test sch1[:a].counts == Dict(2=>1,3=>1,1=>1)
 	@test sch1[:a].updated == 3
 	@test sch2[:a].counts == Dict(2=>1,3=>1,1=>1)
@@ -694,6 +703,18 @@ end
 	JsonGrinder.merge_inplace!(sch1[:a], sch2[:a])
 	@test sch1[:a].counts == Dict(2=>2,3=>2,1=>2)
 	@test sch1[:a].updated == 6
+
+	sch1 = JsonGrinder.schema([j1,j2,j3])
+	sch2 = JsonGrinder.schema([j4,j5,j6])
+	with_max_keys(2) do
+		@test sch1[:a].counts == Dict(2=>1,3=>1,1=>1)
+		@test sch1[:a].updated == 3
+		@test sch2[:a].counts == Dict(2=>1,3=>1,1=>1)
+		@test sch2[:a].updated == 3
+		JsonGrinder.merge_inplace!(sch1[:a], sch2[:a])
+		@test sch1[:a].counts == Dict(2=>2,3=>2)
+		@test sch1[:a].updated == 6
+	end
 end
 
 @testset "Merging of irregular schemas" begin

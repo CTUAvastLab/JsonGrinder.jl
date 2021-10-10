@@ -17,8 +17,6 @@ end
 
 is_numeric(s::AbstractString, T::Type{<:Number}) = tryparse(T, s) isa Number
 is_real_numeric(s::AbstractString, T::Type{<:Real}) = tryparse(T, s) isa Real
-isfloat(s::AbstractString) = is_numeric(s, Float64)
-isint(s::AbstractString) = is_numeric(s, Int64)
 
 Entry(s::T) where {T<:Number} = Entry(Dict{Number,Int}(),0)
 function Entry(s::T) where {T<:AbstractString}
@@ -35,8 +33,6 @@ is_castable(e, T::Type{<:Number}) = unify_types(e) <: T || unify_types(e) <: Abs
 is_intable(e) = is_castable(e, Int32)
 is_floatable(e) = is_castable(e, FloatType)
 is_numeric_entry(e, T::Type{<:Number}) = unify_types(e) <: T
-is_int_entry(e) = is_numeric_entry(e, Integer)
-is_float_entry(e) = is_numeric_entry(e, AbstractFloat)
 
 shorten_if_str(v) = v
 shorten_if_str(v::AbstractString) = length(v) > max_len() ? "$(first(v, max_len()))_$(length(v))_$(bytes2hex(sha1(v)))" : v

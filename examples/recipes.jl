@@ -23,14 +23,14 @@ sch = JsonGrinder.schema(samples)
 delete!(sch.childs,:id)
 
 extractor = suggestextractor(sch)
-
+# todo: figure out why I have maybe missings in targets
 extract_data = ExtractDict(deepcopy(extractor.dict))
 extract_target = ExtractDict(deepcopy(extractor.dict))
 delete!(extract_target.dict, :ingredients)
 delete!(extract_data.dict, :cuisine)
-extract_target.dict[:cuisine] = JsonGrinder.ExtractCategorical(keys(sch[:cuisine]))
 
 extract_data(JsonGrinder.sample_synthetic(sch))
+extract_target(samples[1])[:cuisine]
 ###############################################################
 # we convert JSONs to Datasets
 ###############################################################

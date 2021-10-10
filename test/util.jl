@@ -42,6 +42,8 @@ end
 
 	@test hcat(X1,X1) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
 	@test reduce(hcat, [X1,X1]) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
+	@test reduce(catobs, [X1,X1]) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
+	@test catobs(X1,X1) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
 
 	X2 = Flux.onehotbatch([1,2,3,4,5,6], 1:12)
 	@test_throws DimensionMismatch hcat(X1,X2)
