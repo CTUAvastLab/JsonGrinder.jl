@@ -432,12 +432,12 @@ end
 			Tuple{BagNode{
 				ProductNode{NamedTuple{(:a, :b, :c),
 					Tuple{
-						ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}},Nothing},
-						ArrayNode{OneHotMatrix{UInt32, UInt32(2), Vector{UInt32}},Nothing}
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
+						ArrayNode{OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
 					}},
 				Nothing},
-			AlignedBags{Int64},Nothing}}},Nothing}
+			AlignedBags{Int64}, Nothing}}}, Nothing}
 	end
 
 	@testset "with missing nested dicts" begin
@@ -477,12 +477,12 @@ end
 			Tuple{
 				ProductNode{NamedTuple{(:a, :b, :c),
 					Tuple{
-						ArrayNode{NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}},Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}},Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}},Nothing}
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing}
 					}},
 				Nothing},
-				ArrayNode{OneHotMatrix{UInt32, UInt32(2), Vector{UInt32}},Nothing}
+				ArrayNode{OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
 			}},
 		Nothing}
 	end

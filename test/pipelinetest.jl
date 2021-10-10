@@ -69,7 +69,7 @@ end
 	j5 = JSON.parse("""{}""")
 
 	sch = JsonGrinder.schema([j1,j2,j3,j4, j5])
-	ext = suggestextractor(sch)
+	ext = suggestextractor(sch, testing_settings)
 	dss = ext.([j1,j2,j3,j4,j5])
 	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k, 10, relu))
@@ -115,36 +115,36 @@ end
 		(ext["w"], ds["w"]),
 	]
 	@test buf_printtree(sch) == """
-	[Dict] (updated = 5)
-	  └── a: [List] (updated = 4)
-	           └── [Dict] (updated = 5)
-	                 ├── a: [Scalar - Int64], 2 unique values, updated = 4
-	                 ├── b: [Scalar - Int64], 2 unique values, updated = 4
-	                 └── c: [Scalar - String], 3 unique values, updated = 3
+	[Dict] \t# updated = 5
+	  └── a: [List] \t# updated = 4
+	           └── [Dict] \t# updated = 5
+	                 ├── a: [Scalar - Int64], 2 unique values \t# updated = 4
+	                 ├── b: [Scalar - Int64], 2 unique values \t# updated = 4
+	                 └── c: [Scalar - String], 3 unique values \t# updated = 3
 	"""
 	@test buf_printtree(ext) == """
 	Dict
 	  └── a: Array of
 	           └── Dict
-	                 ├── a: Categorical d = 3
-	                 ├── b: Categorical d = 3
+	                 ├── a: Float32
+	                 ├── b: Float32
 	                 └── c: String
 	"""                 
 	@test buf_printtree(m) == """
-	ProductModel … ↦ ArrayModel(identity)
-	  └── a: BagModel … ↦ BagCount([SegmentedMean(10); SegmentedMax(10)]) ↦ ArrayModel(Dense(21, 10, relu))
-	           └── ProductModel … ↦ ArrayModel(Dense(30, 10, relu))
-	                 ├── a: ArrayModel([post_imputing]Dense(3, 10, relu))
-	                 ├── b: ArrayModel([post_imputing]Dense(3, 10, relu))
-	                 └── c: ArrayModel([post_imputing]Dense(2053, 10, relu))
+	ProductModel ↦ ArrayModel(identity)
+	  └── a: BagModel ↦ BagCount([SegmentedMean(10); SegmentedMax(10)]) ↦ ArrayModel(Dense(21, 10, relu)) \t# 4 arrays, 240 params, 1.094 KiB
+	           └── ProductModel ↦ ArrayModel(Dense(12, 10, relu)) \t# 2 arrays, 130 params, 600 bytes
+	                 ├── a: ArrayModel([preimputing]Dense(1, 1)) \t# 2 arrays, 2 params, 148 bytes
+	                 ├── b: ArrayModel([preimputing]Dense(1, 1)) \t# 2 arrays, 2 params, 148 bytes
+	                 └── c: ArrayModel([postimputing]Dense(2053, 10, relu)) \t# 2 arrays, 20_540 params, 80.406 KiB
 	"""
 	@test buf_printtree(ds) == """
-	ProductNode with 5 obs
-	  └── a: BagNode with 5 obs
-	           └── ProductNode with 5 obs
-	                 ├── a: ArrayNode(3×5 MaybeHotMatrix with Union{Missing, Bool} elements) with 5 obs
-	                 ├── b: ArrayNode(3×5 MaybeHotMatrix with Union{Missing, Bool} elements) with 5 obs
-	                 └── c: ArrayNode(2053×5 NGramMatrix with Union{Missing, Int64} elements) with 5 obs
+	ProductNode \t# 5 obs, 56 bytes
+	  └── a: BagNode \t# 5 obs, 184 bytes
+	           └── ProductNode \t# 5 obs, 48 bytes
+	                 ├── a: ArrayNode(1×5 Array with Union{Missing, Float32} elements) \t# 5 obs, 73 bytes
+	                 ├── b: ArrayNode(1×5 Array with Union{Missing, Float32} elements) \t# 5 obs, 73 bytes
+	                 └── c: ArrayNode(2053×5 NGramMatrix with Union{Missing, Int64} elements) \t# 5 obs, 176 bytes
 	"""
 
 	@test m[""].m.m == identity

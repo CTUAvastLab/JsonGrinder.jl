@@ -1058,12 +1058,12 @@ end
 	"""
 	[Dict] \t# updated = 7
 	  └── a: [MultiEntry] \t# updated = 7
-			   ├── 1: [Scalar - String], 3 unique values \t# updated = 3
-			   ├── 2: [Scalar - Float64,Int64], 2 unique values \t# updated = 2
-			   ├── 3: [List] \t# updated = 1
-			   │        └── [Scalar - Int64], 5 unique values \t# updated = 5
-			   └── 4: [Dict] \t# updated = 1
-					    └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values \t# updated = 1
+	           ├── 1: [Scalar - String], 3 unique values \t# updated = 3
+	           ├── 2: [Scalar - Float64,Int64], 2 unique values \t# updated = 2
+	           ├── 3: [List] \t# updated = 1
+	           │        └── [Scalar - Int64], 5 unique values \t# updated = 5
+	           └── 4: [Dict] \t# updated = 1
+	                    └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values \t# updated = 1
 	"""
 
 	@test buf_printtree(ext, trav=true) ==
@@ -1090,10 +1090,10 @@ end
 	"""
 	ProductNode \t# 1 obs, 48 bytes
 	  └── a: ProductNode \t# 1 obs, 48 bytes
-			   ├── e1: ArrayNode(5×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 73 bytes
-			   ├── e2: ProductNode \t# 1 obs, 32 bytes
-			   │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) \t# 1 obs, 112 bytes
-			   └── e3: ArrayNode(1×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 53 bytes
+	           ├── e1: ArrayNode(5×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 73 bytes
+	           ├── e2: ProductNode \t# 1 obs, 32 bytes
+	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) \t# 1 obs, 112 bytes
+	           └── e3: ArrayNode(1×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 53 bytes
 	"""
 	@test ext[:a][1] == ext["c"]
 end
@@ -1112,10 +1112,10 @@ end
 	"""
 	[Dict] \t# updated = 5
 	  └── a: [MultiEntry] \t# updated = 5
-			   ├── 1: [Scalar - String], 2 unique values \t# updated = 2
-			   ├── 2: [Scalar - Float64,Int64], 2 unique values \t# updated = 2
-			   └── 3: [List] \t# updated = 1
-					    └── [Scalar - Int64], 5 unique values \t# updated = 5
+	           ├── 1: [Scalar - String], 2 unique values \t# updated = 2
+	           ├── 2: [Scalar - Float64,Int64], 2 unique values \t# updated = 2
+	           └── 3: [List] \t# updated = 1
+	                    └── [Scalar - Int64], 5 unique values \t# updated = 5
 	"""
 
 	@test buf_printtree(ext) ==
@@ -1206,7 +1206,7 @@ end
     """
 	ProductNode \t# 1 obs, 16 bytes
 	  └── a: BagNode \t# 1 obs, 80 bytes
-			   └── ArrayNode(1×2 Array with Float32 elements) \t# 2 obs, 56 bytes
+	           └── ArrayNode(1×2 Array with Float32 elements) \t# 2 obs, 56 bytes
 	"""
 
 	m = reflectinmodel(sch, ext)
@@ -1214,7 +1214,7 @@ end
     """
 	ProductModel ↦ ArrayModel(identity)
 	  └── a: BagModel ↦ BagCount([SegmentedMean(1); SegmentedMax(1)]) ↦ ArrayModel(Dense(3, 10)) \t# 4 arrays, 42 params, 328 bytes
-			   └── ArrayModel(identity)
+	           └── ArrayModel(identity)
 	"""
 end
 
