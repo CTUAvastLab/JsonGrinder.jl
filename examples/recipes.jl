@@ -23,7 +23,7 @@ sch = JsonGrinder.schema(samples)
 delete!(sch.childs,:id)
 
 extractor = suggestextractor(sch)
-
+# todo: figure out why I have maybe missings in targets
 extract_data = ExtractDict(deepcopy(extractor.dict))
 extract_target = ExtractDict(deepcopy(extractor.dict))
 delete!(extract_target.dict, :ingredients)
@@ -59,11 +59,13 @@ data, target = data[1_001:5_000], target[:,1001:5_000]
 # for less recourse-chungry training, we use only part of data for trainng, but it is advised to used all, as i following line:
 # data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
 
-cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata[1]).data) .== Flux.onecold(valdata[2])))
+cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata[1]).data) .== Flux.onecold(Matrix(valdata[2]))))
 #iterations = 1000
 iterations = 100
 ps = Flux.params(m)
-mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
+# until https://github.com/CTUAvastLab/Mill.jl/issues/83 is fixed
+# this is hacky, but I cast to dense matrix
+mean(Flux.onecold(m(data).data) .== Flux.onecold(Matrix(target)))
 
 @info "testing the gradient"
 loss(data, target)
@@ -75,7 +77,7 @@ Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 20), opt, cb = F
 # Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 500), opt, cb = Flux.throttle(cb, 10))
 
 #calculate the accuracy
-mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
+mean(Flux.onecold(m(data).data) .== Flux.onecold(Matrix(target)))
 
 # samples = open("recipes_test.json","r") do fid
 # 	Array{Dict}(JSON.parse(readstring(fid)))
