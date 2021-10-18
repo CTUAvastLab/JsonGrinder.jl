@@ -25,28 +25,28 @@ julia> using Mill: catobs
 julia> e = ExtractCategorical(2:4, true);
 
 julia> mapreduce(e, catobs, [2,3,1,4]).data
-4×4 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
-  true  false  false  false
- false   true  false  false
- false  false  false   true
- false  false   true  false
+4×4 MaybeHotMatrix with eltype Union{Missing, Bool}:
+  true    ⋅      ⋅      ⋅
+   ⋅     true    ⋅      ⋅
+   ⋅      ⋅      ⋅     true
+   ⋅      ⋅     true    ⋅
 
 julia> mapreduce(e, catobs, [1,missing,5]).data
-4×3 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
- false  missing  false
- false  missing  false
- false  missing  false
+4×3 MaybeHotMatrix with eltype Union{Missing, Bool}:
+   ⋅    missing    ⋅
+   ⋅    missing    ⋅
+   ⋅    missing    ⋅
   true  missing   true
 
 julia> e(4).data
-4×1 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
- false
- false
+4×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
+   ⋅
+   ⋅
   true
- false
+   ⋅
 
 julia> e(missing).data
-4×1 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
+4×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
  missing
  missing
  missing
