@@ -67,7 +67,7 @@ make_missing_scalar(s::ExtractScalar{T}, v, store_input) where {T} =
 make_empty_scalar(s::ExtractScalar{T}, store_input) where {T} =
 	_make_array_node(stabilize_types_scalar(s, fill(zero(T),1,0)), fill(undef,1,0), store_input)
 
-(s::ExtractScalar)(v; store_input=false) = make_missing_scalar(s, v, store_input)
+(s::ExtractScalar)(v::HierarchicType; store_input=false) = make_missing_scalar(s, v, store_input)
 (s::ExtractScalar{T})(v::MissingOrNothing; store_input=false) where {T} = make_missing_scalar(s, v, store_input)
 (s::ExtractScalar{T})(v::ExtractEmpty; store_input=false) where {T} = make_empty_scalar(s, store_input)
 (s::ExtractScalar{T})(v::Number; store_input=false) where {T} =

@@ -91,7 +91,7 @@ function ExtractCategorical(ks::Vector, uniontypes = true)
 	ExtractCategorical(Dict(zip(ks, UInt32(1):UInt32(keys_len))), UInt32(keys_len + 1), uniontypes)
 end
 
-map_val(s, v::MissingOrNothing) = s.uniontypes ? missing : error("This extractor does not support missing values")
+map_val(s, ::MissingOrNothing) = s.uniontypes ? missing : error("This extractor does not support missing values")
 map_val(s, v) = get(s.keyvalemap, v, s.n)
 stabilize_types_categorical(s::ExtractCategorical{V,I}, x) where {V,I} = s.uniontypes ? Vector{Union{Missing, I}}(x) : x
 val2idx(s::ExtractCategorical{V,I}, v::V) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
@@ -119,7 +119,7 @@ make_missing_categorical(s::ExtractCategorical, v, store_input) =
 (s::ExtractCategorical{V,I})(::ExtractEmpty; store_input=false) where {V,I} =
 	ArrayNode(construct(s, s.uniontypes ? Vector{Union{Missing, I}}() : Vector{I}(), s.n))
 
-(s::ExtractCategorical)(v; store_input=false) = make_missing_categorical(s, v, store_input)
+(s::ExtractCategorical)(v::HierarchicType; store_input=false) = make_missing_categorical(s, v, store_input)
 
 Base.hash(e::ExtractCategorical, h::UInt) = hash((e.keyvalemap, e.n, e.uniontypes), h)
 Base.:(==)(e1::ExtractCategorical, e2::ExtractCategorical) =

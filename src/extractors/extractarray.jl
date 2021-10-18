@@ -47,11 +47,11 @@ end
 
 (s::ExtractArray)(v::MissingOrNothing; store_input=false) = extract_missing_bag(s, v; store_input)
 
-(s::ExtractArray)(v::Vector; store_input=false) =
+(s::ExtractArray)(v::AbstractVector; store_input=false) =
     isempty(v) ?
 	extract_missing_bag(s, v; store_input) :
 	BagNode(mapreduce(x->s.item(x; store_input), catobs, v),[1:length(v)])
-(s::ExtractArray)(v; store_input=false) = extract_missing_bag(s, v; store_input)
+(s::ExtractArray)(v::HierarchicType; store_input=false) = extract_missing_bag(s, v; store_input)
 
 (s::ExtractArray)(v::ExtractEmpty; store_input=false) = make_empty_bag(s.item(extractempty; store_input), v)
 

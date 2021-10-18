@@ -67,8 +67,8 @@ end
 Base.keys(e::ExtractDict) = keys(e.dict)
 
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
-(s::ExtractDict)(::MissingOrNothing; store_input=false) = s(Dict{String, Any}())
-(s::ExtractDict)(v; store_input=false)  = s(nothing)
+(s::ExtractDict)(v::MissingOrNothing; store_input=false) = s(Dict{String, Any}())
+(s::ExtractDict)(v::HierarchicType; store_input=false)  = s(nothing)
 
 
 function (s::ExtractDict{S})(v::AbstractDict; store_input=false) where {S<:Dict}
