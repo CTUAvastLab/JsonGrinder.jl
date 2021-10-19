@@ -25,13 +25,13 @@ julia> res1[:a].data
  -3.0f0
 
 julia> res1[:b].data
-6×1 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
+6×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
   true
- false
- false
- false
- false
- false
+   ⋅
+   ⋅
+   ⋅
+   ⋅
+   ⋅
 
 julia> res2 = e(Dict("a"=>0))
 ProductNode \t# 1 obs, 24 bytes
@@ -43,7 +43,7 @@ julia> res2[:a].data
  -6.0f0
 
 julia> res2[:b].data
-6×1 Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}:
+6×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
  missing
  missing
  missing
@@ -67,11 +67,11 @@ end
 Base.keys(e::ExtractDict) = keys(e.dict)
 
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
-(s::ExtractDict)(v::MissingOrNothing; store_input=false) = s(Dict{String, Any}())
+(s::ExtractDict)(::MissingOrNothing; store_input=false) = s(Dict{String, Any}())
 (s::ExtractDict)(v; store_input=false)  = s(nothing)
 
 
-function (s::ExtractDict{S})(v::Dict; store_input=false) where {S<:Dict}
+function (s::ExtractDict{S})(v::AbstractDict; store_input=false) where {S<:Dict}
 	o = [Symbol(k) => f(get(v,String(k),nothing); store_input) for (k,f) in s.dict]
 	ProductNode((; o...))
 end

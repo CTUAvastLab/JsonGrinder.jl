@@ -21,7 +21,7 @@ Base.get(s::Dict{Symbol, <:Any}, key::String, default) = get(s, Symbol(key), def
 Base.keys(e::DictEntry) = keys(e.childs)
 Base.isempty(e::DictEntry) = isempty(e.childs)
 
-function update!(s::DictEntry, d::Dict; path = "")
+function update!(s::DictEntry, d::AbstractDict; path = "")
 	s.updated += 1
 	for (k,v) in d
 		kc = Symbol(k)

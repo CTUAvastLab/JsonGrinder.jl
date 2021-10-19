@@ -13,10 +13,10 @@ julia> ec = ExtractArray(ExtractCategorical(2:4));
 
 julia> ec([2,3,1,4]).data
 4×4 Mill.ArrayNode{Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing}:
-  true  false  false  false
- false   true  false  false
- false  false  false   true
- false  false   true  false
+  true    ⋅      ⋅      ⋅  
+   ⋅     true    ⋅      ⋅
+   ⋅      ⋅      ⋅     true
+   ⋅      ⋅     true    ⋅
 
 julia> es = ExtractArray(ExtractScalar());
 
@@ -33,7 +33,7 @@ struct ExtractArray{T} <: BagExtractor
 	item::T
 end
 
-extract_empty_bag_item(s::BagExtractor, store_input) = @error "Abstract method, please, implement it for your extractor"
+extract_empty_bag_item(::BagExtractor, store_input) = @error "Abstract method, please, implement it for your extractor"
 extract_empty_bag_item(s::ExtractArray, store_input) = s.item(extractempty; store_input)
 
 """

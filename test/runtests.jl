@@ -37,5 +37,6 @@ const ≃ = isequal
 	end
 	include("show_html.jl")
 	include("util.jl")
+	include("json3.jl")
 
 end
