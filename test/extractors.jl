@@ -191,6 +191,19 @@ end
 	@test ens.metadata == [nothing]
 	@test isnothing(e234.data.metadata)
 	@test isnothing(en.data.metadata)
+
+	# testing https://github.com/CTUAvastLab/JsonGrinder.jl/issues/76
+	e = ExtractArray(ExtractScalar(Float32))
+	@test e([1,2,3]) == BagNode(
+		ArrayNode([1. 2. 3.]),
+		[1:3]
+	)
+	@test_throws MethodError e((1,2,3))
+	@test e(nothing) == BagNode(
+		ArrayNode(Matrix(fill(zero(Float32),1,0))),
+		[0:-1]
+	)
+	@test_throws MethodError e(e)
 end
 
 @testset "ExtractVector" begin
