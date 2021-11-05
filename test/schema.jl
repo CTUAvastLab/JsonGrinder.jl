@@ -148,6 +148,10 @@ end
 	ext2 = suggestextractor(sch2)
 	ext3 = suggestextractor(sch3)
 	@test ext2 == ext3
+
+	sch = JsonGrinder.schema([Dict("key" => []), Dict("key" => [1,2,3])])
+	ext = suggestextractor(sch)
+	@test ext[:key].item isa ExtractCategorical
 end
 
 @testset "More empty arrays" begin

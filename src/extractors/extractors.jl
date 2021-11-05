@@ -14,6 +14,7 @@ downstream extractors that they should extract an empty sample.
 const extractempty = ExtractEmpty()
 
 const MissingOrNothing = Union{Missing, Nothing}
+const HierarchicType = Union{AbstractDict, AbstractVector, StringOrNumber, MissingOrNothing, ExtractEmpty}
 
 _make_array_node(x, v, store_input) = store_input ? ArrayNode(x, v) : ArrayNode(x)
 _make_bag_node(x, bags, v, store_input) = store_input ? BagNode(x, bags, v) : BagNode(x, bags)

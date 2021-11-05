@@ -39,9 +39,9 @@ labelnames = unique(targets)
 #  Create the model
 #####
 model = reflectinmodel(sch, extractor,
-	k -> Dense(k, neurons, relu),
-	d -> SegmentedMeanMax(d),
-	fsm = Dict("" => k -> Dense(k, length(labelnames))),
+	layer -> Dense(layer, neurons, relu),
+	bag -> SegmentedMeanMax(bag),
+	fsm = Dict("" => layer -> Dense(layer, length(labelnames))),
 )
 
 #####

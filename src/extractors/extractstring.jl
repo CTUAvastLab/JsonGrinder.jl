@@ -74,8 +74,8 @@ make_empty_string(s::ExtractString, store_input) where {T} =
 	_make_array_node(NGramMatrix(stabilize_types_string(s, [v]), s.n, s.b, s.m), [v], store_input)
 (s::ExtractString)(v::AbstractString; store_input=false) = s(String(v); store_input)
 (s::ExtractString)(v::MissingOrNothing; store_input=false) = make_missing_string(s, v, store_input)
-(s::ExtractString)(v::ExtractEmpty; store_input=false) = make_empty_string(s, store_input)
-(s::ExtractString)(v; store_input=false) = make_missing_string(s, v, store_input)
+(s::ExtractString)(::ExtractEmpty; store_input=false) = make_empty_string(s, store_input)
+(s::ExtractString)(v::HierarchicType; store_input=false) = make_missing_string(s, v, store_input)
 (s::ExtractString)(v::Symbol; store_input=false) = s(String(v); store_input)
 
 """

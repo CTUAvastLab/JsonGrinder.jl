@@ -20,7 +20,7 @@ extract_empty_bag_item(e::ExtractKeyAsField, store_input) =
 (e::ExtractKeyAsField)(v::ExtractEmpty; store_input=false) =
 	make_empty_bag(ProductNode((key = e.key(v; store_input), item = e.item(v; store_input))), v)
 
-function (e::ExtractKeyAsField)(vs::Dict; store_input=false)
+function (e::ExtractKeyAsField)(vs::AbstractDict; store_input=false)
 	isempty(vs) && return extract_missing_bag(e, vs; store_input)
 	items = mapreduce(catobs, collect(vs)) do (k,v)
 		ProductNode((key = e.key(k; store_input), item = e.item(v; store_input)))

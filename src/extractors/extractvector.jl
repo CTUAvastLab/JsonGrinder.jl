@@ -30,9 +30,9 @@ stabilize_types_vector(s::ExtractVector{T}, x) where {T} = s.uniontypes ? Matrix
 (s::ExtractVector)(v::MissingOrNothing; store_input=false) = make_missing_vector(s, v, store_input)
 (s::ExtractVector{T})(::ExtractEmpty; store_input=false) where {T} =
     ArrayNode(stabilize_types_vector(s, Matrix{T}(undef, s.n, 0)))
-(s::ExtractVector)(v; store_input=false) = make_missing_vector(s, v, store_input)
+(s::ExtractVector)(v::HierarchicType; store_input=false) = make_missing_vector(s, v, store_input)
 
-function (s::ExtractVector{T})(v::Vector; store_input=false) where {T}
+function (s::ExtractVector{T})(v::AbstractVector; store_input=false) where {T}
 	isempty(v) && make_missing_vector(s, v, store_input)
 	if length(v) > s.n
 		@warn "array too long, truncating"
