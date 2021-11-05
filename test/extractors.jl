@@ -113,6 +113,7 @@ end
 	sc = ExtractArray(ExtractCategorical(2:4))
 	with_emptyismissing(false) do
 		e234 = sc([2,3,4], store_input=false)
+		e234 = sc([2,3,4], store_input=false)
 		en = sc(nothing, store_input=false)
 		e234s = sc([2,3,4], store_input=true)
 		ens = sc(nothing, store_input=true)
@@ -1185,10 +1186,10 @@ end
 @testset "AuxiliaryExtractor" begin
 	e2 = ExtractCategorical(["a","b"])
 	e = AuxiliaryExtractor(e2, (ext, sample; store_input=false)->ext(String(sample); store_input))
-
-	@test e("b") == e(:b)
+	
+	@test e("b") == e("bbb"[1:1])
 	@test e("b").data ≈ [0, 1, 0]
-	@test e(:b).data ≈ [0, 1, 0]
+	@test e("bbb"[1:1]).data ≈ [0, 1, 0]
 
     @test buf_printtree(e) ==
 	"""

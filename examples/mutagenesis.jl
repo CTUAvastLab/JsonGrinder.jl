@@ -29,19 +29,6 @@ test_indices = length(samples)-test_num+1:length(samples)
 sch = JsonGrinder.schema(samples)
 extractor = suggestextractor(sch)
 
-sch
-printtree(sch, trav=true)
-printtree(extractor, trav=true)
-code2lens(sch, "BK")
-sch_lens = only(code2lens(sch, "BK"))
-code2lens(extractor, "BK")
-ext_lens = first(code2lens(extractor, "BK"))
-
-get(sch, lens)
-set(extractor, ext_lens, JsonGrinder.ExtractCategorical(get(sch, sch_lens)))
-
-printtree(extractor, trav=true)
-
 #####
 #  Convert samples to Mill structure and extract targets
 #####
@@ -52,9 +39,9 @@ labelnames = unique(targets)
 #  Create the model
 #####
 model = reflectinmodel(sch, extractor,
-	k -> Dense(k, neurons, relu),
-	d -> SegmentedMeanMax(d),
-	fsm = Dict("" => k -> Dense(k, length(labelnames))),
+	layer -> Dense(layer, neurons, relu),
+	bag -> SegmentedMeanMax(bag),
+	fsm = Dict("" => layer -> Dense(layer, length(labelnames))),
 )
 
 #####

@@ -105,6 +105,9 @@ make_missing_categorical(s::ExtractCategorical, v, store_input) =
 
 (s::ExtractCategorical{V})(v::V; store_input=false) where {V<:HierarchicType} =
 	_make_array_node(construct(s, val2idx(s, v), s.n), [v], store_input)
+# I need to define this in order to disambiguate the method with different numbers compared to HierarchicType
+(s::ExtractCategorical{V})(v::V; store_input=false) where {V<:Number} =
+	_make_array_node(construct(s, val2idx(s, v), s.n), [v], store_input)
 
 # following 2 methods are to let us extract float from int extractor and vice versa
 (s::ExtractCategorical{<:Number})(v::Number; store_input=false) =
