@@ -1,40 +1,29 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, ThreadTools
-using JsonGrinder: suggestextractor, ExtractDict
-using Mill: reflectinmodel
-using StatsBase: sample
+using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern
 
 ###############################################################
 # start by loading all samples
 ###############################################################
-samples = Vector{Dict}(open(JSON.parse, "data/mutagenesis/data.json"))
+train_x, train_y = MLDatasets.Mutagenesis.traindata()
+test_x, test_y = MLDatasets.Mutagenesis.testdata()
 
-JSON.print(samples[3],2)
-
-metadata = open(JSON.parse, "data/mutagenesis/meta.json")
-labelkey = metadata["label"]
-test_num = metadata["test_samples"]
 minibatchsize = 100
 iterations = 5_000
 neurons = 20 		# neurons per layer
 
-targets = map(i -> i[labelkey], samples)
-foreach(i -> delete!(i, labelkey), samples)
-
-train_indices = 1:length(samples)-test_num
-test_indices = length(samples)-test_num+1:length(samples)
-
 #####
-#  Create the schema and extractor
+#  Create the schema and extractor from training data
 #####
-sch = JsonGrinder.schema(samples)
+sch = JsonGrinder.schema(train_x)
 extractor = suggestextractor(sch)
 
 #####
 #  Convert samples to Mill structure and extract targets
 #####
-data = tmap(extractor, samples)
-labelnames = unique(targets)
+train_data = extractor.(train_x)
+test_data = extractor.(test_x)
+labelnames = unique(train_y)
 
+@show train_data[1]
 #####
 #  Create the model
 #####
@@ -47,39 +36,50 @@ model = reflectinmodel(sch, extractor,
 #####
 #  Train the model
 #####
-function minibatch()
-	idx = sample(1:length(data[train_indices]), minibatchsize, replace = false)
-	reduce(catobs, data[idx]), Flux.onehotbatch(targets[idx], labelnames)
-end
 
-accuracy(x,y) = mean(labelnames[Flux.onecold(model(x).data)] .== y)
+inference(x::AbstractMillNode) = model(x).data
+inference(x::AbstractVector{<:AbstractMillNode}) = inference(reduce(catobs, x))
+accuracy(x,y) = mean(labelnames[Flux.onecold(inference(x))] .== y)
 
-trainset = reduce(catobs, data[train_indices])
-testset = reduce(catobs, data[test_indices])
+using ChainRulesCore
+@non_differentiable reduce(catobs, x::AbstractVector{<:AbstractMillNode})
 
 cb = () -> begin
-	train_acc = accuracy(trainset, targets[train_indices])
-	test_acc = accuracy(testset, targets[test_indices])
+	train_acc = accuracy(train_data, train_y)
+	test_acc = accuracy(test_data, test_y)
 	println("accuracy: train = $train_acc, test = $test_acc")
 end
 ps = Flux.params(model)
-loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
-Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
+# loss 
+loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
+loss(xy::Tuple) = loss(xy...)
+minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
 
+x, y = train_data[1:10], train_y[1:10]
+x_catobsed = reduce(catobs, x)
+
+gradient(() -> loss(x, y), ps)
+gradient(() -> loss(x_catobsed, y), ps)
+
+
+Flux.Optimise.train!(loss, ps, minibatches, ADAM(), cb = Flux.throttle(cb, 2))
+for mb in minibatches
+	@show loss(mb)
+end
 ###############################################################
 #  Classify test set
 ###############################################################
 
-probs = softmax(model(testset).data)
+probs = softmax(inference(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
 
-print(mean(pred_classes .== targets[test_indices]))
+print(mean(pred_classes .== test_y))
 # we see the accuracy is around 79% on test set
 
 #predicted classes for test set
 print(pred_classes)
 #gt classes for test set
-print(targets[test_indices])
+print(test_y)
 # probabilities for test set
 print(probs)

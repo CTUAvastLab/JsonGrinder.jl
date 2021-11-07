@@ -1,4 +1,4 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools, ThreadTools
+using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools
 import JsonGrinder: suggestextractor, ExtractCategorical, ExtractDict, ExtractString, MultipleRepresentation, extractscalar
 import Mill: mapdata, sparsify, reflectinmodel
 
@@ -35,9 +35,9 @@ extract_target(samples[1])[:cuisine]
 # we convert JSONs to Datasets
 ###############################################################
 # advised to use all the samples, this is just speedup to demonstrate functionality
-data = tmap(extract_data, samples[1:5_000])
+data = extract_data.(samples[1:5_000])
 data = reduce(catobs, data)
-target = tmap(extract_target, samples[1:5_000])
+target = extract_target.(samples[1:5_000])
 target = reduce(catobs, target)[:cuisine].data
 
 ###############################################################

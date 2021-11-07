@@ -40,7 +40,7 @@ function schema(samples::AbstractArray, map_fun::Function)
 end
 
 schema(map_fun::Function, samples::AbstractArray) = schema(samples, map_fun)
-schema(samples::AbstractArray{<:Dict}) = schema(samples, identity)
+schema(samples::AbstractArray{<:AbstractDict}) = schema(samples, identity)
 schema(samples::AbstractArray{<:AbstractString}) = schema(samples, JSON.parse)
 # BSON integration
 schema(samples::AbstractArray{<:BSONDict}) = schema(samples, identity)
