@@ -1,4 +1,4 @@
-using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern
+using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics
 
 ###############################################################
 # start by loading all samples
