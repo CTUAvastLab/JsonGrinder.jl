@@ -37,12 +37,13 @@ model = reflectinmodel(sch, extractor,
 #  Train the model
 #####
 
+# let's define some helper functions
 inference(x::AbstractMillNode) = model(x).data
 inference(x::AbstractVector{<:AbstractMillNode}) = inference(reduce(catobs, x))
 accuracy(x,y) = mean(labelnames[Flux.onecold(inference(x))] .== y)
 
 using ChainRulesCore
-@non_differentiable reduce(catobs, x::AbstractVector{<:AbstractMillNode})
+@non_differentiable Base.reduce(catobs, x::AbstractVector{<:AbstractMillNode})
 
 cb = () -> begin
 	train_acc = accuracy(train_data, train_y)
@@ -50,22 +51,15 @@ cb = () -> begin
 	println("accuracy: train = $train_acc, test = $test_acc")
 end
 ps = Flux.params(model)
-# loss 
+
+# let's define loss and some helper function
 loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
 loss(xy::Tuple) = loss(xy...)
+
+# create minibatches
 minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
-
-x, y = train_data[1:10], train_y[1:10]
-x_catobsed = reduce(catobs, x)
-
-gradient(() -> loss(x, y), ps)
-gradient(() -> loss(x_catobsed, y), ps)
-
-
 Flux.Optimise.train!(loss, ps, minibatches, ADAM(), cb = Flux.throttle(cb, 2))
-for mb in minibatches
-	@show loss(mb)
-end
+
 ###############################################################
 #  Classify test set
 ###############################################################
