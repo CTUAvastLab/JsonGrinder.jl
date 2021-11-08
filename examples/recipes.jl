@@ -1,6 +1,5 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, IterTools, Statistics, BenchmarkTools
-import JsonGrinder: suggestextractor, ExtractCategorical, ExtractDict, ExtractString, MultipleRepresentation, extractscalar
-import Mill: mapdata, sparsify, reflectinmodel
+using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
+using JSON, MLDataPattern
 
 ###############################################################
 # start by loading all samples
@@ -9,7 +8,6 @@ samples = open("data/recipes.json","r") do fid
 	Vector{Dict}(JSON.parse(read(fid, String)))
 end
 JSON.print(samples[1],2)
-
 
 ###############################################################
 # create schema of the JSON
@@ -44,16 +42,16 @@ target = reduce(catobs, target)[:cuisine].data
 # 	create the model according to the data
 ###############################################################
 m = reflectinmodel(sch, extract_data,
-	k -> Dense(k,20,relu),
-	d -> SegmentedMeanMax(d),
-	fsm = Dict("" => k -> Dense(k, size(target, 1))),
+	layer -> Dense(layer,20,relu),
+	bag -> SegmentedMeanMax(bag),
+	fsm = Dict("" => layer -> Dense(layer, size(target, 1))),
 )
 
 ###############################################################
 #  train
 ###############################################################
 opt = Flux.Optimise.ADAM()
-loss = (x,y) -> Flux.logitcrossentropy(m(x).data, y)
+loss(x, y) = Flux.logitcrossentropy(m(x).data, y)
 valdata = data[1:1_000],target[:,1:1_000]
 data, target = data[1_001:5_000], target[:,1001:5_000]
 # for less recourse-chungry training, we use only part of data for trainng, but it is advised to used all, as i following line:
@@ -70,31 +68,11 @@ loss(data, target)
 gs = gradient(() -> loss(data, target), ps)
 Flux.Optimise.update!(opt, ps, gs)
 
+iterations = 5_000
+#todo: rewrite repeatedly to MLDataPattern from IterTools
 Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 20), opt, cb = Flux.throttle(cb, 2))
 # feel free to train for longer period of time, this example is learns only 20 iterations, so it runs fast
 # Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 500), opt, cb = Flux.throttle(cb, 10))
 
 #calculate the accuracy
 mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
-
-# samples = open("recipes_test.json","r") do fid
-# 	Array{Dict}(JSON.parse(readstring(fid)))
-# end
-# ids = map(s -> s["id"],samples)
-# tstdata = @>> samples map(extract_data);
-# tstdata = cat(tstdata...);
-# tstdata = mapdata(sentence2ngrams,tstdata)
-# tstdata = mapdata(i -> sparsify(Float32.(i),0.05),tstdata)
-# names = extract_target.other["cuisine"].items
-# y = map(i -> names[i],Flux.argmax(m(tstdata)));
-
-
-# using DataFrames
-# CSV.write("cuisine.csv",DataFrame(id = ids,cuisine = y ),delim=',')
-
-# schema can also be created in parallel for better performance, compare:
-
-# single threaded
-# @btime JsonGrinder.schema(samples)
-# multi threaded
-# @btime merge(tmap(x->JsonGrinder.schema(collect(x)), Iterators.partition(samples, 5_000))...)

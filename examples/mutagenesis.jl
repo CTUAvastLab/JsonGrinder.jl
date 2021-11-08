@@ -1,10 +1,10 @@
-using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics
+using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
 
 ###############################################################
 # start by loading all samples
 ###############################################################
-train_x, train_y = MLDatasets.Mutagenesis.traindata()
-test_x, test_y = MLDatasets.Mutagenesis.testdata()
+train_x, train_y = MLDatasets.Mutagenesis.traindata();
+test_x, test_y = MLDatasets.Mutagenesis.testdata();
 
 minibatchsize = 100
 iterations = 5_000
@@ -37,12 +37,13 @@ model = reflectinmodel(sch, extractor,
 #  Train the model
 #####
 
-# let's define some helper functions
+# let's define loss and some helper functions
+loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
 inference(x::AbstractMillNode) = model(x).data
 inference(x::AbstractVector{<:AbstractMillNode}) = inference(reduce(catobs, x))
 accuracy(x,y) = mean(labelnames[Flux.onecold(inference(x))] .== y)
+loss(xy::Tuple) = loss(xy...)
 
-using ChainRulesCore
 @non_differentiable Base.reduce(catobs, x::AbstractVector{<:AbstractMillNode})
 
 cb = () -> begin
@@ -50,15 +51,10 @@ cb = () -> begin
 	test_acc = accuracy(test_data, test_y)
 	println("accuracy: train = $train_acc, test = $test_acc")
 end
-ps = Flux.params(model)
-
-# let's define loss and some helper function
-loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
-loss(xy::Tuple) = loss(xy...)
 
 # create minibatches
 minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
-Flux.Optimise.train!(loss, ps, minibatches, ADAM(), cb = Flux.throttle(cb, 2))
+Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))
 
 ###############################################################
 #  Classify test set
