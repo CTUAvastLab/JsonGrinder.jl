@@ -1,7 +1,17 @@
 using Documenter
 using JsonGrinder
+using Literate
 
 DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
+
+# generate files using literate.jl
+examples_dir = joinpath(@__DIR__, "..", "examples")
+mutagenesis_file = joinpath(examples_dir, "mutagenesis.jl")
+
+Literate.markdown(mutagenesis_file, examples_dir; credit = false, name = "mutagenesis_generated")
+Literate.script(mutagenesis_file, examples_dir)
+Literate.notebook(mutagenesis_file, examples_dir)
+
 # for running only doctests
 doctest(JsonGrinder)
 makedocs(

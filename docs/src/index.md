@@ -87,6 +87,18 @@ Authors see the biggest advantage in the `model` being hierarchical and reflecti
 ## Example
 Our idealized workflow is demonstrated in `examples/mutagenesis.jl` [determining mutagenicity on Salmonella typhimurium](https://relational.fit.cvut.cz/dataset/Mutagenesis) (dataset is stored in json format [inside JsonGrinder.jl repo](https://github.com/CTUAvastLab/JsonGrinder.jl/tree/master/data/mutagenesis) for your convenience) and here we'll break it down in order to demonstrate the basic functionality of JsonGrinder.
 
+```@eval
+import Markdown
+file = joinpath(@__DIR__, "../examples/mutagenesis_generated.md")
+str = "`````markdown\n" * rstrip(read(file, String)) * "\n`````"
+rm(file)
+Markdown.parse(str)
+```
+
+### Setup
+
+If you want to run this tutorial yourself, you can find the notebook file [here](examples/mutagenesis.ipynb).
+
 ## A walkthrough of the example
 
 Here we include libraries and load the data. Dataset can be conveniently obtained using the [`MLDatasets` library](https://juliaml.github.io/MLDatasets.jl/stable/datasets/Mutagenesis/)
