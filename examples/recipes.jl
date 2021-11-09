@@ -1,5 +1,5 @@
 using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
-using JSON, MLDataPattern
+using JSON
 
 ###############################################################
 # start by loading all samples
@@ -21,7 +21,6 @@ sch = JsonGrinder.schema(samples)
 delete!(sch.childs,:id)
 
 extractor = suggestextractor(sch)
-# todo: figure out why I have maybe missings in targets
 extract_data = ExtractDict(deepcopy(extractor.dict))
 extract_target = ExtractDict(deepcopy(extractor.dict))
 delete!(extract_target.dict, :ingredients)
@@ -47,31 +46,39 @@ m = reflectinmodel(sch, extract_data,
 	fsm = Dict("" => layer -> Dense(layer, size(target, 1))),
 )
 
+@non_differentiable getobs(x::DataSubset{<:ProductNode})
+
+first(minibatches)[1] |> typeof
+
 ###############################################################
 #  train
 ###############################################################
 opt = Flux.Optimise.ADAM()
 loss(x, y) = Flux.logitcrossentropy(m(x).data, y)
+loss(x::DataSubset, y) = loss(getobs(x), y)
+loss(xy::Tuple) = loss(xy...)
 valdata = data[1:1_000],target[:,1:1_000]
 data, target = data[1_001:5_000], target[:,1001:5_000]
 # for less recourse-chungry training, we use only part of data for trainng, but it is advised to used all, as i following line:
 # data, target = data[1001:nobs(data)], target[:,1001:size(target,2)]
 
 cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata[1]).data) .== Flux.onecold(valdata[2])))
-#iterations = 1000
-iterations = 100
 ps = Flux.params(m)
 mean(Flux.onecold(m(data).data) .== Flux.onecold(target))
 
+iterations = 20
+minibatchsize = 4000
+minibatches = RandomBatches((data, target), size = minibatchsize, count = iterations)
+
 @info "testing the gradient"
-loss(data, target)
-gs = gradient(() -> loss(data, target), ps)
+loss(first(minibatches))
+gs = gradient(() -> loss(first(minibatches)), ps)
 Flux.Optimise.update!(opt, ps, gs)
 
-iterations = 5_000
-#todo: rewrite repeatedly to MLDataPattern from IterTools
-Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 20), opt, cb = Flux.throttle(cb, 2))
 # feel free to train for longer period of time, this example is learns only 20 iterations, so it runs fast
+loss(first(minibatches))
+gs = gradient(() -> loss(first(minibatches)), ps)
+Flux.Optimise.train!(loss, ps, minibatches, opt, cb = Flux.throttle(cb, 2))
 # Flux.Optimise.train!(loss, ps, repeatedly(() -> (data, target), 500), opt, cb = Flux.throttle(cb, 10))
 
 #calculate the accuracy
