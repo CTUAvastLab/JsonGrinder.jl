@@ -37,4 +37,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/CTUAvastLab/JsonGrinder.jl.git",
+    push_preview = true
 )
