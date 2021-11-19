@@ -5,12 +5,13 @@ using Literate
 DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
 
 # generate files using literate.jl
-examples_dir = joinpath(@__DIR__, "..", "examples", "generated")
+examples_dir = joinpath(@__DIR__, "..", "examples")
+examples_generated_dir = joinpath(examples_dir, "generated")
 mutagenesis_file = joinpath(examples_dir, "mutagenesis.jl")
 
-Literate.markdown(mutagenesis_file, examples_dir; credit = false)
-Literate.script(mutagenesis_file, examples_dir)
-Literate.notebook(mutagenesis_file, examples_dir)
+Literate.markdown(mutagenesis_file, examples_generated_dir; credit = false)
+Literate.script(mutagenesis_file, examples_generated_dir)
+Literate.notebook(mutagenesis_file, examples_generated_dir)
 
 # for running only doctests
 doctest(JsonGrinder)
