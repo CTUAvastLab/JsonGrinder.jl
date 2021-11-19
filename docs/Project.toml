@@ -1,4 +1,5 @@
 [deps]
+ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
 HierarchicalUtils = "f9ccea15-0695-44b9-8113-df7c26ae4fa9"
