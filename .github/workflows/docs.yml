@@ -18,6 +18,8 @@ env:
 
 jobs:
   docs:
+    env:
+      PYTHON: ""
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
