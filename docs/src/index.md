@@ -89,9 +89,8 @@ Our idealized workflow is demonstrated in `examples/mutagenesis.jl` [determining
 
 ```@eval
 import Markdown
-file = joinpath(@__DIR__, "../../examples/generated/mutagenesis.md")
-str = rstrip(read(file, String))
-rm(file)
+file = joinpath(@__DIR__, "..", "..", "examples", "generated", "mutagenesis.md")
+str = rstrip(join(readlines(file)[4:end]))
 Markdown.parse(str)
 ```
 
