@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Creating extractors · JsonGrinder.jl</title><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img class="docs-light-only" src="../assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="../assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../schema/">Schema</a></li><li class="is-active"><a class="tocitem" href>Creating extractors</a><ul class="internal"><li class="toplevel"><a class="tocitem" href="#Manual-creation-of-extractors"><span>Manual creation of extractors</span></a></li><li class="toplevel"><a class="tocitem" href="#Semi-automatic-creation-of-extractors"><span>Semi-automatic creation of extractors</span></a></li><li><a class="tocitem" href="#Scalars"><span>Scalars</span></a></li><li><a class="tocitem" href="#Arrays"><span>Arrays</span></a></li><li><a class="tocitem" href="#Dict"><span>Dict</span></a></li><li><a class="tocitem" href="#Modifying-extractor"><span>Modifying extractor</span></a></li></ul></li><li><a class="tocitem" href="../exfunctions/">Extractors overview</a></li><li><a class="tocitem" href="../automl/">AutoML</a></li><li><a class="tocitem" href="../hierarchical/">External tools</a></li><li><a class="tocitem" href="../api/">API Documentation</a></li><li><a class="tocitem" href="../developers/">Developers</a></li><li><a class="tocitem" href="../citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Creating extractors</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Creating extractors</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/docs/src/extractors.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Creating-an-Extractor"><a class="docs-heading-anchor" href="#Creating-an-Extractor">Creating an Extractor</a><a id="Creating-an-Extractor-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-an-Extractor" title="Permalink"></a></h1><p>Extractor is responsible for converting json to <code>Mill</code> structures. The main design idea is that the extractor for a whole json is created by composing (sub-)extractors while reflecting the JSON structure. This composability is achieved by the <strong>commitment</strong> of each extractor returning a subtype of <code>Mill.AbstractDataNode</code>. Extractor can be any function, but to ensure a composability, it is should be a subtype of <code>AbstractExtractor</code>, which means all of them are implemented as functors (also because they contain parameters).</p><h1 id="Manual-creation-of-extractors"><a class="docs-heading-anchor" href="#Manual-creation-of-extractors">Manual creation of extractors</a><a id="Manual-creation-of-extractors-1"></a><a class="docs-heading-anchor-permalink" href="#Manual-creation-of-extractors" title="Permalink"></a></h1><p>The simplest way to create a custom extractor is the compose it from provided extractor functions. Imagine for example json file as follows.</p><pre><code class="language-json hljs">{&quot;name&quot;: &quot;Karl&quot;,
+ &quot;siblings&quot;: [&quot;Gertruda&quot;, &quot;Heike&quot;, &quot;Fritz&quot;],
+ &quot;hobby&quot;: [&quot;running&quot;, &quot;pingpong&quot;],
+ &quot;age&quot;: 21
+}</code></pre><p>A corresponding extractor might look like</p><pre><code class="language-julia hljs">ex = ExtractDict(Dict(
+	:name =&gt; ExtractString(),
+	:siblings =&gt; ExtractArray(ExtractString()),
+	:hobby =&gt; ExtractArray(ExtractCategorical([&quot;running&quot;, &quot;swimming&quot;,&quot;yoga&quot;])),
+	:age =&gt; ExtractScalar(),
+))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Dict
+  ├──── age: Float32
+  ├─── name: String
+  ⋮
+  └── hobby: Array of
+               └── Categorical d = 4</code></pre><p>Notice, how the composability of extractors simplifies the desing and allow to reflect the same feature of JSON documents.</p><p>Applying the extractor <code>ex</code> on the above json yields the corresponding <code>Mill</code> structure.</p><pre><code class="language-julia hljs">s = JSON.parse(&quot;{\&quot;name\&quot; : \&quot;Karl\&quot;,
+ \&quot;siblings\&quot; : [\&quot;Gertruda\&quot;, \&quot;Heike\&quot;, \&quot;Fritz\&quot;],
+ \&quot;hobby\&quot; : [\&quot;running\&quot;, \&quot;pingpong\&quot;],
+ \&quot;age\&quot; : 21
+}&quot;)
+ex(s)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ProductNode 	# 1 obs, 104 bytes
+  ├─────── age: ArrayNode(1×1 Array with Union{Missing, Float32} elements) 	# 1 obs, 53 bytes
+  ├────── name: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) 	# 1 obs, 124 bytes
+  ├── siblings: BagNode 	# 1 obs, 104 bytes
+  │               └── ArrayNode(2053×3 NGramMatrix with Union{Missing, Int64} elements) 	# 3 obs, 170 bytes
+  └───── hobby: BagNode 	# 1 obs, 88 bytes
+                  └── ArrayNode(4×2 MaybeHotMatrix with Union{Missing, Bool} elements) 	# 2 obs, 82 bytes</code></pre><p>The list of all extractors that we have found handy during our experiments and are part of <code>JsonGrinder</code> can be found in <a href="../exfunctions/#Extractors-overview">Extractors overview</a>.</p><h1 id="Semi-automatic-creation-of-extractors"><a class="docs-heading-anchor" href="#Semi-automatic-creation-of-extractors">Semi-automatic creation of extractors</a><a id="Semi-automatic-creation-of-extractors-1"></a><a class="docs-heading-anchor-permalink" href="#Semi-automatic-creation-of-extractors" title="Permalink"></a></h1><p>Manually creating extractors is boring and error-prone process. Function <code>suggestextractor(schema)</code> tries to simplify this, since creation of most of the extractors is straightforward, once the schema is known.</p><p>This is especially true for <code>Dict</code> and <code>Arrays</code>, while extractors for leaves can be tricky, as one needs to decide, if the leaf should be represented as a <code>Scalar</code> and <code>String</code> or as <code>Categorical</code> variable.</p><p>The sample diagram below shows the various selections of variable representations. In the example, there are 42 different <em>TCP destination port</em> values, while the <em>TCP source port</em> has more variability in the data. Therefore, a <code>categorical variable</code> is selected for the <em>destination port</em>, while the <em>source port</em> is represented as <code>Float32</code>.</p><pre><code class="nohighlight hljs">KeyAsField
+  ├── String
+  └── Array of
+        └── Dict
+              ├─── ip: Dict
+              │          ├── dst: Categorical d = 4416
+              │          └── src: Categorical d = 4
+              ├── tcp: Dict
+              │          ├────── dstport: Categorical d = 42
+              │          ├────── srcport: Float32
+              │          └── window_size: Float32
+              └── udp: Dict
+                         ├─────── udp.dstport: Float32
+                         ├──────── udp.length: Float32
+                         ├─────── udp.srcport: Float32</code></pre><p><code>suggestextractor(schema, settings)</code> uses a simple heuristic (described below) for choosing reasonable extractors, but it can make errors. It is therefore <strong>highly recommended</strong> to check the proposed extractor manually, if it makes sense. A typical error, especially if schema is created from a small number of samples, is that some variable is treated as a <code>Categorical</code>, while it should be <code>String</code> / <code>Scalar</code>.</p><p>Extractor for <code>Dict</code> can be configured to use either <code>ExtractDict</code> or <code>ExtractKeyAsField</code> based on properties number of keys in schema.</p><p>Extractor for <code>Array</code> is not configurable, as we do not feel the pressure to so, as there does not seems to be much to do.</p><pre><code class="language-julia hljs">JsonGrinder.suggestextractor(schema, settings = NamedTuple())</code></pre><p>allows to pass following parameters inside the <code>settings</code> argument</p><ul><li>scalar_extractors</li><li>key<em>as</em>field</li><li>mincountkey</li></ul><p><code>scalar_extractors</code> allows to pass your own heuristic and rules for handling scalars.</p><p>By default, it&#39;s <code>settings = (; scalar_extractors = default_scalar_extractor())</code>.</p><p><code>key_as_field</code> is an <code>Int</code> parameter which configures how <code>Dict</code>s are extracted. If number of unique keys in dict is &gt;= <code>key_as_field</code>, <a href="../exfunctions/#ExtractKeyAsField">ExtractKeyAsField</a> is used, otherwise <a href="../exfunctions/#exfuctions_ExtractDict">ExtractDict</a> is used.</p><p>By default, it&#39;s <code>settings = (; key_as_field = 500)</code>.</p><p><code>minkountkey</code> is an <code>Int</code> parameter which allows you to skip sparse keys in <code>Dict</code> to avoid creation of unnecessarily large model. <code>minkountkey</code> contains minimum number of observations of the key in schema to be included in extractor. All keys, whose <code>updated</code> field in schema for specific key is &gt; <code>minkountkey</code> are included in resulting <code>ExtractDict</code>. This settings applies only to <code>Dict</code>s which are not consideted to be &quot;key as field&quot;. If a certain <code>Dict</code> is considered to be extracted by <code>ExtractKeyAsField</code>, <code>minkountkey</code> does not apply to it.</p><p>By default, it&#39;s <code>settings = (; minkountkey = 0)</code>, thus no keys are omitted by default.</p><h2 id="Scalars"><a class="docs-heading-anchor" href="#Scalars">Scalars</a><a id="Scalars-1"></a><a class="docs-heading-anchor-permalink" href="#Scalars" title="Permalink"></a></h2><p><code>scalar_extractors</code> is a list of tuples, where the first is a condition and the second is a function creating the extractor in case of a true. The default heuristic is following and you can adjust according to your liking.</p><pre><code class="language-julia hljs">function default_scalar_extractor()
+	[
+	(e -&gt; length(keys(e)) &lt;= 100 &amp;&amp; is_numeric_or_numeric_string(e),
+		(e, uniontypes) -&gt; ExtractCategorical(keys(e), uniontypes)),
+	(e -&gt; is_intable(e),
+		(e, uniontypes) -&gt; extractscalar(Int32, e, uniontypes)),
+	(e -&gt; is_floatable(e),
+	 	(e, uniontypes) -&gt; extractscalar(FloatType, e, uniontypes)),
+	# it&#39;s important that condition here would be lower than maxkeys
+	(e -&gt; (keys_len = length(keys(e)); keys_len / e.updated &lt; 0.1 &amp;&amp; keys_len &lt; 10000 &amp;&amp; !is_numeric_or_numeric_string(e)),
+		(e, uniontypes) -&gt; ExtractCategorical(keys(e), uniontypes)),
+	(e -&gt; true,
+		(e, uniontypes) -&gt; extractscalar(unify_types(e), e, uniontypes)),]
+end</code></pre><p>Note that order matters here, as the extractors are suggested using following logic</p><pre><code class="language-julia hljs">for (c, ex) in get(settings, :scalar_extractors, default_scalar_extractor())
+	c(e) &amp;&amp; return ex(e)
+end</code></pre><h2 id="Arrays"><a class="docs-heading-anchor" href="#Arrays">Arrays</a><a id="Arrays-1"></a><a class="docs-heading-anchor-permalink" href="#Arrays" title="Permalink"></a></h2><p>Extractor suggested for <code>ArrayEntry</code> is most of the time <code>ExtractArray</code> converting <code>Array</code>s to <code>Mill.BagNode</code>s. The exception is the case, when vectors are of the same length and their items are numbers. In this case, the <code>suggestextractor</code> returns <code>ExtractVector</code>, which treats convert the array to a <code>Mill.ArrayNode</code>, as we believe the array to represent a feature vector.</p><h2 id="Dict"><a class="docs-heading-anchor" href="#Dict">Dict</a><a id="Dict-1"></a><a class="docs-heading-anchor-permalink" href="#Dict" title="Permalink"></a></h2><p>Extractor suggested for <code>DictEntry</code> is most of the time <code>ExtractDict</code> converting <code>Dict</code>s to <code>ProductNode</code>s. As mentioned above, there is an excetion. Sometimes, people use <code>Dict</code>s with names of keys being values. For example consider following two jsons</p><pre><code class="language-json hljs">{&quot;a.dll&quot;: [&quot;f&quot;, &quot;g&quot;, &quot;h&quot;],
+ &quot;b.dll&quot;: [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]}
+{&quot;c.dll&quot;: [&quot;x&quot;, &quot;y&quot;, &quot;z&quot;]}</code></pre><p>in the case, keys <code>[&quot;a.dll&quot;,&quot;b.dll&quot;,&quot;c.dll&quot;]</code> are actually values (names of libraries), and arrays are values as well. The dictionary therefore contain an array. If this case is detected, it is suggested to use <code>ExtractKeyAsField</code>, which interprets the above JSON as</p><pre><code class="language-json hljs">[{&quot;key&quot;: &quot;a.dll&quot;,
+  &quot;field&quot;: [&quot;f&quot;, &quot;g&quot;, &quot;h&quot;]},
+ {&quot;key&quot;: &quot;b.dll&quot;,
+ &quot;field&quot;: [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]}
+]
+[{&quot;key&quot;: &quot;c.dll&quot;,
+&quot;field&quot;: [&quot;x&quot;, &quot;y&quot;, &quot;z&quot;]}]</code></pre><p>To demonstrate difference between them, let&#39;s compare resulting <code>Mill</code> structures.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; s1 = JSON.parse(&quot;{\&quot;a.dll\&quot;: [\&quot;f\&quot;, \&quot;g\&quot;, \&quot;h\&quot;],
+        \&quot;b.dll\&quot;: [\&quot;a\&quot;, \&quot;b\&quot;, \&quot;c\&quot;]}&quot;)</code><code class="nohighlight hljs ansi" style="display:block;">Dict{String, Any} with 2 entries:
+  &quot;b.dll&quot; =&gt; Any[&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+  &quot;a.dll&quot; =&gt; Any[&quot;f&quot;, &quot;g&quot;, &quot;h&quot;]</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; s2 = JSON.parse(&quot;{\&quot;c.dll\&quot;: [\&quot;x\&quot;, \&quot;y\&quot;, \&quot;z\&quot;]}&quot;)</code><code class="nohighlight hljs ansi" style="display:block;">Dict{String, Any} with 1 entry:
+  &quot;c.dll&quot; =&gt; Any[&quot;x&quot;, &quot;y&quot;, &quot;z&quot;]</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ex_dict = ExtractDict(Dict(
+       	Symbol(&quot;a.dll&quot;) =&gt; ExtractArray(ExtractString()),
+       	Symbol(&quot;b.dll&quot;) =&gt; ExtractArray(ExtractString()),
+       	Symbol(&quot;c.dll&quot;) =&gt; ExtractArray(ExtractString()),
+       ))</code><code class="nohighlight hljs ansi" style="display:block;">Dict
+  ├── b.dll: Array of
+  │            └── String
+  ├── c.dll: Array of
+  │            └── String
+  └── a.dll: Array of
+               └── String</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ex_key_as_field = ExtractKeyAsField(
+       	ExtractString(), ExtractArray(ExtractString()
+       ))</code><code class="nohighlight hljs ansi" style="display:block;">KeyAsField
+  ├── String
+  └── Array of
+        └── String</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ex_dict(s1)</code><code class="nohighlight hljs ansi" style="display:block;">ProductNode 	# 1 obs, 120 bytes
+  ├── b.dll: BagNode 	# 1 obs, 104 bytes
+  │            └── ArrayNode(2053×3 NGramMatrix with Union{Missing, Int64} elements) 	# 3 obs, 155 bytes
+  ├── c.dll: BagNode 	# 1 obs, 104 bytes
+  │            └── ArrayNode(2053×0 NGramMatrix with Union{Missing, Int64} elements) 	# 0 obs, 104 bytes
+  └── a.dll: BagNode 	# 1 obs, 104 bytes
+               └── ArrayNode(2053×3 NGramMatrix with Union{Missing, Int64} elements) 	# 3 obs, 155 bytes</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ex_key_as_field(s1)</code><code class="nohighlight hljs ansi" style="display:block;">BagNode 	# 1 obs, 144 bytes
+  └── ProductNode 	# 2 obs, 72 bytes
+        ├─── key: ArrayNode(2053×2 NGramMatrix with Union{Missing, Int64} elements) 	# 2 obs, 146 bytes
+        └── item: BagNode 	# 2 obs, 120 bytes
+                    ⋮</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ex_dict(s2)</code><code class="nohighlight hljs ansi" style="display:block;">ProductNode 	# 1 obs, 120 bytes
+  ├── b.dll: BagNode 	# 1 obs, 104 bytes
+  │            └── ArrayNode(2053×0 NGramMatrix with Union{Missing, Int64} elements) 	# 0 obs, 104 bytes
+  ├── c.dll: BagNode 	# 1 obs, 104 bytes
+  │            └── ArrayNode(2053×3 NGramMatrix with Union{Missing, Int64} elements) 	# 3 obs, 155 bytes
+  └── a.dll: BagNode 	# 1 obs, 104 bytes
+               └── ArrayNode(2053×0 NGramMatrix with Union{Missing, Int64} elements) 	# 0 obs, 104 bytes</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ex_key_as_field(s2)</code><code class="nohighlight hljs ansi" style="display:block;">BagNode 	# 1 obs, 144 bytes
+  └── ProductNode 	# 1 obs, 72 bytes
+        ├─── key: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) 	# 1 obs, 125 bytes
+        └── item: BagNode 	# 1 obs, 104 bytes
+                    ⋮</code></pre><p>As we can see <code>ExtractKeyAsField</code> extracts data to more sensible structures in this case.</p><h2 id="Modifying-extractor"><a class="docs-heading-anchor" href="#Modifying-extractor">Modifying extractor</a><a id="Modifying-extractor-1"></a><a class="docs-heading-anchor-permalink" href="#Modifying-extractor" title="Permalink"></a></h2><h3 id="Passing-different-scalar_extractors"><a class="docs-heading-anchor" href="#Passing-different-scalar_extractors">Passing different scalar_extractors</a><a id="Passing-different-scalar_extractors-1"></a><a class="docs-heading-anchor-permalink" href="#Passing-different-scalar_extractors" title="Permalink"></a></h3><p>Let&#39;s demonstrate how can we set extraction of all strings to be <code>MultiRepresentation</code> of <code>String</code> and <code>Categorical</code>, where <code>Categorical</code> will have 20 most frequent values. In general, there are 2 approaches:</p><ul><li>prepending your own extractors to <code>default_scalar_extractor()</code></li><li>providing your own function independent on <code>default_scalar_extractor()</code></li></ul><p>The first case may look as follows:</p><pre><code class="language-julia hljs"># we import necessary functions
+using JsonGrinder: is_intable, is_floatable, unify_types, extractscalar
+# define a helper function
+top_n_keys(e::Entry, n::Int) = map(x-&gt;x[1], sort(e.counts |&gt; collect, by=x-&gt;x[2], rev=true)[begin:min(n, end)])
+# we call the default extractor inside our
+function string_multi_representation_scalar_extractor()
+	vcat([
+	(e -&gt; unify_types(sch[:paper_id]) &lt;: String,
+		e -&gt; MultipleRepresentation((
+			ExtractCategorical(top_n_keys(e, 20)),
+			extractscalar(unify_types(e), e)
+		))
+	], JsonGrinder.default_scalar_extractor()))
+end
+# call the suggestextractor with out extractors
+suggestextractor(sch, (; scalar_extractors = string_multi_representation_scalar_extractor()))</code></pre><p>The second case may look as follows: Let&#39;s take contents <code>default_scalar_extractor()</code> function and modify it</p><pre><code class="language-julia hljs"># we import necessary functions
+using JsonGrinder: is_intable, is_floatable, unify_types, extractscalar
+# define a helper function
+top_n_keys(e::Entry, n::Int) = map(x-&gt;x[1], sort(e.counts |&gt; collect, by=x-&gt;x[2], rev=true)[begin:min(n, end)])
+function string_multi_representation_scalar_extractor()
+	[
+	(e -&gt; length(keys(e)) &lt;= 100 &amp;&amp; (is_intable(e) || is_floatable(e)),
+		e -&gt; ExtractCategorical(keys(e))),
+	(e -&gt; is_intable(e),
+		e -&gt; extractscalar(Int32, e)),
+	(e -&gt; is_floatable(e),
+	 	e -&gt; extractscalar(FloatType, e)),
+	# it&#39;s important that condition here would be lower than maxkeys
+	(e -&gt; (keys_len = length(keys(e)); keys_len / e.updated &lt; 0.1 &amp;&amp; keys_len &lt; 10000 &amp;&amp; !(is_intable(e) || is_floatable(e))),
+		e -&gt; ExtractCategorical(keys(e))),
+	(e -&gt; true,
+		e -&gt; MultipleRepresentation((
+			ExtractCategorical(e, 20),
+			extractscalar(unify_types(e), e)
+			)
+		)),]
+end
+# call the suggestextractor with out extractors
+suggestextractor(sch, (; scalar_extractors = string_multi_representation_scalar_extractor()))</code></pre><p>Note that in the first case, the condition for new extractor is evaluated first, but in the latter case, it&#39;s the latest condition, so it&#39;s used only when the previous ones are not met.</p><h3 id="Manual-modifications-of-extractor"><a class="docs-heading-anchor" href="#Manual-modifications-of-extractor">Manual modifications of extractor</a><a id="Manual-modifications-of-extractor-1"></a><a class="docs-heading-anchor-permalink" href="#Manual-modifications-of-extractor" title="Permalink"></a></h3><p>Because the extractor can be quite big, by default the <code>Base.show</code> shows only structure to depth of 3 and 20 children for each element.</p><p>The full extractor can by seen by <code>HierarchicalUtils.printtree(extractor)</code>. Usually edge-cases and complex cases are seen only on large schemas and extractors, which don&#39;t suit the documentation format. Thus the examination of schema and extractor, and manual modifications are in dedicated example <a href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/examples/schema_examination.jl">examples/schema_examination.jl</a> which creates schema and extractor based on data in <a href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/examples/documents">examples/documents</a>. We advice to check it out and try to run it by yourself.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../schema/">« Schema</a><a class="docs-footer-nextpage" href="../exfunctions/">Extractors overview »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.10 on <span class="colophon-date" title="Friday 19 November 2021 11:47">Friday 19 November 2021</span>. Using Julia version 1.6.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
