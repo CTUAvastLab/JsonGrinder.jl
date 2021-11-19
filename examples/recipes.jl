@@ -48,8 +48,6 @@ m = reflectinmodel(sch, extract_data,
 
 @non_differentiable getobs(x::DataSubset{<:ProductNode})
 
-first(minibatches)[1] |> typeof
-
 ###############################################################
 #  train
 ###############################################################
