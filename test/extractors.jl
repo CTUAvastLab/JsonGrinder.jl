@@ -853,12 +853,12 @@ end
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) == """
 	ProductModel ↦ ArrayModel(Dense(52, 10)) \t# 2 arrays, 530 params, 2.148 KiB
-	  ├── a: ArrayModel(Dense(6, 10)) \t# 2 arrays, 70 params, 360 bytes
+	  ├── f: ArrayModel(Dense(4, 10)) \t# 2 arrays, 50 params, 280 bytes
 	  ├── b: ArrayModel(Dense(2053, 10)) \t# 2 arrays, 20_540 params, 80.312 KiB
-	  ├── c: ArrayModel(Dense(5, 10)) \t# 2 arrays, 60 params, 320 bytes
+	  ├── a: ArrayModel(Dense(6, 10)) \t# 2 arrays, 70 params, 360 bytes
 	  ├── d: ArrayModel(identity)
 	  ├── e: ArrayModel(Dense(4, 10)) \t# 2 arrays, 50 params, 280 bytes
-	  ├── f: ArrayModel(Dense(4, 10)) \t# 2 arrays, 50 params, 280 bytes
+	  ├── c: ArrayModel(Dense(5, 10)) \t# 2 arrays, 60 params, 320 bytes
 	  └── g: ArrayModel(identity)
 	"""
 end
