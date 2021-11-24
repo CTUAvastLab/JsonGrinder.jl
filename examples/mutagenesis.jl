@@ -1,3 +1,9 @@
+#-
+#md # !!! tip
+#md #     This example is also available as a Jupyter notebook:
+#md #     [`mutagenesis.ipynb`](@__NBVIEWER_ROOT_URL__/examples/mutagenesis.ipynb)
+#-
+
 using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
 
 # start by loading all samples

@@ -96,7 +96,7 @@ Markdown.parse(str)
 
 ### Setup
 
-If you want to run this tutorial yourself, you can find the notebook file [here](examples/mutagenesis.ipynb).
+If you want to run this tutorial yourself, you can find the notebook file [in examples firectory](https://github.com/CTUAvastLab/JsonGrinder.jl/tree/master/examples/mutagenesis.ipynb).
 
 ## A walkthrough of the example
 
