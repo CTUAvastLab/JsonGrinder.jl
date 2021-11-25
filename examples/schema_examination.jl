@@ -1,15 +1,31 @@
+# # Schema Examination
+# In this example we build schema of documents with complex structure and show how can we filter it and perform transformations.
+# We start by adding libraries we want to use
+
+#md # !!! tip
+#md #     This example is also available as a Jupyter notebook, feel free to run it yourself:
+#md #     [`schema_examination.ipynb`](@__NBVIEWER_ROOT_URL__/examples/schema_examination.ipynb)
+
 using Flux, MLDataPattern, Mill, JsonGrinder, JSON, HierarchicalUtils, StatsBase
 using JsonGrinder: DictEntry, Entry
 
-# load files in data/documents and parse them
+# We load files in data/documents and parse them
 data_dir = "data/documents" #src
 data_dir = "../../../data/documents" #nb
 data_dir = "../../../data/documents" #md
 data_dir = "../data/documents" #jl
 sch = JsonGrinder.schema(readdir(data_dir, join=true), x->open(JSON.parse, x))
-# suggest default extractor with some keys as field
+# The default printing method restricts depth and width of the printed schema.
+# We can see the whole schema using the `printtree` function from `HierarchicalUtils`.
+printtree(sch)
+
+# This is how some of the documents look like:
+open(JSON.parse, first(readdir(data_dir, join=true)))
+
+# We suggest default extractor.
 extractor = suggestextractor(sch)
-# show whole extractor
+
+# We show the whole extractor.
 printtree(extractor)
 # we see that there are some dictionaries with lots of keys, let's examine schema
 # list_lens lets us iterate over all elements in a way we know their position in schema

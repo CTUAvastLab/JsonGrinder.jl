@@ -24,47 +24,57 @@ neurons = 20
 # We create the schema of the training data, which is the first important step in using the JsonGrinder.
 # This computes both the structure (also known as JSON schema) and histogram of occurrences of individual values in the training data.
 sch = JsonGrinder.schema(train_x)
-extractor = suggestextractor(sch)
 
 # Then we use it to create the extractor converting jsons to Mill structures.
 # The `suggestextractor` is executed below with default setting, but it allows you heavy customization.
+extractor = suggestextractor(sch)
+
+# We convert jsons to mill data samples and prepare list of classes. This classification problem is two-class, but we want to infer it from labels.
+# The extractor is callable, so we can pass it vector of samples to obtain vector of structures with extracted features.
 train_data = extractor.(train_x)
 test_data = extractor.(test_x)
 labelnames = unique(train_y)
 
-@show train_data[1]
-
 # # Create the model
+# We create the model reflecting structure of the data
 model = reflectinmodel(sch, extractor,
 	layer -> Dense(layer, neurons, relu),
 	bag -> SegmentedMeanMax(bag),
 	fsm = Dict("" => layer -> Dense(layer, length(labelnames))),
 )
+# this allows us to create model flexibly, without the need to hardcode individual layers.
+# Individual arguments of `reflectinmodel` are explained in [Mill.jl documentation](https://CTUAvastLab.github.io/Mill.jl/dev/manual/reflectin/#Model-Reflection). But briefly: for every numeric array in the sample, model will create a dense layer with `neurons` neurons (20 in this example). For every vector of observations (called bag in Multiple Instance Learning terminology), it will create aggregation function which will take mean, maximum of feature vectors and concatenate them. The `fsm` keyword argument basically says that on the end of the NN, as a last layer, we want 2 neurons `length(labelnames)` in the output layer, not 20 as in the intermediate layers.
 
 # # Train the model
-# let's define loss and some helper functions
+# Then, we define few handy functions and a loss function, which is categorical crossentropy in our case.
 loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
 inference(x::AbstractMillNode) = model(x).data
 inference(x::AbstractVector{<:AbstractMillNode}) = inference(reduce(catobs, x))
 accuracy(x,y) = mean(labelnames[Flux.onecold(inference(x))] .== y)
 loss(xy::Tuple) = loss(xy...)
 @non_differentiable Base.reduce(catobs, x::AbstractVector{<:AbstractMillNode})
+
+# And we can add a callback which will be printing train and test accuracy during the training
+# and then we can start trining
 cb = () -> begin
 	train_acc = accuracy(train_data, train_y)
 	test_acc = accuracy(test_data, test_y)
 	println("accuracy: train = $train_acc, test = $test_acc")
 end
 
-# create minibatches
+# Lastly we turn our training data to minibatches, and we can start training
 minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
 Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))
+# We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on test set we get over 70%.
 
 # # Classify test set
+# The Last part is inference on test data.
 probs = softmax(inference(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
 mean(pred_classes .== test_y)
 
+# `pred_classes` contains the predictions for our test set.
 # we see the accuracy is around 75% on test set
 # predicted classes for test set
 pred_classes
@@ -72,3 +82,14 @@ pred_classes
 test_y
 # probabilities for test set
 probs
+
+# We can look at individual samples. For instance, some sample from test set is
+test_data[2]
+
+# and the corresponding classification is
+pred_classes[2]
+
+# if you want to see the probability distribution, it can be obtained by applying `softmax` to the output of the network.
+softmax(model(test_data[2]).data)
+
+# so we can see that the probability that given sample is `mutagenetic` is almost 1.

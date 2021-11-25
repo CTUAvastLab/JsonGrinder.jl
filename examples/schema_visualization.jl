@@ -1,3 +1,11 @@
+# # Schema Visualization
+# In this example we show how can schema be turned into HTML interactive visualization, which helps to examine the schema,
+# especially when dealing with large and heterogeneous data.
+
+#md # !!! tip
+#md #     This example is also available as a Jupyter notebook, feel free to run it yourself:
+#md #     [`schema_visualization.ipynb`](@__NBVIEWER_ROOT_URL__/examples/schema_visualization.ipynb)
+
 using JsonGrinder
 using JSON
 
