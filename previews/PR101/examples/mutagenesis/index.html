@@ -43,38 +43,36 @@ cb = () -&gt; begin
 	test_acc = accuracy(test_data, test_y)
 	println(&quot;accuracy: train = $train_acc, test = $test_acc&quot;)
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">#9 (generic function with 1 method)</code></pre><p>create minibatches</p><pre><code class="language-julia hljs">minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
-Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">accuracy: train = 0.6, test = 0.6818181818181818
-accuracy: train = 0.7, test = 0.7045454545454546
-accuracy: train = 0.78, test = 0.8636363636363636
-accuracy: train = 0.82, test = 0.8863636363636364
-accuracy: train = 0.82, test = 0.8863636363636364
-accuracy: train = 0.82, test = 0.8863636363636364
-accuracy: train = 0.82, test = 0.8863636363636364
-accuracy: train = 0.82, test = 0.8863636363636364
-accuracy: train = 0.82, test = 0.8863636363636364
-accuracy: train = 0.83, test = 0.8636363636363636
-accuracy: train = 0.85, test = 0.8636363636363636
-accuracy: train = 0.85, test = 0.8636363636363636
-accuracy: train = 0.85, test = 0.8636363636363636
-accuracy: train = 0.85, test = 0.8636363636363636
-accuracy: train = 0.86, test = 0.8636363636363636
-accuracy: train = 0.88, test = 0.8636363636363636
-accuracy: train = 0.88, test = 0.8636363636363636
-accuracy: train = 0.89, test = 0.8636363636363636
-accuracy: train = 0.89, test = 0.8636363636363636
-accuracy: train = 0.91, test = 0.8636363636363636
-accuracy: train = 0.91, test = 0.8409090909090909
-accuracy: train = 0.91, test = 0.8636363636363636
-accuracy: train = 0.91, test = 0.8409090909090909
-accuracy: train = 0.91, test = 0.8409090909090909
+Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">accuracy: train = 0.27, test = 0.18181818181818182
+accuracy: train = 0.84, test = 0.7954545454545454
+accuracy: train = 0.83, test = 0.8863636363636364
+accuracy: train = 0.84, test = 0.8863636363636364
+accuracy: train = 0.85, test = 0.8863636363636364
+accuracy: train = 0.87, test = 0.8863636363636364
+accuracy: train = 0.87, test = 0.8863636363636364
+accuracy: train = 0.87, test = 0.9090909090909091
+accuracy: train = 0.88, test = 0.9090909090909091
+accuracy: train = 0.9, test = 0.8863636363636364
+accuracy: train = 0.9, test = 0.8636363636363636
+accuracy: train = 0.9, test = 0.8409090909090909
 accuracy: train = 0.91, test = 0.8181818181818182
-accuracy: train = 0.91, test = 0.8181818181818182
-accuracy: train = 0.92, test = 0.8181818181818182
-accuracy: train = 0.93, test = 0.8181818181818182
-accuracy: train = 0.92, test = 0.8181818181818182
-accuracy: train = 0.93, test = 0.8181818181818182
-accuracy: train = 0.93, test = 0.8181818181818182</code></pre><h1 id="Classify-test-set"><a class="docs-heading-anchor" href="#Classify-test-set">Classify test set</a><a id="Classify-test-set-1"></a><a class="docs-heading-anchor-permalink" href="#Classify-test-set" title="Permalink"></a></h1><pre><code class="language-julia hljs">probs = softmax(inference(test_data))
+accuracy: train = 0.91, test = 0.7954545454545454
+accuracy: train = 0.91, test = 0.7954545454545454
+accuracy: train = 0.91, test = 0.7727272727272727
+accuracy: train = 0.91, test = 0.7727272727272727
+accuracy: train = 0.92, test = 0.7727272727272727
+accuracy: train = 0.93, test = 0.7727272727272727
+accuracy: train = 0.93, test = 0.7727272727272727
+accuracy: train = 0.93, test = 0.7727272727272727
+accuracy: train = 0.93, test = 0.75
+accuracy: train = 0.93, test = 0.75
+accuracy: train = 0.93, test = 0.7727272727272727
+accuracy: train = 0.93, test = 0.7727272727272727
+accuracy: train = 0.93, test = 0.75
+accuracy: train = 0.93, test = 0.75
+accuracy: train = 0.93, test = 0.75
+accuracy: train = 0.93, test = 0.75</code></pre><h1 id="Classify-test-set"><a class="docs-heading-anchor" href="#Classify-test-set">Classify test set</a><a id="Classify-test-set-1"></a><a class="docs-heading-anchor-permalink" href="#Classify-test-set" title="Permalink"></a></h1><pre><code class="language-julia hljs">probs = softmax(inference(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
-print(mean(pred_classes .== test_y))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.8181818181818182</code></pre><p>we see the accuracy is around 79% on test set</p><pre><code class="language-julia hljs">#predicted classes for test set
-print(pred_classes)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0]</code></pre><p>gt classes for test set</p><pre><code class="language-julia hljs">print(test_y)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1]</code></pre><p>probabilities for test set</p><pre><code class="language-julia hljs">print(probs)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Float32[0.8067001 0.055362698 0.8323501 0.04140845 0.048417773 0.79643655 0.051438488 0.046752494 0.7239757 0.8291928 0.8284415 0.07158942 0.042432554 0.8707087 0.83135617 0.046782136 0.8252199 0.055577375 0.054814775 0.0467861 0.15440248 0.4279053 0.6106487 0.78154814 0.015652677 0.63068646 0.56369215 0.30059874 0.96783173 0.8398204 0.7563754 0.06264025 0.021983452 0.031218886 0.82412964 0.8358364 0.9886905 0.8241201 0.79217356 0.0553121 0.6424376 0.84023595 0.7986205 0.37574568; 0.19329996 0.9446373 0.1676499 0.9585916 0.9515822 0.20356342 0.94856143 0.95324755 0.2760243 0.17080717 0.17155845 0.92841053 0.95756745 0.12929131 0.16864385 0.95321786 0.17478009 0.9444226 0.94518524 0.9532139 0.8455975 0.5720947 0.38935128 0.21845184 0.98434734 0.36931357 0.43630788 0.6994013 0.032168306 0.1601796 0.24362467 0.9373598 0.9780165 0.9687811 0.17587033 0.16416357 0.011309509 0.17587985 0.20782647 0.94468796 0.3575624 0.15976407 0.20137948 0.6242543]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../exfunctions/">« Extractors overview</a><a class="docs-footer-nextpage" href="../recipes/">Recipe Ingredients Example »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.10 on <span class="colophon-date" title="Thursday 25 November 2021 10:56">Thursday 25 November 2021</span>. Using Julia version 1.6.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+print(mean(pred_classes .== test_y))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.75</code></pre><p>we see the accuracy is around 79% on test set</p><pre><code class="language-julia hljs">#predicted classes for test set
+print(pred_classes)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1]</code></pre><p>gt classes for test set</p><pre><code class="language-julia hljs">print(test_y)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1]</code></pre><p>probabilities for test set</p><pre><code class="language-julia hljs">print(probs)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Float32[0.9991371 0.8062372 0.9986633 0.73439217 0.9141565 0.9992902 0.7105016 0.7174802 0.9993687 0.9989706 0.9988961 0.751291 0.841697 0.9988135 0.9987307 0.7273783 0.9989053 0.8098661 0.7256135 0.71289515 0.20701502 0.9929554 0.99857414 0.99914885 0.7919926 0.9996538 0.99744296 0.5265246 0.9737439 0.99911743 0.9989668 0.7693982 0.43848962 0.82324046 0.99893206 0.9986889 0.9859557 0.9989189 0.9990822 0.80652106 0.9996295 0.9987154 0.18610898 0.9991314; 0.0008629506 0.19376278 0.0013366771 0.26560777 0.08584356 0.00070969504 0.28949845 0.28251982 0.0006312729 0.0010293513 0.0011038797 0.24870898 0.15830302 0.0011865078 0.001269252 0.2726217 0.001094725 0.19013397 0.2743865 0.28710485 0.792985 0.0070446404 0.0014258063 0.0008511551 0.20800747 0.00034618925 0.0025570323 0.47347543 0.026256086 0.0008825672 0.0010331942 0.23060177 0.5615104 0.17675953 0.0010679252 0.0013111082 0.014044234 0.0010811549 0.0009177274 0.19347888 0.0003704353 0.0012846495 0.81389105 0.00086865947]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../exfunctions/">« Extractors overview</a><a class="docs-footer-nextpage" href="../recipes/">Recipe Ingredients Example »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.10 on <span class="colophon-date" title="Thursday 25 November 2021 11:12">Thursday 25 November 2021</span>. Using Julia version 1.6.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
