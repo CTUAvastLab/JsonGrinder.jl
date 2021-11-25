@@ -5,7 +5,7 @@
 
 #md # !!! tip
 #md #     This example is also available as a Jupyter notebook:
-#md #     [`mutagenesis.ipynb`](@__NBVIEWER_ROOT_URL__/examples/recipes.ipynb)
+#md #     [`recipes.ipynb`](@__NBVIEWER_ROOT_URL__/examples/recipes.ipynb)
 
 using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
 using JSON
@@ -13,7 +13,9 @@ using JSON
 # start by loading all samples
 #src magic for resolving paths
 data_file = "data/recipes.json" #src
-#!src data_file = "../../../data/recipes.json"
+data_file = "../../../data/recipes.json" #nb
+data_file = "../../../data/recipes.json" #md
+data_file = "../../data/recipes.json" #jl
 samples = open(data_file,"r") do fid
 	Vector{Dict}(JSON.parse(read(fid, String)))
 end
@@ -41,7 +43,7 @@ data = reduce(catobs, data)
 target = extract_target.(samples[1:5_000])
 target = reduce(catobs, target)[:cuisine].data
 
-# 	create the model according to the data
+# # Create the model
 m = reflectinmodel(sch, extract_data,
 	layer -> Dense(layer,20,relu),
 	bag -> SegmentedMeanMax(bag),
@@ -50,7 +52,7 @@ m = reflectinmodel(sch, extract_data,
 
 @non_differentiable getobs(x::DataSubset{<:ProductNode})
 
-#  train
+# # Train the model
 opt = Flux.Optimise.ADAM()
 loss(x, y) = Flux.logitcrossentropy(m(x).data, y)
 loss(x::DataSubset, y) = loss(getobs(x), y)
@@ -78,5 +80,5 @@ loss(first(minibatches))
 gs = gradient(() -> loss(first(minibatches)), ps)
 Flux.Optimise.train!(loss, ps, minibatches, opt, cb = Flux.throttle(cb, 2))
 
-#calculate the accuracy
+# calculate the accuracy
 mean(Flux.onecold(m(data).data) .== Flux.onecold(target))

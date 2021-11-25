@@ -13,6 +13,8 @@ examples_generated_dir = joinpath(@__DIR__, "src", "examples")
 example_files = [joinpath(examples_dir, f) for f in [
     "mutagenesis.jl",
     "recipes.jl",
+    "schema_examination.jl",
+    "schema_visualization.jl",
 ]]
 
 example_mds = []

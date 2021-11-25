@@ -66,7 +66,8 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - run: julia --color=yes --project=./examples -e 'using Pkg; Pkg.instantiate()'
-      - run: julia --color=yes --project=./examples examples/recipes.jl
+      - run: julia --color=yes --project=./examples examples/make.jl
+      - run: julia --color=yes --project=./examples examples/generated/recipes.jl
       - run: julia --color=yes --project=./examples examples/mutagenesis.jl
       - run: julia --color=yes --project=./examples examples/schema_examination.jl
       - run: julia --color=yes --project=./examples examples/schema_visualization.jl

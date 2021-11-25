@@ -4,23 +4,30 @@
 # Following example demonstrates learning to [predict the mutagenicity on Salmonella typhimurium](https://relational.fit.cvut.cz/dataset/Mutagenesis) (dataset is stored in json format [in MLDatasets.jl](https://juliaml.github.io/MLDatasets.jl/stable/datasets/Mutagenesis/) for your convenience).
 
 #md # !!! tip
-#md #     This example is also available as a Jupyter notebook:
+#md #     This example is also available as a Jupyter notebook, feel free to run it yourself:
 #md #     [`mutagenesis.ipynb`](@__NBVIEWER_ROOT_URL__/examples/mutagenesis.ipynb)
 
+# Here we include libraries all necessary libraries
 using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
 
-# start by loading all samples
+# Here we load all samples.
 train_x, train_y = MLDatasets.Mutagenesis.traindata();
 test_x, test_y = MLDatasets.Mutagenesis.testdata();
+
+# We define some basic parameters for the construction and training of the neural network.
+# Minibatch size is self-explanatory, iterations is number of iterations of gradient descent
+# Neurons is number of neurons in hidden layers for each version of part of the neural network.
 minibatchsize = 100
 iterations = 5_000
-neurons = 20 		# neurons per layer
+neurons = 20
 
-#  Create the schema and extractor from training data
+# We create the schema of the training data, which is the first important step in using the JsonGrinder.
+# This computes both the structure (also known as JSON schema) and histogram of occurrences of individual values in the training data.
 sch = JsonGrinder.schema(train_x)
 extractor = suggestextractor(sch)
 
-#  Convert samples to Mill structure and extract targets
+# Then we use it to create the extractor converting jsons to Mill structures.
+# The `suggestextractor` is executed below with default setting, but it allows you heavy customization.
 train_data = extractor.(train_x)
 test_data = extractor.(test_x)
 labelnames = unique(train_y)
@@ -56,12 +63,12 @@ Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.th
 probs = softmax(inference(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
-print(mean(pred_classes .== test_y))
-# we see the accuracy is around 79% on test set
+mean(pred_classes .== test_y)
 
-#predicted classes for test set
-print(pred_classes)
-# gt classes for test set
-print(test_y)
+# we see the accuracy is around 75% on test set
+# predicted classes for test set
+pred_classes
+# Ground truth classes for test set
+test_y
 # probabilities for test set
-print(probs)
+probs

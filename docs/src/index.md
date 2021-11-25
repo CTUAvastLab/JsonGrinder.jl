@@ -93,20 +93,6 @@ str = rstrip(join(readlines(file)[4:end], "\n"))
 Markdown.parse(str)
 ```
 
-### Setup
-
-If you want to run this tutorial yourself, you can find the notebook file [in examples firectory](https://github.com/CTUAvastLab/JsonGrinder.jl/tree/master/examples/mutagenesis.ipynb).
-
-## A walkthrough of the example
-
-Here we include libraries and load the data. Dataset can be conveniently obtained using the [`MLDatasets` library](https://juliaml.github.io/MLDatasets.jl/stable/datasets/Mutagenesis/)
-
-```@example mutagenesis
-using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
-train_x, train_y = MLDatasets.Mutagenesis.traindata();
-test_x, test_y = MLDatasets.Mutagenesis.testdata();
-```
-
 We define some basic parameters for the construction and training of the neural network.
 ```@example mutagenesis
 minibatchsize = 100
