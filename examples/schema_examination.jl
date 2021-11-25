@@ -13,7 +13,7 @@ using JsonGrinder: DictEntry, Entry
 data_dir = "data/documents" #src
 data_dir = "../../../data/documents" #nb
 data_dir = "../../../data/documents" #md
-data_dir = "../data/documents" #jl
+data_dir = "data/documents" #jl
 sch = JsonGrinder.schema(readdir(data_dir, join=true), x->open(JSON.parse, x))
 # The default printing method restricts depth and width of the printed schema.
 # We can see the whole schema using the `printtree` function from `HierarchicalUtils`.
