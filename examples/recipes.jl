@@ -15,7 +15,7 @@ using JSON
 data_file = "data/recipes.json" #src
 data_file = "../../../data/recipes.json" #nb
 data_file = "../../../data/recipes.json" #md
-data_file = "../../data/recipes.json" #jl
+data_file = "../data/recipes.json" #jl
 samples = open(data_file,"r") do fid
 	Vector{Dict}(JSON.parse(read(fid, String)))
 end

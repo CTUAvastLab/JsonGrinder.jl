@@ -5,7 +5,7 @@ using JsonGrinder: DictEntry, Entry
 data_dir = "data/documents" #src
 data_dir = "../../../data/documents" #nb
 data_dir = "../../../data/documents" #md
-data_dir = "../../data/documents" #jl
+data_dir = "../data/documents" #jl
 sch = JsonGrinder.schema(readdir(data_dir, join=true), x->open(JSON.parse, x))
 # suggest default extractor with some keys as field
 extractor = suggestextractor(sch)

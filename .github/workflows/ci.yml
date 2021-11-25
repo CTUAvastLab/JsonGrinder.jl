@@ -69,8 +69,8 @@ jobs:
       - run: julia --color=yes --project=./examples examples/make.jl
       - run: julia --color=yes --project=./examples examples/generated/recipes.jl
       - run: julia --color=yes --project=./examples examples/mutagenesis.jl
-      - run: julia --color=yes --project=./examples examples/schema_examination.jl
-      - run: julia --color=yes --project=./examples examples/schema_visualization.jl
+      - run: julia --color=yes --project=./examples examples/generated/schema_examination.jl
+      - run: julia --color=yes --project=./examples examples/generated/schema_visualization.jl
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v1
         with:
