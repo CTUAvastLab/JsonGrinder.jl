@@ -84,16 +84,12 @@ The first three steps are handled by `JsonGrinder.jl`, the fourth step by `Mill.
 
 Authors see the biggest advantage in the `model` being hierarchical and reflecting the JSON structure. Thanks to `Mill.jl`, it can handle missing values at all levels.
 
-## Example
-
-### todo: add both this and recipes examples to docs
-
-Our idealized workflow is demonstrated in `examples/mutagenesis.jl` [determining mutagenicity on Salmonella typhimurium](https://relational.fit.cvut.cz/dataset/Mutagenesis) (dataset is stored in json format [in MLDatasets.jl](https://juliaml.github.io/MLDatasets.jl/stable/datasets/Mutagenesis/) for your convenience) and here we'll break it down in order to demonstrate the basic functionality of JsonGrinder.
+Our idealized workflow is demonstrated in following example, which can be also found in [Mutagenesis Example](@ref) and here we'll break it down in order to demonstrate the basic functionality of JsonGrinder.
 
 ```@eval
 import Markdown
-file = joinpath(@__DIR__, "..", "examples", "mutagenesis.md")
-str = rstrip(join(readlines(file)[4:end]))
+file = joinpath(@__DIR__, "examples", "mutagenesis.md")
+str = rstrip(join(readlines(file)[4:end], "\n"))
 Markdown.parse(str)
 ```
 

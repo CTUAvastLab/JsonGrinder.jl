@@ -1,8 +1,11 @@
-#-
+#src this layout is heavily inspired by how examples in https://github.com/Ferrite-FEM/Ferrite.jl are generated
+
+# # Mutagenesis Example
+# Following example demonstrates learning to [predict the mutagenicity on Salmonella typhimurium](https://relational.fit.cvut.cz/dataset/Mutagenesis) (dataset is stored in json format [in MLDatasets.jl](https://juliaml.github.io/MLDatasets.jl/stable/datasets/Mutagenesis/) for your convenience).
+
 #md # !!! tip
 #md #     This example is also available as a Jupyter notebook:
 #md #     [`mutagenesis.ipynb`](@__NBVIEWER_ROOT_URL__/examples/mutagenesis.ipynb)
-#-
 
 using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
 
