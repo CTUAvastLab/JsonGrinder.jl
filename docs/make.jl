@@ -24,7 +24,7 @@ end
 @show example_mds
 
 # for running only doctests
-# doctest(JsonGrinder)
+doctest(JsonGrinder)
 makedocs(
          sitename = "JsonGrinder.jl",
          # doctest = false,

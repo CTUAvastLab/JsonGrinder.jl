@@ -88,7 +88,7 @@ Our idealized workflow is demonstrated in following example, which can be also f
 
 ```@eval
 import Markdown
-file = joinpath(@__DIR__, "examples", "mutagenesis.md")
+file = joinpath(@__DIR__, "..", "src", "examples", "mutagenesis.md")
 str = rstrip(join(readlines(file)[4:end], "\n"))
 Markdown.parse(str)
 ```
