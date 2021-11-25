@@ -2,7 +2,11 @@ using Flux, MLDataPattern, Mill, JsonGrinder, JSON, HierarchicalUtils, StatsBase
 using JsonGrinder: DictEntry, Entry
 
 # load files in data/documents and parse them
-sch = JsonGrinder.schema(readdir("data/documents", join=true), x->open(JSON.parse, x))
+data_dir = "data/documents" #src
+data_dir = "../../../data/documents" #nb
+data_dir = "../../../data/documents" #md
+data_dir = "../../data/documents" #jl
+sch = JsonGrinder.schema(readdir(data_dir, join=true), x->open(JSON.parse, x))
 # suggest default extractor with some keys as field
 extractor = suggestextractor(sch)
 # show whole extractor
