@@ -13,7 +13,7 @@ using JSON
 # start by loading all samples
 #src magic for resolving paths
 data_file = "data/recipes.json" #src
-data_file = "../../../data/recipes.json" #!src
+#!src data_file = "../../../data/recipes.json"
 samples = open(data_file,"r") do fid
 	Vector{Dict}(JSON.parse(read(fid, String)))
 end
