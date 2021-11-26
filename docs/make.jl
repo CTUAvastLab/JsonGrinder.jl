@@ -30,18 +30,8 @@ for f in example_files
     push!(example_mds, relpath(md_file, dirname(examples_generated_dir)))
 end
 
-# because there is a bug that @example blocks are not evaluated when they are included using @eval, I do it manually
-# generated_path = joinpath(src_dir, "generated")
-# !ispath(generated_path) && mkpath(generated_path)
-# open(joinpath(generated_path, "index.md"), "w+") do io
-#     write(io, read("$src_dir/index_header.md"))
-#     write(io, read("$examples_dir/mutagenesis.md"))
-#     write(io, read("$src_dir/index_footer.md"))
-# end
-
-
 # for running only doctests
-doctest(JsonGrinder)
+is_ci && doctest(JsonGrinder)
 makedocs(
          sitename = "JsonGrinder.jl",
          # doctest = false,
@@ -50,7 +40,6 @@ makedocs(
                                   assets=["assets/favicon.ico", "assets/custom.css"]),
          modules = [JsonGrinder],
          pages = [
-#                   "Home" => "generated/index.md",
                   "Home" => "index.md",
                   "Schema" => "schema.md",
                   "Creating extractors" => "extractors.md",
