@@ -43,6 +43,9 @@ generate_html("recipes.html", sch, max_vals=nothing)
 # If we omit the first argument, we will get the html as a string
 generated_html = generate_html(sch, max_vals = 100);
 
+# Now we can look at the visualization
+generated_html
+
 # If you like, you may use the Electron to open it in browser.
 # using the following code (this works if you run it from REPL, but not from jupyter notebook or in CI)
 # ```julia

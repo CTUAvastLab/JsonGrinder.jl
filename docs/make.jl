@@ -18,14 +18,18 @@ example_files = [joinpath(examples_dir, f) for f in [
     "schema_visualization.jl",
 ]]
 
+str = read(joinpath(@__DIR__, "src", "examples", "schema_visualization.md"), String)
 function print_html_raw(str)
+    str
     lines = split(str, "\n")
-    html_start = findfirst(s -> occursin("\"<!DOCTYPE html>", s), lines)
-    html_end = findfirst(s -> occursin("</html>\\n\"", s), lines)
-    lines[html_start-1] *= "@raw html"
-    for i in html_start:html_end
-        lines[i] = replace(lines[i], "\\\"" => "\"")
+    html_line = findfirst(s -> occursin("<!DOCTYPE html>", s) && occursin("</html>\\n\"", s), lines)
+    if isnothing(html_line)
+        return str
     end
+    lines[html_start-1] *= "@raw html"
+    lines[html_line] = replace(lines[html_line], "\\\"" => "\"")
+    lines[html_line] = replace(lines[html_line], "\\n" => "\n")
+    lines[html_line] = replace(lines[html_line], "\\t" => "\t")
     join(lines, "\n")
 end
 
