@@ -7,14 +7,18 @@
 #md #     This example is also available as a Jupyter notebook:
 #md #     [`recipes.ipynb`](@__NBVIEWER_ROOT_URL__/examples/recipes.ipynb)
 
-using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
-using JSON
+#nb # We start by installing JsonGrinder and few other packages we need for the example.
+#nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
+#nb # which may be different from e.g. python where we usually use fewer larger packages.
+#nb ] add JsonGrinder Flux Mill MLDataPattern Statistics ChainRulesCore JSON
+
+using JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore, JSON
 
 # start by loading all samples
 #src magic for resolving paths
 data_file = "data/recipes.json" #src
 data_file = "../../../data/recipes.json" #nb
-data_file = "../../../data/recipes.json" #md
+data_file = "data/recipes.json" #md
 data_file = "data/recipes.json" #jl
 samples = open(data_file,"r") do fid
 	Vector{Dict}(JSON.parse(read(fid, String)))

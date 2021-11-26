@@ -7,8 +7,13 @@
 #md #     This example is also available as a Jupyter notebook, feel free to run it yourself:
 #md #     [`mutagenesis.ipynb`](@__NBVIEWER_ROOT_URL__/examples/mutagenesis.ipynb)
 
+#nb # We start by installing JsonGrinder and few other packages we need for the example.
+#nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
+#nb # which may be different from e.g. python where we usually use fewer larger packages.
+#nb ] add JsonGrinder MLDatasets Flux Mill MLDataPattern Statistics ChainRulesCore
+
 # Here we include libraries all necessary libraries
-using MLDatasets, JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
+using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
 
 # Here we load all samples.
 train_x, train_y = MLDatasets.Mutagenesis.traindata();

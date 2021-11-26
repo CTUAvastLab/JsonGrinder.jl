@@ -6,6 +6,11 @@
 #md #     This example is also available as a Jupyter notebook, feel free to run it yourself:
 #md #     [`schema_visualization.ipynb`](@__NBVIEWER_ROOT_URL__/examples/schema_visualization.ipynb)
 
+#nb # We start by installing JsonGrinder and few other packages we need for the example.
+#nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
+#nb # which may be different from e.g. python where we usually use fewer larger packages.
+#nb ] add JsonGrinder JSON
+
 using JsonGrinder
 using JSON
 
@@ -14,7 +19,7 @@ import JsonGrinder: generate_html
 #load all samples
 data_file = "data/recipes.json" #src
 data_file = "../../../data/recipes.json" #nb
-data_file = "../../../data/recipes.json" #md
+data_file = "data/recipes.json" #md
 data_file = "data/recipes.json" #jl
 samples_str = open(data_file) do fid
 	read(fid, String)

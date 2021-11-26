@@ -6,13 +6,18 @@
 #md #     This example is also available as a Jupyter notebook, feel free to run it yourself:
 #md #     [`schema_examination.ipynb`](@__NBVIEWER_ROOT_URL__/examples/schema_examination.ipynb)
 
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, HierarchicalUtils, StatsBase
+#nb # We start by installing JsonGrinder and few other packages we need for the example.
+#nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
+#nb # which may be different from e.g. python where we usually use fewer larger packages.
+#nb ] add JsonGrinder Flux Mill MLDataPattern JSON HierarchicalUtils StatsBase
+
+using JsonGrinder, Flux, Mill, MLDataPattern, JSON, HierarchicalUtils, StatsBase
 using JsonGrinder: DictEntry, Entry
 
 # We load files in data/documents and parse them
 data_dir = "data/documents" #src
 data_dir = "../../../data/documents" #nb
-data_dir = "../../../data/documents" #md
+data_dir = "data/documents" #md
 data_dir = "data/documents" #jl
 sch = JsonGrinder.schema(readdir(data_dir, join=true), x->open(JSON.parse, x))
 # The default printing method restricts depth and width of the printed schema.
