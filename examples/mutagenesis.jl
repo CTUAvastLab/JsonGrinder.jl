@@ -10,7 +10,8 @@
 #nb # We start by installing JsonGrinder and few other packages we need for the example.
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
-#nb ] add JsonGrinder MLDatasets Flux Mill MLDataPattern Statistics ChainRulesCore
+#nb using Pkg
+#nb pkg"add JsonGrinder MLDatasets Flux Mill MLDataPattern Statistics ChainRulesCore"
 
 # Here we include libraries all necessary libraries
 using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
