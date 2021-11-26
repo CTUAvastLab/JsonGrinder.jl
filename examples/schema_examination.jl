@@ -10,48 +10,86 @@
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master Flux Mill#master MLDataPattern JSON HierarchicalUtils StatsBase"
+#nb pkg"add JsonGrinder#master Flux Mill#master MLDataPattern JSON HierarchicalUtils StatsBase OrderedCollections"
 
-using JsonGrinder, Flux, Mill, MLDataPattern, JSON, HierarchicalUtils, StatsBase
+using JsonGrinder, Flux, Mill, MLDataPattern, JSON, HierarchicalUtils, StatsBase, OrderedCollections
 using JsonGrinder: DictEntry, Entry
 
-# We load files in data/documents and parse them
 data_dir = "data/documents" #src
 data_dir = "../../../data/documents" #nb
 data_dir = "data/documents" #md
 data_dir = "data/documents" #jl
-sch = JsonGrinder.schema(readdir(data_dir, join=true), x->open(JSON.parse, x))
-# The default printing method restricts depth and width of the printed schema.
-# We can see the whole schema using the `printtree` function from `HierarchicalUtils`.
-printtree(sch)
 
 # This is how some of the documents look like:
 open(JSON.parse, first(readdir(data_dir, join=true)))
 
+# We load files in data/documents and parse them
+sch = JsonGrinder.schema(readdir(data_dir, join=true), x->open(JSON.parse, x))
+# The default printing method restricts depth and width of the printed schema.
+# We can see the whole schema using the `printtree` function from [HierarchicalUtils](https://github.com/CTUAvastLab/HierarchicalUtils.jl).
+# The htrunc and vtrunc kwargs tell us maximum number of keys and max depth that will be rendered, respectively.
+printtree(sch, htrunc=20, vtrunc=20)
+
 # We suggest default extractor.
 extractor = suggestextractor(sch)
 
-# We show the whole extractor.
-printtree(extractor)
-# we see that there are some dictionaries with lots of keys, let's examine schema
-# list_lens lets us iterate over all elements in a way we know their position in schema
-# this prints lengths of children of all dict entries.
+# We show the almost whole extractor. Feel free to remove the htrunc and vtrunc kwargs if you want to
+# see it whole.
+printtree(extractor, htrunc=20, vtrunc=20)
+
+# We see that there are some dictionaries with lots of keys, so let's examine the schema more.
+# 
+# Mill.jl [treats Dictionaries as a cartesian product of their embeddings](https://ctuavastlab.github.io/Mill.jl/stable/manual/nodes/#[ProductNode](@ref)s-and-[ProductModel](@ref)s)
+# which does make sense in case when there is consistent number of keys, and keys themselves don't carry semantic meaning.
+# Looking at the schema, we can hypothesize many different keys, which occur very scarcely in data, carry semantic information.
+# 
+# We want to examine how many unique keys are there in the schema in order to handle them differently and train also on key names in such case.
+# So let's take a look at histogram of number of children per Dictionary.
+# 
+# Function [list_lens](https://ctuavastlab.github.io/Mill.jl/stable/api/utilities/#Mill.list_lens) ¨
+# from [Mill.jl](https://github.com/CTUAvastLab/Mill.jl) lets us iterate over all nodes in our tree structure
+# in a way we know their position in the schema.
+StatsBase.countmap([length(get(sch, i).childs) for i in list_lens(sch) if get(sch, i) isa DictEntry]) |> sort
+
+# We see that 1 dict has 103 unique children, 1 dict has 13 unique children, 
+# 91 dicts have 9 unique children, 59 dicts don't have any children etc.
+# 
+# We can take a more detailed look at Dicts with > 5 children.
+# 
+# The following code prints paths to all Dictionaries in the schema and number of their children if they have more than 5 children.
+# In total there is lots of diction
 for i in list_lens(sch)
     e = get(sch, i)
-    if e isa DictEntry
+    if e isa DictEntry && length(e.childs) > 5
         @info i length(e.childs)
     end
 end
 
-# that's a lots of numbers, let's see histogram
-length_hist = StatsBase.countmap([length(get(sch, i).childs) for i in list_lens(sch) if get(sch, i) isa DictEntry])
-
-# we see highest lengths are 103 and 13, let's set 13 as a threshold
+# The dictionaries with most unique children are following ones:
+# ```
+# ┌ Info: (@lens _.childs[:ref_entries])
+# └   length(e.childs) = 13
+# ┌ Info: (@lens _.childs[:bib_entries])
+# └   length(e.childs) = 103
+# ```
+# because this is where keys have semantic meaning.
+# JsonGrinder contains [ExtractKeyAsField](@ref) extractor, which treats 
+# dictionaries with large number of keys as array of pairs (key, value)
+# which leads to more reasonable model. 
+# 
+# There is a default value, but we want to set it ourselves to 13 to cover
+# both cases we see in out data. This can be performed by creating new extractor
+# like this
 extractor = suggestextractor(sch, (; key_as_field=13))
-# show new extractor
-printtree(extractor)
-# this extractor looks much better
-# but still, some values are very sparse,
+
+# When we look at the larger part of extractor
+printtree(extractor, htrunc=20, vtrunc=20)
+# we now see represenation of `bib_entries` and `ref_entries` is
+# more reasonable now.
+# 
+# So we can say this extractor looks much better.
+# 
+# But still, some values are very sparse,
 # let's print all parts of schema where each value is observed only once
 for i in list_lens(sch)
     e = get(sch, i)
@@ -62,6 +100,7 @@ end
 
 #  we can see lots of leaves under `bib_entries`, which is cased by uniqueness of keys here
 # but apart from that, we can see other interesting fields
+# ```
 # [ Info: (@lens _.childs[:metadata].childs[:authors].items.childs[:middle].items)
 # [ Info: (@lens _.childs[:metadata].childs[:authors].items.childs[:last])
 # [ Info: (@lens _.childs[:metadata].childs[:authors].items.childs[:affiliation].childs[:location].childs[:region])
@@ -77,36 +116,14 @@ end
 # [ Info: (@lens _.childs[:back_matter].items.childs[:ref_spans].items.childs[:start])
 # [ Info: (@lens _.childs[:back_matter].items.childs[:ref_spans].items.childs[:text])
 # [ Info: (@lens _.childs[:back_matter].items.childs[:ref_spans].items.childs[:end])
-
-# let's remove some of them from extractor
+# ```
+# 
+# Let's remove some of them from the extractor so we don't train on them.
 delete!(extractor.dict, :paper_id)
 delete!(extractor.dict[:metadata].dict[:authors].item.dict, :last)
 delete!(extractor.dict[:metadata].dict[:authors].item.dict, :middle)
 
-# we can also notice, that some long texts are extracted as categorical variables, e.g.
-extractor[:body_text].item[:text]
-extractor[:body_text].item[:section]
-# let's replace them manually by string extractors
-# note that we need to use the .dict, as the [] accessor on item is just readonly syntax-sugar
-extractor[:body_text].item.dict[:text] = ExtractString()
-extractor[:body_text].item.dict[:section] = ExtractString()
+# Now the extractor looks even better!
+printtree(extractor, htrunc=20, vtrunc=20)
 
-# this concludes example about examining schema and modifying extractor accordingly.
-using JsonGrinder: is_intable, is_floatable, unify_types, extractscalar
-function string_multi_representation_scalar_extractor()
-	vcat([
-	(e -> unify_types(sch[:paper_id]) <: String,
-		(e, uniontypes) -> MultipleRepresentation((
-			ExtractCategorical(top_n_keys(e, 20), uniontypes),
-			extractscalar(unify_types(e), e, uniontypes)
-		)))
-	], JsonGrinder.default_scalar_extractor())
-end
-
-top_n_keys(e::Entry, n::Int) = map(x->x[1], sort(e.counts |> collect, by=x->x[2], rev=true)[begin:min(n, end)])
-suggestextractor(sch, (;
-	scalar_extractors=string_multi_representation_scalar_extractor(),
-	key_as_field=13,
-	)
-) |> printtree
-unify_types(sch[:paper_id]) <: String
+# This concludes example about examining schema and modifying extractor accordingly.

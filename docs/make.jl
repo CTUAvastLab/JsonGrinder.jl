@@ -18,6 +18,17 @@ example_files = [joinpath(examples_dir, f) for f in [
     "schema_visualization.jl",
 ]]
 
+function print_html_raw(str)
+    lines = split(str, "\n")
+    html_start = findfirst(s -> occursin("\"<!DOCTYPE html>", s), lines)
+    html_end = findfirst(s -> occursin("</html>\\n\"", s), lines)
+    lines[html_start-1] *= "@raw html"
+    for i in html_start:html_end
+        lines[i] = replace(lines[i], "\\\"" => "\"")
+    end
+    join(lines, "\n")
+end
+
 example_mds = []
 
 #for purpose of local testing
@@ -25,7 +36,7 @@ config = is_ci ? Dict() : Dict("nbviewer_root_url"=>"https://nbviewer.jupyter.or
 
 # because there is a bug that @example blocks are not evaluated when they are included using @eval, I run the markdown code in Literate.jl
 for f in example_files
-    md_file = Literate.markdown(f, examples_generated_dir; config, credit = false, execute = true)
+    md_file = Literate.markdown(f, examples_generated_dir; config, credit = false, execute = true, postprocess = print_html_raw)
     Literate.notebook(f, examples_generated_dir; config, execute = is_ci) # Don't execute locally, because it takes long
     push!(example_mds, relpath(md_file, dirname(examples_generated_dir)))
 end
@@ -49,7 +60,7 @@ makedocs(
                   "External tools" => "hierarchical.md",
                   "API Documentation" => "api.md",
                   "Developers" => "developers.md",
-                  "Citation" => "citation.md"
+                  "Citation" => "citation.md",
                   ],
 
 )
