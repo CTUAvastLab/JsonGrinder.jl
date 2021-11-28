@@ -18,7 +18,7 @@ example_files = [joinpath(examples_dir, f) for f in [
     "schema_visualization.jl",
 ]]
 
-str = read(joinpath(@__DIR__, "src", "examples", "schema_visualization.md"), String)
+# str = read(joinpath(@__DIR__, "src", "examples", "schema_visualization.md"), String)
 function print_html_raw(str)
     str
     lines = split(str, "\n")

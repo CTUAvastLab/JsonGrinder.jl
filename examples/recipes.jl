@@ -1,12 +1,27 @@
 # # Recipe Ingredients Example
 # Following example demonstrates prediction of cuisine from set of ingredients.
-# For simplicity, the repo contains small subset of the dataset, the whole dataset and problem description can
-# be found [on this Kaggle page](https://www.kaggle.com/kaggle/recipe-ingredients-dataset/home).
+
+# ## A gentle introduction to creation of neural networks reflexing structure of JSON documents 
+
+# This notebook serves as an introduction to `Mill` and `JsonGrinder` libraries. 
+# The former provides support for Multi-instance learning problems, their cascades, and their Cartesian product ([see the paper](https://arxiv.org/abs/2105.09107) for theoretical explanation). 
+# The latter `JsonGrinder` simplifies processing of JSON documents. It allows to infer schema of JSON documents from which it suggests an extractor to convert JSON document to a `Mill` structure.
+# `JsonGrinder` defines basic set of "extractors" converting values of keys to numeric representation (matrices) or to convert them to corresponding structures in `Mill`. Naturally, this set of extractors can be extended.
+# 
+# Below, the intended workflow is demonstrated on a simple problem of guessing type of a cuisine from a list of ingrediences. 
+# The whole dataset and problem description can be found [on this Kaggle page](https://www.kaggle.com/kaggle/recipe-ingredients-dataset/home).
+# Note that the goal is not to achieve state of the art, but to demonstrate the workflow.
 
 #md # !!! tip
 #md #     This example is also available as a Jupyter notebook:
 #md #     [`recipes.ipynb`](@__NBVIEWER_ROOT_URL__/examples/recipes.ipynb)
 
+# todo: dodělat, domigrovat z ipynb a ten pak smazat
+# **Caution**
+# To decrease the computational load, we keep locally in the repo only a subset of the whole dataset (39774), size of the minibatch, and size of the validation data. 
+# Of course these numbers are useless in practice, and therefore the resulting accuracy is poor. 
+# Using all samples (666920), setting minibatch size to 100, and leaving 1000 samples for validation / testing gives you accuracy 0.74 on validation data.
+# 
 #nb # We start by installing JsonGrinder and few other packages we need for the example.
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
