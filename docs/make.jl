@@ -26,7 +26,7 @@ function print_html_raw(str)
     if isnothing(html_line)
         return str
     end
-    lines[html_start-1] *= "@raw html"
+    lines[html_line-1] *= "@raw html"
     lines[html_line] = replace(lines[html_line], "\\\"" => "\"")
     lines[html_line] = replace(lines[html_line], "\\n" => "\n")
     lines[html_line] = replace(lines[html_line], "\\t" => "\t")
