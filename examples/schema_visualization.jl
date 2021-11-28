@@ -44,6 +44,9 @@ generate_html("recipes.html", sch, max_vals=nothing)
 generated_html = generate_html(sch, max_vals = 100);
 
 # Now we can look at the visualization
+# Feel free to click the triangles, individual nodes of the tree are collapsed by default,
+# but can be expanded or collapsed when clicked. This way you can easily examine individual parts of the schema.
+# For lists we show histograms of lengths, for leaves we show histogram of values etc.
 generated_html
 
 # If you like, you may use the Electron to open it in browser.

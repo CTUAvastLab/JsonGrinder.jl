@@ -18,7 +18,7 @@ example_files = [joinpath(examples_dir, f) for f in [
     "schema_visualization.jl",
 ]]
 
-# str = read(joinpath(@__DIR__, "src", "examples", "schema_visualization.md"), String)
+# str = read(joinpath(@__DIR__, "src", "examples", "schema_visualization_raw.md"), String);
 function print_html_raw(str)
     str
     lines = split(str, "\n")
@@ -30,6 +30,7 @@ function print_html_raw(str)
     lines[html_line] = replace(lines[html_line], "\\\"" => "\"")
     lines[html_line] = replace(lines[html_line], "\\n" => "\n")
     lines[html_line] = replace(lines[html_line], "\\t" => "\t")
+    lines[html_line] = replace(lines[html_line], r"\\(\w+)" => s"\1")
     join(lines, "\n")
 end
 
