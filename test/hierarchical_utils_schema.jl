@@ -108,14 +108,14 @@ end
     """
     [Dict] [""] \t# updated = 6
       ├── a: [Scalar - Int64], 1 unique values ["E"] \t# updated = 4
-      ├── c: [Dict] ["U"] \t# updated = 2
-      │        └── a: [Dict] ["c"] \t# updated = 2
-      │                 ├── a: [List] ["e"] \t# updated = 2
-      │                 │        └── [Scalar - Float64,Int64], 3 unique values ["f"] \t# updated = 5
-      │                 └── b: [List] ["g"] \t# updated = 2
-      │                          └── [Scalar - Float64,Int64], 3 unique values ["h"] \t# updated = 5
-      └── d: [Empty List] ["k"] \t# updated = 5
-               └── Nothing ["s"]
+      ├── d: [Empty List] ["U"] \t# updated = 5
+      │        └── Nothing ["c"]
+      └── c: [Dict] ["k"] \t# updated = 2
+               └── a: [Dict] ["s"] \t# updated = 2
+                        ├── a: [List] ["u"] \t# updated = 2
+                        │        └── [Scalar - Float64,Int64], 3 unique values ["v"] \t# updated = 5
+                        └── b: [List] ["w"] \t# updated = 2
+                                 └── [Scalar - Float64,Int64], 3 unique values ["x"] \t# updated = 5
     """
 end
 
@@ -133,18 +133,18 @@ end
     """
     [Dict] [""] \t# updated = 6
       ├── a: [Scalar - Int64], 1 unique values ["E"] \t# updated = 4
-      ├── c: [MultiEntry] ["U"] \t# updated = 5
-      │        ├── 1: [Dict] ["Y"] \t# updated = 2
-      │        │        └── a: [Dict] ["a"] \t# updated = 2
-      │        │                 ├── a: [List] ["aU"] \t# updated = 2
-      │        │                 │        └── [Scalar - Float64,Int64], 3 unique values ["ak"] \t# updated = 5
-      │        │                 └── b: [List] ["b*"] \t# updated = 2
-      │        │                          └── [Scalar - Float64,Int64], 3 unique values ["bE"] \t# updated = 5
-      │        ├── 2: [Scalar - Float64,Int64], 2 unique values ["c"] \t# updated = 2
-      │        └── 3: [List] ["g"] \t# updated = 1
-      │                 └── [Scalar - String], 3 unique values ["i"] \t# updated = 3
-      └── d: [Empty List] ["k"] \t# updated = 5
-               └── Nothing ["s"]
+      ├── d: [Empty List] ["U"] \t# updated = 5
+      │        └── Nothing ["c"]
+      └── c: [MultiEntry] ["k"] \t# updated = 5
+               ├── 1: [Dict] ["o"] \t# updated = 2
+               │        └── a: [Dict] ["q"] \t# updated = 2
+               │                 ├── a: [List] ["qU"] \t# updated = 2
+               │                 │        └── [Scalar - Float64,Int64], 3 unique values ["qk"] \t# updated = 5
+               │                 └── b: [List] ["r*"] \t# updated = 2
+               │                          └── [Scalar - Float64,Int64], 3 unique values ["rE"] \t# updated = 5
+               ├── 2: [Scalar - Float64,Int64], 2 unique values ["s"] \t# updated = 2
+               └── 3: [List] ["w"] \t# updated = 1
+                        └── [Scalar - String], 3 unique values ["y"] \t# updated = 3
     """
 end
 

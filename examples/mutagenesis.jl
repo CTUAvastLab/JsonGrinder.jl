@@ -1,85 +1,101 @@
-using Flux, MLDataPattern, Mill, JsonGrinder, JSON, Statistics, IterTools, ThreadTools
-using JsonGrinder: suggestextractor, ExtractDict
-using Mill: reflectinmodel
-using StatsBase: sample
+#src this layout is heavily inspired by how examples in https://github.com/Ferrite-FEM/Ferrite.jl are generated
 
-###############################################################
-# start by loading all samples
-###############################################################
-samples = Vector{Dict}(open(JSON.parse, "data/mutagenesis/data.json"))
+# # Mutagenesis Example
+# Following example demonstrates learning to [predict the mutagenicity on Salmonella typhimurium](https://relational.fit.cvut.cz/dataset/Mutagenesis) (dataset is stored in json format [in MLDatasets.jl](https://juliaml.github.io/MLDatasets.jl/stable/datasets/Mutagenesis/) for your convenience).
 
-JSON.print(samples[3],2)
+#md # !!! tip
+#md #     This example is also available as a Jupyter notebook, feel free to run it yourself:
+#md #     [`mutagenesis.ipynb`](@__NBVIEWER_ROOT_URL__/examples/mutagenesis.ipynb)
 
-metadata = open(JSON.parse, "data/mutagenesis/meta.json")
-labelkey = metadata["label"]
-test_num = metadata["test_samples"]
+#nb # We start by installing JsonGrinder and few other packages we need for the example.
+#nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
+#nb # which may be different from e.g. python where we usually use fewer larger packages.
+#nb using Pkg
+#nb pkg"add JsonGrinder#master MLDatasets Flux Mill#master MLDataPattern Statistics ChainRulesCore"
+
+# Here we include libraries all necessary libraries
+using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
+
+# Here we load all samples.
+train_x, train_y = MLDatasets.Mutagenesis.traindata();
+test_x, test_y = MLDatasets.Mutagenesis.testdata();
+
+# We define some basic parameters for the construction and training of the neural network.
+# Minibatch size is self-explanatory, iterations is number of iterations of gradient descent
+# Neurons is number of neurons in hidden layers for each version of part of the neural network.
 minibatchsize = 100
 iterations = 5_000
-neurons = 20 		# neurons per layer
+neurons = 20
 
-targets = map(i -> i[labelkey], samples)
-foreach(i -> delete!(i, labelkey), samples)
+# We create the schema of the training data, which is the first important step in using the JsonGrinder.
+# This computes both the structure (also known as JSON schema) and histogram of occurrences of individual values in the training data.
+sch = JsonGrinder.schema(train_x)
 
-train_indices = 1:length(samples)-test_num
-test_indices = length(samples)-test_num+1:length(samples)
-
-#####
-#  Create the schema and extractor
-#####
-sch = JsonGrinder.schema(samples)
+# Then we use it to create the extractor converting jsons to Mill structures.
+# The `suggestextractor` is executed below with default setting, but it allows you heavy customization.
 extractor = suggestextractor(sch)
 
-#####
-#  Convert samples to Mill structure and extract targets
-#####
-data = tmap(extractor, samples)
-labelnames = unique(targets)
+# We convert jsons to mill data samples and prepare list of classes. This classification problem is two-class, but we want to infer it from labels.
+# The extractor is callable, so we can pass it vector of samples to obtain vector of structures with extracted features.
+train_data = extractor.(train_x)
+test_data = extractor.(test_x)
+labelnames = unique(train_y)
 
-#####
-#  Create the model
-#####
+# # Create the model
+# We create the model reflecting structure of the data
 model = reflectinmodel(sch, extractor,
 	layer -> Dense(layer, neurons, relu),
 	bag -> SegmentedMeanMax(bag),
 	fsm = Dict("" => layer -> Dense(layer, length(labelnames))),
 )
+# this allows us to create model flexibly, without the need to hardcode individual layers.
+# Individual arguments of `reflectinmodel` are explained in [Mill.jl documentation](https://CTUAvastLab.github.io/Mill.jl/dev/manual/reflectin/#Model-Reflection). But briefly: for every numeric array in the sample, model will create a dense layer with `neurons` neurons (20 in this example). For every vector of observations (called bag in Multiple Instance Learning terminology), it will create aggregation function which will take mean, maximum of feature vectors and concatenate them. The `fsm` keyword argument basically says that on the end of the NN, as a last layer, we want 2 neurons `length(labelnames)` in the output layer, not 20 as in the intermediate layers.
 
-#####
-#  Train the model
-#####
-function minibatch()
-	idx = sample(1:length(data[train_indices]), minibatchsize, replace = false)
-	reduce(catobs, data[idx]), Flux.onehotbatch(targets[idx], labelnames)
-end
+# # Train the model
+# Then, we define few handy functions and a loss function, which is categorical crossentropy in our case.
+loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
+inference(x::AbstractMillNode) = model(x).data
+inference(x::AbstractVector{<:AbstractMillNode}) = inference(reduce(catobs, x))
+accuracy(x,y) = mean(labelnames[Flux.onecold(inference(x))] .== y)
+loss(xy::Tuple) = loss(xy...)
+@non_differentiable Base.reduce(catobs, x::AbstractVector{<:AbstractMillNode})
 
-accuracy(x,y) = mean(labelnames[Flux.onecold(model(x).data)] .== y)
-
-trainset = reduce(catobs, data[train_indices])
-testset = reduce(catobs, data[test_indices])
-
+# And we can add a callback which will be printing train and test accuracy during the training
+# and then we can start trining
 cb = () -> begin
-	train_acc = accuracy(trainset, targets[train_indices])
-	test_acc = accuracy(testset, targets[test_indices])
+	train_acc = accuracy(train_data, train_y)
+	test_acc = accuracy(test_data, test_y)
 	println("accuracy: train = $train_acc, test = $test_acc")
 end
-ps = Flux.params(model)
-loss = (x,y) -> Flux.logitcrossentropy(model(x).data, y)
-Flux.Optimise.train!(loss, ps, repeatedly(minibatch, iterations), ADAM(), cb = Flux.throttle(cb, 2))
 
-###############################################################
-#  Classify test set
-###############################################################
+# Lastly we turn our training data to minibatches, and we can start training
+minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
+Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))
+# We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on test set we get over 70%.
 
-probs = softmax(model(testset).data)
+# # Classify test set
+# The Last part is inference on test data.
+probs = softmax(inference(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
+mean(pred_classes .== test_y)
 
-print(mean(pred_classes .== targets[test_indices]))
-# we see the accuracy is around 79% on test set
-
-#predicted classes for test set
-print(pred_classes)
-#gt classes for test set
-print(targets[test_indices])
+# `pred_classes` contains the predictions for our test set.
+# we see the accuracy is around 75% on test set
+# predicted classes for test set
+pred_classes
+# Ground truth classes for test set
+test_y
 # probabilities for test set
-print(probs)
+probs
+
+# We can look at individual samples. For instance, some sample from test set is
+test_data[2]
+
+# and the corresponding classification is
+pred_classes[2]
+
+# if you want to see the probability distribution, it can be obtained by applying `softmax` to the output of the network.
+softmax(model(test_data[2]).data)
+
+# so we can see that the probability that given sample is `mutagenetic` is almost 1.
