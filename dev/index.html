@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · JsonGrinder.jl</title><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script><link href="assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href><img class="docs-light-only" src="assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#Motivation"><span>Motivation</span></a></li></ul></li><li><a class="tocitem" href="schema/">Schema</a></li><li><a class="tocitem" href="extractors/">Creating extractors</a></li><li><a class="tocitem" href="exfunctions/">Extractors overview</a></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="examples/mutagenesis/">Mutagenesis Example</a></li><li><a class="tocitem" href="examples/recipes/">Recipe Ingredients Example</a></li><li><a class="tocitem" href="examples/schema_examination/">Schema Examination</a></li><li><a class="tocitem" href="examples/schema_visualization/">Schema Visualization</a></li></ul></li><li><a class="tocitem" href="automl/">AutoML</a></li><li><a class="tocitem" href="hierarchical/">External tools</a></li><li><a class="tocitem" href="api/">API Documentation</a></li><li><a class="tocitem" href="developers/">Developers</a></li><li><a class="tocitem" href="citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="JsonGrinder.jl"><a class="docs-heading-anchor" href="#JsonGrinder.jl">JsonGrinder.jl</a><a id="JsonGrinder.jl-1"></a><a class="docs-heading-anchor-permalink" href="#JsonGrinder.jl" title="Permalink"></a></h1><p><strong>JsonGrinder</strong> is a collection of routines that facilitates conversion of JSON documents into structures used by <a href="https://github.com/CTUAvastLab/Mill.jl">Mill.jl</a> project.</p><h2 id="Motivation"><a class="docs-heading-anchor" href="#Motivation">Motivation</a><a id="Motivation-1"></a><a class="docs-heading-anchor-permalink" href="#Motivation" title="Permalink"></a></h2><p>Imagine that you want to train a classifier on data looking like this</p><pre><code class="language-json hljs">{
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · JsonGrinder.jl</title><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script><link href="assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href><img class="docs-light-only" src="assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#Motivation"><span>Motivation</span></a></li></ul></li><li><a class="tocitem" href="schema/">Schema</a></li><li><a class="tocitem" href="extractors/">Creating extractors</a></li><li><a class="tocitem" href="exfunctions/">Extractors overview</a></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="examples/">Examples Overview</a></li><li><a class="tocitem" href="examples/mutagenesis/">Mutagenesis Example</a></li><li><a class="tocitem" href="examples/recipes/">Recipe Ingredients Example</a></li><li><a class="tocitem" href="examples/schema_examination/">Schema Examination</a></li><li><a class="tocitem" href="examples/schema_visualization/">Schema Visualization</a></li></ul></li><li><a class="tocitem" href="automl/">AutoML</a></li><li><a class="tocitem" href="hierarchical/">External tools</a></li><li><a class="tocitem" href="api/">API Documentation</a></li><li><a class="tocitem" href="developers/">Developers</a></li><li><a class="tocitem" href="citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="JsonGrinder.jl"><a class="docs-heading-anchor" href="#JsonGrinder.jl">JsonGrinder.jl</a><a id="JsonGrinder.jl-1"></a><a class="docs-heading-anchor-permalink" href="#JsonGrinder.jl" title="Permalink"></a></h1><p><strong>JsonGrinder</strong> is a collection of routines that facilitates conversion of JSON documents into structures used by <a href="https://github.com/CTUAvastLab/Mill.jl">Mill.jl</a> project.</p><h2 id="Motivation"><a class="docs-heading-anchor" href="#Motivation">Motivation</a><a id="Motivation-1"></a><a class="docs-heading-anchor-permalink" href="#Motivation" title="Permalink"></a></h2><p>Imagine that you want to train a classifier on data looking like this</p><pre><code class="language-json hljs">{
   &quot;ind1&quot;: 1,
   &quot;inda&quot;: 0,
   &quot;logp&quot;: 6.01,
@@ -78,7 +78,7 @@ The following packages will be downloaded:
     ---------------------------|-----------------
     libgfortran-ng-7.5.0       |      ha8ba4b0_17          22 KB
     libgfortran4-7.5.0         |      ha8ba4b0_17         995 KB
-    scipy-1.7.1                |   py39h292c36d_2        16.9 MB
+    scipy-1.7.3                |   py39hc147768_0        16.9 MB
     ------------------------------------------------------------
                                            Total:        17.9 MB
 
@@ -86,7 +86,7 @@ The following NEW packages will be INSTALLED:
 
   libgfortran-ng     pkgs/main/linux-64::libgfortran-ng-7.5.0-ha8ba4b0_17
   libgfortran4       pkgs/main/linux-64::libgfortran4-7.5.0-ha8ba4b0_17
-  scipy              pkgs/main/linux-64::scipy-1.7.1-py39h292c36d_2
+  scipy              pkgs/main/linux-64::scipy-1.7.3-py39hc147768_0
 
 
 Preparing transaction: ...working... done
@@ -133,55 +133,45 @@ loss(xy::Tuple) = loss(xy...)
 	test_acc = accuracy(test_data, test_y)
 	println(&quot;accuracy: train = $train_acc, test = $test_acc&quot;)
 end</code></pre><pre><code class="nohighlight hljs">#9 (generic function with 1 method)</code></pre><p>Lastly we turn our training data to minibatches, and we can start training</p><pre><code class="language-julia hljs">minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
-Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre><code class="nohighlight hljs">accuracy: train = 0.16, test = 0.1590909090909091
-accuracy: train = 0.61, test = 0.6818181818181818
-accuracy: train = 0.83, test = 0.8181818181818182
-accuracy: train = 0.83, test = 0.8863636363636364
-accuracy: train = 0.84, test = 0.8863636363636364
-accuracy: train = 0.84, test = 0.8863636363636364
-accuracy: train = 0.85, test = 0.8863636363636364
-accuracy: train = 0.85, test = 0.8863636363636364
-accuracy: train = 0.85, test = 0.8863636363636364
-accuracy: train = 0.85, test = 0.8863636363636364
-accuracy: train = 0.85, test = 0.8863636363636364
-accuracy: train = 0.85, test = 0.8863636363636364
-accuracy: train = 0.85, test = 0.8863636363636364
-accuracy: train = 0.85, test = 0.8863636363636364
-accuracy: train = 0.86, test = 0.8863636363636364
-accuracy: train = 0.87, test = 0.8863636363636364
-accuracy: train = 0.87, test = 0.8863636363636364
-accuracy: train = 0.87, test = 0.8863636363636364
-accuracy: train = 0.88, test = 0.8863636363636364
-accuracy: train = 0.88, test = 0.8863636363636364
-accuracy: train = 0.9, test = 0.8863636363636364
-accuracy: train = 0.9, test = 0.8863636363636364
-accuracy: train = 0.9, test = 0.8863636363636364
-accuracy: train = 0.91, test = 0.8863636363636364
-accuracy: train = 0.91, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
-accuracy: train = 0.92, test = 0.8863636363636364
+Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre><code class="nohighlight hljs">accuracy: train = 0.39, test = 0.3181818181818182
+accuracy: train = 0.82, test = 0.8863636363636364
+accuracy: train = 0.82, test = 0.8863636363636364
+accuracy: train = 0.82, test = 0.8863636363636364
+accuracy: train = 0.82, test = 0.8863636363636364
+accuracy: train = 0.84, test = 0.8636363636363636
+accuracy: train = 0.86, test = 0.8636363636363636
+accuracy: train = 0.87, test = 0.8636363636363636
+accuracy: train = 0.89, test = 0.8636363636363636
+accuracy: train = 0.89, test = 0.7954545454545454
+accuracy: train = 0.89, test = 0.7727272727272727
+accuracy: train = 0.89, test = 0.7727272727272727
+accuracy: train = 0.89, test = 0.7727272727272727
+accuracy: train = 0.89, test = 0.7727272727272727
+accuracy: train = 0.89, test = 0.7727272727272727
+accuracy: train = 0.89, test = 0.7727272727272727
+accuracy: train = 0.9, test = 0.7727272727272727
+accuracy: train = 0.89, test = 0.7727272727272727
+accuracy: train = 0.9, test = 0.7727272727272727
+accuracy: train = 0.91, test = 0.7727272727272727
+accuracy: train = 0.9, test = 0.7727272727272727
+accuracy: train = 0.91, test = 0.7727272727272727
+accuracy: train = 0.91, test = 0.7727272727272727
+accuracy: train = 0.91, test = 0.7727272727272727
+accuracy: train = 0.92, test = 0.7727272727272727
+accuracy: train = 0.91, test = 0.7727272727272727
+accuracy: train = 0.93, test = 0.7727272727272727
+accuracy: train = 0.93, test = 0.7727272727272727
+accuracy: train = 0.94, test = 0.7727272727272727
+accuracy: train = 0.94, test = 0.7727272727272727
+accuracy: train = 0.95, test = 0.7727272727272727
+accuracy: train = 0.95, test = 0.7727272727272727
 </code></pre><p>We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on test set we get over 70%.</p><h1>Classify test set</h1><p>The Last part is inference on test data.</p><pre><code class="language-julia hljs">probs = softmax(inference(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
-mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.8863636363636364</code></pre><p><code>pred_classes</code> contains the predictions for our test set. we see the accuracy is around 75% on test set predicted classes for test set</p><pre><code class="language-julia hljs">pred_classes</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
+mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.7727272727272727</code></pre><p><code>pred_classes</code> contains the predictions for our test set. we see the accuracy is around 75% on test set predicted classes for test set</p><pre><code class="language-julia hljs">pred_classes</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
  1
- 0
  1
- 0
- 0
  1
- 0
- 0
  1
  1
  1
@@ -189,25 +179,6 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  0
  1
  1
- 0
- 1
- 0
- 0
- 0
- 0
- 1
- 1
- 1
- 0
- 1
- 1
- 0
- 1
- 1
- 1
- 0
- 0
- 0
  1
  1
  1
@@ -216,7 +187,31 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  0
  1
  1
+ 1
  0
+ 1
+ 1
+ 1
+ 1
+ 0
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 0
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
  1</code></pre><p>Ground truth classes for test set</p><pre><code class="language-julia hljs">test_y</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
  1
  1
@@ -262,14 +257,14 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  1
  0
  1</code></pre><p>probabilities for test set</p><pre><code class="language-julia hljs">probs</code></pre><pre><code class="nohighlight hljs">2×44 Matrix{Float32}:
- 0.937598   0.168761  0.96157    0.0500791  0.157973  0.941128   0.11251   0.374496  0.973564   0.954037   0.954737   0.243644  0.0921047  0.956934   0.958119   0.374055  0.960238   0.220055  0.1366  0.380743  0.140646  0.988163   0.950158   0.967581   0.196704  0.954306   0.957997   0.212106  0.951637   0.93553    0.899956  0.192253  0.206733  0.176485  0.955628   0.930328   0.977134   0.955342   0.956963   0.168276  0.941901   0.9581     0.0332918  0.955918
- 0.0624023  0.831239  0.0384298  0.949921   0.842026  0.0588716  0.887491  0.625504  0.0264364  0.0459626  0.0452631  0.756356  0.907895   0.0430658  0.0418807  0.625945  0.0397624  0.779945  0.8634  0.619257  0.859354  0.0118369  0.0498421  0.0324189  0.803296  0.0456937  0.0420031  0.787894  0.0483635  0.0644695  0.100044  0.807747  0.793267  0.823515  0.0443718  0.0696717  0.0228656  0.0446579  0.0430366  0.831724  0.0580989  0.0419004  0.966708   0.0440821</code></pre><p>We can look at individual samples. For instance, some sample from test set is</p><pre><code class="language-julia hljs">test_data[2]</code></pre><pre><code class="nohighlight hljs">ProductNode 	# 1 obs, 104 bytes
+ 0.998665    0.887192  0.998774    0.897943  0.865392  0.998393    0.0237822  0.284873  0.809061  0.998717   0.9988      0.902543   0.860327  0.998913    0.998784    0.28401  0.99866     0.896977  0.881477  0.285452  0.955168   0.867095  0.998454    0.975646   0.20151  0.912634   0.861052  0.95559    0.994956    0.998632    0.998663    0.901184   0.103315  0.889151  0.998619    0.999196    0.99962      0.998618    0.976504   0.887277  0.912026   0.99878     0.830786  0.99309
+ 0.00133532  0.112808  0.00122603  0.102057  0.134608  0.00160728  0.976218   0.715127  0.190939  0.0012826  0.00120007  0.0974565  0.139673  0.00108699  0.00121622  0.71599  0.00133992  0.103023  0.118523  0.714548  0.0448324  0.132905  0.00154581  0.0243538  0.79849  0.0873662  0.138948  0.0444103  0.00504389  0.00136842  0.00133728  0.0988164  0.896685  0.110849  0.00138115  0.00080365  0.000379563  0.00138239  0.0234959  0.112723  0.0879745  0.00121971  0.169214  0.00691032</code></pre><p>We can look at individual samples. For instance, some sample from test set is</p><pre><code class="language-julia hljs">test_data[2]</code></pre><pre><code class="nohighlight hljs">ProductNode 	# 1 obs, 104 bytes
   ├─── lumo: ArrayNode(99×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   ├─── inda: ArrayNode(2×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   ├─── logp: ArrayNode(63×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   ├─── ind1: ArrayNode(3×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   └── atoms: BagNode 	# 1 obs, 136 bytes
                └── ProductNode 	# 24 obs, 64 bytes
-                     ⋮</code></pre><p>and the corresponding classification is</p><pre><code class="language-julia hljs">pred_classes[2]</code></pre><pre><code class="nohighlight hljs">0</code></pre><p>if you want to see the probability distribution, it can be obtained by applying <code>softmax</code> to the output of the network.</p><pre><code class="language-julia hljs">softmax(model(test_data[2]).data)</code></pre><pre><code class="nohighlight hljs">2×1 Matrix{Float32}:
- 0.16876064
- 0.83123934</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p><p>This concludes a simple classifier for JSON data.</p><p>But keep in mind the framework is general and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.10 on <span class="colophon-date" title="Sunday 28 November 2021 15:47">Sunday 28 November 2021</span>. Using Julia version 1.6.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+                     ⋮</code></pre><p>and the corresponding classification is</p><pre><code class="language-julia hljs">pred_classes[2]</code></pre><pre><code class="nohighlight hljs">1</code></pre><p>if you want to see the probability distribution, it can be obtained by applying <code>softmax</code> to the output of the network.</p><pre><code class="language-julia hljs">softmax(model(test_data[2]).data)</code></pre><pre><code class="nohighlight hljs">2×1 Matrix{Float32}:
+ 0.8871922
+ 0.11280778</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p><p>This concludes a simple classifier for JSON data.</p><p>But keep in mind the framework is general and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.10 on <span class="colophon-date" title="Friday 7 January 2022 17:54">Friday 7 January 2022</span>. Using Julia version 1.7.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
