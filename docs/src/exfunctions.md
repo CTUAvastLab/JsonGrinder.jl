@@ -159,11 +159,21 @@ e = JsonGrinder.Entry{String}(ht_hist, sum(values(ht_hist)))
 Now we can see it has 1000 unique values, and has been created from 1437 observations, where 977 values were observed only once.
 Creating the extractor directly and extracting value from it will produce one-hot encoded vector of dimension 1001 (1000 unique values + 1 dimension for the unknown).
 ```@example 1
-ExtractCategorical(filter(kv->kv[2]>=5, e.counts))("aaaaa")
+ExtractCategorical(e)("aaaaa")
 ```
 
-But when making threshold for values we have seen at least 5 times:
+But when making threshold for values we have seen at least 5 times, it produces one-hot vector of dimension 17, which is significantly smaller.
+```@example 1
+ExtractCategorical(keys(filter(kv->kv[2]>=5, e.counts)))("aaaaa")
+```
 
+For training, the latter approach may be beneficial, because the number of weights will be significantly lower.
+
+### Difference between unknown and missing value
+
+Note that there is semantic difference between unknown and `missing` value.
+For unknown value, special dimension is trained. For the missing one, it's similar, every time missing value is encountered in specific layer, the neural network contains vector it trains instead and which is used as an output in case of missing observation.
+This allows the model to distinguish between missing values (e.g. when the key in dict is not present, the value under that key is tretated as missing) and unknown, previously unseen values.
 
 ## Array (Lists / Sets)
 ```julia
