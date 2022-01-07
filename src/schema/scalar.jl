@@ -110,7 +110,7 @@ function suggestextractor(e::Entry, settings = NamedTuple(); path::String = "", 
 end
 
 # todo: here add argument and decide if it should be full or not
-function default_scalar_extractor(small_categorical_max_dimension=100, large_categorical_min_occurences=10, large_categorical_max_dimension=min(10000, max_keys()))
+function default_scalar_extractor(;small_categorical_max_dimension=100, large_categorical_min_occurences=10, large_categorical_max_dimension=min(10000, max_keys()))
 	[
 	(e -> length(keys(e)) < small_categorical_max_dimension,
 		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),

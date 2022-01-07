@@ -60,7 +60,7 @@ makedocs(
                   "Schema" => "schema.md",
                   "Creating extractors" => "extractors.md",
                   "Extractors overview" => "exfunctions.md",
-                  "Examples" => example_mds,
+                  "Examples" => ["examples.md"; example_mds],
                   "AutoML" => "automl.md",
                   "External tools" => "hierarchical.md",
                   "API Documentation" => "api.md",
