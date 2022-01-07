@@ -152,19 +152,20 @@ the model will not learn the unknown representation, and it will produce noise i
 
 Examples of schema with heavy tail can be following histogram with exponential number of observations
 ```@example 1
+using Random
 ht_hist = Dict((i==1 ? "aaaaa" : randstring(5))=>ceil(100*ℯ^(-i/5)) for i in 1:1000)
-e = JsonGrinder.Entry{String}(ht_hist, sum(values(ht_hist)))
+entry = JsonGrinder.Entry{String}(ht_hist, sum(values(ht_hist)))
 ```
 
 Now we can see it has 1000 unique values, and has been created from 1437 observations, where 977 values were observed only once.
 Creating the extractor directly and extracting value from it will produce one-hot encoded vector of dimension 1001 (1000 unique values + 1 dimension for the unknown).
 ```@example 1
-ExtractCategorical(e)("aaaaa")
+ExtractCategorical(entry)("aaaaa")
 ```
 
 But when making threshold for values we have seen at least 5 times, it produces one-hot vector of dimension 17, which is significantly smaller.
 ```@example 1
-ExtractCategorical(keys(filter(kv->kv[2]>=5, e.counts)))("aaaaa")
+ExtractCategorical(keys(filter(kv->kv[2]>=5, entry.counts)))("aaaaa")
 ```
 
 For training, the latter approach may be beneficial, because the number of weights will be significantly lower.
