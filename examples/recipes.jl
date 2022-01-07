@@ -2,13 +2,13 @@
 # Following example demonstrates prediction of cuisine from set of ingredients.
 
 # ## A gentle introduction to creation of neural networks reflexing structure of JSON documents 
-
+#
 # This notebook serves as an introduction to `Mill` and `JsonGrinder` libraries. 
 # The former provides support for Multi-instance learning problems, their cascades, and their Cartesian product ([see the paper](https://arxiv.org/abs/2105.09107) for theoretical explanation). 
 # The latter `JsonGrinder` simplifies processing of JSON documents. It allows to infer schema of JSON documents from which it suggests an extractor to convert JSON document to a `Mill` structure.
 # `JsonGrinder` defines basic set of "extractors" converting values of keys to numeric representation (matrices) or to convert them to corresponding structures in `Mill`. Naturally, this set of extractors can be extended.
 # 
-# Below, the intended workflow is demonstrated on a simple problem of guessing type of a cuisine from a list of ingrediences. 
+# Below, the intended workflow is demonstrated on a simple problem of guessing type of a cuisine from a list of ingredients.
 # The whole dataset and problem description can be found [on this Kaggle page](https://www.kaggle.com/kaggle/recipe-ingredients-dataset/home).
 # Note that the goal is not to achieve state of the art, but to demonstrate the workflow.
 
@@ -16,9 +16,9 @@
 #md #     This example is also available as a Jupyter notebook:
 #md #     [`recipes.ipynb`](@__NBVIEWER_ROOT_URL__/examples/recipes.ipynb)
 
-# todo: dodělat, domigrovat z ipynb a ten pak smazat
 # **Caution**
-# To reduc, we keep locally in the repo only a subset of the whole dataset (`39774`).
+#
+# To reduce we keep locally in the repo only a subset of the whole dataset (`39774`).
 # To decrease the computational load we use only `5000` samples, size of the validation data = `100`, size of the minibatch `10` and train for 20 iterations.
 # Of course these numbers are useless in practice, and therefore the resulting accuracy is poor. 
 # Using all samples (`39774`), leaving `4774` samples for validation, setting minibatch size to `1000`, and training for `1000` iterations gives you accuracy 0.73 on validation data.
@@ -32,13 +32,13 @@ n_samples, n_val, minibatchsize, iterations = 5_000, 100, 10, 20
 #nb using Pkg
 #nb pkg"add JsonGrinder#master Flux Mill#master MLDataPattern Statistics ChainRulesCore JSON"
 
-# Let's start by imorting all libraries we will need.
+# Let's start by importing all libraries we will need.
 using JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore, JSON
 
 # ### Preparing data
-# After importing libraties we load all samples. Of course we can affort it only for small datasets, but 
+# After importing libraries we load all samples. Of course we can afford it only for small datasets, but
 # for the sake of simplicity we keep whole dataset in memory, while recognizing this is usually not 
-# feasible in real-world scenations.
+# feasible in real-world scenarios.
 # Data are stored in a format "json per line". 
 # This means that each sample is one JSON document stored in each line. 
 # These samples are loaded and parsed to an array. On the end, one sample is printed to show, how data looks like.
@@ -54,8 +54,8 @@ end
 JSON.print(samples[1],2)
 
 # Now we create schema of the JSON.
-# Unline XML or ProtoBuf, JSON documents do not have any schema by default. 
-# Threfore *JsonGrinder* attempts to infer the schema, which is then used to recommend the extractor.
+# Unlike XML or ProtoBuf, JSON documents do not have any schema by default.
+# Therefore *JsonGrinder* attempts to infer the schema, which is then used to recommend the extractor.
 sch = JsonGrinder.schema(samples[1:n_samples])
 
 # ID is deleted from the schema (keys not in the schema are not 
@@ -96,7 +96,7 @@ target = reduce(catobs, target)[:cuisine].data
 # 
 # Since manually creating a model reflecting the structure can be tedious, Mill support a semi-automated procedure. 
 # The function `reflectinmodel` takes as an input data sample and function, which for a given input dimension provides a feed-forward network. 
-# In the example below, the function creates a feed forward network with a single fully-connected layer with twenty neurons and relu nonlinearinty. 
+# In the example below, the function creates a feed forward network with a single fully-connected layer with twenty neurons and relu non-linearity.
 # The structure of the network corresponds to the  structure of input data. 
 # You can observe that each module dealing with multiple-instance data contains an aggregation layer with element-wise mean and maximum.
 m = reflectinmodel(sch, extract_data,
@@ -110,7 +110,7 @@ m = reflectinmodel(sch, extract_data,
 
 # ### Training the model
 # Mill library is compatible with MLDataPattern for manipulating with data (training / testing / minibatchsize preparation) and with Flux. 
-# Please, refer to thos two libraries for support.
+# Please, refer to these two libraries for support.
 # Below, data are first split into training and validation sets. 
 # Then Adam optimizer for training the model is initialized, and loss function is defined.
 # We also define callback which perpetually reports accuracy on validation data during the training.
@@ -126,7 +126,7 @@ mean(Flux.onecold(m(traindata).data) .== Flux.onecold(traintarget))
 # Here we obtain the trainable parameters from the model
 ps = Flux.params(m)
 
-# We use MLDataPattern.RandomBatches to make minibatches from the training data
+# We use `MLDataPattern.RandomBatches` to make mini-batches from the training data
 minibatches = RandomBatches((traindata, traintarget), size = minibatchsize, count = iterations)
 
 # Now we try to compute the loss and perform single step of the gradient descend to see if all works correctly.

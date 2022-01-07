@@ -75,7 +75,8 @@ struct ExtractCategorical{V,I} <: AbstractExtractor
 	uniontypes::Bool
 end
 
-ExtractCategorical(s::Entry, uniontypes = true) = ExtractCategorical(collect(keys(s.counts)), uniontypes)
+ExtractCategorical(s::Base.KeySet, uniontypes = true) = ExtractCategorical(collect(s), uniontypes)
+ExtractCategorical(s::Entry, uniontypes = true) = ExtractCategorical(keys(s.counts), uniontypes)
 ExtractCategorical(s::UnitRange, uniontypes = true) = ExtractCategorical(collect(s), uniontypes)
 function ExtractCategorical(ks::Vector, uniontypes = true)
 	if isempty(ks)
