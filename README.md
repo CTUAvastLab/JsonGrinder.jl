@@ -15,7 +15,8 @@
 [`Mill.jl`](https://github.com/CTUAvastLab/Mill.jl) project.
 
 It provides schema estimation from data, extraction of various data types to numeric representation with
-reasonable defaults, and suggestion of NN model structure based on data. For more details, see [the documentation](https://CTUAvastLab.github.io/JsonGrinder.jl/stable).
+reasonable defaults, suggestion of NN model structure based on data and interactive HTML visualization of estimated schema. 
+For more details, see [the documentation](https://CTUAvastLab.github.io/JsonGrinder.jl/stable).
 
 [**Watch our introductory talk from JuliaCon 2021** ](https://www.youtube.com/watch?v=Bf0CvltIDbE)
 
@@ -26,6 +27,14 @@ Run the following in REPL:
 ```julia
 ] add JsonGrinder
 ```
+
+## Getting Started
+
+Two pointers to get you started:
+- [Tutorials: get you started with understanding and using PyTorch](https://pytorch.org/tutorials/)
+- [Examples: easy to understand PyTorch code across all domains](https://github.com/pytorch/examples)
+- [The documentation](https://CTUAvastLab.github.io/JsonGrinder.jl/stable)
+- [The API Reference](https://ctuavastlab.github.io/JsonGrinder.jl/stable/api/)
 
 ## Citation
 
