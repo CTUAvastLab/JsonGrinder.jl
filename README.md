@@ -30,9 +30,8 @@ Run the following in REPL:
 
 ## Getting Started
 
-Two pointers to get you started:
-- [Tutorials: get you started with understanding and using PyTorch](https://pytorch.org/tutorials/)
-- [Examples: easy to understand PyTorch code across all domains](https://github.com/pytorch/examples)
+Three pointers to get you started:
+- [Examples: easy to understand JsonGrinder.jl and Mill.jl code across various domains](https://ctuavastlab.github.io/JsonGrinder.jl/stable/examples/examples/)
 - [The documentation](https://CTUAvastLab.github.io/JsonGrinder.jl/stable)
 - [The API Reference](https://ctuavastlab.github.io/JsonGrinder.jl/stable/api/)
 
