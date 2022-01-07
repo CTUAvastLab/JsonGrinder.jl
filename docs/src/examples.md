@@ -1,10 +1,10 @@
 # Examples Overview
 
 The documentation also contains 4 examples demonstrating different showcases:
-- [Classification of Mutagenesis dataset](#Mutagenesis-Example)
-- [Classification Recipe Ingredients dataset](#Recipe-Ingredients-Example)
-- [Examination of inferred schema](#Schema-Examination)
-- [HTML Visualization of inferred schema](#Schema-Visualization)
+- [Mutagenesis Example](@ref)
+- [Recipe Ingredients Example](@ref)
+- [Schema Examination](@ref)
+- [Schema Visualization](@ref)
 
 They demonstrate various usages of JsonGrinder.jl and Mill.jl and how to use them with other packages
 from Julia ecosystem, e.g. [Flux.jl](https://fluxml.ai/) and [Zygote.jl](https://github.com/FluxML/Zygote.jl).
