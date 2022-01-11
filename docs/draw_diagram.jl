@@ -4,7 +4,7 @@ using GraphViz
 g = GraphViz.Graph("""
 digraph graphname {
    node [shape=box];
-   label = "Basic workshow of Mill and JsonGrinder"
+   label = "Basic workflow of Mill and JsonGrinder"
    a  [label="step 1\ncreate schema"]
    b  [label="step 2\ncreate extractor from schema"]
    c  [label="step 3\ncreate model from schema and extractor"]
