@@ -90,7 +90,11 @@ Authors see the biggest advantage in the `model` being hierarchical and reflecti
 
 Our idealized workflow is demonstrated in following example, which can be also found in [Mutagenesis Example](@ref) and here we'll break it down in order to demonstrate the basic functionality of JsonGrinder.
 
-The basic workflow can be visualized as follows ![workflow](assets/workflow.svg)
+The basic workflow can be visualized as follows
+```@raw html
+<img src="assets/workflow.svg" alt="workflow" style="width: 30%;">
+```
+
 ```@eval
 import Markdown
 file = joinpath(@__DIR__, "..", "src", "examples", "mutagenesis.md")
