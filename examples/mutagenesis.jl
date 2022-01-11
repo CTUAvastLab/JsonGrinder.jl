@@ -27,20 +27,24 @@ minibatchsize = 100
 iterations = 5_000
 neurons = 20
 
+#md # This is the step 1 of the workflow
 # We create the schema of the training data, which is the first important step in using the JsonGrinder.
 # This computes both the structure (also known as JSON schema) and histogram of occurrences of individual values in the training data.
 sch = JsonGrinder.schema(train_x)
 
+#md # This is the step 2 of the workflow
 # Then we use it to create the extractor converting jsons to Mill structures.
 # The `suggestextractor` is executed below with default setting, but it allows you heavy customization.
 extractor = suggestextractor(sch)
 
+#md # This is the step 4 of the workflow, we call the extractor on each sample
 # We convert jsons to mill data samples and prepare list of classes. This classification problem is two-class, but we want to infer it from labels.
 # The extractor is callable, so we can pass it vector of samples to obtain vector of structures with extracted features.
 train_data = extractor.(train_x)
 test_data = extractor.(test_x)
 labelnames = unique(train_y)
 
+#md # This is the step 3 of the workflow, we create the model using the schema and extractor
 # # Create the model
 # We create the model reflecting structure of the data
 model = reflectinmodel(sch, extractor,
@@ -51,6 +55,7 @@ model = reflectinmodel(sch, extractor,
 # this allows us to create model flexibly, without the need to hardcode individual layers.
 # Individual arguments of `reflectinmodel` are explained in [Mill.jl documentation](https://CTUAvastLab.github.io/Mill.jl/dev/manual/reflectin/#Model-Reflection). But briefly: for every numeric array in the sample, model will create a dense layer with `neurons` neurons (20 in this example). For every vector of observations (called bag in Multiple Instance Learning terminology), it will create aggregation function which will take mean, maximum of feature vectors and concatenate them. The `fsm` keyword argument basically says that on the end of the NN, as a last layer, we want 2 neurons `length(labelnames)` in the output layer, not 20 as in the intermediate layers.
 
+#md # This is the step 5 of the workflow, we train the model
 # # Train the model
 # Then, we define few handy functions and a loss function, which is categorical crossentropy in our case.
 loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
