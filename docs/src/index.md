@@ -75,7 +75,7 @@ With most machine learning libraries assuming your data being stored as tensors 
 There are four steps to create a classifier once you load the data.
 
 1. Create a schema of JSON files (using `sch = JsonGrinder.schema`).
-2. Create an extractor converting JSONs to Mill structures (`extractor = suggestextractor(sch))`). Schema `sch` from previous step is very helpful, as it helps to identify, how to convert nodes (`Dict`, `Array`) to (`Mill.ProductNode` and `Mill.BagNode`) and how to convert values in leaves to (`Float32`, `Vector{Float32}`, `String`, `Categorical`).
+2. Create an extractor converting JSONs to Mill structures (`extractor = suggestextractor(sch)`). Schema `sch` from previous step is very helpful, as it helps to identify, how to convert nodes (`Dict`, `Array`) to (`Mill.ProductNode` and `Mill.BagNode`) and how to convert values in leaves to (`Float32`, `Vector{Float32}`, `String`, `Categorical`).
 3. Extract your JSON files into Mill structures using extractor `extractbatch(extractor, samples)`
 4. Create a model for your JSONs, which can be easily done by (using `model = reflectinmodel(sch, extractor,...)`)
 5. Use your favourite methods to train the model, it is 100% compatible with `Flux.jl` tooling.
