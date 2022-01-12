@@ -13,7 +13,7 @@ include("html_show_tools.jl")
 include("hierarchical_utils.jl")
 include("util.jl")
 
-export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractOneHot, ExtractVector, MultipleRepresentation, ExtractString, AuxiliaryExtractor, ExtractKeyAsField
+export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector, MultipleRepresentation, ExtractString, AuxiliaryExtractor, ExtractKeyAsField
 export suggestextractor, schema, extractbatch, generate_html
 
 Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = print(io, nameof(T))
