@@ -179,23 +179,9 @@ which corresponds to individual elements of an array we have observed.
 
 While schema can be printed to REPL, it can contain quite a lot of information. Therefore `JsonGrinder.generate_html` exports it to HTML, where parts can be expanded at wish.
 
-```@docs
-JsonGrinder.generate_html
-```
-
 Schema supports merging using `Base.merge`, which facilitates parallel computation of schemas. An example might be
 ```
 ThreadsX.mapreduce(schema, merge, Iterators.partition(jsons, div(length(jsons), Threads.nthreads())))
 ```
 
-```@docs
-JsonGrinder.prune_json
-```
-
-```@docs
-JsonGrinder.updatemaxkeys!
-```
-
-```@docs
-JsonGrinder.updatemaxlen!
-```
+For details about `JsonGrinder.generate_html` and other functions related to schema, check [Schema API Reference](@ref)

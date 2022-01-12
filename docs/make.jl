@@ -18,7 +18,6 @@ example_files = [joinpath(examples_dir, f) for f in [
     "schema_visualization.jl",
 ]]
 
-# str = read(joinpath(@__DIR__, "src", "examples", "schema_visualization_raw.md"), String);
 function print_html_raw(str)
     str
     lines = split(str, "\n")
@@ -63,11 +62,16 @@ makedocs(
                   "Examples" => ["examples.md"; example_mds],
                   "AutoML" => "automl.md",
                   "External tools" => "hierarchical.md",
-                  "API Documentation" => "api.md",
+                  "API Documentation" => [
+                      "Public" => "api/public.md",
+                      "Internal" => [
+                          "Schema" => "api/internal/schema.md",
+                          "Extractors" => "api/internal/extractors.md",
+                      ],
+                  ],
                   "Developers" => "developers.md",
                   "Citation" => "citation.md",
                   ],
-
 )
 
 deploydocs(

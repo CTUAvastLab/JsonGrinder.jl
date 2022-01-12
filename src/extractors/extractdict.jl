@@ -81,6 +81,11 @@ function (s::ExtractDict{S})(ee::ExtractEmpty; store_input=false) where {S<:Dict
 	ProductNode((; o...))
 end
 
+"""
+	extractbatch(extractor, samples)
+
+utility function, shortcut for mapreduce(extractor, catobs, samples)
+"""
 extractbatch(extractor, samples) = mapreduce(extractor, catobs, samples)
 
 Base.hash(e::ExtractDict, h::UInt) = hash(e.dict, h)

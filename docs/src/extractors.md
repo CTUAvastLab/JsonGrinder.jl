@@ -84,9 +84,9 @@ Extractor for `Array` is not configurable, as we do not feel the pressure to so,
 JsonGrinder.suggestextractor(schema, settings = NamedTuple())
 ```
 allows to pass following parameters inside the `settings` argument
-- scalar_extractors
-- key_as_field
-- mincountkey
+- `scalar_extractors`
+- `key_as_field`
+- `mincountkey`
 
 `scalar_extractors` allows to pass your own heuristic and rules for handling scalars.
 
