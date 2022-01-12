@@ -158,7 +158,8 @@ entry = JsonGrinder.Entry{String}(ht_hist, sum(values(ht_hist)))
 ```
 
 Now we can see it has 1000 unique values, and has been created from 1437 observations, where 977 values were observed only once.
-Creating the extractor directly and extracting value from it will produce one-hot encoded vector of dimension 1001 (1000 unique values + 1 dimension for the unknown).
+Creating the extractor directly and extracting value from it will produce one-hot encoded vector of dimension 1001 
+(1000 unique values + 1 dimension for the unknown).
 ```@example 1
 ExtractCategorical(entry)("aaaaa")
 ```
@@ -173,8 +174,10 @@ For training, the latter approach may be beneficial, because the number of weigh
 ### Difference between unknown and missing value
 
 Note that there is semantic difference between unknown and `missing` value.
-For unknown value, special dimension is trained. For the missing one, it's similar, every time missing value is encountered in specific layer, the neural network contains vector it trains instead and which is used as an output in case of missing observation.
-This allows the model to distinguish between missing values (e.g. when the key in dict is not present, the value under that key is tretated as missing) and unknown, previously unseen values.
+For unknown value, special dimension is trained. For the missing one, it's similar, every time missing value is encountered in specific layer, 
+the neural network contains vector it trains instead and which is used as an output in case of missing observation.
+This allows the model to distinguish between missing values (e.g. when the key in dict is not present, the value under that key is tretated as missing) 
+and unknown, previously unseen values.
 
 ## Array (Lists / Sets)
 ```julia
@@ -182,7 +185,9 @@ struct ExtractArray{T}
 	item::T
 end
 ```
-Convert array of values to a `Mill.BagNode` with items converted by `item`. The entire array is assumed to be a single bag.
+Converts an array of values to a [`Mill.BagNode`](https://ctuavastlab.github.io/Mill.jl/stable/manual/nodes/#[BagNode](@ref)) 
+with items converted by `item`. The entire array is assumed to be a single bag.
+The `BagNode` contains data in field `data` and information about bags in `bags` field.
 
 ```@example 1
 sc = ExtractArray(ExtractCategorical(["A","B","C"]))
@@ -191,12 +196,17 @@ sc(["A","B","C","D"])
 
 Empty arrays are represented as an empty bag.
 ```@example 1
+sc([])
+```
+
+the information about bags themselves is seen here
+```@example 1
 sc([]).bags
 ```
 The data of empty bag can be either `missing` or a empty sample, which is more convenient as it makes all samples of the same type, 
-which is nicer to AD. This behavior is controlled by `Mill.emptyismissing`. 
+which is nicer to AD. This behavior is controlled by [`Mill.emptyismissing`](https://ctuavastlab.github.io/Mill.jl/stable/api/switches/#Mill.emptyismissing). 
 The extractor of a `BagNode` can signal to child extractors to extract a sample with zero observations using 
-a special singleton `JsonGrinder.extractempty`. 
+a special singleton [`JsonGrinder.extractempty`](@ref). 
 For example
 
 ```@example 1
