@@ -2,6 +2,14 @@
 
 Section of internal API reference related to creation, manipulation and visualization of the schema.
 
+## Index
+
+```@index
+Pages = ["schema.md"]
+```
+
+## Internal functions
+
 ```@docs
 Base.delete!
 Base.merge
