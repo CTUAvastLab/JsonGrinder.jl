@@ -15,5 +15,5 @@ JsonGrinder.make_empty_bag
 JsonGrinder.ExtractEmpty
 JsonGrinder.extractempty
 JsonGrinder.extract_missing_bag
+JsonGrinder.extractscalar
 ```
-
