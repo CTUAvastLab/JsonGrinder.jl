@@ -19,7 +19,6 @@ env:
 jobs:
   docs:
     env:
-      PYTHON: ""
       DATADEPS_ALWAYS_ACCEPT: "true"
     runs-on: ubuntu-latest
     steps:
