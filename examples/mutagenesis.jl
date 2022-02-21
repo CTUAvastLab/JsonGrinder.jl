@@ -11,10 +11,10 @@
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master MLDatasets Flux Mill#master MLDataPattern Statistics Zygote"
+#nb pkg"add JsonGrinder#master MLDatasets Flux Mill#master MLDataPattern Statistics"
 
 # Here we include libraries all necessary libraries
-using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics, Zygote
+using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics
 
 # Here we load all samples.
 train_x, train_y = MLDatasets.Mutagenesis.traindata();
@@ -59,9 +59,6 @@ model = reflectinmodel(sch, extractor,
 # The extractor is callable, so we can pass it vector of samples to obtain vector of structures with extracted features.
 train_data = extractor.(train_x)
 test_data = extractor.(test_x)
-
-# hack, get rid of this after PR is merged
-(m::AbstractMillModel)(x::AbstractVector{<:AbstractMillNode}) = m(Zygote.@ignore(reduce(catobs, x)))
 
 #md # This is the **step 5** of the workflow, we train the model
 #md #
