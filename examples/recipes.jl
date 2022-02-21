@@ -93,9 +93,11 @@ target = reduce(catobs, target)[:cuisine].data
 # We see that target is `21x5000` One-hot matrix in case of 5000 samples. There are 21 cuisines which are the prediction targets.
 
 # #### Note about data representation
-# this approach, where we catobs all data to single sample, and then we slice it to obtain minibatches, is usable only for datasets which fit into the memory, 
-# which is not suited for many real-world tasks, but is usable for playing with small datasets. The other approach can be seen in the mutagenesis example.
-# Teoretically this approach is useful when you train in multiple epochs and all data fit into the memory, because you perform the catobs only once.
+# This approach, where we catobs all data to single sample, and then we slice it to obtain mini-batches, is usable only
+# for datasets which fit into the memory, which is not suited for many real-world tasks, but is usable for playing with
+# small datasets. The other approach can be seen in the [Mutagenesis Example](@ref) example.
+# Theoretically this approach is useful when you train in multiple epochs and all data fit into the memory,
+# because you perform the catobs only once.
 
 # ### Defining the model reflecting the structure of data
 # 
