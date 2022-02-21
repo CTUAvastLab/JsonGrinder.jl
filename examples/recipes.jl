@@ -24,16 +24,16 @@
 # Using all samples (`39774`), leaving `4774` samples for validation, setting minibatch size to `1000`, and training for `1000` iterations gives you accuracy 0.73 on validation data.
 
 n_samples, n_val, minibatchsize, iterations = 5_000, 100, 10, 20
-#n_samples, n_val, minibatchsize, iterations = 39_774, 4_774, 1_000, 1_000
+# n_samples, n_val, minibatchsize, iterations = 39_774, 4_774, 1_000, 1_000
 
 #nb # We start by installing JsonGrinder and few other packages we need for the example.
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master Flux Mill#master MLDataPattern Statistics ChainRulesCore JSON"
+#nb pkg"add JsonGrinder#master Flux Mill#master MLDataPattern Statistics JSON Zygote"
 
 # Let's start by importing all libraries we will need.
-using JsonGrinder, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore, JSON
+using JsonGrinder, Flux, Mill, MLDataPattern, Statistics, JSON, Zygote
 
 # ### Preparing data
 # After importing libraries we load all samples. Of course we can afford it only for small datasets, but
@@ -92,6 +92,11 @@ target = extract_target.(samples[1:n_samples])
 target = reduce(catobs, target)[:cuisine].data
 # We see that target is `21x5000` One-hot matrix in case of 5000 samples. There are 21 cuisines which are the prediction targets.
 
+# #### Note about data representation
+# this approach, where we catobs all data to single sample, and then we slice it to obtain minibatches, is usable only for datasets which fit into the memory, 
+# which is not suited for many real-world tasks, but is usable for playing with small datasets. The other approach can be seen in the mutagenesis example.
+# Teoretically this approach is useful when you train in multiple epochs and all data fit into the memory, because you perform the catobs only once.
+
 # ### Defining the model reflecting the structure of data
 # 
 # Since manually creating a model reflecting the structure can be tedious, Mill support a semi-automated procedure. 
@@ -106,7 +111,7 @@ m = reflectinmodel(sch, extract_data,
 )
 
 # ugly hack, hope to get rid of this
-@non_differentiable getobs(x::DataSubset{<:ProductNode})
+(m::AbstractMillModel)(x::DataSubset) = m(Zygote.@ignore(getobs(x)))
 
 # ### Training the model
 # Mill library is compatible with MLDataPattern for manipulating with data (training / testing / minibatchsize preparation) and with Flux. 
@@ -118,7 +123,6 @@ valdata, valtarget = data[n_samples-n_val:n_samples], target[:,n_samples-n_val:n
 traindata, traintarget = data[1:n_samples-n_val], target[:,1:n_samples-n_val]
 opt = Flux.Optimise.ADAM()
 loss(x, y) = Flux.logitcrossentropy(m(x).data, y)
-loss(x::DataSubset, y) = loss(getobs(x), y)
 loss(xy::Tuple) = loss(xy...)
 cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata).data) .== Flux.onecold(valtarget)))
 # Here we compute the accuracy.
@@ -143,3 +147,5 @@ mean(Flux.onecold(m(traindata).data) .== Flux.onecold(traintarget))
 mean(Flux.onecold(m(valdata).data) .== Flux.onecold(valtarget))
 
 # This concludes our example on training the classifier to recogninze cuisine based on ingredients.
+
+# todo: describe differences between this approach when we catobs everything and catobsing using minibatches

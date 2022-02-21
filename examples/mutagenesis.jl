@@ -11,10 +11,10 @@
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master MLDatasets Flux Mill#master MLDataPattern Statistics ChainRulesCore"
+#nb pkg"add JsonGrinder#master MLDatasets Flux Mill#master MLDataPattern Statistics Zygote"
 
 # Here we include libraries all necessary libraries
-using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics, ChainRulesCore
+using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics, Zygote
 
 # Here we load all samples.
 train_x, train_y = MLDatasets.Mutagenesis.traindata();
@@ -60,16 +60,18 @@ model = reflectinmodel(sch, extractor,
 train_data = extractor.(train_x)
 test_data = extractor.(test_x)
 
+# hack, get rid of this after PR is merged
+(m::AbstractMillModel)(x::AbstractVector{<:AbstractMillNode}) = m(Zygote.@ignore(reduce(catobs, x)))
+
 #md # This is the **step 5** of the workflow, we train the model
 #md #
 # # Train the model
 # Then, we define few handy functions and a loss function, which is categorical crossentropy in our case.
+
 loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
-inference(x::AbstractMillNode) = model(x).data
-inference(x::AbstractVector{<:AbstractMillNode}) = inference(reduce(catobs, x))
+inference(x) = model(x).data
 accuracy(x,y) = mean(labelnames[Flux.onecold(inference(x))] .== y)
 loss(xy::Tuple) = loss(xy...)
-@non_differentiable Base.reduce(catobs, x::AbstractVector{<:AbstractMillNode})
 
 # And we can add a callback which will be printing train and test accuracy during the training
 # and then we can start trining
