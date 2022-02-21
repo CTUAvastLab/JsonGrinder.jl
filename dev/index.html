@@ -59,7 +59,7 @@
 	}
   ]
 },
-</code></pre><p>and the task is to predict the value in key <code>mutagenic</code> (in this sample it&#39;s <code>1</code>) from the rest of the JSON.</p><p>With most machine learning libraries assuming your data being stored as tensors of a fixed dimension, or a sequence, you will have a bad time.  Contrary, <code>JsonGrider.jl</code> assumes your data to be stored in a flexible JSON format and tries to automate most labor using reasonable default, but it still gives you an option to control and tweak almost everything.  <code>JsonGrinder.jl</code> is built on top of <a href="https://github.com/CTUAvastLab/Mill.jl">Mill.jl</a> which itself is built on top of <a href="https://fluxml.ai/">Flux.jl</a> (we do not reinvent the wheel).  <strong>Although JsonGrinder was designed for JSON files, you can easily adapt it to XML, <a href="https://developers.google.com/protocol-buffers">Protocol Buffers</a>, <a href="https://msgpack.org/index.html">MessagePack</a>, and other similar structures</strong></p><p>There are 5 steps to create a classifier once you load the data.</p><ol><li>Create a schema of JSON files (using <code>sch = JsonGrinder.schema(...)</code>).</li><li>Create an extractor converting JSONs to Mill structures (<code>extractor = suggestextractor(sch)</code>). </li></ol><p>Schema <code>sch</code> from previous step is very helpful, as it helps to identify, how to convert nodes (<code>Dict</code>, <code>Array</code>) to (<code>Mill.ProductNode</code> and <code>Mill.BagNode</code>) and how to convert values in leaves to (<code>Float32</code>, <code>Vector{Float32}</code>, <code>String</code>, <code>Categorical</code>).</p><ol><li>Create a model for your JSONs, which can be easily done by (using <code>model = reflectinmodel(sch, extractor,...)</code>)</li><li>Extract your JSON files into Mill structures using extractor <code>extractbatch(extractor, samples)</code> (at once if all data fit to memory, or per-minibatch during training)</li><li>Use your favourite methods to train the model, it is 100% compatible with <code>Flux.jl</code> tooling.</li></ol><p>Steps 1 and 2 are handled by <code>JsonGrinder.jl</code>, steps 3 and 4 by combination of <code>Mill.jl</code> <code>JsonGrinder.jl</code> and the 5. step by a combination of <code>Mill.jl</code> and <code>Flux.jl</code>.</p><p>Authors see the biggest advantage in the <code>model</code> being hierarchical and reflecting the JSON structure. Thanks to <code>Mill.jl</code>, it can handle missing values at all levels.</p><p>Our idealized workflow is demonstrated in following example, which can be also found in <a href="examples/mutagenesis/#Mutagenesis-Example">Mutagenesis Example</a> and here we&#39;ll break it down in order to demonstrate the basic functionality of JsonGrinder.</p><p>The basic workflow can be visualized as follows</p><img src="assets/workflow.svg" alt="workflow" style="width: 30%;"><h1>Mutagenesis Example</h1><p>Following example demonstrates learning to <a href="https://relational.fit.cvut.cz/dataset/Mutagenesis">predict the mutagenicity on Salmonella typhimurium</a> (dataset is stored in json format <a href="https://juliaml.github.io/MLDatasets.jl/stable/datasets/Mutagenesis/">in MLDatasets.jl</a> for your convenience).</p><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>This example is also available as a Jupyter notebook, feel free to run it yourself: <a href="https://nbviewer.jupyter.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/dev/examples/mutagenesis.ipynb"><code>mutagenesis.ipynb</code></a></p></div></div><p>Here we include libraries all necessary libraries</p><pre><code class="language-julia hljs">using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics, Zygote</code></pre><p>Here we load all samples.</p><pre><code class="language-julia hljs">train_x, train_y = MLDatasets.Mutagenesis.traindata();
+</code></pre><p>and the task is to predict the value in key <code>mutagenic</code> (in this sample it&#39;s <code>1</code>) from the rest of the JSON.</p><p>With most machine learning libraries assuming your data being stored as tensors of a fixed dimension, or a sequence, you will have a bad time.  Contrary, <code>JsonGrider.jl</code> assumes your data to be stored in a flexible JSON format and tries to automate most labor using reasonable default, but it still gives you an option to control and tweak almost everything.  <code>JsonGrinder.jl</code> is built on top of <a href="https://github.com/CTUAvastLab/Mill.jl">Mill.jl</a> which itself is built on top of <a href="https://fluxml.ai/">Flux.jl</a> (we do not reinvent the wheel).  <strong>Although JsonGrinder was designed for JSON files, you can easily adapt it to XML, <a href="https://developers.google.com/protocol-buffers">Protocol Buffers</a>, <a href="https://msgpack.org/index.html">MessagePack</a>, and other similar structures</strong></p><p>There are 5 steps to create a classifier once you load the data.</p><ol><li>Create a schema of JSON files (using <code>sch = JsonGrinder.schema(...)</code>).</li><li>Create an extractor converting JSONs to Mill structures (<code>extractor = suggestextractor(sch)</code>). </li></ol><p>Schema <code>sch</code> from previous step is very helpful, as it helps to identify, how to convert nodes (<code>Dict</code>, <code>Array</code>) to (<code>Mill.ProductNode</code> and <code>Mill.BagNode</code>) and how to convert values in leaves to (<code>Float32</code>, <code>Vector{Float32}</code>, <code>String</code>, <code>Categorical</code>).</p><ol><li>Create a model for your JSONs, which can be easily done by (using <code>model = reflectinmodel(sch, extractor,...)</code>)</li><li>Extract your JSON files into Mill structures using extractor <code>extractbatch(extractor, samples)</code> (at once if all data fit to memory, or per-minibatch during training)</li><li>Use your favourite methods to train the model, it is 100% compatible with <code>Flux.jl</code> tooling.</li></ol><p>Steps 1 and 2 are handled by <code>JsonGrinder.jl</code>, steps 3 and 4 by combination of <code>Mill.jl</code> <code>JsonGrinder.jl</code> and the 5. step by a combination of <code>Mill.jl</code> and <code>Flux.jl</code>.</p><p>Authors see the biggest advantage in the <code>model</code> being hierarchical and reflecting the JSON structure. Thanks to <code>Mill.jl</code>, it can handle missing values at all levels.</p><p>Our idealized workflow is demonstrated in following example, which can be also found in <a href="examples/mutagenesis/#Mutagenesis-Example">Mutagenesis Example</a> and here we&#39;ll break it down in order to demonstrate the basic functionality of JsonGrinder.</p><p>The basic workflow can be visualized as follows</p><img src="assets/workflow.svg" alt="workflow" style="width: 30%;"><h1>Mutagenesis Example</h1><p>Following example demonstrates learning to <a href="https://relational.fit.cvut.cz/dataset/Mutagenesis">predict the mutagenicity on Salmonella typhimurium</a> (dataset is stored in json format <a href="https://juliaml.github.io/MLDatasets.jl/stable/datasets/Mutagenesis/">in MLDatasets.jl</a> for your convenience).</p><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>This example is also available as a Jupyter notebook, feel free to run it yourself: <a href="https://nbviewer.jupyter.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/dev/examples/mutagenesis.ipynb"><code>mutagenesis.ipynb</code></a></p></div></div><p>Here we include libraries all necessary libraries</p><pre><code class="language-julia hljs">using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics</code></pre><p>Here we load all samples.</p><pre><code class="language-julia hljs">train_x, train_y = MLDatasets.Mutagenesis.traindata();
 test_x, test_y = MLDatasets.Mutagenesis.testdata();</code></pre><p>We define some basic parameters for the construction and training of the neural network. Minibatch size is self-explanatory, iterations is number of iterations of gradient descent Neurons is number of neurons in hidden layers for each version of part of the neural network.</p><pre><code class="language-julia hljs">minibatchsize = 100
 iterations = 5_000
 neurons = 20</code></pre><pre><code class="nohighlight hljs">20</code></pre><p>This is the <strong>step 1</strong> of the workflow</p><p>We create the schema of the training data, which is the first important step in using the JsonGrinder. This computes both the structure (also known as JSON schema) and histogram of occurrences of individual values in the training data.</p><pre><code class="language-julia hljs">sch = JsonGrinder.schema(train_x)</code></pre><pre><code class="nohighlight hljs">[Dict] 	# updated = 100
@@ -127,78 +127,70 @@ test_data = extractor.(test_x)</code></pre><pre><code class="nohighlight hljs">4
  ProductNode
  ProductNode
  ProductNode
- ProductNode</code></pre><p>hack, get rid of this after PR is merged</p><pre><code class="language-julia hljs">(m::AbstractMillModel)(x::AbstractVector{&lt;:AbstractMillNode}) = m(Zygote.@ignore(reduce(catobs, x)))</code></pre><p>This is the <strong>step 5</strong> of the workflow, we train the model</p><h1>Train the model</h1><p>Then, we define few handy functions and a loss function, which is categorical crossentropy in our case.</p><pre><code class="language-julia hljs">loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
-inference(x) = model(x).data
+ ProductNode</code></pre><p>This is the <strong>step 5</strong> of the workflow, we train the model</p><h1>Train the model</h1><p>Then, we define few handy functions and a loss function, which is categorical crossentropy in our case.</p><pre><code class="language-julia hljs">inference(x) = model(x).data
+loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
 accuracy(x,y) = mean(labelnames[Flux.onecold(inference(x))] .== y)
 loss(xy::Tuple) = loss(xy...)</code></pre><pre><code class="nohighlight hljs">loss (generic function with 2 methods)</code></pre><p>And we can add a callback which will be printing train and test accuracy during the training and then we can start trining</p><pre><code class="language-julia hljs">cb = () -&gt; begin
 	train_acc = accuracy(train_data, train_y)
 	test_acc = accuracy(test_data, test_y)
 	println(&quot;accuracy: train = $train_acc, test = $test_acc&quot;)
-end</code></pre><pre><code class="nohighlight hljs">#9 (generic function with 1 method)</code></pre><p>Lastly we turn our training data to minibatches, and we can start training</p><pre><code class="language-julia hljs">minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
-Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre><code class="nohighlight hljs">accuracy: train = 0.39, test = 0.3181818181818182
-accuracy: train = 0.92, test = 0.8636363636363636
-accuracy: train = 0.98, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.8181818181818182
-accuracy: train = 1.0, test = 0.7954545454545454
+end</code></pre><pre><code class="nohighlight hljs">#7 (generic function with 1 method)</code></pre><p>Lastly we turn our training data to minibatches, and we can start training</p><pre><code class="language-julia hljs">minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
+Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre><code class="nohighlight hljs">accuracy: train = 0.26, test = 0.45454545454545453
+accuracy: train = 0.91, test = 0.8181818181818182
+accuracy: train = 0.99, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7272727272727273
 accuracy: train = 1.0, test = 0.7954545454545454
 accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
 accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
 accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
 accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
 </code></pre><p>We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on test set we get over 70%.</p><h1>Classify test set</h1><p>The Last part is inference on test data.</p><pre><code class="language-julia hljs">probs = softmax(inference(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
-mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.7727272727272727</code></pre><p><code>pred_classes</code> contains the predictions for our test set. we see the accuracy is around 75% on test set predicted classes for test set</p><pre><code class="language-julia hljs">pred_classes</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
+mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.7272727272727273</code></pre><p><code>pred_classes</code> contains the predictions for our test set. we see the accuracy is around 75% on test set predicted classes for test set</p><pre><code class="language-julia hljs">pred_classes</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
  1
  1
  0
@@ -209,16 +201,6 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  1
  1
  1
- 0
- 0
- 1
- 1
- 1
- 0
- 1
- 1
- 0
- 0
  1
  0
  1
@@ -227,10 +209,20 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  1
  1
  1
+ 0
  1
  1
  0
+ 1
+ 1
+ 1
+ 1
  0
+ 1
+ 1
+ 1
+ 1
+ 1
  0
  0
  1
@@ -287,8 +279,8 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  1
  0
  1</code></pre><p>probabilities for test set</p><pre><code class="language-julia hljs">probs</code></pre><pre><code class="nohighlight hljs">2×44 Matrix{Float32}:
- 0.999999    0.999852     0.000594522  0.000684665  0.99995     0.999998    0.999444     0.70787  0.999977    1.0         0.137129  0.417381  0.999986    0.999977    0.824231  0.00768224  1.0         0.995546    3.11149f-6  0.00120712  0.878913  5.29734f-12  0.999881     1.0         0.995955    0.999995    0.985044  1.0         1.0          0.999999    0.262482  0.00170877  1.21288f-5  0.000219228  1.0         0.967169   0.99556     1.0         1.0         0.999859    1.0         0.537781  0.998497    0.999996
- 9.10137f-7  0.000147893  0.999406     0.999315     5.02809f-5  2.23923f-6  0.000555525  0.29213  2.26571f-5  2.12827f-7  0.862871  0.582619  1.43964f-5  2.26372f-5  0.175769  0.992318    2.95504f-7  0.00445365  0.999997    0.998793    0.121087  1.0          0.000118811  1.61758f-7  0.00404489  5.48656f-6  0.014956  2.08863f-7  3.74827f-10  8.70963f-7  0.737518  0.998291    0.999988    0.999781     2.35424f-7  0.0328312  0.00443954  3.42774f-7  2.43093f-7  0.00014121  3.99186f-7  0.462219  0.00150297  4.00645f-6</code></pre><p>We can look at individual samples. For instance, some sample from test set is</p><pre><code class="language-julia hljs">test_data[2]</code></pre><pre><code class="nohighlight hljs">ProductNode 	# 1 obs, 104 bytes
+ 0.99999     0.995573    0.109899  0.0170911  0.999646     0.997939   0.926386   0.529197  0.999865     0.999999  0.720346  0.216665  0.997085    0.999976    0.698053  0.520249  0.999987    0.627345  0.00119703  0.532191  0.975108   0.000556436  0.973434   0.999996    0.577944  0.999989    0.275656  0.999848     1.0         0.999985    0.925304   0.894066  0.00339277  0.066736  0.999998    0.999907    0.998128    0.999998    0.999998    0.995582    0.999994    0.660646  0.988326   0.999557
+ 9.67751f-6  0.00442708  0.890101  0.982909   0.000354384  0.0020606  0.0736138  0.470803  0.000134678  1.475f-6  0.279654  0.783335  0.00291539  2.38627f-5  0.301947  0.479751  1.25802f-5  0.372655  0.998803    0.467809  0.0248919  0.999444     0.0265656  4.00839f-6  0.422056  1.14443f-5  0.724344  0.000151579  9.87825f-9  1.52136f-5  0.0746962  0.105934  0.996607    0.933264  2.04013f-6  9.31348f-5  0.00187211  2.03372f-6  1.89884f-6  0.00441845  5.79272f-6  0.339354  0.0116736  0.00044293</code></pre><p>We can look at individual samples. For instance, some sample from test set is</p><pre><code class="language-julia hljs">test_data[2]</code></pre><pre><code class="nohighlight hljs">ProductNode 	# 1 obs, 104 bytes
   ├─── lumo: ArrayNode(99×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   ├─── inda: ArrayNode(2×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   ├─── logp: ArrayNode(63×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
@@ -296,5 +288,5 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
   └── atoms: BagNode 	# 1 obs, 136 bytes
                └── ProductNode 	# 24 obs, 64 bytes
                      ⋮</code></pre><p>and the corresponding classification is</p><pre><code class="language-julia hljs">pred_classes[2]</code></pre><pre><code class="nohighlight hljs">1</code></pre><p>if you want to see the probability distribution, it can be obtained by applying <code>softmax</code> to the output of the network.</p><pre><code class="language-julia hljs">softmax(model(test_data[2]).data)</code></pre><pre><code class="nohighlight hljs">2×1 Matrix{Float32}:
- 0.99985206
- 0.00014789288</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p><p>This concludes a simple classifier for JSON data.</p><p>But keep in mind the framework is general and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.12 on <span class="colophon-date" title="Monday 21 February 2022 09:16">Monday 21 February 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ 0.9955729
+ 0.004427077</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p><p>This concludes a simple classifier for JSON data.</p><p>But keep in mind the framework is general and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.12 on <span class="colophon-date" title="Monday 21 February 2022 15:03">Monday 21 February 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
