@@ -65,8 +65,8 @@ test_data = extractor.(test_x)
 # # Train the model
 # Then, we define few handy functions and a loss function, which is categorical crossentropy in our case.
 
-loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
 inference(x) = model(x).data
+loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
 accuracy(x,y) = mean(labelnames[Flux.onecold(inference(x))] .== y)
 loss(xy::Tuple) = loss(xy...)
 
