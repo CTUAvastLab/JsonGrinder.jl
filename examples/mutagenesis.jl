@@ -11,7 +11,7 @@
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master MLDatasets Flux Mill#master MLDataPattern Statistics"
+#nb pkg"add JsonGrinder#master MLDatasets Flux Mill MLDataPattern Statistics"
 
 # Here we include libraries all necessary libraries
 using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics

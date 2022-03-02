@@ -26,7 +26,6 @@ jobs:
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
-      - run: julia --color=yes --project=docs/ -e 'using Pkg; pkg"add Mill#master"'
       - name: Install dependencies
         run: julia --project=docs/ -e '
             using Pkg;
