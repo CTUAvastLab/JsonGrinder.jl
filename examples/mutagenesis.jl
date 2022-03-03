@@ -84,7 +84,7 @@ Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.th
 
 # # Classify test set
 # The Last part is inference on test data.
-probs = softmax(inference(test_data))
+probs = softmax(model(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
 mean(pred_classes .== test_y)
