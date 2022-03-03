@@ -1,20 +1,43 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>External tools · JsonGrinder.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img class="docs-light-only" src="../assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="../assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../schema/">Schema</a></li><li><a class="tocitem" href="../extractors/">Creating extractors</a></li><li><a class="tocitem" href="../exfunctions/">Extractors overview</a></li><li><a class="tocitem" href="../automl/">AutoML</a></li><li class="is-active"><a class="tocitem" href>External tools</a></li><li><a class="tocitem" href="../api/">API Documentation</a></li><li><a class="tocitem" href="../developers/">Developers</a></li><li><a class="tocitem" href="../citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>External tools</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>External tools</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/docs/src/hierarchical.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="HierarchicalUtils.jl"><a class="docs-heading-anchor" href="#HierarchicalUtils.jl">HierarchicalUtils.jl</a><a id="HierarchicalUtils.jl-1"></a><a class="docs-heading-anchor-permalink" href="#HierarchicalUtils.jl" title="Permalink"></a></h1><p>JsonGrinder.jl uses <a href="https://github.com/Sheemon7/HierarchicalUtils.jl">HierarchicalUtils.jl</a> which brings a lot of additional features.</p><pre><code class="language-julia">using HierarchicalUtils</code></pre><p>Let&#39;s say we gave complex schema and we want to find type instabilities.</p><p>After creating the schema as</p><pre><code class="language-julia-repl">julia&gt; using JSON, JsonGrinder
+<!DOCTYPE html><HTML lang="en"><head><meta charset="UTF-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>External tools · JsonGrinder.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script data-main="../assets/documenter.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" data-theme-name="documenter-dark" data-theme-primary-dark="" href="../assets/themes/documenter-dark.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="documenter-light" data-theme-primary="" href="../assets/themes/documenter-light.css" rel="stylesheet" type="text/css"/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/><script data-is-old-version="">document.addEventListener("DOMContentLoaded", function () {
+    if (document.body.querySelector('meta[name="robots"]') === null) {
+        const meta = document.createElement('meta');
+        meta.name = 'robots';
+        meta.content = 'noindex';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+    };
+    const div = document.createElement('div');
+    div.setAttribute('style', 'position: fixed; width: 100%; top: 0; left: 0; box-shadow: 0 0 10px rgba(0,0,0,0.3); z-index: 999; background-color: #ffaf9c; color: rgba(0, 0, 0, 0.7); border-bottom: 1px solid #d54625; padding: 10px 35px; text-align: center; font-size: 15px;');
+    const closer = document.createElement('div');
+    closer.setAttribute('style', 'position: absolute; top: calc(50% - 8px); right: 18px; cursor: pointer; width: 12px;');
+    // Icon by font-awesome (license: https://fontawesome.com/license, link: https://fontawesome.com/icons/times?style=solid)
+    closer.innerHTML = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+    closer.addEventListener('click', function () {
+        document.body.removeChild(div);
+    });
+    let href = '/stable';
+    if (window.documenterBaseURL) {
+        href = window.documenterBaseURL + '/../stable';
+    }
+    div.innerHTML = 'This is an old version of the documentation. <br> <a href="' + href + '" style="color: rgb(46, 99, 184)">Go to the newest version</a>.';
+    div.appendChild(closer);
+    document.body.appendChild(div);
+});
+</script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img alt="JsonGrinder.jl logo" class="docs-light-only" src="../assets/logo.svg"/><img alt="JsonGrinder.jl logo" class="docs-dark-only" src="../assets/logo-dark.svg"/></a><form action="../search/" class="docs-search"><input class="docs-search-query" id="documenter-search-query" name="q" placeholder="Search docs" type="text"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../schema/">Schema</a></li><li><a class="tocitem" href="../extractors/">Creating extractors</a></li><li><a class="tocitem" href="../exfunctions/">Extractors overview</a></li><li><a class="tocitem" href="../automl/">AutoML</a></li><li class="is-active"><a class="tocitem" href="">External tools</a></li><li><a class="tocitem" href="../api/">API Documentation</a></li><li><a class="tocitem" href="../developers/">Developers</a></li><li><a class="tocitem" href="../citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href="">External tools</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="">External tools</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/docs/src/hierarchical.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" href="#" id="documenter-settings-button" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" href="#" id="documenter-sidebar-button"></a></div></header><article class="content" id="documenter-page"><h1 id="HierarchicalUtils.jl"><a class="docs-heading-anchor" href="#HierarchicalUtils.jl">HierarchicalUtils.jl</a><a id="HierarchicalUtils.jl-1"></a><a class="docs-heading-anchor-permalink" href="#HierarchicalUtils.jl" title="Permalink"></a></h1><p>JsonGrinder.jl uses <a href="https://github.com/Sheemon7/HierarchicalUtils.jl">HierarchicalUtils.jl</a> which brings a lot of additional features.</p><pre><code class="language-julia">using HierarchicalUtils</code></pre><p>Let's say we gave complex schema and we want to find type instabilities.</p><p>After creating the schema as</p><pre><code class="language-julia-repl">julia&gt; using JSON, JsonGrinder
 
-julia&gt; j1 = JSON.parse(&quot;&quot;&quot;{&quot;a&quot;: 4, &quot;b&quot;: &quot;birb&quot;}&quot;&quot;&quot;)
+julia&gt; j1 = JSON.parse("""{"a": 4, "b": "birb"}""")
 Dict{String,Any} with 2 entries:
-  &quot;b&quot; =&gt; &quot;birb&quot;
-  &quot;a&quot; =&gt; 4
+  "b" =&gt; "birb"
+  "a" =&gt; 4
 
-julia&gt; j2 = JSON.parse(&quot;&quot;&quot;{&quot;a&quot;: { &quot;a&quot;: &quot;hello&quot;, &quot;b&quot;:[5,6]}, &quot;b&quot;: &quot;bird&quot;}&quot;&quot;&quot;)
+julia&gt; j2 = JSON.parse("""{"a": { "a": "hello", "b":[5,6]}, "b": "bird"}""")
 Dict{String,Any} with 2 entries:
-  &quot;b&quot; =&gt; &quot;bird&quot;
-  &quot;a&quot; =&gt; Dict{String,Any}(&quot;b&quot;=&gt;Any[5, 6],&quot;a&quot;=&gt;&quot;hello&quot;)
+  "b" =&gt; "bird"
+  "a" =&gt; Dict{String,Any}("b"=&gt;Any[5, 6],"a"=&gt;"hello")
 
-julia&gt; j3 = JSON.parse(&quot;&quot;&quot;{&quot;a&quot;: [1, 2, 3, &quot;hi&quot;], &quot;b&quot;: &quot;word&quot;}&quot;&quot;&quot;)
+julia&gt; j3 = JSON.parse("""{"a": [1, 2, 3, "hi"], "b": "word"}""")
 Dict{String,Any} with 2 entries:
-  &quot;b&quot; =&gt; &quot;word&quot;
-  &quot;a&quot; =&gt; Any[1, 2, 3, &quot;hi&quot;]
+  "b" =&gt; "word"
+  "a" =&gt; Any[1, 2, 3, "hi"]
 
 julia&gt; sch = schema([j1, j2, j3])
 [ Info: In path [a]: Instability in the schema detected. Using multiple representation.
@@ -26,7 +49,7 @@ julia&gt; sch = schema([j1, j2, j3])
   │        │        ⋮
   │        └── 3: [List] (updated = 1)
   │                 ⋮
-  └── b: [Scalar - String], 3 unique values, updated = 3</code></pre><p>In small enough schema, you can immediately see all types of nodes, but it gets more complicated if the schema does not fit your screen. Let&#39;s see how we can leverage <code>HierarchicalUtils</code> to programmatically examine shema.</p><p>This can be used to print a non-truncated version of a model:</p><pre><code class="language-julia-repl">julia&gt; printtree(sch)
+  └── b: [Scalar - String], 3 unique values, updated = 3</code></pre><p>In small enough schema, you can immediately see all types of nodes, but it gets more complicated if the schema does not fit your screen. Let's see how we can leverage <code>HierarchicalUtils</code> to programmatically examine shema.</p><p>This can be used to print a non-truncated version of a model:</p><pre><code class="language-julia-repl">julia&gt; printtree(sch)
 [Dict] (updated = 3)
   ├── a: [MultiEntry] (updated = 3)
   │        ├── 1: [Scalar - Int64], 1 unique values, updated = 1
@@ -39,26 +62,26 @@ julia&gt; sch = schema([j1, j2, j3])
   │                       ├── 1: [Scalar - Int64], 3 unique values, updated = 3
   │                       └── 2: [Scalar - String], 1 unique values, updated = 1
   └── b: [Scalar - String], 3 unique values, updated = 3</code></pre><p>Callling with <code>trav=true</code> enables convenient traversal functionality with string indexing:</p><pre><code class="language-julia-repl">julia&gt; printtree(sch, trav=true)
-[Dict] (updated = 3) [&quot;&quot;]
-  ├── a: [MultiEntry] (updated = 3) [&quot;E&quot;]
-  │        ├── 1: [Scalar - Int64], 1 unique values, updated = 1 [&quot;I&quot;]
-  │        ├── 2: [Dict] (updated = 1) [&quot;M&quot;]
-  │        │        ├── a: [Scalar - String], 1 unique values, updated = 1 [&quot;N&quot;]
-  │        │        └── b: [List] (updated = 1) [&quot;O&quot;]
-  │        │                 └── [Scalar - Int64], 2 unique values, updated = 2 [&quot;OU&quot;]
-  │        └── 3: [List] (updated = 1) [&quot;Q&quot;]
-  │                 └── [MultiEntry] (updated = 4) [&quot;S&quot;]
-  │                       ├── 1: [Scalar - Int64], 3 unique values, updated = 3 [&quot;SU&quot;]
-  │                       └── 2: [Scalar - String], 1 unique values, updated = 1 [&quot;T*&quot;]
-  └── b: [Scalar - String], 3 unique values, updated = 3 [&quot;U&quot;]</code></pre><p>This way any element in the schema is swiftly accessible, which may come in handy when inspecting model parameters or simply deleting/replacing/inserting nodes to tree (for instance when constructing adversarial samples). All tree nodes are accessible by indexing with the traversal code:</p><pre><code class="language-julia-repl">julia&gt; sch[&quot;N&quot;]
-[Scalar - String], 1 unique values, updated = 1</code></pre><p>The following two approaches give the same result:</p><pre><code class="language-julia-repl">julia&gt; sch[&quot;N&quot;] === sch.childs[:a][2][:a]
-true</code></pre><p>We can even search for specific elements in schema. Let&#39;s examine occurrences of irregularities a.k.a. MultiEntry by running</p><pre><code class="language-julia-repl">julia&gt; TypeIterator(JsonGrinder.MultiEntry, sch) |&gt; collect
+[Dict] (updated = 3) [""]
+  ├── a: [MultiEntry] (updated = 3) ["E"]
+  │        ├── 1: [Scalar - Int64], 1 unique values, updated = 1 ["I"]
+  │        ├── 2: [Dict] (updated = 1) ["M"]
+  │        │        ├── a: [Scalar - String], 1 unique values, updated = 1 ["N"]
+  │        │        └── b: [List] (updated = 1) ["O"]
+  │        │                 └── [Scalar - Int64], 2 unique values, updated = 2 ["OU"]
+  │        └── 3: [List] (updated = 1) ["Q"]
+  │                 └── [MultiEntry] (updated = 4) ["S"]
+  │                       ├── 1: [Scalar - Int64], 3 unique values, updated = 3 ["SU"]
+  │                       └── 2: [Scalar - String], 1 unique values, updated = 1 ["T*"]
+  └── b: [Scalar - String], 3 unique values, updated = 3 ["U"]</code></pre><p>This way any element in the schema is swiftly accessible, which may come in handy when inspecting model parameters or simply deleting/replacing/inserting nodes to tree (for instance when constructing adversarial samples). All tree nodes are accessible by indexing with the traversal code:</p><pre><code class="language-julia-repl">julia&gt; sch["N"]
+[Scalar - String], 1 unique values, updated = 1</code></pre><p>The following two approaches give the same result:</p><pre><code class="language-julia-repl">julia&gt; sch["N"] === sch.childs[:a][2][:a]
+true</code></pre><p>We can even search for specific elements in schema. Let's examine occurrences of irregularities a.k.a. MultiEntry by running</p><pre><code class="language-julia-repl">julia&gt; TypeIterator(JsonGrinder.MultiEntry, sch) |&gt; collect
 2-element Array{JsonGrinder.MultiEntry,1}:
  JsonGrinder.MultiEntry
  JsonGrinder.MultiEntry</code></pre><p>which tells us there are 2 multientries, but does not tell us where they are.</p><p>Using this</p><pre><code class="language-julia-repl">julia&gt; filter(e-&gt;sch[e] isa JsonGrinder.MultiEntry, list_traversal(sch))
 2-element Array{String,1}:
- &quot;E&quot;
- &quot;S&quot;</code></pre><p>we can see that <code>sch[&quot;E&quot;]</code> and <code>sch[&quot;S&quot;]</code> are indeed MultiEntry, but we don&#39;t have easy way to see where they are in schema.</p><pre><code class="language-julia-repl">julia&gt; using Mill
+ "E"
+ "S"</code></pre><p>we can see that <code>sch["E"]</code> and <code>sch["S"]</code> are indeed MultiEntry, but we don't have easy way to see where they are in schema.</p><pre><code class="language-julia-repl">julia&gt; using Mill
 
 julia&gt; lenses = [only(code2lens(sch, e)) for e in list_traversal(sch) if sch[e] isa JsonGrinder.MultiEntry]
 2-element Array{Setfield.ComposedLens{Setfield.PropertyLens{:childs},LI} where LI,1}:
@@ -75,4 +98,4 @@ julia&gt; lenses = [only(code2lens(sch, e)) for e in list_traversal(sch) if sch[
                  ⋮</code></pre><p>returns the first <code>MultiEntry</code> and</p><pre><code class="language-julia-repl">julia&gt; get(sch, lenses[2])
 [MultiEntry] (updated = 4)
   ├── 1: [Scalar - Int64], 3 unique values, updated = 3
-  └── 2: [Scalar - String], 1 unique values, updated = 1</code></pre><p>returns the second one.</p><p>For the complete showcase of possibilities, refer to <a href="https://github.com/CTUAvastLab/HierarchicalUtils.jl">HierarchicalUtils.jl</a> and <a href="https://github.com/CTUAvastLab/HierarchicalUtils.jl/blob/master/examples/mill_integration.ipynb">this notebook</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../automl/">« AutoML</a><a class="docs-footer-nextpage" href="../api/">API Documentation »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 24 February 2021 21:20">Wednesday 24 February 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  └── 2: [Scalar - String], 1 unique values, updated = 1</code></pre><p>returns the second one.</p><p>For the complete showcase of possibilities, refer to <a href="https://github.com/CTUAvastLab/HierarchicalUtils.jl">HierarchicalUtils.jl</a> and <a href="https://github.com/CTUAvastLab/HierarchicalUtils.jl/blob/master/examples/mill_integration.ipynb">this notebook</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../automl/">« AutoML</a><a class="docs-footer-nextpage" href="../api/">API Documentation »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label></p><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div><p></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 24 February 2021 21:20">Wednesday 24 February 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></HTML>

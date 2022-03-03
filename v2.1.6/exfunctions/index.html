@@ -1,26 +1,49 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Extractors overview · JsonGrinder.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img class="docs-light-only" src="../assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="../assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../schema/">Schema</a></li><li><a class="tocitem" href="../extractors/">Creating extractors</a></li><li class="is-active"><a class="tocitem" href>Extractors overview</a><ul class="internal"><li><a class="tocitem" href="#Numbers"><span>Numbers</span></a></li><li><a class="tocitem" href="#Strings"><span>Strings</span></a></li><li><a class="tocitem" href="#Categorical"><span>Categorical</span></a></li><li><a class="tocitem" href="#Array-(Lists-/-Sets)"><span>Array (Lists / Sets)</span></a></li><li><a class="tocitem" href="#exfuctions_ExtractDict"><span>Dict</span></a></li><li class="toplevel"><a class="tocitem" href="#Specials"><span>Specials</span></a></li><li><a class="tocitem" href="#ExtractKeyAsField"><span>ExtractKeyAsField</span></a></li><li><a class="tocitem" href="#MultipleRepresentation"><span>MultipleRepresentation</span></a></li><li><a class="tocitem" href="#ExtractEmpty"><span>ExtractEmpty</span></a></li></ul></li><li><a class="tocitem" href="../automl/">AutoML</a></li><li><a class="tocitem" href="../hierarchical/">External tools</a></li><li><a class="tocitem" href="../api/">API Documentation</a></li><li><a class="tocitem" href="../developers/">Developers</a></li><li><a class="tocitem" href="../citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Extractors overview</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Extractors overview</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/docs/src/exfunctions.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Extractors-overview"><a class="docs-heading-anchor" href="#Extractors-overview">Extractors overview</a><a id="Extractors-overview-1"></a><a class="docs-heading-anchor-permalink" href="#Extractors-overview" title="Permalink"></a></h1><p>Below, we first describe extractors of values (i.e. leaves of JSON tree), then proceed to description of extractors of <code>Array</code> and <code>Dict</code>, and finish with some specials.</p><p>Extractors of scalar values are arguably the most important, but also fortunately the most understood ones. They control, how values are converted to a <code>Vector</code> (or generally tensor) for the neural networks. For example they control, if number should be represented as a number, or as one-hot encoded categorical variable. Similarly, they control how <code>String</code> should be treated, although we admit to natively support only n-grams.</p><p>Because mapping from JSON (or different hierarchical structure) to <code>Mill</code> structures can be non-trivial, extractors have keyword argument <code>store_input</code>, which, if <code>true</code>, causes input data to be stored as metadata of respective <code>Mill</code> structure. By default, it&#39;s false, because it can cause type-instability in case of irregular input data and thus suffer from performance loss. The <code>store_input</code> argument is propagated to leaves and is used to store primarily leaf values.</p><p>Recall</p><h2 id="Numbers"><a class="docs-heading-anchor" href="#Numbers">Numbers</a><a id="Numbers-1"></a><a class="docs-heading-anchor-permalink" href="#Numbers" title="Permalink"></a></h2><pre><code class="language-julia">struct ExtractScalar{T} &lt;: AbstractExtractor
+<!DOCTYPE html><HTML lang="en"><head><meta charset="UTF-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>Extractors overview · JsonGrinder.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script data-main="../assets/documenter.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" data-theme-name="documenter-dark" data-theme-primary-dark="" href="../assets/themes/documenter-dark.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="documenter-light" data-theme-primary="" href="../assets/themes/documenter-light.css" rel="stylesheet" type="text/css"/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/><script data-is-old-version="">document.addEventListener("DOMContentLoaded", function () {
+    if (document.body.querySelector('meta[name="robots"]') === null) {
+        const meta = document.createElement('meta');
+        meta.name = 'robots';
+        meta.content = 'noindex';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+    };
+    const div = document.createElement('div');
+    div.setAttribute('style', 'position: fixed; width: 100%; top: 0; left: 0; box-shadow: 0 0 10px rgba(0,0,0,0.3); z-index: 999; background-color: #ffaf9c; color: rgba(0, 0, 0, 0.7); border-bottom: 1px solid #d54625; padding: 10px 35px; text-align: center; font-size: 15px;');
+    const closer = document.createElement('div');
+    closer.setAttribute('style', 'position: absolute; top: calc(50% - 8px); right: 18px; cursor: pointer; width: 12px;');
+    // Icon by font-awesome (license: https://fontawesome.com/license, link: https://fontawesome.com/icons/times?style=solid)
+    closer.innerHTML = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+    closer.addEventListener('click', function () {
+        document.body.removeChild(div);
+    });
+    let href = '/stable';
+    if (window.documenterBaseURL) {
+        href = window.documenterBaseURL + '/../stable';
+    }
+    div.innerHTML = 'This is an old version of the documentation. <br> <a href="' + href + '" style="color: rgb(46, 99, 184)">Go to the newest version</a>.';
+    div.appendChild(closer);
+    document.body.appendChild(div);
+});
+</script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img alt="JsonGrinder.jl logo" class="docs-light-only" src="../assets/logo.svg"/><img alt="JsonGrinder.jl logo" class="docs-dark-only" src="../assets/logo-dark.svg"/></a><form action="../search/" class="docs-search"><input class="docs-search-query" id="documenter-search-query" name="q" placeholder="Search docs" type="text"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../schema/">Schema</a></li><li><a class="tocitem" href="../extractors/">Creating extractors</a></li><li class="is-active"><a class="tocitem" href="">Extractors overview</a><ul class="internal"><li><a class="tocitem" href="#Numbers"><span>Numbers</span></a></li><li><a class="tocitem" href="#Strings"><span>Strings</span></a></li><li><a class="tocitem" href="#Categorical"><span>Categorical</span></a></li><li><a class="tocitem" href="#Array-(Lists-/-Sets)"><span>Array (Lists / Sets)</span></a></li><li><a class="tocitem" href="#exfuctions_ExtractDict"><span>Dict</span></a></li><li class="toplevel"><a class="tocitem" href="#Specials"><span>Specials</span></a></li><li><a class="tocitem" href="#ExtractKeyAsField"><span>ExtractKeyAsField</span></a></li><li><a class="tocitem" href="#MultipleRepresentation"><span>MultipleRepresentation</span></a></li><li><a class="tocitem" href="#ExtractEmpty"><span>ExtractEmpty</span></a></li></ul></li><li><a class="tocitem" href="../automl/">AutoML</a></li><li><a class="tocitem" href="../hierarchical/">External tools</a></li><li><a class="tocitem" href="../api/">API Documentation</a></li><li><a class="tocitem" href="../developers/">Developers</a></li><li><a class="tocitem" href="../citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href="">Extractors overview</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="">Extractors overview</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/docs/src/exfunctions.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" href="#" id="documenter-settings-button" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" href="#" id="documenter-sidebar-button"></a></div></header><article class="content" id="documenter-page"><h1 id="Extractors-overview"><a class="docs-heading-anchor" href="#Extractors-overview">Extractors overview</a><a id="Extractors-overview-1"></a><a class="docs-heading-anchor-permalink" href="#Extractors-overview" title="Permalink"></a></h1><p>Below, we first describe extractors of values (i.e. leaves of JSON tree), then proceed to description of extractors of <code>Array</code> and <code>Dict</code>, and finish with some specials.</p><p>Extractors of scalar values are arguably the most important, but also fortunately the most understood ones. They control, how values are converted to a <code>Vector</code> (or generally tensor) for the neural networks. For example they control, if number should be represented as a number, or as one-hot encoded categorical variable. Similarly, they control how <code>String</code> should be treated, although we admit to natively support only n-grams.</p><p>Because mapping from JSON (or different hierarchical structure) to <code>Mill</code> structures can be non-trivial, extractors have keyword argument <code>store_input</code>, which, if <code>true</code>, causes input data to be stored as metadata of respective <code>Mill</code> structure. By default, it's false, because it can cause type-instability in case of irregular input data and thus suffer from performance loss. The <code>store_input</code> argument is propagated to leaves and is used to store primarily leaf values.</p><p>Recall</p><h2 id="Numbers"><a class="docs-heading-anchor" href="#Numbers">Numbers</a><a id="Numbers-1"></a><a class="docs-heading-anchor-permalink" href="#Numbers" title="Permalink"></a></h2><pre><code class="language-julia">struct ExtractScalar{T} &lt;: AbstractExtractor
 	c::T
 	s::T
 end</code></pre><p>Extracts a numerical value, centered by subtracting <code>c</code> and scaled by multiplying by <code>s</code>. Strings are converted to numbers. The extractor returns <code>ArrayNode{Matrix{T}}</code> with a single row if <code>uniontypes</code> if <code>false</code>, and <code>ArrayNode{Matrix{Union{Missing, T}}}</code> with a single row if <code>uniontypes</code> if <code>true</code>.</p><pre><code class="language-julia">e = ExtractScalar(Float32, 0.5, 4.0)
-e(&quot;1&quot;).data</code></pre><pre class="documenter-example-output">1×1 Array{Float32,2}:
+e("1").data</code></pre><pre class="documenter-example-output">1×1 Array{Float32,2}:
  2.0</pre><p><code>missing</code> value is extracted as a missing value, as it is automatically handled downstream by <code>Mill</code>.</p><pre><code class="language-julia">e(missing)</code></pre><pre class="documenter-example-output">1×1 Mill.ArrayNode{Array{Missing,2},Nothing}:
- missing</pre><p>the <code>e(&quot;1&quot;)</code> is equivalent to <code>e(&quot;1&quot;, store_input=false)</code>. To see input data in metadata of <code>ArrayNode</code>, we can run</p><pre><code class="language-julia">e(&quot;1&quot;, store_input=true).metadata</code></pre><pre class="documenter-example-output">1×1 Array{String,2}:
- &quot;1&quot;</pre><p>data remain unchanged</p><pre><code class="language-julia">e(&quot;1&quot;, store_input=true).data</code></pre><pre class="documenter-example-output">1×1 Array{Float32,2}:
- 2.0</pre><p>by default, metadata contains <code>nothing</code></p><pre><code class="language-julia">e(&quot;1&quot;).metadata</code></pre><h2 id="Strings"><a class="docs-heading-anchor" href="#Strings">Strings</a><a id="Strings-1"></a><a class="docs-heading-anchor-permalink" href="#Strings" title="Permalink"></a></h2><pre><code class="language-julia">struct ExtractString{T} &lt;: AbstractExtractor
+ missing</pre><p>the <code>e("1")</code> is equivalent to <code>e("1", store_input=false)</code>. To see input data in metadata of <code>ArrayNode</code>, we can run</p><pre><code class="language-julia">e("1", store_input=true).metadata</code></pre><pre class="documenter-example-output">1×1 Array{String,2}:
+ "1"</pre><p>data remain unchanged</p><pre><code class="language-julia">e("1", store_input=true).data</code></pre><pre class="documenter-example-output">1×1 Array{Float32,2}:
+ 2.0</pre><p>by default, metadata contains <code>nothing</code></p><pre><code class="language-julia">e("1").metadata</code></pre><h2 id="Strings"><a class="docs-heading-anchor" href="#Strings">Strings</a><a id="Strings-1"></a><a class="docs-heading-anchor-permalink" href="#Strings" title="Permalink"></a></h2><pre><code class="language-julia">struct ExtractString{T} &lt;: AbstractExtractor
 	n::Int
 	b::Int
 	m::Int
 end</code></pre><p>Represents <code>String</code> as <code>n-</code>grams (<code>NGramMatrix</code> from <code>Mill.jl</code>) with base <code>b</code> and modulo <code>m</code>.</p><pre><code class="language-julia">e = ExtractString()
-e(&quot;Hello&quot;)</code></pre><pre class="documenter-example-output">2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Int64},Nothing}:
- &quot;Hello&quot;</pre><p><code>missing</code> value is extracted as a missing value, as it is automatically handled downstream by <code>Mill</code>.</p><pre><code class="language-julia">e(missing)</code></pre><pre class="documenter-example-output">2053×1 Mill.ArrayNode{Mill.NGramMatrix{Missing,Missing},Nothing}:
- missing</pre><p>Storing input works in the same manner as for <code>ExtractScalar</code>, see</p><pre><code class="language-julia">e(&quot;Hello&quot;, store_input=true).metadata</code></pre><pre class="documenter-example-output">1-element Array{String,1}:
- &quot;Hello&quot;</pre><p>it works the same also with missing values</p><pre><code class="language-julia">e(missing, store_input=true).metadata</code></pre><pre class="documenter-example-output">1-element Array{Missing,1}:
+e("Hello")</code></pre><pre class="documenter-example-output">2053×1 Mill.ArrayNode{Mill.NGramMatrix{String,Int64},Nothing}:
+ "Hello"</pre><p><code>missing</code> value is extracted as a missing value, as it is automatically handled downstream by <code>Mill</code>.</p><pre><code class="language-julia">e(missing)</code></pre><pre class="documenter-example-output">2053×1 Mill.ArrayNode{Mill.NGramMatrix{Missing,Missing},Nothing}:
+ missing</pre><p>Storing input works in the same manner as for <code>ExtractScalar</code>, see</p><pre><code class="language-julia">e("Hello", store_input=true).metadata</code></pre><pre class="documenter-example-output">1-element Array{String,1}:
+ "Hello"</pre><p>it works the same also with missing values</p><pre><code class="language-julia">e(missing, store_input=true).metadata</code></pre><pre class="documenter-example-output">1-element Array{Missing,1}:
  missing</pre><h2 id="Categorical"><a class="docs-heading-anchor" href="#Categorical">Categorical</a><a id="Categorical-1"></a><a class="docs-heading-anchor-permalink" href="#Categorical" title="Permalink"></a></h2><pre><code class="language-julia">struct ExtractCategorical{V,I} &lt;: AbstractExtractor
 	keyvalemap::Dict{V,I}
 	n::Int
-end</code></pre><p>Converts a single item to a one-hot encoded vector. For a safety, there is always an extra item reserved for an unknown value.</p><pre><code class="language-julia">e = ExtractCategorical([&quot;A&quot;,&quot;B&quot;,&quot;C&quot;])
-e([&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;]).data</code></pre><pre class="documenter-example-output">4×4 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
+end</code></pre><p>Converts a single item to a one-hot encoded vector. For a safety, there is always an extra item reserved for an unknown value.</p><pre><code class="language-julia">e = ExtractCategorical(["A","B","C"])
+e(["A","B","C","D"]).data</code></pre><pre class="documenter-example-output">4×4 Mill.MaybeHotMatrix{Int64,Int64,Bool}:
  1  0  0  0
  0  1  0  0
  0  0  1  0
@@ -28,105 +51,105 @@ e([&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;]).data</code></pre><p
  missing
  missing
  missing
- missing</pre><p>Storing input in this case looks as follows</p><pre><code class="language-julia">e([&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;], store_input=true).metadata</code></pre><pre class="documenter-example-output">1-element Array{Array{String,1},1}:
- [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;]</pre><h2 id="Array-(Lists-/-Sets)"><a class="docs-heading-anchor" href="#Array-(Lists-/-Sets)">Array (Lists / Sets)</a><a id="Array-(Lists-/-Sets)-1"></a><a class="docs-heading-anchor-permalink" href="#Array-(Lists-/-Sets)" title="Permalink"></a></h2><pre><code class="language-julia">struct ExtractArray{T}
+ missing</pre><p>Storing input in this case looks as follows</p><pre><code class="language-julia">e(["A","B","C","D"], store_input=true).metadata</code></pre><pre class="documenter-example-output">1-element Array{Array{String,1},1}:
+ ["A", "B", "C", "D"]</pre><h2 id="Array-(Lists-/-Sets)"><a class="docs-heading-anchor" href="#Array-(Lists-/-Sets)">Array (Lists / Sets)</a><a id="Array-(Lists-/-Sets)-1"></a><a class="docs-heading-anchor-permalink" href="#Array-(Lists-/-Sets)" title="Permalink"></a></h2><pre><code class="language-julia">struct ExtractArray{T}
 	item::T
-end</code></pre><p>Convert array of values to a <code>Mill.BagNode</code> with items converted by <code>item</code>. The entire array is assumed to be a single bag.</p><pre><code class="language-julia">sc = ExtractArray(ExtractCategorical([&quot;A&quot;,&quot;B&quot;,&quot;C&quot;]))
-sc([&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;])</code></pre><pre class="documenter-example-output">BagNode with 1 obs
+end</code></pre><p>Convert array of values to a <code>Mill.BagNode</code> with items converted by <code>item</code>. The entire array is assumed to be a single bag.</p><pre><code class="language-julia">sc = ExtractArray(ExtractCategorical(["A","B","C"]))
+sc(["A","B","C","D"])</code></pre><pre class="documenter-example-output">BagNode with 1 obs
   └── ArrayNode(4×4 MaybeHotMatrix with Bool elements) with 4 obs</pre><p>Empty arrays are represented as an empty bag.</p><pre><code class="language-julia">sc([]).bags</code></pre><pre class="documenter-example-output">Mill.AlignedBags{Int64}(UnitRange{Int64}[0:-1])</pre><p>The data of empty bag can be either <code>missing</code> or a empty sample, which is more convenient as it makes all samples of the same type, which is nicer to AD. This behavior is controlled by <code>Mill.emptyismissing</code>. The extractor of a <code>BagNode</code> can signal to child extractors to extract a sample with zero observations using a special singleton <code>JsonGrinder.extractempty</code>. For example</p><pre><code class="language-julia">Mill.emptyismissing!(true)
 sc([]).data</code></pre><pre class="documenter-example-output">missing</pre><pre><code class="language-julia">Mill.emptyismissing!(false)
-sc([]).data</code></pre><pre class="documenter-example-output">4×0 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Int64,Bool},Nothing}</pre><p>Storing input is delegated to leaf extractors, so metadata of bag itself are empty</p><pre><code class="language-julia">sc([&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;], store_input=true).metadata</code></pre><p>but metadata of underlying <code>ArrayNode</code> contain inputs.</p><pre><code class="language-julia">sc([&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;], store_input=true).data.metadata</code></pre><pre class="documenter-example-output">4-element Array{String,1}:
- &quot;A&quot;
- &quot;B&quot;
- &quot;C&quot;
- &quot;D&quot;</pre><p>In case of empty arrays, input is stored in metadata of <code>BagNode</code> itself, because there might not be any underlying <code>ArrayNode</code>.</p><pre><code class="language-julia">sc([], store_input=true).metadata</code></pre><pre class="documenter-example-output">1-element Array{Array{Any,1},1}:
+sc([]).data</code></pre><pre class="documenter-example-output">4×0 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Int64,Bool},Nothing}</pre><p>Storing input is delegated to leaf extractors, so metadata of bag itself are empty</p><pre><code class="language-julia">sc(["A","B","C","D"], store_input=true).metadata</code></pre><p>but metadata of underlying <code>ArrayNode</code> contain inputs.</p><pre><code class="language-julia">sc(["A","B","C","D"], store_input=true).data.metadata</code></pre><pre class="documenter-example-output">4-element Array{String,1}:
+ "A"
+ "B"
+ "C"
+ "D"</pre><p>In case of empty arrays, input is stored in metadata of <code>BagNode</code> itself, because there might not be any underlying <code>ArrayNode</code>.</p><pre><code class="language-julia">sc([], store_input=true).metadata</code></pre><pre class="documenter-example-output">1-element Array{Array{Any,1},1}:
  []</pre><h2 id="exfuctions_ExtractDict"><a class="docs-heading-anchor" href="#exfuctions_ExtractDict">Dict</a><a id="exfuctions_ExtractDict-1"></a><a class="docs-heading-anchor-permalink" href="#exfuctions_ExtractDict" title="Permalink"></a></h2><pre><code class="language-julia">struct ExtractDict{S} &lt;: AbstractExtractor
 	dict::S
 end</code></pre><p>Extracts all items in <code>dict</code> and return them as a ProductNode. Key in dict corresponds to keys in JSON.</p><pre><code class="language-julia">ex = ExtractDict(Dict(:a =&gt; ExtractScalar(),
 	:b =&gt; ExtractString(),
-	:c =&gt; ExtractCategorical([&quot;A&quot;,&quot;B&quot;]),
+	:c =&gt; ExtractCategorical(["A","B"]),
 	:d =&gt; ExtractArray(ExtractString())))
-ex(Dict(:a =&gt; &quot;1&quot;,
-	:b =&gt; &quot;Hello&quot;,
-	:c =&gt; &quot;A&quot;,
-	:d =&gt; [&quot;Hello&quot;, &quot;world&quot;]))</code></pre><pre class="documenter-example-output">ProductNode with 1 obs
+ex(Dict(:a =&gt; "1",
+	:b =&gt; "Hello",
+	:c =&gt; "A",
+	:d =&gt; ["Hello", "world"]))</code></pre><pre class="documenter-example-output">ProductNode with 1 obs
   ├── a: ArrayNode(1×1 Array with Float32 elements) with 1 obs
   ├── b: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs
   ⋮
   └── d: BagNode with 1 obs
-           └── ArrayNode(2053×2 NGramMatrix with Int64 elements) with 2 obs</pre><p>Missing keys are replaced by <code>missing</code> and handled by child extractors.</p><pre><code class="language-julia">ex(Dict(:a =&gt; &quot;1&quot;,
-	:c =&gt; &quot;A&quot;))</code></pre><pre class="documenter-example-output">ProductNode with 1 obs
+           └── ArrayNode(2053×2 NGramMatrix with Int64 elements) with 2 obs</pre><p>Missing keys are replaced by <code>missing</code> and handled by child extractors.</p><pre><code class="language-julia">ex(Dict(:a =&gt; "1",
+	:c =&gt; "A"))</code></pre><pre class="documenter-example-output">ProductNode with 1 obs
   ├── a: ArrayNode(1×1 Array with Float32 elements) with 1 obs
   ├── b: ArrayNode(2053×1 NGramMatrix with Missing elements) with 1 obs
   ⋮
   └── d: BagNode with 1 obs
-           └── ArrayNode(2053×0 NGramMatrix with Int64 elements) with 0 obs</pre><p>Storing input data works in similar manner as for <code>ExtractArray</code>, input data are delegated to leaf extractors.</p><pre><code class="language-julia-repl">julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:c =&gt; &quot;A&quot;), store_input=true).metadata
+           └── ArrayNode(2053×0 NGramMatrix with Int64 elements) with 0 obs</pre><p>Storing input data works in similar manner as for <code>ExtractArray</code>, input data are delegated to leaf extractors.</p><pre><code class="language-julia-repl">julia&gt; ex(Dict(:a =&gt; "1",
+       	:c =&gt; "A"), store_input=true).metadata
 
-julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:c =&gt; &quot;A&quot;), store_input=true)[:a].metadata
+julia&gt; ex(Dict(:a =&gt; "1",
+       	:c =&gt; "A"), store_input=true)[:a].metadata
 1×1 Array{String,2}:
- &quot;1&quot;
+ "1"
 
-julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:c =&gt; &quot;A&quot;), store_input=true)[:b].metadata
+julia&gt; ex(Dict(:a =&gt; "1",
+       	:c =&gt; "A"), store_input=true)[:b].metadata
 1-element Array{Nothing,1}:
  nothing
 
-julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:c =&gt; &quot;A&quot;), store_input=true)[:c].metadata
+julia&gt; ex(Dict(:a =&gt; "1",
+       	:c =&gt; "A"), store_input=true)[:c].metadata
 1-element Array{String,1}:
- &quot;A&quot;
+ "A"
 
-julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:c =&gt; &quot;A&quot;), store_input=true)[:d].metadata
+julia&gt; ex(Dict(:a =&gt; "1",
+       	:c =&gt; "A"), store_input=true)[:d].metadata
 1-element Array{Nothing,1}:
- nothing</code></pre><p>or</p><pre><code class="language-julia-repl">julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:b =&gt; &quot;Hello&quot;,
-       	:c =&gt; &quot;A&quot;,
-       	:d =&gt; [&quot;Hello&quot;, &quot;world&quot;]), store_input=true).metadata
+ nothing</code></pre><p>or</p><pre><code class="language-julia-repl">julia&gt; ex(Dict(:a =&gt; "1",
+       	:b =&gt; "Hello",
+       	:c =&gt; "A",
+       	:d =&gt; ["Hello", "world"]), store_input=true).metadata
 
-julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:b =&gt; &quot;Hello&quot;,
-       	:c =&gt; &quot;A&quot;,
-       	:d =&gt; [&quot;Hello&quot;, &quot;world&quot;]), store_input=true)[:a].metadata
+julia&gt; ex(Dict(:a =&gt; "1",
+       	:b =&gt; "Hello",
+       	:c =&gt; "A",
+       	:d =&gt; ["Hello", "world"]), store_input=true)[:a].metadata
 1×1 Array{String,2}:
- &quot;1&quot;
+ "1"
 
-julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:b =&gt; &quot;Hello&quot;,
-       	:c =&gt; &quot;A&quot;,
-       	:d =&gt; [&quot;Hello&quot;, &quot;world&quot;]), store_input=true)[:b].metadata
+julia&gt; ex(Dict(:a =&gt; "1",
+       	:b =&gt; "Hello",
+       	:c =&gt; "A",
+       	:d =&gt; ["Hello", "world"]), store_input=true)[:b].metadata
 1-element Array{String,1}:
- &quot;Hello&quot;
+ "Hello"
 
-julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:b =&gt; &quot;Hello&quot;,
-       	:c =&gt; &quot;A&quot;,
-       	:d =&gt; [&quot;Hello&quot;, &quot;world&quot;]), store_input=true)[:c].metadata
+julia&gt; ex(Dict(:a =&gt; "1",
+       	:b =&gt; "Hello",
+       	:c =&gt; "A",
+       	:d =&gt; ["Hello", "world"]), store_input=true)[:c].metadata
 1-element Array{String,1}:
- &quot;A&quot;
+ "A"
 
-julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:b =&gt; &quot;Hello&quot;,
-       	:c =&gt; &quot;A&quot;,
-       	:d =&gt; [&quot;Hello&quot;, &quot;world&quot;]), store_input=true)[:d].metadata
+julia&gt; ex(Dict(:a =&gt; "1",
+       	:b =&gt; "Hello",
+       	:c =&gt; "A",
+       	:d =&gt; ["Hello", "world"]), store_input=true)[:d].metadata
 
-julia&gt; ex(Dict(:a =&gt; &quot;1&quot;,
-       	:b =&gt; &quot;Hello&quot;,
-       	:c =&gt; &quot;A&quot;,
-       	:d =&gt; [&quot;Hello&quot;, &quot;world&quot;]), store_input=true)[:d].data.metadata
+julia&gt; ex(Dict(:a =&gt; "1",
+       	:b =&gt; "Hello",
+       	:c =&gt; "A",
+       	:d =&gt; ["Hello", "world"]), store_input=true)[:d].data.metadata
 2-element Array{String,1}:
- &quot;Hello&quot;
- &quot;world&quot;</code></pre><h1 id="Specials"><a class="docs-heading-anchor" href="#Specials">Specials</a><a id="Specials-1"></a><a class="docs-heading-anchor-permalink" href="#Specials" title="Permalink"></a></h1><h2 id="ExtractKeyAsField"><a class="docs-heading-anchor" href="#ExtractKeyAsField">ExtractKeyAsField</a><a id="ExtractKeyAsField-1"></a><a class="docs-heading-anchor-permalink" href="#ExtractKeyAsField" title="Permalink"></a></h2><p>Some JSONs we have encountered use <code>Dict</code>s to hold an array of named lists (or other types). Having computer security background a prototypical example is storing a list of DLLs with a corresponding list of imported function in a single structure. For example a JSON</p><pre><code class="language-json">{ &quot;foo.dll&quot; : [&quot;print&quot;,&quot;write&quot;, &quot;open&quot;,&quot;close&quot;],
-  &quot;bar.dll&quot; : [&quot;send&quot;, &quot;recv&quot;]
-}</code></pre><p>should be better written as</p><pre><code class="language-json">[{&quot;key&quot;: &quot;foo.dll&quot;,
-  &quot;item&quot;: [&quot;print&quot;,&quot;write&quot;, &quot;open&quot;,&quot;close&quot;]},
-  {&quot;key&quot;: &quot;bar.dll&quot;,
-  &quot;item&quot;: [&quot;send&quot;, &quot;recv&quot;]}
-]</code></pre><p>JsonGrinder tries to detect these cases, as they are typically manifested by <code>Dicts</code> with excessively large number of keys in a schema. The detection logic of this case in <code>suggestextractor(e::DictEntry)</code> is simple, if the number of unique keys in a specific <code>Dict</code> is greater than <code>settings.key_as_field = 500</code>, such <code>Dict</code> is considered to hold values in keys and <code>ExtractKeyAsField</code> is used instead of <code>ExtractDict</code>. <code>key_as_field</code> can be set to any value based on specific data or domain, but we have found <code>500</code> to be reasonable default.</p><p>The extractor itself is simple as well. For the case above, it would look like</p><pre><code class="language-julia">s = JSON.parse(&quot;{ \&quot;foo.dll\&quot; : [\&quot;print\&quot;,\&quot;write\&quot;, \&quot;open\&quot;,\&quot;close\&quot;],
-  \&quot;bar.dll\&quot; : [\&quot;send\&quot;, \&quot;recv\&quot;]
-}&quot;)
+ "Hello"
+ "world"</code></pre><h1 id="Specials"><a class="docs-heading-anchor" href="#Specials">Specials</a><a id="Specials-1"></a><a class="docs-heading-anchor-permalink" href="#Specials" title="Permalink"></a></h1><h2 id="ExtractKeyAsField"><a class="docs-heading-anchor" href="#ExtractKeyAsField">ExtractKeyAsField</a><a id="ExtractKeyAsField-1"></a><a class="docs-heading-anchor-permalink" href="#ExtractKeyAsField" title="Permalink"></a></h2><p>Some JSONs we have encountered use <code>Dict</code>s to hold an array of named lists (or other types). Having computer security background a prototypical example is storing a list of DLLs with a corresponding list of imported function in a single structure. For example a JSON</p><pre><code class="language-json">{ "foo.dll" : ["print","write", "open","close"],
+  "bar.dll" : ["send", "recv"]
+}</code></pre><p>should be better written as</p><pre><code class="language-json">[{"key": "foo.dll",
+  "item": ["print","write", "open","close"]},
+  {"key": "bar.dll",
+  "item": ["send", "recv"]}
+]</code></pre><p>JsonGrinder tries to detect these cases, as they are typically manifested by <code>Dicts</code> with excessively large number of keys in a schema. The detection logic of this case in <code>suggestextractor(e::DictEntry)</code> is simple, if the number of unique keys in a specific <code>Dict</code> is greater than <code>settings.key_as_field = 500</code>, such <code>Dict</code> is considered to hold values in keys and <code>ExtractKeyAsField</code> is used instead of <code>ExtractDict</code>. <code>key_as_field</code> can be set to any value based on specific data or domain, but we have found <code>500</code> to be reasonable default.</p><p>The extractor itself is simple as well. For the case above, it would look like</p><pre><code class="language-julia">s = JSON.parse("{ \"foo.dll\" : [\"print\",\"write\", \"open\",\"close\"],
+  \"bar.dll\" : [\"send\", \"recv\"]
+}")
 ex = ExtractKeyAsField(ExtractString(),ExtractArray(ExtractString()))
 ex(s)</code></pre><pre class="documenter-example-output">BagNode with 1 obs
   └── ProductNode with 2 obs
@@ -134,33 +157,33 @@ ex(s)</code></pre><pre class="documenter-example-output">BagNode with 1 obs
         │           ⋮
         └─── key: ArrayNode(2053×2 NGramMatrix with Int64 elements) with 2 obs</pre><p>As you might expect, inputs are stored in leaf metadata if needed</p><pre><code class="language-julia-repl">julia&gt; ex(s, store_input=true).metadata
 1-element Array{Dict{String,Any},1}:
- Dict(&quot;bar.dll&quot; =&gt; Any[&quot;send&quot;, &quot;recv&quot;],&quot;foo.dll&quot; =&gt; Any[&quot;print&quot;, &quot;write&quot;, &quot;open&quot;, &quot;close&quot;])
+ Dict("bar.dll" =&gt; Any["send", "recv"],"foo.dll" =&gt; Any["print", "write", "open", "close"])
 
 julia&gt; ex(s, store_input=true).data[:key].metadata
 2-element Array{String,1}:
- &quot;bar.dll&quot;
- &quot;foo.dll&quot;
+ "bar.dll"
+ "foo.dll"
 
 julia&gt; ex(s, store_input=true).data[:item].data.metadata
 6-element Array{String,1}:
- &quot;send&quot;
- &quot;recv&quot;
- &quot;print&quot;
- &quot;write&quot;
- &quot;open&quot;
- &quot;close&quot;</code></pre><p>Because it returns <code>BagNode</code>, missing values are treated in similar manner as in <code>ExtractArray</code> and settings of <code>Mill.emptyismissing</code> applies here too.</p><pre><code class="language-julia">Mill.emptyismissing!(true)
+ "send"
+ "recv"
+ "print"
+ "write"
+ "open"
+ "close"</code></pre><p>Because it returns <code>BagNode</code>, missing values are treated in similar manner as in <code>ExtractArray</code> and settings of <code>Mill.emptyismissing</code> applies here too.</p><pre><code class="language-julia">Mill.emptyismissing!(true)
 ex(Dict()).data</code></pre><pre class="documenter-example-output">missing</pre><pre><code class="language-julia">Mill.emptyismissing!(false)
 ex(Dict()).data</code></pre><pre class="documenter-example-output">ProductNode with 0 obs
   ├── item: BagNode with 0 obs
   │           └── ArrayNode(2053×0 NGramMatrix with Int64 elements) with 0 obs
-  └─── key: ArrayNode(2053×0 NGramMatrix with Int64 elements) with 0 obs</pre><h2 id="MultipleRepresentation"><a class="docs-heading-anchor" href="#MultipleRepresentation">MultipleRepresentation</a><a id="MultipleRepresentation-1"></a><a class="docs-heading-anchor-permalink" href="#MultipleRepresentation" title="Permalink"></a></h2><p>Provides a way to have multiple representations for a single value or subtree in JSON. For example imagine that are extracting strings with some very frequently occurring values and a lots of clutter, which might be important and you do not know about it. <code>MultipleRepresentation(extractors::Tuple)</code> contains a <code>Tuple</code> or <code>NamedTuple</code> of extractors and apply them to a single sub-tree in a json. The corresponding <code>Mill</code> structure will contain <code>ProductNode</code> of both representation.</p><p>For example <code>String</code> with <em>Categorical</em> and <em>NGram</em> representation will look like</p><pre><code class="language-julia">ex = MultipleRepresentation((c = ExtractCategorical([&quot;Hello&quot;,&quot;world&quot;]), s = ExtractString()))
-reduce(catobs,ex.([&quot;Hello&quot;,&quot;world&quot;,&quot;from&quot;,&quot;Prague&quot;]))</code></pre><pre class="documenter-example-output">ProductNode with 4 obs
+  └─── key: ArrayNode(2053×0 NGramMatrix with Int64 elements) with 0 obs</pre><h2 id="MultipleRepresentation"><a class="docs-heading-anchor" href="#MultipleRepresentation">MultipleRepresentation</a><a id="MultipleRepresentation-1"></a><a class="docs-heading-anchor-permalink" href="#MultipleRepresentation" title="Permalink"></a></h2><p>Provides a way to have multiple representations for a single value or subtree in JSON. For example imagine that are extracting strings with some very frequently occurring values and a lots of clutter, which might be important and you do not know about it. <code>MultipleRepresentation(extractors::Tuple)</code> contains a <code>Tuple</code> or <code>NamedTuple</code> of extractors and apply them to a single sub-tree in a json. The corresponding <code>Mill</code> structure will contain <code>ProductNode</code> of both representation.</p><p>For example <code>String</code> with <em>Categorical</em> and <em>NGram</em> representation will look like</p><pre><code class="language-julia">ex = MultipleRepresentation((c = ExtractCategorical(["Hello","world"]), s = ExtractString()))
+reduce(catobs,ex.(["Hello","world","from","Prague"]))</code></pre><pre class="documenter-example-output">ProductNode with 4 obs
   ├── c: ArrayNode(3×4 MaybeHotMatrix with Bool elements) with 4 obs
   └── s: ArrayNode(2053×4 NGramMatrix with Int64 elements) with 4 obs</pre><p>Because it produces <code>ProductNode</code>, missing values are delegated to leaf extractors.</p><pre><code class="language-julia">ex(missing)</code></pre><pre class="documenter-example-output">ProductNode with 1 obs
   ├── c: ArrayNode(3×1 MaybeHotMatrix with Missing elements) with 1 obs
-  └── s: ArrayNode(2053×1 NGramMatrix with Missing elements) with 1 obs</pre><p><code>MultipleRepresentation</code> together with handling of <code>missing</code> values enables <code>JsonGrinder</code> to deal with JSONs with non-stable schema.</p><p>Minimalistic example of such non-stable schema can be json which sometimes has string and sometimes has array of numbers under same key. Let&#39;s create appropriate <code>MultipleRepresentation</code> (although in real-world usage most suitable <code>MultipleRepresentation</code> is proposed based on observed data in <code>suggestextractor</code>):</p><pre><code class="language-julia-repl">julia&gt; ex = MultipleRepresentation((ExtractString(), ExtractArray(ExtractScalar(Float32))));
+  └── s: ArrayNode(2053×1 NGramMatrix with Missing elements) with 1 obs</pre><p><code>MultipleRepresentation</code> together with handling of <code>missing</code> values enables <code>JsonGrinder</code> to deal with JSONs with non-stable schema.</p><p>Minimalistic example of such non-stable schema can be json which sometimes has string and sometimes has array of numbers under same key. Let's create appropriate <code>MultipleRepresentation</code> (although in real-world usage most suitable <code>MultipleRepresentation</code> is proposed based on observed data in <code>suggestextractor</code>):</p><pre><code class="language-julia-repl">julia&gt; ex = MultipleRepresentation((ExtractString(), ExtractArray(ExtractScalar(Float32))));
 
-julia&gt; e_hello = ex(&quot;Hello&quot;)
+julia&gt; e_hello = ex("Hello")
 ProductNode with 1 obs
   ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs
   └── e2: BagNode with 1 obs
@@ -168,7 +191,7 @@ ProductNode with 1 obs
 
 julia&gt; e_hello[:e1].data
 2053×1 Mill.NGramMatrix{String,Int64}:
- &quot;Hello&quot;
+ "Hello"
 
 julia&gt; e_hello[:e2].data
 1×0 Mill.ArrayNode{Array{Float32,2},Nothing}
@@ -201,7 +224,7 @@ julia&gt; e_2[:e2].data
 1×1 Mill.ArrayNode{Array{Float32,2},Nothing}:
  2.0
 
-julia&gt; e_world = ex(&quot;world&quot;)
+julia&gt; e_world = ex("world")
 ProductNode with 1 obs
   ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) with 1 obs
   └── e2: BagNode with 1 obs
@@ -209,7 +232,7 @@ ProductNode with 1 obs
 
 julia&gt; e_world[:e1].data
 2053×1 Mill.NGramMatrix{String,Int64}:
- &quot;world&quot;
+ "world"
 
 julia&gt; e_world[:e2].data
 1×0 Mill.ArrayNode{Array{Float32,2},Nothing}</code></pre><p>in this example we can see that every time one representation is always missing, and the other one contains data.</p><h2 id="ExtractEmpty"><a class="docs-heading-anchor" href="#ExtractEmpty">ExtractEmpty</a><a id="ExtractEmpty-1"></a><a class="docs-heading-anchor-permalink" href="#ExtractEmpty" title="Permalink"></a></h2><p>As mentioned in earlier, <code>ExtractEmpty</code> is a type used to extract observation with 0 samples. There is singleton <code>extractempty</code> which can be used to obtain instance of instance of <code>ExtractEmpty</code> type. <code>StatsBase.nobs(ex(JsonGrinder.extractempty)) == 0</code> is required to hold for every extractor in order to work correctly.</p><p>All above-mentioned extractors are able to extract this, as we can see here</p><pre><code class="language-julia-repl">julia&gt; ExtractString()(JsonGrinder.extractempty)
@@ -218,10 +241,10 @@ julia&gt; e_world[:e2].data
 julia&gt; ExtractString()(JsonGrinder.extractempty) |&gt; nobs
 0
 
-julia&gt; ExtractCategorical([&quot;A&quot;,&quot;B&quot;])(JsonGrinder.extractempty)
+julia&gt; ExtractCategorical(["A","B"])(JsonGrinder.extractempty)
 3×0 Mill.ArrayNode{Mill.MaybeHotMatrix{Int64,Int64,Bool},Nothing}
 
-julia&gt; ExtractCategorical([&quot;A&quot;,&quot;B&quot;])(JsonGrinder.extractempty) |&gt; nobs
+julia&gt; ExtractCategorical(["A","B"])(JsonGrinder.extractempty) |&gt; nobs
 0
 
 julia&gt; ExtractScalar()(JsonGrinder.extractempty)
@@ -239,7 +262,7 @@ julia&gt; ExtractArray(ExtractString())(JsonGrinder.extractempty) |&gt; nobs
 
 julia&gt; ExtractDict(Dict(:a =&gt; ExtractScalar(),
        	:b =&gt; ExtractString(),
-       	:c =&gt; ExtractCategorical([&quot;A&quot;,&quot;B&quot;]),
+       	:c =&gt; ExtractCategorical(["A","B"]),
        	:d =&gt; ExtractArray(ExtractString())))(JsonGrinder.extractempty)
 ProductNode with 0 obs
   ├── a: ArrayNode(1×0 Array with Float32 elements) with 0 obs
@@ -250,6 +273,6 @@ ProductNode with 0 obs
 
 julia&gt; ExtractDict(Dict(:a =&gt; ExtractScalar(),
        	:b =&gt; ExtractString(),
-       	:c =&gt; ExtractCategorical([&quot;A&quot;,&quot;B&quot;]),
+       	:c =&gt; ExtractCategorical(["A","B"]),
        	:d =&gt; ExtractArray(ExtractString())))(JsonGrinder.extractempty) |&gt; nobs
-0</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../extractors/">« Creating extractors</a><a class="docs-footer-nextpage" href="../automl/">AutoML »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 24 February 2021 21:20">Wednesday 24 February 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+0</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../extractors/">« Creating extractors</a><a class="docs-footer-nextpage" href="../automl/">AutoML »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label></p><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div><p></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 24 February 2021 21:20">Wednesday 24 February 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></HTML>
