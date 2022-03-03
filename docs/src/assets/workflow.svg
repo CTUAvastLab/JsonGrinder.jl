@@ -8,21 +8,20 @@
  viewBox="0.00 0.00 247.00 365.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 361)">
 <title>graphname</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-361 243,-361 243,4 -4,4"/>
-<text text-anchor="middle" x="119.5" y="-7.8" font-family="Times New Roman,serif" font-size="14.00">Basic workflow of Mill and JsonGrinder</text>
+<text text-anchor="middle" x="119.5" y="-7.8" font-family="Times,serif" font-size="14.00">Basic workflow of Mill and JsonGrinder</text>
 <!-- a -->
 <g id="node1" class="node">
 <title>a</title>
 <polygon fill="none" stroke="black" points="166.5,-357 72.5,-357 72.5,-319 166.5,-319 166.5,-357"/>
-<text text-anchor="middle" x="119.5" y="-341.8" font-family="Times New Roman,serif" font-size="14.00">step 1</text>
-<text text-anchor="middle" x="119.5" y="-326.8" font-family="Times New Roman,serif" font-size="14.00">create schema</text>
+<text text-anchor="middle" x="119.5" y="-341.8" font-family="Times,serif" font-size="14.00">step 1</text>
+<text text-anchor="middle" x="119.5" y="-326.8" font-family="Times,serif" font-size="14.00">create schema</text>
 </g>
 <!-- b -->
 <g id="node2" class="node">
 <title>b</title>
 <polygon fill="none" stroke="black" points="207.5,-283 31.5,-283 31.5,-245 207.5,-245 207.5,-283"/>
-<text text-anchor="middle" x="119.5" y="-267.8" font-family="Times New Roman,serif" font-size="14.00">step 2</text>
-<text text-anchor="middle" x="119.5" y="-252.8" font-family="Times New Roman,serif" font-size="14.00">create extractor from schema</text>
+<text text-anchor="middle" x="119.5" y="-267.8" font-family="Times,serif" font-size="14.00">step 2</text>
+<text text-anchor="middle" x="119.5" y="-252.8" font-family="Times,serif" font-size="14.00">create extractor from schema</text>
 </g>
 <!-- a&#45;&gt;b -->
 <g id="edge1" class="edge">
@@ -34,8 +33,8 @@
 <g id="node3" class="node">
 <title>c</title>
 <polygon fill="none" stroke="black" points="238.5,-209 0.5,-209 0.5,-171 238.5,-171 238.5,-209"/>
-<text text-anchor="middle" x="119.5" y="-193.8" font-family="Times New Roman,serif" font-size="14.00">step 3</text>
-<text text-anchor="middle" x="119.5" y="-178.8" font-family="Times New Roman,serif" font-size="14.00">create model from schema and extractor</text>
+<text text-anchor="middle" x="119.5" y="-193.8" font-family="Times,serif" font-size="14.00">step 3</text>
+<text text-anchor="middle" x="119.5" y="-178.8" font-family="Times,serif" font-size="14.00">create model from schema and extractor</text>
 </g>
 <!-- b&#45;&gt;c -->
 <g id="edge2" class="edge">
@@ -47,8 +46,8 @@
 <g id="node4" class="node">
 <title>d</title>
 <polygon fill="none" stroke="black" points="236.5,-135 2.5,-135 2.5,-97 236.5,-97 236.5,-135"/>
-<text text-anchor="middle" x="119.5" y="-119.8" font-family="Times New Roman,serif" font-size="14.00">step 4</text>
-<text text-anchor="middle" x="119.5" y="-104.8" font-family="Times New Roman,serif" font-size="14.00">prepare training data using the extractor</text>
+<text text-anchor="middle" x="119.5" y="-119.8" font-family="Times,serif" font-size="14.00">step 4</text>
+<text text-anchor="middle" x="119.5" y="-104.8" font-family="Times,serif" font-size="14.00">prepare training data using the extractor</text>
 </g>
 <!-- c&#45;&gt;d -->
 <g id="edge3" class="edge">
@@ -60,8 +59,8 @@
 <g id="node5" class="node">
 <title>e</title>
 <polygon fill="none" stroke="black" points="169.5,-61 69.5,-61 69.5,-23 169.5,-23 169.5,-61"/>
-<text text-anchor="middle" x="119.5" y="-45.8" font-family="Times New Roman,serif" font-size="14.00">step 5</text>
-<text text-anchor="middle" x="119.5" y="-30.8" font-family="Times New Roman,serif" font-size="14.00">train the model</text>
+<text text-anchor="middle" x="119.5" y="-45.8" font-family="Times,serif" font-size="14.00">step 5</text>
+<text text-anchor="middle" x="119.5" y="-30.8" font-family="Times,serif" font-size="14.00">train the model</text>
 </g>
 <!-- d&#45;&gt;e -->
 <g id="edge4" class="edge">

@@ -1,4 +1,7 @@
-# JsonGrinder.jl
+```@raw html
+<img class="display-light-only" src="assets/logo.svg" alt="JsonGrinder.jl logo" style="width: 50%;"/>
+<img class="display-dark-only" src="assets/logo-dark.svg" alt="JsonGrinder.jl logo" /style="width: 50%;">
+```
 
 **JsonGrinder** is a collection of routines that facilitates conversion of JSON documents into structures used by [Mill.jl](https://github.com/CTUAvastLab/Mill.jl) project.
 
@@ -91,8 +94,10 @@ Authors see the biggest advantage in the `model` being hierarchical and reflecti
 Our idealized workflow is demonstrated in following example, which can be also found in [Mutagenesis Example](@ref) and here we'll break it down in order to demonstrate the basic functionality of JsonGrinder.
 
 The basic workflow can be visualized as follows
+
 ```@raw html
-<img src="assets/workflow.svg" alt="workflow" style="width: 30%;">
+<img class="display-light-only" src="assets/workflow.svg" alt="JsonGrinder workflow" style="width: 30%;"/>
+<img class="display-dark-only" src="assets/workflow-dark.svg" alt="JsonGrinder workflow" style="width: 30%;"/>
 ```
 
 ```@eval
