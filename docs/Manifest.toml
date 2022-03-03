@@ -660,7 +660,9 @@ version = "0.5.0"
 
 [[Mill]]
 deps = ["ChainRulesCore", "Combinatorics", "DataFrames", "DataStructures", "FiniteDifferences", "Flux", "HierarchicalUtils", "LearnBase", "LinearAlgebra", "MLDataPattern", "MacroTools", "Preferences", "Setfield", "SparseArrays", "Statistics", "StatsBase", "Zygote"]
-git-tree-sha1 = "021e8e10e817967ae2193224ea0c1c5291ede752"
+git-tree-sha1 = "29f3855dc42ae98d2e380e4e4341396270278fbc"
+repo-rev = "array_outputs"
+repo-url = "https://github.com/CTUAvastLab/Mill.jl.git"
 uuid = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
 version = "2.6.0"
 
