@@ -13,9 +13,9 @@ using Mill: reflectinmodel
 	dss = reduce(catobs, ds)
 
 	m = reflectinmodel(dss, k -> Dense(k,10, relu))
-	o = m(dss).data
+	o = m(dss)
 	for i in 1:length(ds)
-		@test o[:,i] ≈ m(ds[i]).data
+		@test o[:,i] ≈ m(ds[i])
 	end
 end
 
@@ -33,10 +33,10 @@ end
 	dss = extractor.([j1,j2,j3,j4,j5,j6])
 	ds = reduce(catobs, dss)
 	m = reflectinmodel(ds, k -> Dense(k,10, relu))
-	o = m(ds).data
+	o = m(ds)
 
 	for i in 1:length(dss)
-		@test o[:,i] ≈ m(dss[i]).data
+		@test o[:,i] ≈ m(dss[i])
 	end
 end
 
@@ -53,11 +53,11 @@ end
 	ds = extractbatch(extractor, [j1,j2,j3,j4,j5])
 	@test reduce(catobs, dss) ≃ ds
 	m = reflectinmodel(ds, k -> Dense(k,10, relu))
-	o = m(ds).data
+	o = m(ds)
 	for i in 1:length(dss)
-		@test o[:,i] ≈ m(dss[i]).data
+		@test o[:,i] ≈ m(dss[i])
 	end
-	@test m.m.m == identity
+	@test m.m == identity
 	@test size(dss[4][:a].data[:a].data) == (3, 0)
 end
 
@@ -131,9 +131,9 @@ end
 	                 └── c: String
 	"""
 	@test buf_printtree(m) == """
-	ProductModel ↦ ArrayModel(identity)
-	  └── a: BagModel ↦ BagCount([SegmentedMean(10); SegmentedMax(10)]) ↦ ArrayModel(Dense(21, 10, relu)) \t# 4 arrays, 240 params, 1.094 KiB
-	           └── ProductModel ↦ ArrayModel(Dense(12, 10, relu)) \t# 2 arrays, 130 params, 600 bytes
+	ProductModel ↦ identity
+	  └── a: BagModel ↦ BagCount([SegmentedMean(10); SegmentedMax(10)]) ↦ Dense(21, 10, relu) \t# 4 arrays, 240 params, 1.094 KiB
+	           └── ProductModel ↦ Dense(12, 10, relu) \t# 2 arrays, 130 params, 600 bytes
 	                 ├── a: ArrayModel([preimputing]Dense(1, 1)) \t# 3 arrays, 3 params, 132 bytes
 	                 ├── b: ArrayModel([preimputing]Dense(1, 1)) \t# 3 arrays, 3 params, 132 bytes
 	                 └── c: ArrayModel([postimputing]Dense(2053, 10, relu)) \t# 3 arrays, 20_550 params, 80.391 KiB
@@ -147,7 +147,7 @@ end
 	                 └── c: ArrayNode(2053×5 NGramMatrix with Union{Missing, Int64} elements) \t# 5 obs, 176 bytes
 	"""
 
-	@test m[""].m.m == identity
+	@test m[""].m == identity
 
 	@test nobs(dss[5]["s"].data) == 0
 	@test nobs(dss[5]) == 1

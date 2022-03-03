@@ -121,11 +121,11 @@ m = reflectinmodel(sch, extract_data,
 valdata, valtarget = data[n_samples-n_val:n_samples], target[:,n_samples-n_val:n_samples]
 traindata, traintarget = data[1:n_samples-n_val], target[:,1:n_samples-n_val]
 opt = Flux.Optimise.ADAM()
-loss(x, y) = Flux.logitcrossentropy(m(x).data, y)
+loss(x, y) = Flux.logitcrossentropy(m(x), y)
 loss(xy::Tuple) = loss(xy...)
-cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata).data) .== Flux.onecold(valtarget)))
+cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata)) .== Flux.onecold(valtarget)))
 # Here we compute the accuracy.
-mean(Flux.onecold(m(traindata).data) .== Flux.onecold(traintarget))
+mean(Flux.onecold(m(traindata)) .== Flux.onecold(traintarget))
 # Here we obtain the trainable parameters from the model
 ps = Flux.params(m)
 
@@ -142,7 +142,7 @@ Flux.Optimise.train!(loss, ps, minibatches, opt, cb = Flux.throttle(cb, 2))
 
 # ### Reporting accuracy on validation data
 # As last steps, we calculate accuracy on training and validation data after the model has been trained.
-mean(Flux.onecold(m(traindata).data) .== Flux.onecold(traintarget))
-mean(Flux.onecold(m(valdata).data) .== Flux.onecold(valtarget))
+mean(Flux.onecold(m(traindata)) .== Flux.onecold(traintarget))
+mean(Flux.onecold(m(valdata)) .== Flux.onecold(valtarget))
 
 # This concludes our example on training the classifier to recogninze cuisine based on ingredients.
