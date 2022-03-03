@@ -30,7 +30,7 @@ n_samples, n_val, minibatchsize, iterations = 5_000, 100, 10, 20
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master Flux Mill#master MLDataPattern Statistics JSON"
+#nb pkg"add JsonGrinder#master Flux Mill MLDataPattern Statistics JSON"
 
 # Let's start by importing all libraries we will need.
 using JsonGrinder, Flux, Mill, MLDataPattern, Statistics, JSON

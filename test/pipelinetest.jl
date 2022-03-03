@@ -129,14 +129,14 @@ end
 	                 ├── a: Float32
 	                 ├── b: Float32
 	                 └── c: String
-	"""                 
+	"""
 	@test buf_printtree(m) == """
 	ProductModel ↦ ArrayModel(identity)
 	  └── a: BagModel ↦ BagCount([SegmentedMean(10); SegmentedMax(10)]) ↦ ArrayModel(Dense(21, 10, relu)) \t# 4 arrays, 240 params, 1.094 KiB
 	           └── ProductModel ↦ ArrayModel(Dense(12, 10, relu)) \t# 2 arrays, 130 params, 600 bytes
-	                 ├── a: ArrayModel([preimputing]Dense(1, 1)) \t# 2 arrays, 2 params, 148 bytes
-	                 ├── b: ArrayModel([preimputing]Dense(1, 1)) \t# 2 arrays, 2 params, 148 bytes
-	                 └── c: ArrayModel([postimputing]Dense(2053, 10, relu)) \t# 2 arrays, 20_540 params, 80.406 KiB
+	                 ├── a: ArrayModel([preimputing]Dense(1, 1)) \t# 3 arrays, 3 params, 132 bytes
+	                 ├── b: ArrayModel([preimputing]Dense(1, 1)) \t# 3 arrays, 3 params, 132 bytes
+	                 └── c: ArrayModel([postimputing]Dense(2053, 10, relu)) \t# 3 arrays, 20_550 params, 80.391 KiB
 	"""
 	@test buf_printtree(ds) == """
 	ProductNode \t# 5 obs, 56 bytes
