@@ -1,5 +1,6 @@
 <p align="center">
- <img src="https://raw.githubusercontent.com/CTUAvastLab/JsonGrinder.jl/master/docs/src/assets/logo.svg" alt="JsonGrinder.jl logo"/>
+  <img src="https://github.com/CTUAvastLab/JsonGrinder.jl/raw/master/docs/src/assets/logo.svg#gh-light-mode-only" alt="JsonGrinder.jl logo"/>
+  <img src="https://github.com/CTUAvastLab/JsonGrinder.jl/raw/master/docs/src/assets/logo-dark.svg#gh-dark-mode-only" alt="JsonGrinder.jl logo"/>
 </p>
 
 ---
