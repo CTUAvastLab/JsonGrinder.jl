@@ -422,9 +422,9 @@ version = "4.7.1"
 
 [[LLVMExtra_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "f7f5dd0fb39209f4d28ca59d0d4e24579ad325fe"
+git-tree-sha1 = "67cc5406b15bd04ff72a45f628bec61d36078908"
 uuid = "dad2f222-ce93-54a1-a47d-0025e8a3acab"
-version = "0.0.13+2"
+version = "0.0.13+3"
 
 [[LazyArtifacts]]
 deps = ["Artifacts", "Pkg"]
@@ -535,12 +535,10 @@ uuid = "e89f7d12-3494-54d1-8411-f7d8b9ae1f27"
 version = "0.5.0"
 
 [[Mill]]
-deps = ["ChainRulesCore", "Combinatorics", "DataFrames", "DataStructures", "FiniteDifferences", "Flux", "HierarchicalUtils", "LearnBase", "LinearAlgebra", "MLDataPattern", "Setfield", "SparseArrays", "Statistics", "StatsBase", "Zygote"]
-git-tree-sha1 = "2c1a075fb3f2466e88a10cf179304cff86646ac5"
-repo-rev = "master"
-repo-url = "https://github.com/CTUAvastLab/Mill.jl.git"
+deps = ["ChainRulesCore", "Combinatorics", "DataFrames", "DataStructures", "FiniteDifferences", "Flux", "HierarchicalUtils", "LearnBase", "LinearAlgebra", "MLDataPattern", "MacroTools", "Preferences", "Setfield", "SparseArrays", "Statistics", "StatsBase", "Zygote"]
+git-tree-sha1 = "021e8e10e817967ae2193224ea0c1c5291ede752"
 uuid = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
-version = "2.5.0"
+version = "2.6.0"
 
 [[Missings]]
 deps = ["DataAPI"]
