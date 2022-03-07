@@ -428,8 +428,8 @@ end
 		# todo: add tests for extraction of synthetic samples and if they have correct types
 		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}"""))).data isa Matrix{Float32}
-		@test m(ext(JSON.parse("""{"a": []}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": []}"""))) isa Matrix{Float32}
 
 		s = make_representative_sample(sch, ext)
 		@test s isa ProductNode{NamedTuple{(:a,),
@@ -467,12 +467,12 @@ end
 		# todo: add test for make_representative_sample
 		m = reflectinmodel(sch, ext)
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext(JSON.parse("""{"b":1}"""))).data isa Matrix{Float32}
-		@test m(ext(JSON.parse("""{"a": {"a":"c","c":1},"b":1}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"b":1}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": {"a":"c","c":1},"b":1}"""))) isa Matrix{Float32}
 
 		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}], "b": 1}"""))).data isa Matrix{Float32}
-		@test m(ext(JSON.parse("""{"a": [], "b": 1}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}], "b": 1}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": [], "b": 1}"""))) isa Matrix{Float32}
 		# the key b is always present, it should not be missing
 		@test_throws ErrorException m(ext(JSON.parse("""{"a": []}""")))
 
@@ -503,11 +503,7 @@ end
 			3)),
 		4)
 
-		@static if VERSION >= v"1.6.0-"
-			@test sample_synthetic(sch) == Dict(:a=>5,:b=>5)
-		else
-			@test sample_synthetic(sch) == Dict(:a=>2,:b=>2)
-		end
+		@test sample_synthetic(sch) == Dict(:a=>5,:b=>5)
 
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
@@ -515,22 +511,17 @@ end
 		@test ext[:b][1].uniontypes
 
 		s = ext(sample_synthetic(sch))
-		# this is wrong
-		@static if VERSION >= v"1.6.0-"
-			@test s[:a][:e1].data ≃ [0 0 0 1 0]'
-			@test s[:b][:e1].data ≃ [0 0 1 0]'
-		else
-			@test s[:a][:e1].data ≃ [1 0 0 0 0]'
-			@test s[:b][:e1].data ≃ [1 0 0 0]'
-		end
+		# this is wrong, check it
+		@test s[:a][:e1].data ≃ [0 0 0 1 0]'
+		@test s[:b][:e1].data ≃ [0 0 1 0]'
 
 		m = reflectinmodel(sch, ext)
 		@test !(m[:a][:e1].m isa PostImputingDense)
 		@test m[:b][:e1].m isa PostImputingDense
 
 		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
-		@test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a":5}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a":"3"}"""))) isa Matrix{Float32}
 
 		s = make_representative_sample(sch, ext)
 		@test s isa ProductNode{NamedTuple{(:a, :b),
@@ -559,11 +550,7 @@ end
 		4)
 
 		# this is not representative, but all information is inside types
-		@static if VERSION >= v"1.6.0-"
-			@test sample_synthetic(sch) == Dict(:a=>5)
-		else
-			@test sample_synthetic(sch) == Dict(:a=>2)
-		end
+		@test sample_synthetic(sch) == Dict(:a=>5)
 
 		ext = suggestextractor(sch)
 		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
@@ -572,20 +559,16 @@ end
 		@test ext[:a][2][:b].uniontypes
 
 		s = ext(sample_synthetic(sch))
-		# this is wrong
-		@static if VERSION >= v"1.6.0-"
-			@test s[:a][:e1].data ≃ [0 1 0]'
-		else
-			@test s[:a][:e1].data ≃ [1 0 0]'
-		end
+		# this is wrong, check it
+		@test s[:a][:e1].data ≃ [0 1 0]'
 
 		m = reflectinmodel(sch, ext)
 		# this is wrong, it should not be postimputing
 		@test m[:a][:e1].m isa PostImputingDense
 
 		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
-		@test m(ext(JSON.parse("""{"a":5}"""))).data isa Matrix{Float32}
-		@test m(ext(JSON.parse("""{"a":"3"}"""))).data isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a":5}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a":"3"}"""))) isa Matrix{Float32}
 	end
 	# todo: test schema with keyasfield
 end

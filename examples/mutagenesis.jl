@@ -65,9 +65,8 @@ test_data = extractor.(test_x)
 # # Train the model
 # Then, we define few handy functions and a loss function, which is categorical crossentropy in our case.
 
-inference(x) = model(x).data
-loss(x,y) = Flux.logitcrossentropy(inference(x), Flux.onehotbatch(y, labelnames))
-accuracy(x,y) = mean(labelnames[Flux.onecold(inference(x))] .== y)
+loss(x,y) = Flux.logitcrossentropy(model(x), Flux.onehotbatch(y, labelnames))
+accuracy(x,y) = mean(labelnames[Flux.onecold(model(x))] .== y)
 loss(xy::Tuple) = loss(xy...)
 
 # And we can add a callback which will be printing train and test accuracy during the training
@@ -85,7 +84,7 @@ Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.th
 
 # # Classify test set
 # The Last part is inference on test data.
-probs = softmax(inference(test_data))
+probs = softmax(model(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
 mean(pred_classes .== test_y)
@@ -106,6 +105,6 @@ test_data[2]
 pred_classes[2]
 
 # if you want to see the probability distribution, it can be obtained by applying `softmax` to the output of the network.
-softmax(model(test_data[2]).data)
+softmax(model(test_data[2]))
 
 # so we can see that the probability that given sample is `mutagenetic` is almost 1.
