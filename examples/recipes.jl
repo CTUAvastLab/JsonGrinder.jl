@@ -146,5 +146,3 @@ mean(Flux.onecold(m(traindata).data) .== Flux.onecold(traintarget))
 mean(Flux.onecold(m(valdata).data) .== Flux.onecold(valtarget))
 
 # This concludes our example on training the classifier to recogninze cuisine based on ingredients.
-
-# todo: describe differences between this approach when we catobs everything and catobsing using minibatches

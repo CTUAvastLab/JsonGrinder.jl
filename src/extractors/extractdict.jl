@@ -1,4 +1,3 @@
-
 """
 	struct ExtractDict{S} <: AbstractExtractor
 		dict::S
@@ -67,9 +66,8 @@ end
 Base.keys(e::ExtractDict) = keys(e.dict)
 
 replacebyspaces(pad) = map(s -> (s[1], " "^length(s[2])), pad)
-(s::ExtractDict)(v::MissingOrNothing; store_input=false) = s(Dict{String, Any}())
-(s::ExtractDict)(v::HierarchicType; store_input=false)  = s(nothing)
-
+(s::ExtractDict)(v::MissingOrNothing; store_input=false) = s(Dict{String, Any}(); store_input)
+(s::ExtractDict)(v::HierarchicType; store_input=false)  = s(nothing; store_input)
 
 function (s::ExtractDict{S})(v::AbstractDict; store_input=false) where {S<:Dict}
 	o = [Symbol(k) => f(get(v,String(k),nothing); store_input) for (k,f) in s.dict]

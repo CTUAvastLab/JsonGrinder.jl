@@ -371,6 +371,10 @@ end
 	@test catobs(a3,a3)[:c].data.data ≈ [-3 0 3 6 -3 0 3 6]
 	@test all(catobs(a3,a3)[:c].bags .== [1:4,5:8])
 
+	@testset "missing with store input" begin
+		br([], store_input=true)["U"].metadata ≃ hcat(nothing)
+		br([], store_input=true)["k"].metadata ≃ hcat(nothing)
+	end
 	@testset "extractempty" begin
 		a4 = br(extractempty)
 		@test nobs(a4) == 0
