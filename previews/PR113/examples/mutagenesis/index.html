@@ -22,7 +22,7 @@ labelnames = unique(train_y)</code></pre><pre><code class="nohighlight hljs">2-e
   ├─── ind1: ArrayModel(Dense(3, 20, relu)) 	# 2 arrays, 80 params, 400 bytes
   └── atoms: BagModel ↦ [SegmentedMean(20); SegmentedMax(20)] ↦ Dense(40, 20, relu) 	# 4 arrays, 860 params, 3.516 KiB
                └── ProductModel ↦ Dense(61, 20, relu) 	# 2 arrays, 1_240 params, 4.922 KiB
-                     ⋮</code></pre><p>this allows us to create model flexibly, without the need to hardcode individual layers. Individual arguments of <code>reflectinmodel</code> are explained in <a href="https://CTUAvastLab.github.io/Mill.jl/dev/manual/reflectin/#Model-Reflection">Mill.jl documentation</a>. But briefly: for every numeric array in the sample, model will create a dense layer with <code>neurons</code> neurons (20 in this example). For every vector of observations (called bag in Multiple Instance Learning terminology), it will create aggregation function which will take mean, maximum of feature vectors and concatenate them. The <code>fsm</code> keyword argument basically says that on the end of the NN, as a last layer, we want 2 neurons <code>length(labelnames)</code> in the output layer, not 20 as in the intermediate layers.</p><p>This is the <strong>step 4</strong> of the workflow, we call the extractor on each sample</p><p>We convert jsons to mill data samples and prepare list of classes. This classification problem is two-class, but we want to infer it from labels. The extractor is callable, so we can pass it vector of samples to obtain vector of structures with extracted features.</p><pre><code class="language-julia hljs">train_data = extractor.(train_x)
+                     ⋮</code></pre><p>this allows us to create model flexibly, without the need to hardcode individual layers. Individual arguments of <code>reflectinmodel</code> are explained in <a href="https://CTUAvastLab.github.io/Mill.jl/stable/manual/reflectin/#Model-Reflection">Mill.jl documentation</a>. But briefly: for every numeric array in the sample, model will create a dense layer with <code>neurons</code> neurons (20 in this example). For every vector of observations (called bag in Multiple Instance Learning terminology), it will create aggregation function which will take mean, maximum of feature vectors and concatenate them. The <code>fsm</code> keyword argument basically says that on the end of the NN, as a last layer, we want 2 neurons <code>length(labelnames)</code> in the output layer, not 20 as in the intermediate layers.</p><p>This is the <strong>step 4</strong> of the workflow, we call the extractor on each sample</p><p>We convert jsons to mill data samples and prepare list of classes. This classification problem is two-class, but we want to infer it from labels. The extractor is callable, so we can pass it vector of samples to obtain vector of structures with extracted features.</p><pre><code class="language-julia hljs">train_data = extractor.(train_x)
 test_data = extractor.(test_x)</code></pre><pre><code class="nohighlight hljs">44-element Vector{Mill.ProductNode{NamedTuple{(:lumo, :inda, :logp, :ind1, :atoms), Tuple{Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000063, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x0000003f, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000003, 1, 2, Vector{UInt32}}, Nothing}, Mill.BagNode{Mill.ProductNode{NamedTuple{(:element, :bonds, :charge, :atom_type), Tuple{Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000007, 1, 2, Vector{UInt32}}, Nothing}, Mill.BagNode{Mill.ProductNode{NamedTuple{(:element, :bond_type, :charge, :atom_type), Tuple{Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000007, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000004, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Matrix{Float32}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x0000001d, 1, 2, Vector{UInt32}}, Nothing}}}, Nothing}, Mill.AlignedBags{Int64}, Nothing}, Mill.ArrayNode{Matrix{Float32}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x0000001d, 1, 2, Vector{UInt32}}, Nothing}}}, Nothing}, Mill.AlignedBags{Int64}, Nothing}}}, Nothing}}:
  ProductNode
  ProductNode
@@ -74,54 +74,51 @@ loss(xy::Tuple) = loss(xy...)</code></pre><pre><code class="nohighlight hljs">lo
 	test_acc = accuracy(test_data, test_y)
 	println(&quot;accuracy: train = $train_acc, test = $test_acc&quot;)
 end</code></pre><pre><code class="nohighlight hljs">#7 (generic function with 1 method)</code></pre><p>Lastly we turn our training data to minibatches, and we can start training</p><pre><code class="language-julia hljs">minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
-Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre><code class="nohighlight hljs">accuracy: train = 0.76, test = 0.45454545454545453
-accuracy: train = 0.9, test = 0.8181818181818182
-accuracy: train = 0.97, test = 0.8181818181818182
+Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre><code class="nohighlight hljs">accuracy: train = 0.48, test = 0.6363636363636364
+accuracy: train = 0.92, test = 0.8636363636363636
+accuracy: train = 1.0, test = 0.8636363636363636
+accuracy: train = 1.0, test = 0.8409090909090909
+accuracy: train = 1.0, test = 0.8409090909090909
+accuracy: train = 1.0, test = 0.8409090909090909
+accuracy: train = 1.0, test = 0.8409090909090909
+accuracy: train = 1.0, test = 0.8409090909090909
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
 accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
-accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7954545454545454
 accuracy: train = 1.0, test = 0.75
 accuracy: train = 1.0, test = 0.75
 accuracy: train = 1.0, test = 0.75
@@ -132,7 +129,7 @@ pred_classes = labelnames[o]
 mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.75</code></pre><p><code>pred_classes</code> contains the predictions for our test set. we see the accuracy is around 75% on test set predicted classes for test set</p><pre><code class="language-julia hljs">pred_classes</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
  1
  1
- 1
+ 0
  0
  1
  1
@@ -141,8 +138,8 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  1
  1
  1
- 1
- 1
+ 0
+ 0
  1
  1
  1
@@ -156,7 +153,7 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  1
  1
  1
- 1
+ 0
  1
  1
  1
@@ -218,8 +215,8 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  1
  0
  1</code></pre><p>probabilities for test set</p><pre><code class="language-julia hljs">probs</code></pre><pre><code class="nohighlight hljs">2×44 Matrix{Float32}:
- 0.999997    0.999292     0.778597  0.124117  0.999912    0.998855    0.997349    0.960009   0.999996    0.999999    0.963838   0.773065  0.993104    0.999991    0.960417   0.94794    0.999998    0.966865   0.0100549  0.947339   0.986855   0.00161237  0.99983      0.999999    0.956499   0.999999    0.72666  0.999946    1.0         0.999993    0.962317  0.886692  0.100633  0.202545  0.999997    0.99992     0.998879    0.999997    0.999999    0.999296     0.999999    0.957622   0.997575    0.999902
- 3.27752f-6  0.000708351  0.221403  0.875883  8.77418f-5  0.00114474  0.00265074  0.0399907  3.76104f-6  1.39208f-6  0.0361618  0.226935  0.00689561  9.40245f-6  0.0395826  0.0520596  1.57586f-6  0.0331351  0.989945   0.0526608  0.0131449  0.998388    0.000169488  9.15201f-7  0.0435009  7.93366f-7  0.27334  5.45114f-5  2.09241f-8  7.29451f-6  0.037683  0.113308  0.899367  0.797455  2.61525f-6  8.00152f-5  0.00112131  2.54468f-6  1.05058f-6  0.000704362  9.77389f-7  0.0423785  0.00242492  9.74998f-5</code></pre><p>We can look at individual samples. For instance, some sample from test set is</p><pre><code class="language-julia hljs">test_data[2]</code></pre><pre><code class="nohighlight hljs">ProductNode 	# 1 obs, 104 bytes
+ 1.0         0.999655     0.0103002  0.0150665  0.997901    0.94746    0.996969   0.519942  0.999943    1.0         0.722785  0.189803  0.465969  0.999995    0.680918  0.558218  0.999998    0.722708  0.00239178  0.51574  0.974337   0.00116808  0.947126   0.999999    0.997307    0.999999    0.445836  0.999995   1.0         0.999999    0.9827     0.851257  0.017163  0.0131471  1.0         0.999863     0.982649   1.0         1.0         0.999653     1.0         0.589826  0.980266   0.999917
+ 3.87619f-7  0.000344662  0.9897     0.984934   0.00209865  0.0525396  0.0030315  0.480058  5.65955f-5  1.58175f-7  0.277215  0.810197  0.534031  4.84336f-6  0.319082  0.441782  1.50984f-6  0.277292  0.997608    0.48426  0.0256631  0.998832    0.0528737  1.36738f-6  0.00269285  6.39917f-7  0.554164  4.8901f-6  2.24262f-9  7.57543f-7  0.0173003  0.148743  0.982837  0.986853   3.20646f-7  0.000137047  0.0173509  3.20072f-7  1.69644f-7  0.000346835  8.45838f-8  0.410174  0.0197345  8.26149f-5</code></pre><p>We can look at individual samples. For instance, some sample from test set is</p><pre><code class="language-julia hljs">test_data[2]</code></pre><pre><code class="nohighlight hljs">ProductNode 	# 1 obs, 104 bytes
   ├─── lumo: ArrayNode(99×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   ├─── inda: ArrayNode(2×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   ├─── logp: ArrayNode(63×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
@@ -227,5 +224,5 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
   └── atoms: BagNode 	# 1 obs, 136 bytes
                └── ProductNode 	# 24 obs, 64 bytes
                      ⋮</code></pre><p>and the corresponding classification is</p><pre><code class="language-julia hljs">pred_classes[2]</code></pre><pre><code class="nohighlight hljs">1</code></pre><p>if you want to see the probability distribution, it can be obtained by applying <code>softmax</code> to the output of the network.</p><pre><code class="language-julia hljs">softmax(model(test_data[2]))</code></pre><pre><code class="nohighlight hljs">2×1 Matrix{Float32}:
- 0.99929166
- 0.0007083508</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Examples Overview</a><a class="docs-footer-nextpage" href="../recipes/">Recipe Ingredients Example »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.14 on <span class="colophon-date" title="Thursday 3 March 2022 16:16">Thursday 3 March 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ 0.99965537
+ 0.0003446619</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Examples Overview</a><a class="docs-footer-nextpage" href="../recipes/">Recipe Ingredients Example »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.14 on <span class="colophon-date" title="Monday 7 March 2022 14:28">Monday 7 March 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
