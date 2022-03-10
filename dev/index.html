@@ -136,66 +136,55 @@ loss(xy::Tuple) = loss(xy...)</code></pre><pre><code class="nohighlight hljs">lo
 	test_acc = accuracy(test_data, test_y)
 	println(&quot;accuracy: train = $train_acc, test = $test_acc&quot;)
 end</code></pre><pre><code class="nohighlight hljs">#7 (generic function with 1 method)</code></pre><p>Lastly we turn our training data to minibatches, and we can start training</p><pre><code class="language-julia hljs">minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
-Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre><code class="nohighlight hljs">accuracy: train = 0.72, test = 0.8181818181818182
-accuracy: train = 0.9, test = 0.8636363636363636
-accuracy: train = 0.97, test = 0.8863636363636364
-accuracy: train = 1.0, test = 0.8636363636363636
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
+Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre><code class="nohighlight hljs">accuracy: train = 0.6, test = 0.6363636363636364
+accuracy: train = 0.93, test = 0.8409090909090909
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
+accuracy: train = 1.0, test = 0.8181818181818182
 accuracy: train = 1.0, test = 0.7954545454545454
 accuracy: train = 1.0, test = 0.7727272727272727
 accuracy: train = 1.0, test = 0.7727272727272727
 accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
-accuracy: train = 1.0, test = 0.7954545454545454
 accuracy: train = 1.0, test = 0.7727272727272727
-accuracy: train = 1.0, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7272727272727273
 </code></pre><p>We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on test set we get over 70%.</p><h1>Classify test set</h1><p>The Last part is inference on test data.</p><pre><code class="language-julia hljs">probs = softmax(model(test_data))
 o = Flux.onecold(probs)
 pred_classes = labelnames[o]
-mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.7727272727272727</code></pre><p><code>pred_classes</code> contains the predictions for our test set. we see the accuracy is around 75% on test set predicted classes for test set</p><pre><code class="language-julia hljs">pred_classes</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
+mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.7272727272727273</code></pre><p><code>pred_classes</code> contains the predictions for our test set. we see the accuracy is around 75% on test set predicted classes for test set</p><pre><code class="language-julia hljs">pred_classes</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
  1
  1
  0
@@ -203,11 +192,11 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  1
  1
  1
- 0
  1
  1
+ 1
  0
- 0
+ 1
  1
  1
  1
@@ -284,8 +273,8 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
  1
  0
  1</code></pre><p>probabilities for test set</p><pre><code class="language-julia hljs">probs</code></pre><pre><code class="nohighlight hljs">2×44 Matrix{Float32}:
- 0.999999    0.999846     0.0473772  0.00424246  0.782768  0.999537     0.999199    0.429532  0.999432     0.999999    0.4861  0.161214  0.998138    0.999852     0.699329  0.119019  0.999986    0.648874  0.000280556  0.0918625  0.921616   0.000526805  0.943365   0.999994    0.835776  0.999998  0.192823  0.994051    1.0         0.999996    0.808154  0.711907  0.00189632  0.00183842  0.999998    0.999488     0.993793    0.999998    1.0         0.999846     1.0         0.5787  0.981412   0.999909
- 8.78794f-7  0.000153633  0.952623   0.995758    0.217232  0.000463486  0.00080059  0.570467  0.000568024  1.03016f-6  0.5139  0.838786  0.00186228  0.000148395  0.300671  0.880981  1.40354f-5  0.351126  0.999719     0.908138   0.0783842  0.999473     0.0566346  6.49423f-6  0.164224  1.568f-6  0.807177  0.00594931  1.03083f-9  4.07907f-6  0.191846  0.288093  0.998104    0.998162    2.14459f-6  0.000511926  0.00620723  1.97799f-6  2.57531f-7  0.000154138  6.41404f-8  0.4213  0.0185877  9.13405f-5</code></pre><p>We can look at individual samples. For instance, some sample from test set is</p><pre><code class="language-julia hljs">test_data[2]</code></pre><pre><code class="nohighlight hljs">ProductNode 	# 1 obs, 104 bytes
+ 0.999977    0.999634     1.88175f-5  0.0430895  0.981825   0.999728     0.997713    0.513924  0.999589     0.999986    0.126544  0.681231  0.991565    0.999892     0.890768  0.0220383  0.999977    0.976611   5.42359f-6  0.0241967  0.996826    0.000377315  0.961589   0.999989    0.998025    0.999807     0.294403  0.999994    1.0         0.999446     0.798201  0.978949   8.57698f-6  0.0026948  0.999981    0.999495     0.997289    0.999975    0.99999     0.999649     0.999992    0.703735  0.984726   0.97337
+ 2.29108f-5  0.000366122  0.999981    0.956911   0.0181747  0.000271594  0.00228662  0.486076  0.000411028  1.39771f-5  0.873456  0.318769  0.00843527  0.000107582  0.109232  0.977962   2.26285f-5  0.0233888  0.999995    0.975803   0.00317383  0.999623     0.0384107  1.10903f-5  0.00197504  0.000193189  0.705597  5.54889f-6  3.21812f-7  0.000553852  0.201799  0.0210511  0.999991    0.997305   1.92535f-5  0.000504992  0.00271062  2.45349f-5  1.05127f-5  0.000351324  7.97138f-6  0.296265  0.0152737  0.0266298</code></pre><p>We can look at individual samples. For instance, some sample from test set is</p><pre><code class="language-julia hljs">test_data[2]</code></pre><pre><code class="nohighlight hljs">ProductNode 	# 1 obs, 104 bytes
   ├─── lumo: ArrayNode(99×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   ├─── inda: ArrayNode(2×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
   ├─── logp: ArrayNode(63×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
@@ -293,5 +282,5 @@ mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.
   └── atoms: BagNode 	# 1 obs, 136 bytes
                └── ProductNode 	# 24 obs, 64 bytes
                      ⋮</code></pre><p>and the corresponding classification is</p><pre><code class="language-julia hljs">pred_classes[2]</code></pre><pre><code class="nohighlight hljs">1</code></pre><p>if you want to see the probability distribution, it can be obtained by applying <code>softmax</code> to the output of the network.</p><pre><code class="language-julia hljs">softmax(model(test_data[2]))</code></pre><pre><code class="nohighlight hljs">2×1 Matrix{Float32}:
- 0.99984634
- 0.00015363314</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p><p>This concludes a simple classifier for JSON data.</p><p>But keep in mind the framework is general and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.14 on <span class="colophon-date" title="Thursday 10 March 2022 16:38">Thursday 10 March 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ 0.9996339
+ 0.00036612173</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p><p>This concludes a simple classifier for JSON data.</p><p>But keep in mind the framework is general and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.14 on <span class="colophon-date" title="Thursday 10 March 2022 16:55">Thursday 10 March 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
