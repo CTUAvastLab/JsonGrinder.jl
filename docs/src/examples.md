@@ -2,6 +2,7 @@
 
 The documentation also contains 4 examples demonstrating different showcases:
 - [Mutagenesis Example](@ref)
+- [Mutagenesis Python Example](@ref)
 - [Recipe Ingredients Example](@ref)
 - [Schema Examination](@ref)
 - [Schema Visualization](@ref)
