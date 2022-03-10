@@ -2,7 +2,7 @@
 
 The documentation also contains 4 examples demonstrating different showcases:
 - [Mutagenesis Example](@ref)
-- [Mutagenesis Python Example](@ref)
+- [Mutagenesis Python Example](https://nbviewer.jupyter.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/dev/examples/mutagenesis_python.ipynb)
 - [Recipe Ingredients Example](@ref)
 - [Schema Examination](@ref)
 - [Schema Visualization](@ref)
