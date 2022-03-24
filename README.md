@@ -33,6 +33,7 @@ Run the following in REPL:
 
 Three pointers to get you started:
 - [Examples: easy to understand JsonGrinder.jl and Mill.jl code across various domains](https://ctuavastlab.github.io/JsonGrinder.jl/stable/examples/)
+  - [Example allowing to use the package from Python](https://nbviewer.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/dev/examples/mutagenesis_python.ipynb) using [pyjulia](https://github.com/JuliaPy/pyjulia) 
 - [The documentation](https://CTUAvastLab.github.io/JsonGrinder.jl/stable)
 - [The API Reference](https://ctuavastlab.github.io/JsonGrinder.jl/stable/api/)
 
