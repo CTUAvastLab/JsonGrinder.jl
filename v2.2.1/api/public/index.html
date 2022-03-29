@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Public · JsonGrinder.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img class="docs-light-only" src="../../assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="../../assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../schema/">Schema</a></li><li><a class="tocitem" href="../../extractors/">Creating extractors</a></li><li><a class="tocitem" href="../../exfunctions/">Extractors overview</a></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../../examples/">Examples Overview</a></li><li><a class="tocitem" href="../../examples/mutagenesis/">Mutagenesis Example</a></li><li><a class="tocitem" href="../../examples/recipes/">Recipe Ingredients Example</a></li><li><a class="tocitem" href="../../examples/schema_examination/">Schema Examination</a></li><li><a class="tocitem" href="../../examples/schema_visualization/">Schema Visualization</a></li></ul></li><li><a class="tocitem" href="../../automl/">AutoML</a></li><li><a class="tocitem" href="../../hierarchical/">External tools</a></li><li><span class="tocitem">API Documentation</span><ul><li class="is-active"><a class="tocitem" href>Public</a><ul class="internal"><li><a class="tocitem" href="#Index"><span>Index</span></a></li><li><a class="tocitem" href="#Public-Interface"><span>Public Interface</span></a></li></ul></li><li><input class="collapse-toggle" id="menuitem-8-2" type="checkbox"/><label class="tocitem" for="menuitem-8-2"><span class="docs-label">Internal</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../internal/schema/">Schema</a></li><li><a class="tocitem" href="../internal/extractors/">Extractors</a></li></ul></li></ul></li><li><a class="tocitem" href="../../developers/">Developers</a></li><li><a class="tocitem" href="../../citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">API Documentation</a></li><li class="is-active"><a href>Public</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Public</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/docs/src/api/public.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Public-API-Reference"><a class="docs-heading-anchor" href="#Public-API-Reference">Public API Reference</a><a id="Public-API-Reference-1"></a><a class="docs-heading-anchor-permalink" href="#Public-API-Reference" title="Permalink"></a></h1><p>Documentation for <code>JsonGrinder.jl</code>&#39;s public interface.</p><p>See the Internals section of the manual for internal package docs covering all functions.</p><h2 id="Index"><a class="docs-heading-anchor" href="#Index">Index</a><a id="Index-1"></a><a class="docs-heading-anchor-permalink" href="#Index" title="Permalink"></a></h2><ul><li><a href="#JsonGrinder.AuxiliaryExtractor"><code>JsonGrinder.AuxiliaryExtractor</code></a></li><li><a href="#JsonGrinder.ExtractArray"><code>JsonGrinder.ExtractArray</code></a></li><li><a href="#JsonGrinder.ExtractCategorical"><code>JsonGrinder.ExtractCategorical</code></a></li><li><a href="#JsonGrinder.ExtractDict"><code>JsonGrinder.ExtractDict</code></a></li><li><a href="#JsonGrinder.ExtractKeyAsField"><code>JsonGrinder.ExtractKeyAsField</code></a></li><li><a href="#JsonGrinder.ExtractScalar"><code>JsonGrinder.ExtractScalar</code></a></li><li><a href="#JsonGrinder.ExtractString"><code>JsonGrinder.ExtractString</code></a></li><li><a href="#JsonGrinder.ExtractVector"><code>JsonGrinder.ExtractVector</code></a></li><li><a href="#JsonGrinder.MultipleRepresentation"><code>JsonGrinder.MultipleRepresentation</code></a></li><li><a href="#JsonGrinder.extractbatch"><code>JsonGrinder.extractbatch</code></a></li><li><a href="#JsonGrinder.generate_html"><code>JsonGrinder.generate_html</code></a></li><li><a href="#JsonGrinder.schema"><code>JsonGrinder.schema</code></a></li><li><a href="#JsonGrinder.suggestextractor"><code>JsonGrinder.suggestextractor</code></a></li></ul><h2 id="Public-Interface"><a class="docs-heading-anchor" href="#Public-Interface">Public Interface</a><a id="Public-Interface-1"></a><a class="docs-heading-anchor-permalink" href="#Public-Interface" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.schema" href="#JsonGrinder.schema"><code>JsonGrinder.schema</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">schema(samples::AbstractArray{&lt;:Dict})
+schema(samples::AbstractArray{&lt;:AbstractString})
+schema(samples::AbstractArray, map_fun::Function)
+schema(map_fun::Function, samples::AbstractArray)</code></pre><p>creates schema from an array of parsed or unparsed JSONs.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/schema/makeschema.jl#L16-L23">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.suggestextractor" href="#JsonGrinder.suggestextractor"><code>JsonGrinder.suggestextractor</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">suggestextractor(e::DictEntry, settings = NamedTuple())</code></pre><p>create convertor of json to tree-structure of <code>DataNode</code></p><ul><li><code>e</code> top-level of json hierarchy, typically returned by invoking schema</li><li><code>settings</code> can be any container supporting <code>get</code> function</li><li><code>settings.mincountkey</code> contains minimum repetition of the key to be included into the extractor (if missing it is equal to zero)</li><li><code>settings.key_as_field</code> of the number of keys exceeds this value, it is assumed that keys contains a value, which means that they will be treated as strings.</li><li><code>settings.scalar_extractors</code> contains rules for determining which extractor to use for leaves. Default value is return value of <code>default_scalar_extractor()</code>, it&#39;s array of pairs where first element is predicate and if it matches, second element, function which maps schema to specific extractor, is called.</li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/schema/dict.jl#L41-L55">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.generate_html" href="#JsonGrinder.generate_html"><code>JsonGrinder.generate_html</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">generate_html(sch::DictEntry; max_vals=100, max_len=1_000)
+generate_html(file_name, sch::DictEntry; max_vals=100, max_len=1_000)</code></pre><p>exports schema to HTML including CSS style and JS allowing to expand / hide sub-parts of schema, countmaps, and lengthmaps.</p><p><strong>Arguments</strong></p><ul><li><code>max_vals</code> controls maximum number of exported values in countmap</li><li><code>max_len</code> controls maximum number of exported lengts of arrays</li><li><code>file_name</code> a name of file to save HTML with schema</li></ul><p><strong>Return</strong></p><p>If provided filename, it does not return anything. If not, it returns the generated HTML+CSS+JS as a String.</p><p><strong>Example</strong></p><p>You can either open the html file in any browser, or open it directly using ElectronDisplay</p><pre><code class="language-julia hljs">using ElectronDisplay
+using ElectronDisplay: newdisplay
+generated_html = generate_html(sch, max_vals = 100)
+display(newdisplay(), MIME{Symbol(&quot;text/html&quot;)}(), generated_html)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/html_show_tools.jl#L143-L168">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.extractbatch" href="#JsonGrinder.extractbatch"><code>JsonGrinder.extractbatch</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">extractbatch(extractor, samples)</code></pre><p>utility function, shortcut for mapreduce(extractor, catobs, samples)</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/extractdict.jl#L82-L86">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractScalar" href="#JsonGrinder.ExtractScalar"><code>JsonGrinder.ExtractScalar</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct ExtractScalar{T} &lt;: AbstractExtractor
+	c::T
+	s::T
+	uniontypes::Bool
+end</code></pre><p>Extracts a numerical value, centred by subtracting <code>c</code> and scaled by multiplying by <code>s</code>. Strings are converted to numbers.</p><p>The extractor returns <code>ArrayNode{Matrix{Union{Missing, Int64}},Nothing}</code> or it subtypes. If passed <code>missing</code>, it extracts missing values which Mill understands and can work with.</p><p>The <code>uniontypes</code> field determines whether extractor may or may not accept <code>missing</code>. If <code>uniontypes</code> is false, it does not accept missing values. If <code>uniontypes</code> is true, it accepts missing values, and always returns Mill structure of type Union{Missing, T} due to type stability reasons.</p><p>It can be created also using <code>extractscalar(Float32, 5, 2)</code></p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; ExtractScalar(Float32, 2, 3, true)(1)
+1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+ -3.0f0
+
+julia&gt; ExtractScalar(Float32, 2, 3, true)(missing)
+1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+ missing
+
+julia&gt; ExtractScalar(Float32, 2, 3, false)(1)
+1×1 Mill.ArrayNode{Matrix{Float32}, Nothing}:
+ -3.0
+</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/extractscalar.jl#L1-L35">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractCategorical" href="#JsonGrinder.ExtractCategorical"><code>JsonGrinder.ExtractCategorical</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct ExtractCategorical{V,I} &lt;: AbstractExtractor
+	keyvalemap::Dict{V,I}
+	n::Int
+	uniontypes::Bool
+end
+ExtractCategorical(s::Entry, uniontypes = true)
+ExtractCategorical(s::UnitRange, uniontypes = true)
+ExtractCategorical(s::Vector, uniontypes = true)</code></pre><p>Converts a single item to a one-hot encoded vector. Converts array of items into matrix of one-hot encoded columns. There is always alocated an extra element for a unknown value. If passed <code>missing</code>, if <code>uniontypes</code> is true, returns column of missing values, otherwise raises error. If <code>uniontypes</code> is true, it allows extracting <code>missing</code> values and all extracted values will be of type <code>Union{Missing, &lt;other type&gt;}</code> due to type stability reasons. Otherwise missings extraction is not allowed.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using Mill: catobs
+
+julia&gt; e = ExtractCategorical(2:4, true);
+
+julia&gt; mapreduce(e, catobs, [2,3,1,4]).data
+4×4 MaybeHotMatrix with eltype Union{Missing, Bool}:
+  true    ⋅      ⋅      ⋅
+   ⋅     true    ⋅      ⋅
+   ⋅      ⋅      ⋅     true
+   ⋅      ⋅     true    ⋅
+
+julia&gt; mapreduce(e, catobs, [1,missing,5]).data
+4×3 MaybeHotMatrix with eltype Union{Missing, Bool}:
+   ⋅    missing    ⋅
+   ⋅    missing    ⋅
+   ⋅    missing    ⋅
+  true  missing   true
+
+julia&gt; e(4).data
+4×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
+   ⋅
+   ⋅
+  true
+   ⋅
+
+julia&gt; e(missing).data
+4×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
+ missing
+ missing
+ missing
+ missing
+
+julia&gt; e = ExtractCategorical(2:4, false);
+
+julia&gt; mapreduce(e, catobs, [2,3,1,4]).data
+4×4 OneHotMatrix(::Vector{UInt32}) with eltype Bool:
+ 1  ⋅  ⋅  ⋅
+ ⋅  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1
+ ⋅  ⋅  1  ⋅
+
+julia&gt; e(4).data
+4×1 OneHotMatrix(::Vector{UInt32}) with eltype Bool:
+ ⋅
+ ⋅
+ 1
+ ⋅</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/extractcategorical.jl#L3-L71">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractArray" href="#JsonGrinder.ExtractArray"><code>JsonGrinder.ExtractArray</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct ExtractArray{T}
+	item::T
+end</code></pre><p>Convert array of values to a <code>Mill.BagNode</code> with items converted by <code>item</code>. The entire array is assumed to be a single bag.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; ec = ExtractArray(ExtractCategorical(2:4));
+
+julia&gt; ec([2,3,1,4]).data
+4×4 Mill.ArrayNode{Mill.MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing}:
+  true    ⋅      ⋅      ⋅  
+   ⋅     true    ⋅      ⋅
+   ⋅      ⋅      ⋅     true
+   ⋅      ⋅     true    ⋅
+
+julia&gt; es = ExtractArray(ExtractScalar());
+
+julia&gt; es([2,3,4])
+BagNode 	# 1 obs, 80 bytes
+  └── ArrayNode(1×3 Array with Union{Missing, Float32} elements) 	# 3 obs, 63 bytes
+
+julia&gt; es([2,3,4]).data
+1×3 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+ 2.0f0  3.0f0  4.0f0</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/extractarray.jl#L1-L31">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractDict" href="#JsonGrinder.ExtractDict"><code>JsonGrinder.ExtractDict</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct ExtractDict{S} &lt;: AbstractExtractor
+	dict::S
+end</code></pre><p>extracts all items in <code>dict</code> and return them as a <code>Mill.ProductNode</code>. If a key is missing in extracted dict, <code>nothing</code> is passed to the child extractors.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; e = ExtractDict(Dict(:a=&gt;ExtractScalar(Float32, 2, 3), :b=&gt;ExtractCategorical(1:5)))
+Dict
+  ├── a: Float32
+  └── b: Categorical d = 6
+
+julia&gt; res1 = e(Dict(&quot;a&quot;=&gt;1, &quot;b&quot;=&gt;1))
+ProductNode 	# 1 obs, 24 bytes
+  ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements) 	# 1 obs, 53 bytes
+  └── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements) 	# 1 obs, 77 bytes
+
+julia&gt; res1[:a].data
+1×1 Matrix{Union{Missing, Float32}}:
+ -3.0f0
+
+julia&gt; res1[:b].data
+6×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
+  true
+   ⋅
+   ⋅
+   ⋅
+   ⋅
+   ⋅
+
+julia&gt; res2 = e(Dict(&quot;a&quot;=&gt;0))
+ProductNode 	# 1 obs, 24 bytes
+  ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements) 	# 1 obs, 53 bytes
+  └── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements) 	# 1 obs, 77 bytes
+
+julia&gt; res2[:a].data
+1×1 Matrix{Union{Missing, Float32}}:
+ -6.0f0
+
+julia&gt; res2[:b].data
+6×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
+ missing
+ missing
+ missing
+ missing
+ missing
+ missing</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/extractdict.jl#L1-L53">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractVector" href="#JsonGrinder.ExtractVector"><code>JsonGrinder.ExtractVector</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct ExtractVector{T} &lt;: AbstractExtractor
+    n::Int
+    uniontypes::Bool
+end</code></pre><p>represents an array of a fixed length, typically a feature vector of numbers of type T</p><pre><code class="language-jloctest hljs">julia&gt; sc = ExtractVector(4)
+julia&gt; sc([2,3,1,4]).data
+3×1 Array{Float32,2}:
+ 2.0
+ 3.0
+ 1.0</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/extractvector.jl#L1-L17">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.MultipleRepresentation" href="#JsonGrinder.MultipleRepresentation"><code>JsonGrinder.MultipleRepresentation</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">MultipleRepresentation(extractors::Tuple)</code></pre><p>Extractor extracts item to a <code>ProductNode</code> where each item is different extractor and item is extracted by all extractors in multirepresentation.</p><p><strong>Examples</strong></p><p><strong>Example of both categorical and string representation</strong></p><p>One of usecases is to use string representation for strings and categorical variable representation for most frequent values. This allows model to more easily learn frequent or somehow else significant values, which creating meaningful representation for previously unseen inputs.</p><pre><code class="language-julia-repl hljs">julia&gt; e = MultipleRepresentation((ExtractString(false), ExtractCategorical([&quot;tcp&quot;, &quot;udp&quot;, &quot;dhcp&quot;], false)));
+
+julia&gt; s1 = e(&quot;tcp&quot;)
+ProductNode 	# 1 obs, 40 bytes
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) 	# 1 obs, 123 bytes
+  └── e2: ArrayNode(4×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
+
+julia&gt; s1[:e1]
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
+ &quot;tcp&quot;
+
+julia&gt; s1[:e2]
+4×1 Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000004, 1, 2, Vector{UInt32}}, Nothing}:
+ ⋅
+ 1
+ ⋅
+ ⋅
+
+julia&gt; s2 = e(&quot;http&quot;)
+ProductNode 	# 1 obs, 40 bytes
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) 	# 1 obs, 124 bytes
+  └── e2: ArrayNode(4×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
+
+julia&gt; s2[:e1]
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
+ &quot;http&quot;
+
+julia&gt; s2[:e2]
+4×1 Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000004, 1, 2, Vector{UInt32}}, Nothing}:
+ ⋅
+ ⋅
+ ⋅
+ 1</code></pre><p><strong>Example of irregular schema representation</strong></p><p>The other usecase is to handle irregular schema, where extractor returns <code>missing</code> representation if it&#39;s unable to extract it properly. Of course there do not have to be only leaf value extractors, some extractors may be ExtractDict, while other are extracting leaves etc.</p><pre><code class="language-julia-repl hljs">julia&gt; e = MultipleRepresentation((ExtractString(), ExtractScalar(Float32, 2, 3)));
+
+julia&gt; s1 = e(5)
+ProductNode 	# 1 obs, 40 bytes
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) 	# 1 obs, 112 bytes
+  └── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements) 	# 1 obs, 53 bytes
+
+julia&gt; s1[:e1]
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+ missing
+
+julia&gt; s1[:e2]
+1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+ 9.0f0
+
+julia&gt; s2 = e(&quot;hi&quot;)
+ProductNode 	# 1 obs, 40 bytes
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) 	# 1 obs, 122 bytes
+  └── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements) 	# 1 obs, 53 bytes
+
+julia&gt; s2[:e1]
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+ &quot;hi&quot;
+
+julia&gt; s2[:e2]
+1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+ missing
+</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/multirepresentation.jl#L1-L87">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractString" href="#JsonGrinder.ExtractString"><code>JsonGrinder.ExtractString</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct ExtractString{T} &lt;: AbstractExtractor
+	n::Int
+	b::Int
+	m::Int
+	uniontypes::Bool
+end</code></pre><p>Represents <code>String</code> as <code>n-</code>grams (<code>NGramMatrix</code> from <code>Mill.jl</code>) with base <code>b</code> and modulo <code>m</code>.</p><p>The <code>uniontypes</code> field determines whether extractor may or may not accept <code>missing</code>. If <code>uniontypes</code> is false, it does not accept missing values. If <code>uniontypes</code> is true, it accepts missing values, and always returns Mill structure of type Union{Missing, T} due to type stability reasons.</p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using Mill: catobs
+
+julia&gt; ExtractString(true)(&quot;hello&quot;)
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+ &quot;hello&quot;
+
+julia&gt; mapreduce(ExtractString(true), catobs, ([&quot;hello&quot;, &quot;world&quot;]))
+2053×2 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+ &quot;hello&quot;
+ &quot;world&quot;
+ 
+julia&gt; mapreduce(ExtractString(true), catobs, [&quot;hello&quot;, missing])
+2053×2 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+ &quot;hello&quot;
+ missing
+
+julia&gt; ExtractString(true)(missing)
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+ missing
+
+julia&gt; ExtractString(false)(&quot;hello&quot;)
+2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
+ &quot;hello&quot;
+
+julia&gt; mapreduce(ExtractString(false), catobs, ([&quot;hello&quot;, &quot;world&quot;]))
+2053×2 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
+ &quot;hello&quot;
+ &quot;world&quot;
+
+julia&gt; ExtractString(false)([&quot;hello&quot;, &quot;world&quot;])
+ERROR: This extractor does not support missing values
+</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/extractstring.jl#L3-L52">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.ExtractKeyAsField" href="#JsonGrinder.ExtractKeyAsField"><code>JsonGrinder.ExtractKeyAsField</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct ExtractKeyAsField{S,V} &lt;: AbstractExtractor
+	key::S
+	item::V
+end</code></pre><p>extracts all items in <code>vec</code> and in <code>other</code> and return them as a ProductNode.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/extract_keyasfield.jl#L2-L9">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="JsonGrinder.AuxiliaryExtractor" href="#JsonGrinder.AuxiliaryExtractor"><code>JsonGrinder.AuxiliaryExtractor</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct AuxiliaryExtractor &lt;: AbstractExtractor
+	extractor::AbstractExtractor
+	extract_fun::Function
+end</code></pre><p>Universal extractor for applying any function, which lets you ambed any transformation into the AbstractExtractor machinery. Useful e.g. for extractors accompanying trained models, where you need to apply yet another transformation.</p><pre><code class="language-jldocstest hljs">julia&gt; e1 = ExtractDict(Dict(:a=&gt;ExtractString(), :b=&gt;ExtractString()));
+
+julia&gt; e2 = AuxiliaryExtractor(e1, (e,x)-&gt;e[:a](x[&quot;a&quot;]))
+Auxiliary extractor with
+  └── Dict
+        ├── a: String
+        └── b: String
+
+julia&gt; e2(Dict(&quot;a&quot;=&gt;&quot;Hello&quot;, &quot;b&quot;=&gt;&quot;World&quot;))
+ArrayNode{NGramMatrix{String,Array{String,1},Int64},Nothing}:
+ &quot;Hello&quot;</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/429fea425d06694e759468dc5301e218bf89106f/src/extractors/auxiliary.jl#L1-L25">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../hierarchical/">« External tools</a><a class="docs-footer-nextpage" href="../internal/schema/">Schema »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.14 on <span class="colophon-date" title="Tuesday 29 March 2022 09:51">Tuesday 29 March 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
