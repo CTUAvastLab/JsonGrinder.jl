@@ -16,6 +16,7 @@ example_files = [joinpath(examples_dir, f) for f in [
     "recipes.jl",
     "schema_examination.jl",
     "schema_visualization.jl",
+    "examples.jl",
 ]]
 
 function print_html_raw(str)
@@ -58,7 +59,7 @@ makedocs(
                   "Schema" => "schema.md",
                   "Creating extractors" => "extractors.md",
                   "Extractors overview" => "exfunctions.md",
-                  "Examples" => ["examples.md"; example_mds],
+                  "Examples" => example_mds,
                   "AutoML" => "automl.md",
                   "External tools" => "hierarchical.md",
                   "API Documentation" => [

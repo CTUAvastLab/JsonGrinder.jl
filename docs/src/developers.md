@@ -2,7 +2,7 @@
 
 ## Implementing new extractor function
 Requirements on an extractor
-1. The extractor should implemented as a *functor* (a callable structure) with an abstract supertype `JsonGrinder.AbstractExtractor.`  
+1. The extractor should be implemented as a *functor* (a callable structure) with an abstract supertype `JsonGrinder.AbstractExtractor.`  
 2. The extractor has to return a subtype of `Mill.AbstractNode` with the correct number of samples.
 3. The extractor has to handle `missing`, typically by delegating this to appropriate Mill structures, (see more details in [Handling empty bags](@ref)).
 4. The extractor has to create a sample with zero observations when `extractempty` is passed as argument.
