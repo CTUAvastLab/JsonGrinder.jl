@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Schema Visualization · JsonGrinder.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img class="docs-light-only" src="../../assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="../../assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../schema/">Schema</a></li><li><a class="tocitem" href="../../extractors/">Creating extractors</a></li><li><a class="tocitem" href="../../exfunctions/">Extractors overview</a></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../">Examples Overview</a></li><li><a class="tocitem" href="../mutagenesis/">Mutagenesis Example</a></li><li><a class="tocitem" href="../recipes/">Recipe Ingredients Example</a></li><li><a class="tocitem" href="../schema_examination/">Schema Examination</a></li><li class="is-active"><a class="tocitem" href>Schema Visualization</a></li></ul></li><li><a class="tocitem" href="../../automl/">AutoML</a></li><li><a class="tocitem" href="../../hierarchical/">External tools</a></li><li><span class="tocitem">API Documentation</span><ul><li><a class="tocitem" href="../../api/public/">Public</a></li><li><input class="collapse-toggle" id="menuitem-8-2" type="checkbox"/><label class="tocitem" for="menuitem-8-2"><span class="docs-label">Internal</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../api/internal/schema/">Schema</a></li><li><a class="tocitem" href="../../api/internal/extractors/">Extractors</a></li></ul></li></ul></li><li><a class="tocitem" href="../../developers/">Developers</a></li><li><a class="tocitem" href="../../citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Schema Visualization</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Schema Visualization</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/examples/schema_visualization.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Schema-Visualization"><a class="docs-heading-anchor" href="#Schema-Visualization">Schema Visualization</a><a id="Schema-Visualization-1"></a><a class="docs-heading-anchor-permalink" href="#Schema-Visualization" title="Permalink"></a></h1><p>In this example we show how can schema be turned into HTML interactive visualization, which helps to examine the schema, especially when dealing with large and heterogeneous data.</p><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>This example is also available as a Jupyter notebook, feel free to run it yourself: <a href="https://nbviewer.jupyter.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/previews/PR115/examples/schema_visualization.ipynb"><code>schema_visualization.ipynb</code></a></p></div></div><p>We include packages we want to use.</p><pre><code class="language-julia hljs">using JsonGrinder, JSON
+import JsonGrinder: generate_html</code></pre><p>Now we load all samples</p><pre><code class="language-julia hljs">data_file = &quot;data/recipes.json&quot;
+samples_str = open(data_file) do fid
+	read(fid, String)
+end;</code></pre><p>We parse them to structures</p><pre><code class="language-julia hljs">samples = convert(Vector{Dict}, JSON.parse(samples_str));</code></pre><p>Print example of the JSON</p><pre><code class="language-julia hljs">JSON.print(samples[1],2)</code></pre><pre><code class="nohighlight hljs">{
+  &quot;id&quot;: 10259,
+  &quot;ingredients&quot;: [
+    &quot;romaine lettuce&quot;,
+    &quot;black olives&quot;,
+    &quot;grape tomatoes&quot;,
+    &quot;garlic&quot;,
+    &quot;pepper&quot;,
+    &quot;purple onion&quot;,
+    &quot;seasoning&quot;,
+    &quot;garbanzo beans&quot;,
+    &quot;feta cheese crumbles&quot;
+  ],
+  &quot;cuisine&quot;: &quot;greek&quot;
+}
+</code></pre><p>We create schema from all samples</p><pre><code class="language-julia hljs">sch = JsonGrinder.schema(samples)</code></pre><pre><code class="nohighlight hljs">[Dict] 	# updated = 39774
+  ├─────────── id: [Scalar - Int64], 10000 unique values 	# updated = 39774
+  ├────── cuisine: [Scalar - String], 20 unique values 	# updated = 39774
+  └── ingredients: [List] 	# updated = 39774
+                     └── [Scalar - String], 6714 unique values 	# updated = 428275</code></pre><p>Now we can generate the html visualization into a file, keeping only 100 unique values per item</p><pre><code class="language-julia hljs">generate_html(&quot;recipes_max_vals=100.html&quot;, sch, max_vals=100)</code></pre><pre><code class="nohighlight hljs">11484</code></pre><p>Or we can generate html, keeping all values from schema.</p><pre><code class="language-julia hljs">generate_html(&quot;recipes.html&quot;, sch, max_vals=nothing)</code></pre><pre><code class="nohighlight hljs">490993</code></pre><p>If we omit the first argument, we will get the html as a string</p><pre><code class="language-julia hljs">generated_html = generate_html(sch, max_vals = 100);</code></pre><p>Now we can look at the visualization.</p><p>Feel free to click the triangles, individual nodes of the tree are collapsed by default, but can be expanded or collapsed when clicked. This way you can easily examine individual parts of the schema. For lists we show histograms of lengths, for leaves we show histogram of values etc.</p><pre><code class="language-julia hljs">generated_html</code></pre>"	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+    	<meta charset="UTF-8">
+    	<title>Json schema dump</title>
+    	<style>
+        	ul, .top_dict {/* Remove default bullets */
+            	list-style-type: none;
+        	}
+        	.top_dict {/* Remove margins and padding from the parent ul */
+            	margin: 0;
+            	padding: 0;
+        	}
+        	.caret {/* Style the caret/arrow */
+            	cursor: pointer;
+            	user-select: none; /* Prevent text selection */
+        	}
+        	.caret::before {/* Create the caret/arrow with a unicode, and style it */
+            	content: "\25B6";
+            	color: black;
+            	display: inline-block;
+            	margin-right: 6px;
+        	}
+        	.caret-down::before {/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+            	transform: rotate(90deg);
+        	}
+            .nested { /* Hide the nested list */
+                display: none;
+            }
+            .active { /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+                display: block;
+            }
+            label { /* Style the label */
+                cursor: pointer;
+            }
+            #show_block {
+                position: absolute;
+                right: 5%;
+            }
+    	</style>
+		</head>
+		<body>
+		<div id="show_block">
+		    <div id="selectors_output"></div>
+		    <button type="button" id="copy_clipboard">Copy selectors to clipboard</button>
+		</div>
+		<ul class="top_dict" style="color: #4E79A7">[Dict] (updated=39774)
+  <li><span class="caret">cuisine</span> - <label>[:cuisine]<input type="checkbox" name="[:cuisine]" value="[:cuisine]"></label>
+    <ul class="nested" style="color: #E15759">    [Scalar - String], 20 unique values,
+(updated=39774, filled=100.00%, min=brazilian: 467, max=italian: 7838)
+      <li>italian: 7838</li>
+      <li>mexican: 6438</li>
+      <li>southern_us: 4320</li>
+      <li>indian: 3003</li>
+      <li>chinese: 2673</li>
+      <li>french: 2646</li>
+      <li>cajun_creole: 1546</li>
+      <li>thai: 1539</li>
+      <li>japanese: 1423</li>
+      <li>greek: 1175</li>
+      <li>spanish: 989</li>
+      <li>korean: 830</li>
+      <li>vietnamese: 825</li>
+      <li>moroccan: 821</li>
+      <li>british: 804</li>
+      <li>filipino: 755</li>
+      <li>irish: 667</li>
+      <li>jamaican: 526</li>
+      <li>russian: 489</li>
+      <li>brazilian: 467</li>
+     </ul>
+  </li>
+  <li><span class="caret">id</span> - <label>[:id]<input type="checkbox" name="[:id]" value="[:id]"></label>
+    <ul class="nested" style="color: #E15759">    [Scalar - Int64], 10000 unique values,
+(updated=39774, filled=100.00%, min=41850: 1, max=23593: 1)
+      <li>23593: 1</li>
+      <li>37819: 1</li>
+      <li>29454: 1</li>
+      <li>11950: 1</li>
+      <li>45120: 1</li>
+      <li>12778: 1</li>
+      <li>10548: 1</li>
+      <li>1956: 1</li>
+      <li>12427: 1</li>
+      <li>42582: 1</li>
+      <li>41222: 1</li>
+      <li>27167: 1</li>
+      <li>36280: 1</li>
+      <li>47428: 1</li>
+      <li>39471: 1</li>
+      <li>38919: 1</li>
+      <li>16797: 1</li>
+      <li>29579: 1</li>
+      <li>28900: 1</li>
+      <li>37780: 1</li>
+      <li>7353: 1</li>
+      <li>48361: 1</li>
+      <li>18139: 1</li>
+      <li>46927: 1</li>
+      <li>17925: 1</li>
+      <li>36992: 1</li>
+      <li>33594: 1</li>
+      <li>12255: 1</li>
+      <li>11280: 1</li>
+      <li>28025: 1</li>
+      <li>46806: 1</li>
+      <li>14804: 1</li>
+      <li>21896: 1</li>
+      <li>29702: 1</li>
+      <li>37160: 1</li>
+      <li>33390: 1</li>
+      <li>1823: 1</li>
+      <li>17853: 1</li>
+      <li>33003: 1</li>
+      <li>16984: 1</li>
+      <li>11373: 1</li>
+      <li>33489: 1</li>
+      <li>5435: 1</li>
+      <li>6706: 1</li>
+      <li>3646: 1</li>
+      <li>49672: 1</li>
+      <li>13701: 1</li>
+      <li>47586: 1</li>
+      <li>28505: 1</li>
+      <li>12322: 1</li>
+      <li>3163: 1</li>
+      <li>46481: 1</li>
+      <li>31634: 1</li>
+      <li>16341: 1</li>
+      <li>23629: 1</li>
+      <li>35305: 1</li>
+      <li>37033: 1</li>
+      <li>22241: 1</li>
+      <li>35395: 1</li>
+      <li>37258: 1</li>
+      <li>47577: 1</li>
+      <li>47032: 1</li>
+      <li>5640: 1</li>
+      <li>47726: 1</li>
+      <li>46400: 1</li>
+      <li>31831: 1</li>
+      <li>35526: 1</li>
+      <li>47339: 1</li>
+      <li>27819: 1</li>
+      <li>366: 1</li>
+      <li>37890: 1</li>
+      <li>27617: 1</li>
+      <li>9329: 1</li>
+      <li>40964: 1</li>
+      <li>19588: 1</li>
+      <li>33968: 1</li>
+      <li>18219: 1</li>
+      <li>79: 1</li>
+      <li>19391: 1</li>
+      <li>9374: 1</li>
+      <li>49378: 1</li>
+      <li>44623: 1</li>
+      <li>41931: 1</li>
+      <li>12795: 1</li>
+      <li>33642: 1</li>
+      <li>23214: 1</li>
+      <li>40228: 1</li>
+      <li>45920: 1</li>
+      <li>28442: 1</li>
+      <li>5001: 1</li>
+      <li>19448: 1</li>
+      <li>6515: 1</li>
+      <li>15982: 1</li>
+      <li>11775: 1</li>
+      <li>24042: 1</li>
+      <li>32017: 1</li>
+      <li>40725: 1</li>
+      <li>21512: 1</li>
+      <li>25196: 1</li>
+      <li>7560: 1</li>
+      <li>and other 9900 values</li>
+     </ul>
+  </li>
+  <li><span class="caret">ingredients</span> - <label>[:ingredients]<input type="checkbox" name="[:ingredients]" value="[:ingredients]"></label>
+    <ul class="nested" style="color: #E15759">[List] (updated=39774, filled=100.00%, mean=10.77,
+min=1, max=65, 10th percentile=6.0, median=10.0, 90th percentile=17.0)
+    <li><span class="caret">with following frequencies</span>
+    <ul class="nested">
+      <li>1: 22</li>
+      <li>2: 193</li>
+      <li>3: 549</li>
+      <li>4: 1128</li>
+      <li>5: 1891</li>
+      <li>6: 2662</li>
+      <li>7: 3329</li>
+      <li>8: 3556</li>
+      <li>9: 3753</li>
+      <li>10: 3677</li>
+      <li>11: 3512</li>
+      <li>12: 3146</li>
+      <li>13: 2698</li>
+      <li>14: 2253</li>
+      <li>15: 1809</li>
+      <li>16: 1439</li>
+      <li>17: 1160</li>
+      <li>18: 879</li>
+      <li>19: 610</li>
+      <li>20: 504</li>
+      <li>21: 313</li>
+      <li>22: 218</li>
+      <li>23: 141</li>
+      <li>24: 91</li>
+      <li>25: 72</li>
+      <li>26: 46</li>
+      <li>27: 20</li>
+      <li>28: 27</li>
+      <li>29: 21</li>
+      <li>30: 15</li>
+      <li>31: 11</li>
+      <li>32: 4</li>
+      <li>33: 4</li>
+      <li>34: 3</li>
+      <li>35: 3</li>
+      <li>36: 4</li>
+      <li>38: 2</li>
+      <li>40: 3</li>
+      <li>43: 1</li>
+      <li>49: 2</li>
+      <li>52: 1</li>
+      <li>59: 1</li>
+      <li>65: 1</li>
+    </ul>
+    </li>
+    <li><span class="caret">and data</span>
+      <ul class="nested" style="color: #76B7B2">      [Scalar - String], 6714 unique values,
+(updated=428275, min=pecan meal: 1, max=salt: 18049)
+        <li>salt: 18049</li>
+        <li>onions: 7972</li>
+        <li>olive oil: 7972</li>
+        <li>water: 7457</li>
+        <li>garlic: 7380</li>
+        <li>sugar: 6434</li>
+        <li>garlic cloves: 6237</li>
+        <li>butter: 4848</li>
+        <li>ground black pepper: 4785</li>
+        <li>all-purpose flour: 4632</li>
+        <li>pepper: 4438</li>
+        <li>vegetable oil: 4385</li>
+        <li>eggs: 3388</li>
+        <li>soy sauce: 3296</li>
+        <li>kosher salt: 3113</li>
+        <li>green onions: 3078</li>
+        <li>tomatoes: 3058</li>
+        <li>large eggs: 2948</li>
+        <li>carrots: 2814</li>
+        <li>unsalted butter: 2782</li>
+        <li>extra-virgin olive oil: 2747</li>
+        <li>ground cumin: 2747</li>
+        <li>black pepper: 2627</li>
+        <li>milk: 2263</li>
+        <li>chili powder: 2036</li>
+        <li>oil: 1970</li>
+        <li>red bell pepper: 1939</li>
+        <li>purple onion: 1896</li>
+        <li>scallions: 1891</li>
+        <li>grated parmesan cheese: 1886</li>
+        <li>sesame oil: 1773</li>
+        <li>corn starch: 1757</li>
+        <li>ginger: 1755</li>
+        <li>baking powder: 1738</li>
+        <li>jalapeno chilies: 1730</li>
+        <li>dried oregano: 1707</li>
+        <li>chopped cilantro fresh: 1698</li>
+        <li>fresh lemon juice: 1679</li>
+        <li>diced tomatoes: 1624</li>
+        <li>fresh parsley: 1604</li>
+        <li>minced garlic: 1583</li>
+        <li>chicken broth: 1554</li>
+        <li>sour cream: 1539</li>
+        <li>cayenne pepper: 1523</li>
+        <li>fresh ginger: 1503</li>
+        <li>brown sugar: 1503</li>
+        <li>cooking spray: 1490</li>
+        <li>shallots: 1477</li>
+        <li>garlic powder: 1442</li>
+        <li>lime: 1439</li>
+        <li>lemon juice: 1395</li>
+        <li>fresh lime juice: 1368</li>
+        <li>flour: 1348</li>
+        <li>honey: 1299</li>
+        <li>vanilla extract: 1298</li>
+        <li>paprika: 1287</li>
+        <li>chopped onion: 1251</li>
+        <li>fish sauce: 1247</li>
+        <li>ground cinnamon: 1231</li>
+        <li>avocado: 1229</li>
+        <li>canola oil: 1223</li>
+        <li>dry white wine: 1218</li>
+        <li>lemon: 1218</li>
+        <li>rice vinegar: 1204</li>
+        <li>yellow onion: 1184</li>
+        <li>green bell pepper: 1180</li>
+        <li>cilantro leaves: 1160</li>
+        <li>tomato paste: 1158</li>
+        <li>heavy cream: 1146</li>
+        <li>cilantro: 1142</li>
+        <li>fresh basil: 1137</li>
+        <li>boneless skinless chicken breasts: 1111</li>
+        <li>flat leaf parsley: 1094</li>
+        <li>white sugar: 1093</li>
+        <li>lime juice: 1072</li>
+        <li>chicken stock: 1039</li>
+        <li>bay leaves: 1036</li>
+        <li>potatoes: 1018</li>
+        <li>chicken: 982</li>
+        <li>corn tortillas: 965</li>
+        <li>salsa: 963</li>
+        <li>cumin: 953</li>
+        <li>ground turmeric: 949</li>
+        <li>freshly ground pepper: 949</li>
+        <li>baking soda: 942</li>
+        <li>sea salt: 940</li>
+        <li>cumin seed: 935</li>
+        <li>garam masala: 925</li>
+        <li>shrimp: 912</li>
+        <li>black beans: 896</li>
+        <li>zucchini: 892</li>
+        <li>ground beef: 878</li>
+        <li>dried thyme: 873</li>
+        <li>large garlic cloves: 873</li>
+        <li>tomato sauce: 865</li>
+        <li>flour tortillas: 865</li>
+        <li>buttermilk: 863</li>
+        <li>plum tomatoes: 858</li>
+        <li>coconut milk: 854</li>
+        <li>granulated sugar: 849</li>
+        <li>and other 6614 values</li>
+       </ul>
+    </li>
+    </ul>
+  </li>
+</ul>
+
+<script>
+
+document.querySelectorAll(".caret").forEach((toggler, index) => {
+	// I need anonymous function, not arrow function, to preserve the context
+	toggler.addEventListener("click", function() {
+		this.parentElement.querySelector(".nested").classList.toggle("active");
+		this.classList.toggle("caret-down");
+	});
+});
+
+document.querySelectorAll("label > input[type=checkbox]").forEach((toggler, index) => {
+// I need anonymous function, not arrow function, to preserve the context
+	toggler.addEventListener("change", function() {
+		document.getElementById("selectors_output").innerHTML = Array
+			.from(document.querySelectorAll("label > input[type=checkbox]:checked"))
+			.map(x => x.parentElement.textContent).join("<br/>");
+	});
+});
+
+document.getElementById("copy_clipboard").addEventListener("click", () => {
+	let range = document.createRange();
+	range.selectNode(document.getElementById("selectors_output"));
+	window.getSelection().removeAllRanges(); // clear current selection
+	window.getSelection().addRange(range); // to select text
+	document.execCommand("copy");
+	window.getSelection().removeAllRanges();// to deselect
+});
+</script>
+</body>
+</html>
+"<p>If you like, you may use the Electron to open it in browser. using the following code (this works if you run it from REPL, but not from jupyter notebook or in CI)</p><pre><code class="language-julia hljs">using ElectronDisplay
+using ElectronDisplay: newdisplay
+display(newdisplay(), MIME{Symbol(&quot;text/html&quot;)}(), generated_html)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../schema_examination/">« Schema Examination</a><a class="docs-footer-nextpage" href="../../automl/">AutoML »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.14 on <span class="colophon-date" title="Tuesday 29 March 2022 09:56">Tuesday 29 March 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
