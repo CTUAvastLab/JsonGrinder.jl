@@ -11,12 +11,13 @@ src_dir = joinpath(@__DIR__, "src")
 examples_dir = joinpath(@__DIR__, "..", "examples")
 examples_generated_dir = joinpath(src_dir, "examples")
 !ispath(examples_generated_dir) && mkpath(examples_generated_dir)
+# the order here will be propagated to the order in the html menu
 example_files = [joinpath(examples_dir, f) for f in [
+    "examples.jl",
     "mutagenesis.jl",
     "recipes.jl",
     "schema_examination.jl",
     "schema_visualization.jl",
-    "examples.jl",
 ]]
 
 function print_html_raw(str)
