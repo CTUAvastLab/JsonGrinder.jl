@@ -1,7 +1,7 @@
 name = "JsonGrinder"
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
 authors = ["pevnak <pevnak@gmail.com>", "Matej Racinsky <racinsky.matej@seznam.cz>"]
-version = "2.2.0"
+version = "2.2.1"
 
 [deps]
 BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
@@ -35,7 +35,7 @@ HttpCommon = "^0.5"
 JSON = "~0.20, ~0.21"
 LearnBase = "^0.4"
 MLDataPattern = "^0.5"
-Mill = "~2.6"
+Mill = "~2.7"
 Mustache = "^1"
 Setfield = "0.6, 0.7, 0.8"
 StatsBase = "^0.33"
