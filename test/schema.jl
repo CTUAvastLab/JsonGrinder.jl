@@ -918,8 +918,8 @@ end
 	)
 end
 
-num_params(m) = m |> params .|> size .|> prod |> sum
-params_empty(m) = m |> params .|> size |> isempty
+num_params(m) = m |> Flux.params .|> size .|> prod |> sum
+params_empty(m) = m |> Flux.params .|> size |> isempty
 
 @testset "suggestextractor with ints and floats numeric and stringy" begin
 	j1 = JSON.parse("""{"a": "4"}""")

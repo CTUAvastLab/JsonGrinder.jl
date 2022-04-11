@@ -1,7 +1,7 @@
 name = "JsonGrinder"
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
 authors = ["pevnak <pevnak@gmail.com>", "Matej Racinsky <racinsky.matej@seznam.cz>"]
-version = "2.2.2"
+version = "2.2.3"
 
 [deps]
 BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
@@ -29,7 +29,7 @@ Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 BSON = "^0.3.1"
 DataStructures = "~0.17, ~0.18"
 FillArrays = "0.8, 0.9, 0.10, 0.11, 0.12, 0.13"
-Flux = "0.12"
+Flux = "0.13"
 HierarchicalUtils = "2"
 HttpCommon = "^0.5"
 JSON = "~0.20, ~0.21"
