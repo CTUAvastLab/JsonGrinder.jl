@@ -64,8 +64,14 @@ jobs:
 #      - run: julia --color=yes --project=. -e 'using Pkg; pkg"add Mill#master"'
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
-      - run: julia --color=yes --project=./examples -e 'using Pkg; Pkg.instantiate()'
+      - name: Install dependencies
+        run: julia --color=yes --project=./examples -e '
+            using Pkg;
+            Pkg.develop(PackageSpec(path=pwd()));
+            Pkg.instantiate()'
         if: matrix.version == '1'
+#      - run: julia --color=yes --project=./examples -e 'using Pkg; Pkg.instantiate()'
+#        if: matrix.version == '1'
       - run: julia --color=yes --project=./examples examples/make.jl
         if: matrix.version == '1'
       - run: julia --color=yes --project=./examples examples/generated/recipes.jl
