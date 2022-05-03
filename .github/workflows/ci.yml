@@ -61,7 +61,7 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-      - run: julia --color=yes --project=. -e 'using Pkg; pkg"add Mill#master"'
+#      - run: julia --color=yes --project=. -e 'using Pkg; pkg"add Mill#master"'
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - run: julia --color=yes --project=./examples -e 'using Pkg; Pkg.instantiate()'
