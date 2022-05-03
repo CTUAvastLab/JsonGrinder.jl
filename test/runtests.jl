@@ -1,6 +1,7 @@
 using JsonGrinder
 using Test
 using Documenter
+using Random
 
 function buf_printtree(data; kwargs...)
     buf = IOBuffer()
