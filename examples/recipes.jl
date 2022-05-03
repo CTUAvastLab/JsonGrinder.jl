@@ -107,9 +107,9 @@ target = reduce(catobs, target)[:cuisine].data
 # The structure of the network corresponds to the  structure of input data. 
 # You can observe that each module dealing with multiple-instance data contains an aggregation layer with element-wise mean and maximum.
 m = reflectinmodel(sch, extract_data,
-	layer -> Dense(layer,20,relu),
-	bag -> SegmentedMeanMax(bag),
-	fsm = Dict("" => layer -> Dense(layer, size(target, 1))),
+	input_dim -> Dense(input_dim,20,relu),
+	input_dim -> SegmentedMeanMax(input_dim),
+	fsm = Dict("" => input_dim -> Dense(input_dim, size(target, 1))),
 )
 
 # ### Training the model
