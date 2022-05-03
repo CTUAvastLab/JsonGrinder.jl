@@ -5,6 +5,7 @@ using Mill
 using Mill: catobs, nobs, MaybeHotMatrix
 using Flux: OneHotMatrix
 using LinearAlgebra
+using Setfield
 
 function less_categorical_scalar_extractor()
 	[
@@ -615,7 +616,6 @@ end
 		@test e(d2)[:key].data ≈ [0,1,0]
 		
 		e2 = suggestextractor(sch)
-		using Setfield
 		@set! e2.dict[:key] = JsonGrinder.extractscalar(String, sch[:key])
 		@test e2(d1) != e2(d2)
 	end
