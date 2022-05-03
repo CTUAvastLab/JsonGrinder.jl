@@ -18,6 +18,9 @@ const ≃ = isequal
         doctest(JsonGrinder)
 	end
 
+	# now we have some random things in tests, fixing the seed
+	Random.seed!(0)
+
 	@testset "Extractors" begin
 		include("extractors.jl")
 		include("multirepresentation.jl")
