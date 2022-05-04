@@ -67,7 +67,7 @@ jobs:
       - name: Install dependencies
         run: julia --color=yes --project=./examples -e '
             using Pkg;
-            Pkg.develop(PackageSpec(path=pwd()));
+            Pkg.develop(PackageSpec(path=pwd()*'/examples'));
             Pkg.instantiate()'
         if: matrix.version == '1'
 #      - run: julia --color=yes --project=./examples -e 'using Pkg; Pkg.instantiate()'
