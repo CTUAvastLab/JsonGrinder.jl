@@ -17,7 +17,7 @@ using JsonGrinder: DictEntry, Entry
 
 data_dir = "data/documents" #src
 data_dir = "../../../data/documents" #nb
-data_dir = "data/documents" #md
+data_dir = "../../../data/documents" #md
 data_dir = "data/documents" #jl
 
 # This is how some of the documents look like:

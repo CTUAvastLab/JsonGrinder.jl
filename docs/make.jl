@@ -39,7 +39,7 @@ example_mds = []
 
 #for purpose of local testing
 config = is_ci ? Dict() : Dict("nbviewer_root_url"=>"https://nbviewer.jupyter.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/previews/PR101")
-
+f = example_files[3]
 # because there is a bug that @example blocks are not evaluated when they are included using @eval, I run the markdown code in Literate.jl
 for f in example_files
     md_file = Literate.markdown(f, examples_generated_dir; config, credit = false, execute = true, postprocess = print_html_raw)
