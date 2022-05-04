@@ -19,7 +19,7 @@ import JsonGrinder: generate_html
 # Now we load all samples
 data_file = "data/recipes.json" #src
 data_file = "../../../data/recipes.json" #nb
-data_file = "data/recipes.json" #md
+data_file = "../../../data/recipes.json" #md
 data_file = "data/recipes.json" #jl
 samples_str = open(data_file) do fid
 	read(fid, String)

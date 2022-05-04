@@ -93,7 +93,8 @@ function ExtractCategorical(ks::Vector, uniontypes = true)
 end
 
 map_val(s, ::MissingOrNothing) = s.uniontypes ? missing : error("This extractor does not support missing values")
-map_val(s, v) = get(s.keyvalemap, v, s.n)
+# bugfix for https://github.com/CTUAvastLab/JsonGrinder.jl/issues/100
+map_val(s, v) = get(s.keyvalemap, shorten_if_str(v), s.n)
 stabilize_types_categorical(s::ExtractCategorical{V,I}, x) where {V,I} = s.uniontypes ? Vector{Union{Missing, I}}(x) : x
 val2idx(s::ExtractCategorical{V,I}, v::V) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
 val2idx(s::ExtractCategorical{<:Number,I}, v::Number) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])

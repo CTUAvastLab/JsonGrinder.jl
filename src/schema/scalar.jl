@@ -18,8 +18,8 @@ end
 is_numeric(s::AbstractString, T::Type{<:Number}) = tryparse(T, s) isa Number
 is_real_numeric(s::AbstractString, T::Type{<:Real}) = tryparse(T, s) isa Real
 
-Entry(s::T) where {T<:Number} = Entry(Dict{Number,Int}(),0)
-function Entry(s::T) where {T<:AbstractString}
+Entry(::T) where {T<:Number} = Entry(Dict{Number,Int}(),0)
+function Entry(::T) where {T<:AbstractString}
 	return Entry(Dict{T,Int}(),0)
 end
 

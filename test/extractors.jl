@@ -5,6 +5,7 @@ using Mill
 using Mill: catobs, nobs, MaybeHotMatrix
 using Flux: OneHotMatrix
 using LinearAlgebra
+using Setfield
 
 function less_categorical_scalar_extractor()
 	[
@@ -602,6 +603,21 @@ end
 		@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4"))
 		@test ext(Dict("a"=>4)) == ext(Dict("a"=>"4.0"))
 		# todo: add here metadata test
+	end
+
+	@testset "long strings trimming" begin
+		d1 = Dict("key" => String(rand('a':'b', 20000)))
+		d2 = Dict("key" => String(rand('a':'b', 20000)))
+		sch = JsonGrinder.schema(rand([ d1, d2 ], 10000))
+		
+		e = suggestextractor(sch)
+		@test e(d1) != e(d2)
+		@test e(d1)[:key].data ≈ [1,0,0]
+		@test e(d2)[:key].data ≈ [0,1,0]
+		
+		e2 = suggestextractor(sch)
+		@set! e2.dict[:key] = JsonGrinder.extractscalar(String, sch[:key])
+		@test e2(d1) != e2(d2)
 	end
 end
 

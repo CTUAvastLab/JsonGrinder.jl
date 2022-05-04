@@ -1,6 +1,7 @@
 using JsonGrinder
 using Test
 using Documenter
+using Random
 
 function buf_printtree(data; kwargs...)
     buf = IOBuffer()
@@ -17,6 +18,9 @@ const ≃ = isequal
     	DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
         doctest(JsonGrinder)
 	end
+
+	# now we have some random things in tests, fixing the seed
+	Random.seed!(0)
 
 	@testset "Extractors" begin
 		include("extractors.jl")
