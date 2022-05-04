@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Mutagenesis Example · JsonGrinder.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.044/juliamono.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img class="docs-light-only" src="../../assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="../../assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../schema/">Schema</a></li><li><a class="tocitem" href="../../extractors/">Creating extractors</a></li><li><a class="tocitem" href="../../exfunctions/">Extractors overview</a></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../examples/">Examples Overview</a></li><li class="is-active"><a class="tocitem" href>Mutagenesis Example</a><ul class="internal"><li class="toplevel"><a class="tocitem" href="#Create-the-model"><span>Create the model</span></a></li><li class="toplevel"><a class="tocitem" href="#Train-the-model"><span>Train the model</span></a></li><li class="toplevel"><a class="tocitem" href="#Classify-test-set"><span>Classify test set</span></a></li></ul></li><li><a class="tocitem" href="../recipes/">Recipe Ingredients Example</a></li><li><a class="tocitem" href="../schema_examination/">Schema Examination</a></li><li><a class="tocitem" href="../schema_visualization/">Schema Visualization</a></li></ul></li><li><a class="tocitem" href="../../automl/">AutoML</a></li><li><a class="tocitem" href="../../hierarchical/">External tools</a></li><li><span class="tocitem">API Documentation</span><ul><li><a class="tocitem" href="../../api/public/">Public</a></li><li><input class="collapse-toggle" id="menuitem-8-2" type="checkbox"/><label class="tocitem" for="menuitem-8-2"><span class="docs-label">Internal</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../api/internal/schema/">Schema</a></li><li><a class="tocitem" href="../../api/internal/extractors/">Extractors</a></li></ul></li></ul></li><li><a class="tocitem" href="../../developers/">Developers</a></li><li><a class="tocitem" href="../../citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Mutagenesis Example</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Mutagenesis Example</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/examples/mutagenesis.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Mutagenesis-Example"><a class="docs-heading-anchor" href="#Mutagenesis-Example">Mutagenesis Example</a><a id="Mutagenesis-Example-1"></a><a class="docs-heading-anchor-permalink" href="#Mutagenesis-Example" title="Permalink"></a></h1><p>Following example demonstrates learning to <a href="https://relational.fit.cvut.cz/dataset/Mutagenesis">predict the mutagenicity on Salmonella typhimurium</a> (dataset is stored in json format <a href="https://juliaml.github.io/MLDatasets.jl/stable/datasets/Mutagenesis/">in MLDatasets.jl</a> for your convenience).</p><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>This example is also available as a Jupyter notebook, feel free to run it yourself: <a href="https://nbviewer.jupyter.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/previews/PR118/examples/mutagenesis.ipynb"><code>mutagenesis.ipynb</code></a></p></div></div><p>Here we include libraries all necessary libraries</p><pre><code class="language-julia hljs">using JsonGrinder, MLDatasets, Flux, Mill, MLDataPattern, Statistics</code></pre><p>Here we load all samples.</p><pre><code class="language-julia hljs">train_x, train_y = MLDatasets.Mutagenesis.traindata();
+test_x, test_y = MLDatasets.Mutagenesis.testdata();</code></pre><p>We define some basic parameters for the construction and training of the neural network. Minibatch size is self-explanatory, iterations is number of iterations of gradient descent Neurons is number of neurons in hidden layers for each version of part of the neural network.</p><pre><code class="language-julia hljs">minibatchsize = 100
+iterations = 5_000
+neurons = 20</code></pre><pre><code class="nohighlight hljs">20</code></pre><p>This is the <strong>step 1</strong> of the workflow</p><p>We create the schema of the training data, which is the first important step in using the JsonGrinder. This computes both the structure (also known as JSON schema) and histogram of occurrences of individual values in the training data.</p><pre><code class="language-julia hljs">sch = JsonGrinder.schema(train_x)</code></pre><pre><code class="nohighlight hljs">[Dict] 	# updated = 100
+  ├─── lumo: [Scalar - Float64], 98 unique values 	# updated = 100
+  ├─── inda: [Scalar - Int64], 1 unique values 	# updated = 100
+  ⋮
+  └── atoms: [List] 	# updated = 100
+               └── [Dict] 	# updated = 2529
+                     ⋮</code></pre><p>This is the <strong>step 2</strong> of the workflow</p><p>Then we use it to create the extractor converting jsons to Mill structures. The <code>suggestextractor</code> is executed below with default setting, but it allows you heavy customization. We also prepare list of classes. This classification problem is two-class, but we want to infer it from labels.</p><pre><code class="language-julia hljs">extractor = suggestextractor(sch)
+labelnames = unique(train_y)</code></pre><pre><code class="nohighlight hljs">2-element Vector{Int64}:
+ 1
+ 0</code></pre><p>This is the <strong>step 3</strong> of the workflow, we create the model using the schema and extractor</p><h1 id="Create-the-model"><a class="docs-heading-anchor" href="#Create-the-model">Create the model</a><a id="Create-the-model-1"></a><a class="docs-heading-anchor-permalink" href="#Create-the-model" title="Permalink"></a></h1><p>We create the model reflecting structure of the data</p><pre><code class="language-julia hljs">model = reflectinmodel(sch, extractor,
+	input_dim -&gt; Dense(input_dim, neurons, relu),
+	input_dim -&gt; SegmentedMeanMax(input_dim),
+	fsm = Dict(&quot;&quot; =&gt; input_dim -&gt; Dense(input_dim, length(labelnames))),
+)</code></pre><pre><code class="nohighlight hljs">ProductModel ↦ Dense(100 =&gt; 2) 	# 2 arrays, 202 params, 888 bytes
+  ├─── lumo: ArrayModel(Dense(99 =&gt; 20, relu)) 	# 2 arrays, 2_000 params, 7.891 KiB
+  ├─── inda: ArrayModel(Dense(2 =&gt; 20, relu)) 	# 2 arrays, 60 params, 320 bytes
+  ├─── logp: ArrayModel(Dense(63 =&gt; 20, relu)) 	# 2 arrays, 1_280 params, 5.078 KiB
+  ├─── ind1: ArrayModel(Dense(3 =&gt; 20, relu)) 	# 2 arrays, 80 params, 400 bytes
+  └── atoms: BagModel ↦ [SegmentedMean(20); SegmentedMax(20)] ↦ Dense(40 =&gt; 20, relu) 	# 4 arrays, 860 params, 3.516 KiB
+               └── ProductModel ↦ Dense(61 =&gt; 20, relu) 	# 2 arrays, 1_240 params, 4.922 KiB
+                     ⋮</code></pre><p>this allows us to create model flexibly, without the need to hardcode individual layers. Individual arguments of <code>reflectinmodel</code> are explained in <a href="https://CTUAvastLab.github.io/Mill.jl/stable/manual/reflectin/#Model-Reflection">Mill.jl documentation</a>. But briefly: for every numeric array in the sample, model will create a dense layer with <code>neurons</code> neurons (20 in this example). For every vector of observations (called bag in Multiple Instance Learning terminology), it will create aggregation function which will take mean, maximum of feature vectors and concatenate them. The <code>fsm</code> keyword argument basically says that on the end of the NN, as a last layer, we want 2 neurons <code>length(labelnames)</code> in the output layer, not 20 as in the intermediate layers.</p><p>This is the <strong>step 4</strong> of the workflow, we call the extractor on each sample</p><p>We convert jsons to mill data samples and prepare list of classes. This classification problem is two-class, but we want to infer it from labels. The extractor is callable, so we can pass it vector of samples to obtain vector of structures with extracted features.</p><pre><code class="language-julia hljs">train_data = extractor.(train_x)
+test_data = extractor.(test_x)</code></pre><pre><code class="nohighlight hljs">44-element Vector{Mill.ProductNode{NamedTuple{(:lumo, :inda, :logp, :ind1, :atoms), Tuple{Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000063, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x0000003f, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000003, 1, 2, Vector{UInt32}}, Nothing}, Mill.BagNode{Mill.ProductNode{NamedTuple{(:element, :bonds, :charge, :atom_type), Tuple{Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000007, 1, 2, Vector{UInt32}}, Nothing}, Mill.BagNode{Mill.ProductNode{NamedTuple{(:element, :bond_type, :charge, :atom_type), Tuple{Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000007, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000004, 1, 2, Vector{UInt32}}, Nothing}, Mill.ArrayNode{Matrix{Float32}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x0000001d, 1, 2, Vector{UInt32}}, Nothing}}}, Nothing}, Mill.AlignedBags{Int64}, Nothing}, Mill.ArrayNode{Matrix{Float32}, Nothing}, Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x0000001d, 1, 2, Vector{UInt32}}, Nothing}}}, Nothing}, Mill.AlignedBags{Int64}, Nothing}}}, Nothing}}:
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode
+ ProductNode</code></pre><p>This is the <strong>step 5</strong> of the workflow, we train the model</p><h1 id="Train-the-model"><a class="docs-heading-anchor" href="#Train-the-model">Train the model</a><a id="Train-the-model-1"></a><a class="docs-heading-anchor-permalink" href="#Train-the-model" title="Permalink"></a></h1><p>Then, we define few handy functions and a loss function, which is categorical crossentropy in our case.</p><pre><code class="language-julia hljs">loss(x,y) = Flux.logitcrossentropy(model(x), Flux.onehotbatch(y, labelnames))
+accuracy(x,y) = mean(labelnames[Flux.onecold(model(x))] .== y)
+loss(xy::Tuple) = loss(xy...)</code></pre><pre><code class="nohighlight hljs">loss (generic function with 2 methods)</code></pre><p>And we can add a callback which will be printing train and test accuracy during the training and then we can start trining</p><pre><code class="language-julia hljs">cb = () -&gt; begin
+	train_acc = accuracy(train_data, train_y)
+	test_acc = accuracy(test_data, test_y)
+	println(&quot;accuracy: train = $train_acc, test = $test_acc&quot;)
+end</code></pre><pre><code class="nohighlight hljs">#7 (generic function with 1 method)</code></pre><p>Lastly we turn our training data to minibatches, and we can start training</p><pre><code class="language-julia hljs">minibatches = RandomBatches((train_data, train_y), size = minibatchsize, count = iterations)
+Flux.Optimise.train!(loss, Flux.params(model), minibatches, ADAM(), cb = Flux.throttle(cb, 2))</code></pre><pre><code class="nohighlight hljs">accuracy: train = 0.61, test = 0.6818181818181818
+accuracy: train = 0.88, test = 0.7954545454545454
+accuracy: train = 0.97, test = 0.7954545454545454
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7045454545454546
+accuracy: train = 1.0, test = 0.7272727272727273
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.75
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+accuracy: train = 1.0, test = 0.7727272727272727
+</code></pre><p>We can see the accuracy rising and obtaining over 98% on training set quite quickly, and on test set we get over 70%.</p><h1 id="Classify-test-set"><a class="docs-heading-anchor" href="#Classify-test-set">Classify test set</a><a id="Classify-test-set-1"></a><a class="docs-heading-anchor-permalink" href="#Classify-test-set" title="Permalink"></a></h1><p>The Last part is inference on test data.</p><pre><code class="language-julia hljs">probs = softmax(model(test_data))
+o = Flux.onecold(probs)
+pred_classes = labelnames[o]
+mean(pred_classes .== test_y)</code></pre><pre><code class="nohighlight hljs">0.7727272727272727</code></pre><p><code>pred_classes</code> contains the predictions for our test set. we see the accuracy is around 75% on test set predicted classes for test set</p><pre><code class="language-julia hljs">pred_classes</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
+ 1
+ 1
+ 0
+ 0
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 0
+ 1
+ 1
+ 0
+ 0
+ 1
+ 0
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 0
+ 0
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1</code></pre><p>Ground truth classes for test set</p><pre><code class="language-julia hljs">test_y</code></pre><pre><code class="nohighlight hljs">44-element Vector{Int64}:
+ 1
+ 1
+ 1
+ 0
+ 1
+ 1
+ 0
+ 0
+ 1
+ 1
+ 1
+ 0
+ 0
+ 1
+ 1
+ 0
+ 1
+ 1
+ 0
+ 0
+ 0
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 0
+ 1
+ 1
+ 1
+ 0
+ 0
+ 0
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 0
+ 1</code></pre><p>probabilities for test set</p><pre><code class="language-julia hljs">probs</code></pre><pre><code class="nohighlight hljs">2×44 Matrix{Float32}:
+ 1.0         0.999998    0.0361531  0.024782  0.999458    1.0         0.999977    0.738664  0.999905    1.0         0.646733  0.996069    0.999998    1.0         0.655287  0.028681  1.0         0.999598     0.00171749  0.00110968  0.984027   7.10086f-6  0.999952    1.0         0.999959    0.999987    0.997101    1.0         1.0          1.0         0.999908    0.999934    0.000315483  0.00753259  1.0         0.999954    0.980109   1.0         1.0         0.999998    1.0         0.544226  0.9741     0.999999
+ 9.77338f-9  2.04692f-6  0.963847   0.975218  0.00054237  4.98114f-7  2.34504f-5  0.261336  9.46347f-5  3.70067f-9  0.353267  0.00393104  2.21939f-6  1.88259f-7  0.344713  0.971319  1.33884f-7  0.000402135  0.998283    0.99889     0.0159731  0.999993    4.78854f-5  8.31167f-8  4.09501f-5  1.29711f-5  0.00289912  4.78828f-7  8.12331f-12  2.64356f-8  9.21743f-5  6.55714f-5  0.999685     0.992467    5.08382f-9  4.60795f-5  0.0198914  5.19199f-9  2.63944f-9  2.03632f-6  7.28291f-9  0.455774  0.0258999  6.13816f-7</code></pre><p>We can look at individual samples. For instance, some sample from test set is</p><pre><code class="language-julia hljs">test_data[2]</code></pre><pre><code class="nohighlight hljs">ProductNode 	# 1 obs, 104 bytes
+  ├─── lumo: ArrayNode(99×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
+  ├─── inda: ArrayNode(2×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
+  ├─── logp: ArrayNode(63×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
+  ├─── ind1: ArrayNode(3×1 OneHotArray with Bool elements) 	# 1 obs, 60 bytes
+  └── atoms: BagNode 	# 1 obs, 136 bytes
+               └── ProductNode 	# 24 obs, 64 bytes
+                     ⋮</code></pre><p>and the corresponding classification is</p><pre><code class="language-julia hljs">pred_classes[2]</code></pre><pre><code class="nohighlight hljs">1</code></pre><p>if you want to see the probability distribution, it can be obtained by applying <code>softmax</code> to the output of the network.</p><pre><code class="language-julia hljs">softmax(model(test_data[2]))</code></pre><pre><code class="nohighlight hljs">2×1 Matrix{Float32}:
+ 0.999998
+ 2.0469195f-6</code></pre><p>so we can see that the probability that given sample is <code>mutagenetic</code> is almost 1.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../examples/">« Examples Overview</a><a class="docs-footer-nextpage" href="../recipes/">Recipe Ingredients Example »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.16 on <span class="colophon-date" title="Wednesday 4 May 2022 08:13">Wednesday 4 May 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
