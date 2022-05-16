@@ -22,12 +22,8 @@ using JsonGrinder, Mill, Flux, MLDatasets, Statistics, Random
 # we stabilize the seed to obtain same results every run, for pedagogic purposes
 Random.seed!(42)
 
-# We define some basic parameters for the construction and training of the neural network.
-# Minibatch size is self-explanatory, Neurons is number of neurons in hidden layers for 
-# each version of part of the neural network.
-
-neurons = 50
-BATCH_SIZE = 50
+# We define the minibatch size.
+BATCH_SIZE = 10
 
 # Here we load the training samples.
 x_train, y_train = MLDatasets.Mutagenesis.traindata();
@@ -77,7 +73,8 @@ ps = Flux.params(model)
 
 # Lastly we turn our training data to minibatches, and we can start training
 data_loader = Flux.Data.DataLoader((ds_train, y_train), batchsize=BATCH_SIZE, shuffle=true)
-# We can see the accuracy rising and obtaining over 70% quite quickly
+
+# We can see the accuracy rising and obtaining over 80% quite quickly
 Flux.@epochs 3 begin
     Flux.Optimise.train!(loss, ps, data_loader, opt)
     @show accuracy(ds_train, y_train)
@@ -87,6 +84,8 @@ end
 # The Last part is inference and evaluation on test data.
 x_test, y_test = MLDatasets.Mutagenesis.testdata();
 ds_test = extractor.(x_test)
+
+# we see that the test set accuracy is also over 80%
 @show accuracy(ds_test, y_test)
 
 probs = softmax(model(ds_test))
@@ -111,4 +110,4 @@ y_test[2] + 1
 # if you want to see the probability distribution, it can be obtained by applying `softmax` to the output of the network.
 softmax(model(ds_test[2]))
 
-# so we can see that the probability that given sample is `mutagenetic` is > 60%.
+# so we can see that the probability that given sample belongs to the first class is > 60%.
