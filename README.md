@@ -31,11 +31,12 @@ Run the following in REPL:
 
 ## Getting Started
 
-Three pointers to get you started:
-- [Examples: easy to understand JsonGrinder.jl and Mill.jl code across various domains](https://ctuavastlab.github.io/JsonGrinder.jl/stable/examples/)
+Four pointers to get you started:
+- [Examples: easy to understand JsonGrinder.jl and Mill.jl code across various domains](https://ctuavastlab.github.io/JsonGrinder.jl/stable/examples/examples/)
   - [Example allowing to use the package from Python](https://nbviewer.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/v2.3.0/examples/mutagenesis_python.ipynb) using [pyjulia](https://github.com/JuliaPy/pyjulia) 
 - [The documentation](https://CTUAvastLab.github.io/JsonGrinder.jl/stable)
 - [The API Reference](https://ctuavastlab.github.io/JsonGrinder.jl/stable/api/)
+- [Dedicated examples repository](https://github.com/CTUAvastLab/JsonGrinderExamples) containing few real-world usecases train on various datasets. 
 
 ## Citation
 

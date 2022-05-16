@@ -7,10 +7,12 @@ on:
     tags: '*'
     paths:
       - 'docs/**'
+      - 'examples/**'
       - '.github/workflows/docs.yml'
   pull_request:
     paths:
       - 'docs/**'
+      - 'examples/**'
       - '.github/workflows/docs.yml'
 
 env:

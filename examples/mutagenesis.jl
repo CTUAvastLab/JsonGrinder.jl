@@ -50,7 +50,10 @@ extractor = suggestextractor(sch)
 # We create the model reflecting structure of the data
 encoder = reflectinmodel(sch, extractor)
 # this allows us to create model flexibly, without the need to hardcode individual layers.
-# Individual arguments of `reflectinmodel` are explained in [Mill.jl documentation](https://CTUAvastLab.github.io/Mill.jl/stable/manual/reflectin/#Model-Reflection). But briefly: for every numeric array in the sample, model will create a dense layer with `neurons` neurons (20 in this example). For every vector of observations (called bag in Multiple Instance Learning terminology), it will create aggregation function which will take mean, maximum of feature vectors and concatenate them. The `fsm` keyword argument basically says that on the end of the NN, as a last layer, we want 2 neurons `length(labelnames)` in the output layer, not 20 as in the intermediate layers.
+# Individual arguments of `reflectinmodel` are explained in [Mill.jl documentation](https://CTUAvastLab.github.io/Mill.jl/stable/manual/reflectin/#Model-Reflection).
+# But briefly: for every numeric array in the sample, model will create a dense layer with `neurons` neurons (20 in this example).
+# For every vector of observations (called bag in Multiple Instance Learning terminology), it will create aggregation function which will take mean, maximum of feature vectors and concatenate them.
+# The `fsm` keyword argument basically says that on the end of the NN, as a last layer, we want 2 neurons `length(labelnames)` in the output layer, not 20 as in the intermediate layers.
 # then we add layer with 2 output of the model at the end of the neural network
 model = Dense(10, 2) ∘ encoder
 
