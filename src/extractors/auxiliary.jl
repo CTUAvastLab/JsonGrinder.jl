@@ -13,9 +13,9 @@ julia> e1 = ExtractDict(Dict(:a=>ExtractString(), :b=>ExtractString()));
 
 julia> e2 = AuxiliaryExtractor(e1, (e,x)->e[:a](x["a"]))
 Auxiliary extractor with
-  └── Dict
+  ╰── Dict
         ├── a: String
-        └── b: String
+        ╰── b: String
 
 julia> e2(Dict("a"=>"Hello", "b"=>"World"))
 ArrayNode{NGramMatrix{String,Array{String,1},Int64},Nothing}:

@@ -115,36 +115,36 @@ end
 		(ext["w"], ds["w"]),
 	]
 	@test buf_printtree(sch) == """
-	[Dict] \t# updated = 5
-	  └── a: [List] \t# updated = 4
-	           └── [Dict] \t# updated = 5
-	                 ├── a: [Scalar - Int64], 2 unique values \t# updated = 4
-	                 ├── b: [Scalar - Int64], 2 unique values \t# updated = 4
-	                 └── c: [Scalar - String], 3 unique values \t# updated = 3
+	[Dict]  # updated = 5
+	  ╰── a: [List]  # updated = 4
+	           ╰── [Dict]  # updated = 5
+	                 ├── a: [Scalar - Int64], 2 unique values  # updated = 4
+	                 ├── b: [Scalar - Int64], 2 unique values  # updated = 4
+	                 ╰── c: [Scalar - String], 3 unique values  # updated = 3
 	"""
 	@test buf_printtree(ext) == """
 	Dict
-	  └── a: Array of
-	           └── Dict
+	  ╰── a: Array of
+	           ╰── Dict
 	                 ├── a: Float32
 	                 ├── b: Float32
-	                 └── c: String
+	                 ╰── c: String
 	"""
-	@test buf_printtree(m) == """
+	@test buf_printtree(m, limit=false) == """
 	ProductModel ↦ identity
-	  └── a: BagModel ↦ BagCount([SegmentedMean(10); SegmentedMax(10)]) ↦ Dense(21 => 10, relu) \t# 4 arrays, 240 params, 1.094 KiB
-	           └── ProductModel ↦ Dense(12 => 10, relu) \t# 2 arrays, 130 params, 600 bytes
-	                 ├── a: ArrayModel([preimputing]Dense(1 => 1)) \t# 3 arrays, 3 params, 132 bytes
-	                 ├── b: ArrayModel([preimputing]Dense(1 => 1)) \t# 3 arrays, 3 params, 132 bytes
-	                 └── c: ArrayModel([postimputing]Dense(2053 => 10, relu)) \t# 3 arrays, 20_550 params, 80.391 KiB
+	  ╰── a: BagModel ↦ BagCount([SegmentedMean(10); SegmentedMax(10)]) ↦ Dense(21 => 10, relu)  # 4 arrays, 240 params, 1.094 KiB
+	           ╰── ProductModel ↦ Dense(12 => 10, relu)  # 2 arrays, 130 params, 600 bytes
+	                 ├── a: ArrayModel([preimputing]Dense(1 => 1))  # 3 arrays, 3 params, 132 bytes
+	                 ├── b: ArrayModel([preimputing]Dense(1 => 1))  # 3 arrays, 3 params, 132 bytes
+	                 ╰── c: ArrayModel([postimputing]Dense(2053 => 10, relu))  # 3 arrays, 20_550 params, 80.391 KiB
 	"""
-	@test buf_printtree(ds) == """
-	ProductNode \t# 5 obs, 56 bytes
-	  └── a: BagNode \t# 5 obs, 184 bytes
-	           └── ProductNode \t# 5 obs, 48 bytes
-	                 ├── a: ArrayNode(1×5 Array with Union{Missing, Float32} elements) \t# 5 obs, 73 bytes
-	                 ├── b: ArrayNode(1×5 Array with Union{Missing, Float32} elements) \t# 5 obs, 73 bytes
-	                 └── c: ArrayNode(2053×5 NGramMatrix with Union{Missing, Int64} elements) \t# 5 obs, 176 bytes
+	@test buf_printtree(ds, limit=false) == """
+	ProductNode  # 5 obs, 56 bytes
+	  ╰── a: BagNode  # 5 obs, 184 bytes
+	           ╰── ProductNode  # 5 obs, 48 bytes
+	                 ├── a: ArrayNode(1×5 Array with Union{Missing, Float32} elements)  # 5 obs, 73 bytes
+	                 ├── b: ArrayNode(1×5 Array with Union{Missing, Float32} elements)  # 5 obs, 73 bytes
+	                 ╰── c: ArrayNode(2053×5 NGramMatrix with Union{Missing, Int64} elements)  # 5 obs, 176 bytes
 	"""
 
 	@test m[""].m == identity

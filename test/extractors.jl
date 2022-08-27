@@ -871,15 +871,15 @@ end
 	@test Mill.metadata.(values(ext_j4s.data)) == ([3], ["c"], ["4"], fill(5,1,1), ["1.4"], ["5"], fill("4",1,1))
 
 	m = reflectinmodel(sch, ext)
-	@test buf_printtree(m) == """
-	ProductModel ↦ Dense(52 => 10) \t# 2 arrays, 530 params, 2.148 KiB
-	  ├── f: ArrayModel(Dense(4 => 10)) \t# 2 arrays, 50 params, 280 bytes
-	  ├── b: ArrayModel(Dense(2053 => 10)) \t# 2 arrays, 20_540 params, 80.312 KiB
-	  ├── a: ArrayModel(Dense(6 => 10)) \t# 2 arrays, 70 params, 360 bytes
+	@test buf_printtree(m, limit=false) == """
+	ProductModel ↦ Dense(52 => 10)  # 2 arrays, 530 params, 2.148 KiB
+	  ├── f: ArrayModel(Dense(4 => 10))  # 2 arrays, 50 params, 280 bytes
+	  ├── b: ArrayModel(Dense(2053 => 10))  # 2 arrays, 20_540 params, 80.312 KiB
+	  ├── a: ArrayModel(Dense(6 => 10))  # 2 arrays, 70 params, 360 bytes
 	  ├── d: ArrayModel(identity)
-	  ├── e: ArrayModel(Dense(4 => 10)) \t# 2 arrays, 50 params, 280 bytes
-	  ├── c: ArrayModel(Dense(5 => 10)) \t# 2 arrays, 60 params, 320 bytes
-	  └── g: ArrayModel(identity)
+	  ├── e: ArrayModel(Dense(4 => 10))  # 2 arrays, 50 params, 280 bytes
+	  ├── c: ArrayModel(Dense(5 => 10))  # 2 arrays, 60 params, 320 bytes
+	  ╰── g: ArrayModel(identity)
 	"""
 end
 
@@ -905,8 +905,8 @@ end
 	Dict [""]
 	  ├── a: Float32 ["E"]
 	  ├── b: FeatureVector with 3 items ["U"]
-	  └── c: Array of ["k"]
-	           └── Categorical d = 6 ["s"]
+	  ╰── c: Array of ["k"]
+	           ╰── Categorical d = 6 ["s"]
 	"""
 
 	ext_j1 = ext(j1, store_input=false)
@@ -1090,24 +1090,24 @@ end
 
 	@test buf_printtree(sch) ==
 	"""
-	[Dict] \t# updated = 7
-	  └── a: [MultiEntry] \t# updated = 7
-	           ├── 1: [Scalar - String], 3 unique values \t# updated = 3
-	           ├── 2: [Scalar - Float64,Int64], 2 unique values \t# updated = 2
-	           ├── 3: [List] \t# updated = 1
-	           │        └── [Scalar - Int64], 5 unique values \t# updated = 5
-	           └── 4: [Dict] \t# updated = 1
-	                    └── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values \t# updated = 1
+	[Dict]  # updated = 7
+	  ╰── a: [MultiEntry]  # updated = 7
+	           ├── 1: [Scalar - String], 3 unique values  # updated = 3
+	           ├── 2: [Scalar - Float64,Int64], 2 unique values  # updated = 2
+	           ├── 3: [List]  # updated = 1
+	           │        ╰── [Scalar - Int64], 5 unique values  # updated = 5
+	           ╰── 4: [Dict]  # updated = 1
+	                    ╰── Sylvanas is the worst warchief ever: [Scalar - String], 1 unique values  # updated = 1
 	"""
 
 	@test buf_printtree(ext, trav=true) ==
     """
 	Dict [""]
-	  └── a: MultiRepresentation ["U"]
+	  ╰── a: MultiRepresentation ["U"]
 	           ├── e1: FeatureVector with 5 items ["c"]
 	           ├── e2: Dict ["k"]
-	           │         └── Sylvanas is the worst warchief ever: String ["o"]
-	           └── e3: Float32 ["s"]
+	           │         ╰── Sylvanas is the worst warchief ever: String ["o"]
+	           ╰── e3: Float32 ["s"]
 	"""
 
 	e1 = ext(j1)
@@ -1122,12 +1122,12 @@ end
 	@test e5["s"].data ≈ [0.875]
 	@test buf_printtree(e1) ==
 	"""
-	ProductNode \t# 1 obs, 48 bytes
-	  └── a: ProductNode \t# 1 obs, 48 bytes
-	           ├── e1: ArrayNode(5×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 73 bytes
-	           ├── e2: ProductNode \t# 1 obs, 32 bytes
-	           │         └── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) \t# 1 obs, 112 bytes
-	           └── e3: ArrayNode(1×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 53 bytes
+	ProductNode  # 1 obs, 48 bytes
+	  ╰── a: ProductNode  # 1 obs, 48 bytes
+	           ├── e1: ArrayNode(5×1 Array with Union{Missing, Float32} elements)  # 1 obs, 73 bytes
+	           ├── e2: ProductNode  # 1 obs, 32 bytes
+	           │         ╰── Sylvanas is the worst warchief ever: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements)  # 1 obs, 112 bytes
+	           ╰── e3: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  # 1 obs, 53 bytes
 	"""
 	@test ext[:a][1] == ext["c"]
 end
@@ -1144,21 +1144,21 @@ end
 
 	@test buf_printtree(sch) ==
 	"""
-	[Dict] \t# updated = 5
-	  └── a: [MultiEntry] \t# updated = 5
-	           ├── 1: [Scalar - String], 2 unique values \t# updated = 2
-	           ├── 2: [Scalar - Float64,Int64], 2 unique values \t# updated = 2
-	           └── 3: [List] \t# updated = 1
-	                    └── [Scalar - Int64], 5 unique values \t# updated = 5
+	[Dict]  # updated = 5
+	  ╰── a: [MultiEntry]  # updated = 5
+	           ├── 1: [Scalar - String], 2 unique values  # updated = 2
+	           ├── 2: [Scalar - Float64,Int64], 2 unique values  # updated = 2
+	           ╰── 3: [List]  # updated = 1
+	                    ╰── [Scalar - Int64], 5 unique values  # updated = 5
 	"""
 
 	@test buf_printtree(ext) ==
 	"""
 	Dict
-	  └── a: MultiRepresentation
+	  ╰── a: MultiRepresentation
 	           ├── e1: String
 	           ├── e2: Float32
-	           └── e3: FeatureVector with 5 items
+	           ╰── e3: FeatureVector with 5 items
 	"""
 
 	e1 = ext(j1)
@@ -1214,7 +1214,7 @@ end
     @test buf_printtree(e) ==
 	"""
 	Auxiliary extractor with
-	  └── Categorical d = 3
+	  ╰── Categorical d = 3
 	"""
 end
 
@@ -1231,24 +1231,24 @@ end
 	@test buf_printtree(ext) ==
 	"""
 	Dict
-	  └── a: Array of
-	           └── Float32
+	  ╰── a: Array of
+	           ╰── Float32
 	"""
 
 	ext_j2 = ext(j2)
 	@test buf_printtree(ext_j2) ==
     """
-	ProductNode \t# 1 obs, 16 bytes
-	  └── a: BagNode \t# 1 obs, 80 bytes
-	           └── ArrayNode(1×2 Array with Float32 elements) \t# 2 obs, 56 bytes
+	ProductNode  # 1 obs, 16 bytes
+	  ╰── a: BagNode  # 1 obs, 80 bytes
+	           ╰── ArrayNode(1×2 Array with Float32 elements)  # 2 obs, 56 bytes
 	"""
 
 	m = reflectinmodel(sch, ext)
 	@test buf_printtree(m) ==
     """
 	ProductModel ↦ identity
-	  └── a: BagModel ↦ BagCount([SegmentedMean(1); SegmentedMax(1)]) ↦ Dense(3 => 10) \t# 4 arrays, 42 params, 328 bytes
-	           └── ArrayModel(identity)
+	  ╰── a: BagModel ↦ BagCount([SegmentedMean(1); SegmentedMax(1)]) ↦ Dense(3 => 10)  # 4 arrays, 42 params, 328 bytes
+	           ╰── ArrayModel(identity)
 	"""
 end
 

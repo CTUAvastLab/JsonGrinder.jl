@@ -15,8 +15,12 @@ const ≃ = isequal
 
 	# this must be first, because other tests include more imports which break string asserts on types
 	@testset "Doctests" begin
-    	DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
-        doctest(JsonGrinder)
+    	DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, quote
+    	using JsonGrinder
+    	# do not shorten prints in doctests
+    	ENV["LINES"] = ENV["COLUMNS"] = typemax(Int)
+    	end; recursive=true)
+    	doctest(JsonGrinder)
 	end
 
 	# now we have some random things in tests, fixing the seed

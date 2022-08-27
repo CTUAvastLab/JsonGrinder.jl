@@ -7,13 +7,13 @@ abstract type JSONEntry end
 StringOrNumber = Union{AbstractString,Number}
 
 function safe_update!(s::JSONEntry, d; path = "")
-	success = update!(s, d)
-	isnothing(success) && return nothing
-	success && return s
-	@info "In path $path: Instability in the schema detected. Using multiple representation."
-	s = MultiEntry([s], s.updated)
-	update!(s, d, path=path)
-	return s
+    success = update!(s, d)
+    isnothing(success) && return nothing
+    success && return s
+    @info "In path $path: Instability in the schema detected. Using multiple representation."
+    s = MultiEntry([s], s.updated)
+    update!(s, d, path = path)
+    return s
 end
 safe_update!(::Nothing, d; path = "") = newentry!(d)
 update!(s::JSONEntry, d; path = "") = false
@@ -37,14 +37,14 @@ merge(::Nothing, e::JSONEntry) = e
 make_representative_sample(sch::JSONEntry, ex::AbstractExtractor) = ex(sample_synthetic(sch))
 
 function Mill.reflectinmodel(sch::JSONEntry, ex::AbstractExtractor, args...; kwargs...)
-	# because we have type-stable extractors, we now have information about what is missing and what not inside types
-	# so I don't have to extract empty and missing samples, the logic is now part of suggestextractor
-	specimen = make_representative_sample(sch, ex)
-	reflectinmodel(specimen, args...; kwargs...)
+    # because we have type-stable extractors, we now have information about what is missing and what not inside types
+    # so I don't have to extract empty and missing samples, the logic is now part of suggestextractor
+    specimen = make_representative_sample(sch, ex)
+    reflectinmodel(specimen, args...; kwargs...)
 end
 
 # this can probably be
-make_selector(s) = e->select_by_string(s, e)
+make_selector(s) = e -> select_by_string(s, e)
 select_by_string(s::AbstractString, e::DictEntry) = e.childs[Symbol(s)]
 select_by_string(s::AbstractString, e::ArrayEntry) = s == "[]" ? e.items : @error "wrong selector"
 select_by_string(s::AbstractString, e::MultiEntry) = e.childs[parse(Int, s)]
@@ -57,10 +57,10 @@ deletes the field `x` from `schema` at:
 	`schema.childs[:field].childs[:subfield].items.childs`
 """
 function Base.delete!(sch::JSONEntry, path::AbstractString, field::AbstractString)
-	@assert field != "[]"
-	selectors = split(path, ".")[2:end]
-	item = reduce((s, f) -> f(s), make_selector.(selectors), init=sch)
-	delete!(item.childs, Symbol(field))
+    @assert field != "[]"
+    selectors = split(path, ".")[2:end]
+    item = reduce((s, f) -> f(s), make_selector.(selectors), init = sch)
+    delete!(item.childs, Symbol(field))
 end
 
 
@@ -78,11 +78,11 @@ julia> j1 = JSON.parse("{\\"a\\": 4, \\"b\\": {\\"a\\":1, \\"b\\": 1}}");
 julia> j2 = JSON.parse("{\\"a\\": 4, \\"b\\": {\\"a\\":1}}");
 
 julia> sch = JsonGrinder.schema([j1,j2])
-[Dict] \t# updated = 2
-  ├── a: [Scalar - Int64], 1 unique values \t# updated = 2
-  └── b: [Dict] \t# updated = 2
-           ├── a: [Scalar - Int64], 1 unique values \t# updated = 2
-           └── b: [Scalar - Int64], 1 unique values \t# updated = 1
+[Dict]  # updated = 2
+  ├── a: [Scalar - Int64], 1 unique values  # updated = 2
+  ╰── b: [Dict]  # updated = 2
+           ├── a: [Scalar - Int64], 1 unique values  # updated = 2
+           ╰── b: [Scalar - Int64], 1 unique values  # updated = 1
 
 julia> j3 = Dict("a" => 4, "b" => Dict("a"=>1), "c" => 1, "d" => 2)
 Dict{String, Any} with 4 entries:
@@ -100,9 +100,10 @@ so the `JsonGrinder.prune_json` removes keys `c` and `d`.
 """
 prune_json(json, sch::Entry) = json
 
-prune_json(json, sch::ArrayEntry) = map(json) do el
-	prune_json(el, sch.items)
-end
+prune_json(json, sch::ArrayEntry) =
+    map(json) do el
+        prune_json(el, sch.items)
+    end
 
 prune_json(json, sch::DictEntry) =
-    Dict(String(k) => prune_json(json[String(k)], v) for (k,v) in children(sch) if String(k) ∈ keys(json))
+    Dict(String(k) => prune_json(json[String(k)], v) for (k, v) in children(sch) if String(k) ∈ keys(json))

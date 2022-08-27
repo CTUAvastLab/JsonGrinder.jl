@@ -11,7 +11,7 @@ nodeshow(io::IO, @nospecialize(n::ArrayEntry)) = print(io, "[" * (isnothing(n.it
 nodeshow(io::IO, @nospecialize(n::DictEntry)) = print(io, "[" * (isnothing(n.childs) ? "Empty " : "") * "Dict]")
 nodeshow(io::IO, @nospecialize(n::MultiEntry)) = print(io, "[" * (isempty(n.childs) ? "Empty " : "") * "MultiEntry]")
 
-nodecommshow(io::IO, @nospecialize(n::JSONEntry)) = print(io, "\t# updated = $(n.updated)")
+nodecommshow(io::IO, @nospecialize(n::JSONEntry)) = print(io, " # updated = $(n.updated)")
 
 children(n::ArrayEntry) = (n.items,)
 # using vector of pairs because splatting to named tuple is not good for compiler

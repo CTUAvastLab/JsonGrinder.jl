@@ -4,7 +4,10 @@ using Literate
 
 const is_ci = haskey(ENV, "GITHUB_ACTIONS")
 
-DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, :(using JsonGrinder); recursive=true)
+DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, quote
+    using JsonGrinder
+    ENV["LINES"] = ENV["COLUMNS"] = typemax(Int)
+end; recursive=true)
 
 # generate files using literate.jl
 src_dir = joinpath(@__DIR__, "src")
