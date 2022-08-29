@@ -108,11 +108,11 @@ julia> display(sch)
 [Dict] (updated = 3)
   ├── a: [MultiEntry] (updated = 3)
   │        ├── 1: [Scalar - String], 2 unique values, updated = 2
-  │        └── 2: [List] (updated = 1)
+  │        ╰── 2: [List] (updated = 1)
   │                 ⋮
-  └── b: [Dict] (updated = 3)
+  ╰── b: [Dict] (updated = 3)
            ├── c: [Scalar - Int64], 2 unique values, updated = 3
-           └── d: [MultiEntry] (updated = 3)
+           ╰── d: [MultiEntry] (updated = 3)
                     ⋮
 ```
 which shows only reasonable part.
@@ -124,14 +124,14 @@ julia> printtree(sch; htrunc=Inf, vtrunc=Inf, trav=true)
 [Dict] (updated = 3) [""]
   ├── a: [MultiEntry] (updated = 3) ["E"]
   │        ├── 1: [Scalar - String], 2 unique values, updated = 2 ["I"]
-  │        └── 2: [List] (updated = 1) ["M"]
-  │                 └── [Scalar - String], 2 unique values, updated = 2 ["O"]
-  └── b: [Dict] (updated = 3) ["U"]
+  │        ╰── 2: [List] (updated = 1) ["M"]
+  │                 ╰── [Scalar - String], 2 unique values, updated = 2 ["O"]
+  ╰── b: [Dict] (updated = 3) ["U"]
            ├── c: [Scalar - Int64], 2 unique values, updated = 3 ["Y"]
-           └── d: [MultiEntry] (updated = 3) ["c"]
+           ╰── d: [MultiEntry] (updated = 3) ["c"]
                     ├── 1: [Scalar - Int64], 2 unique values, updated = 2 ["d"]
-                    └── 2: [List] (updated = 1) ["e"]
-                             └── [Scalar - Int64], 3 unique values, updated = 3 ["eU"]
+                    ╰── 2: [List] (updated = 1) ["e"]
+                             ╰── [Scalar - Int64], 3 unique values, updated = 3 ["eU"]
 ```
 
 Strings at the end of each row can be used as a key to access individual elements of the schema.
