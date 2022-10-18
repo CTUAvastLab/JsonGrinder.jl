@@ -21,8 +21,8 @@ julia> ec([2,3,1,4]).data
 julia> es = ExtractArray(ExtractScalar());
 
 julia> es([2,3,4])
-BagNode \t# 1 obs, 80 bytes
-  └── ArrayNode(1×3 Array with Union{Missing, Float32} elements) \t# 3 obs, 63 bytes
+BagNode  # 1 obs, 80 bytes
+  ╰── ArrayNode(1×3 Array with Union{Missing, Float32} elements)  # 3 obs, 63 bytes
 
 julia> es([2,3,4]).data
 1×3 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:

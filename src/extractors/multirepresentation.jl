@@ -16,32 +16,32 @@ for previously unseen inputs.
 julia> e = MultipleRepresentation((ExtractString(false), ExtractCategorical(["tcp", "udp", "dhcp"], false)));
 
 julia> s1 = e("tcp")
-ProductNode \t# 1 obs, 40 bytes
-  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) \t# 1 obs, 123 bytes
-  └── e2: ArrayNode(4×1 OneHotArray with Bool elements) \t# 1 obs, 60 bytes
+ProductNode  # 1 obs, 40 bytes
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements)  # 1 obs, 123 bytes
+  ╰── e2: ArrayNode(4×1 OneHotArray with Bool elements)  # 1 obs, 60 bytes
 
 julia> s1[:e1]
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "tcp"
 
 julia> s1[:e2]
-4×1 Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000004, 1, 2, Vector{UInt32}}, Nothing}:
+4×1 Mill.ArrayNode{OneHotArrays.OneHotMatrix{UInt32, 0x00000004, Vector{UInt32}}, Nothing}:
  ⋅
  1
  ⋅
  ⋅
 
 julia> s2 = e("http")
-ProductNode \t# 1 obs, 40 bytes
-  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements) \t# 1 obs, 124 bytes
-  └── e2: ArrayNode(4×1 OneHotArray with Bool elements) \t# 1 obs, 60 bytes
+ProductNode  # 1 obs, 40 bytes
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements)  # 1 obs, 124 bytes
+  ╰── e2: ArrayNode(4×1 OneHotArray with Bool elements)  # 1 obs, 60 bytes
 
 julia> s2[:e1]
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "http"
 
 julia> s2[:e2]
-4×1 Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000004, 1, 2, Vector{UInt32}}, Nothing}:
+4×1 Mill.ArrayNode{OneHotArrays.OneHotMatrix{UInt32, 0x00000004, Vector{UInt32}}, Nothing}:
  ⋅
  ⋅
  ⋅
@@ -58,9 +58,9 @@ while other are extracting leaves etc.
 julia> e = MultipleRepresentation((ExtractString(), ExtractScalar(Float32, 2, 3)));
 
 julia> s1 = e(5)
-ProductNode \t# 1 obs, 40 bytes
-  ├── e1: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) \t# 1 obs, 112 bytes
-  └── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 53 bytes
+ProductNode  # 1 obs, 40 bytes
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements)  # 1 obs, 112 bytes
+  ╰── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  # 1 obs, 53 bytes
 
 julia> s1[:e1]
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
@@ -71,9 +71,9 @@ julia> s1[:e2]
  9.0f0
 
 julia> s2 = e("hi")
-ProductNode \t# 1 obs, 40 bytes
-  ├── e1: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) \t# 1 obs, 122 bytes
-  └── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements) \t# 1 obs, 53 bytes
+ProductNode  # 1 obs, 40 bytes
+  ├── e1: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements)  # 1 obs, 122 bytes
+  ╰── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  # 1 obs, 53 bytes
 
 julia> s2[:e1]
 2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:

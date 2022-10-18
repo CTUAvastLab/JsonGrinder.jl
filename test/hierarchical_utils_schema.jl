@@ -16,18 +16,18 @@ sch = schema([j1,j2,j3,j4,j5,j6])
 @testset "printtree" begin
     @test buf_printtree(sch, trav=true) ==
     """
-    [Dict] [""] \t# updated = 6
-      ├── a: [Scalar - Int64], 1 unique values ["E"] \t# updated = 4
-      ├── b: [Dict] ["U"] \t# updated = 4
-      │        ├── a: [List] ["Y"] \t# updated = 2
-      │        │        └── [Scalar - Int64], 3 unique values ["a"] \t# updated = 6
-      │        └── b: [Scalar - Int64], 1 unique values ["c"] \t# updated = 2
-      └── c: [Dict] ["k"] \t# updated = 2
-               └── a: [Dict] ["s"] \t# updated = 2
-                        ├── a: [List] ["u"] \t# updated = 2
-                        │        └── [Scalar - Float64,Int64], 3 unique values ["v"] \t# updated = 5
-                        └── b: [List] ["w"] \t# updated = 2
-                                 └── [Scalar - Float64,Int64], 3 unique values ["x"] \t# updated = 5
+    [Dict] [""]  # updated = 6
+      ├── a: [Scalar - Int64], 1 unique values ["E"]  # updated = 4
+      ├── b: [Dict] ["U"]  # updated = 4
+      │        ├── a: [List] ["Y"]  # updated = 2
+      │        │        ╰── [Scalar - Int64], 3 unique values ["a"]  # updated = 6
+      │        ╰── b: [Scalar - Int64], 1 unique values ["c"]  # updated = 2
+      ╰── c: [Dict] ["k"]  # updated = 2
+               ╰── a: [Dict] ["s"]  # updated = 2
+                        ├── a: [List] ["u"]  # updated = 2
+                        │        ╰── [Scalar - Float64,Int64], 3 unique values ["v"]  # updated = 5
+                        ╰── b: [List] ["w"]  # updated = 2
+                                 ╰── [Scalar - Float64,Int64], 3 unique values ["x"]  # updated = 5
     """
 end
 
@@ -106,16 +106,16 @@ end
 
     @test buf_printtree(sch, trav=true) ==
     """
-    [Dict] [""] \t# updated = 6
-      ├── a: [Scalar - Int64], 1 unique values ["E"] \t# updated = 4
-      ├── d: [Empty List] ["U"] \t# updated = 5
-      │        └── Nothing ["c"]
-      └── c: [Dict] ["k"] \t# updated = 2
-               └── a: [Dict] ["s"] \t# updated = 2
-                        ├── a: [List] ["u"] \t# updated = 2
-                        │        └── [Scalar - Float64,Int64], 3 unique values ["v"] \t# updated = 5
-                        └── b: [List] ["w"] \t# updated = 2
-                                 └── [Scalar - Float64,Int64], 3 unique values ["x"] \t# updated = 5
+    [Dict] [""]  # updated = 6
+      ├── a: [Scalar - Int64], 1 unique values ["E"]  # updated = 4
+      ├── d: [Empty List] ["U"]  # updated = 5
+      │        ╰── Nothing ["c"]
+      ╰── c: [Dict] ["k"]  # updated = 2
+               ╰── a: [Dict] ["s"]  # updated = 2
+                        ├── a: [List] ["u"]  # updated = 2
+                        │        ╰── [Scalar - Float64,Int64], 3 unique values ["v"]  # updated = 5
+                        ╰── b: [List] ["w"]  # updated = 2
+                                 ╰── [Scalar - Float64,Int64], 3 unique values ["x"]  # updated = 5
     """
 end
 
@@ -131,20 +131,20 @@ end
 
     @test buf_printtree(sch, trav=true) ==
     """
-    [Dict] [""] \t# updated = 6
-      ├── a: [Scalar - Int64], 1 unique values ["E"] \t# updated = 4
-      ├── d: [Empty List] ["U"] \t# updated = 5
-      │        └── Nothing ["c"]
-      └── c: [MultiEntry] ["k"] \t# updated = 5
-               ├── 1: [Dict] ["o"] \t# updated = 2
-               │        └── a: [Dict] ["q"] \t# updated = 2
-               │                 ├── a: [List] ["qU"] \t# updated = 2
-               │                 │        └── [Scalar - Float64,Int64], 3 unique values ["qk"] \t# updated = 5
-               │                 └── b: [List] ["r*"] \t# updated = 2
-               │                          └── [Scalar - Float64,Int64], 3 unique values ["rE"] \t# updated = 5
-               ├── 2: [Scalar - Float64,Int64], 2 unique values ["s"] \t# updated = 2
-               └── 3: [List] ["w"] \t# updated = 1
-                        └── [Scalar - String], 3 unique values ["y"] \t# updated = 3
+    [Dict] [""]  # updated = 6
+      ├── a: [Scalar - Int64], 1 unique values ["E"]  # updated = 4
+      ├── d: [Empty List] ["U"]  # updated = 5
+      │        ╰── Nothing ["c"]
+      ╰── c: [MultiEntry] ["k"]  # updated = 5
+               ├── 1: [Dict] ["o"]  # updated = 2
+               │        ╰── a: [Dict] ["q"]  # updated = 2
+               │                 ├── a: [List] ["qU"]  # updated = 2
+               │                 │        ╰── [Scalar - Float64,Int64], 3 unique values ["qk"]  # updated = 5
+               │                 ╰── b: [List] ["r*"]  # updated = 2
+               │                          ╰── [Scalar - Float64,Int64], 3 unique values ["rE"]  # updated = 5
+               ├── 2: [Scalar - Float64,Int64], 2 unique values ["s"]  # updated = 2
+               ╰── 3: [List] ["w"]  # updated = 1
+                        ╰── [Scalar - String], 3 unique values ["y"]  # updated = 3
     """
 end
 
@@ -160,14 +160,14 @@ end
 
     @test buf_printtree(sch, trav=true) ==
     """
-    [Dict] [""] \t# updated = 6
-      └── a: [MultiEntry] ["U"] \t# updated = 6
-               ├── 1: [Scalar - String], 3 unique values ["c"] \t# updated = 3
-               ├── 2: [List] ["k"] \t# updated = 1
-               │        └── [MultiEntry] ["o"] \t# updated = 3
-               │              ├── 1: [Scalar - String], 2 unique values ["p"] \t# updated = 2
-               │              └── 2: [Scalar - Int64], 1 unique values ["q"] \t# updated = 1
-               └── 3: [Scalar - Float64,Int64], 2 unique values ["s"] \t# updated = 2
+    [Dict] [""]  # updated = 6
+      ╰── a: [MultiEntry] ["U"]  # updated = 6
+               ├── 1: [Scalar - String], 3 unique values ["c"]  # updated = 3
+               ├── 2: [List] ["k"]  # updated = 1
+               │        ╰── [MultiEntry] ["o"]  # updated = 3
+               │              ├── 1: [Scalar - String], 2 unique values ["p"]  # updated = 2
+               │              ╰── 2: [Scalar - Int64], 1 unique values ["q"]  # updated = 1
+               ╰── 3: [Scalar - Float64,Int64], 2 unique values ["s"]  # updated = 2
     """
 end
 
@@ -181,8 +181,7 @@ end
     j6 = JSON.parse("""{"a": 4}""")
 
     sch = schema([j1,j2,j3,j4,j5,j6])
-    methods(printtree)
     @test repr(sch) == "DictEntry"
-    @test repr("text/plain", sch) == buf_printtree(sch; trav=false, htrunc=3, vtrunc=20, breakline=false)
+    @test repr("text/plain", sch) == buf_printtree(sch; trav=false, htrunc=5, vtrunc=10, breakline=false)
     repr(Dict(1=>2))
 end

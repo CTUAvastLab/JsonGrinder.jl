@@ -20,14 +20,14 @@ ext = suggestextractor(sch, testing_settings)
       ├── a: Float32 ["E"]
       ├── b: Dict ["U"]
       │        ├── a: Array of ["Y"]
-      │        │        └── Float32 ["a"]
-      │        └── b: Float32 ["c"]
-      └── c: Dict ["k"]
-               └── a: Dict ["s"]
+      │        │        ╰── Float32 ["a"]
+      │        ╰── b: Float32 ["c"]
+      ╰── c: Dict ["k"]
+               ╰── a: Dict ["s"]
                         ├── a: Array of ["u"]
-                        │        └── Float32 ["v"]
-                        └── b: Array of ["w"]
-                                 └── Float32 ["x"]
+                        │        ╰── Float32 ["v"]
+                        ╰── b: Array of ["w"]
+                                 ╰── Float32 ["x"]
     """
     e = JsonGrinder.key_as_field(sch[:b], testing_settings, path = "b")
 	ext2 = deepcopy(ext)
@@ -37,16 +37,16 @@ ext = suggestextractor(sch, testing_settings)
       ├── a: Float32 ["E"]
       ├── b: KeyAsField ["U"]
       │        ├── String ["Y"]
-      │        └── MultiRepresentation ["c"]
+      │        ╰── MultiRepresentation ["c"]
       │              ├── e1: Array of ["d"]
-      │              │         └── Float32 ["dU"]
-      │              └── e2: Float32 ["e"]
-      └── c: Dict ["k"]
-               └── a: Dict ["s"]
+      │              │         ╰── Float32 ["dU"]
+      │              ╰── e2: Float32 ["e"]
+      ╰── c: Dict ["k"]
+               ╰── a: Dict ["s"]
                         ├── a: Array of ["u"]
-                        │        └── Float32 ["v"]
-                        └── b: Array of ["w"]
-                                 └── Float32 ["x"]
+                        │        ╰── Float32 ["v"]
+                        ╰── b: Array of ["w"]
+                                 ╰── Float32 ["x"]
     """
 end
 
@@ -124,9 +124,9 @@ end
     """
     Dict [""]
       ├── a: Array of ["E"]
-      │        └── Float64 ["M"]
-      └── b: Array of ["U"]
-               └── Float64 ["c"]
+      │        ╰── Float64 ["M"]
+      ╰── b: Array of ["U"]
+               ╰── Float64 ["c"]
     """
 
     dict = Dict("a" => ExtractScalar(Float64,2,3),"b" => ExtractScalar(Float64), "c" => ExtractArray(ExtractScalar(Float64,2,3)))
@@ -136,8 +136,8 @@ end
     Dict [""]
       ├── a: Float64 ["E"]
       ├── b: Float64 ["U"]
-      └── c: Array of ["k"]
-               └── Float64 ["s"]
+      ╰── c: Array of ["k"]
+               ╰── Float64 ["s"]
     """
 
     other1 = Dict("a" => ExtractArray(ExtractScalar(Float64,2,3)),"b" => ExtractArray(ExtractScalar(Float64,2,3)))
@@ -148,11 +148,11 @@ end
     """
     Dict [""]
       ├── a: Array of ["E"]
-      │        └── Dict ["M"]
+      │        ╰── Dict ["M"]
       │              ├── a: Array of ["O"]
-      │              │        └── Float64 ["P"]
-      │              └── b: Array of ["Q"]
-      │                       └── Float64 ["R"]
-      └── b: Float64 ["U"]
+      │              │        ╰── Float64 ["P"]
+      │              ╰── b: Array of ["Q"]
+      │                       ╰── Float64 ["R"]
+      ╰── b: Float64 ["U"]
     """
 end

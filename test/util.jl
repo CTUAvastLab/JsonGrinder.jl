@@ -1,4 +1,5 @@
-using Setfield, Flux, InteractiveUtils
+using Setfield, InteractiveUtils, OneHotArrays
+using Mill: catobs
 
 @testset "code2lens & lens2code" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2,"c":"oh"}]}""")
@@ -36,15 +37,15 @@ using Setfield, Flux, InteractiveUtils
 end
 
 @testset "onehot hcat" begin
-	X1 = Flux.onehotbatch([1,2,3,4,5], 1:10)
-	@test @which(hcat(X1,X1)).module == Flux
+	X1 = OneHotArrays.onehotbatch([1,2,3,4,5], 1:10)
+	@test @which(hcat(X1,X1)).module == OneHotArrays
 	@test @which(reduce(hcat, [X1,X1])).module == JsonGrinder
 
-	@test hcat(X1,X1) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
-	@test reduce(hcat, [X1,X1]) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
-	@test reduce(catobs, [X1,X1]) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
-	@test catobs(X1,X1) == Flux.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
-
-	X2 = Flux.onehotbatch([1,2,3,4,5,6], 1:12)
+	@test hcat(X1,X1) == OneHotArrays.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
+	@test reduce(hcat, [X1,X1]) == OneHotArrays.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
+	@test reduce(catobs, [X1,X1]) == OneHotArrays.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
+	@test catobs(X1,X1) == OneHotArrays.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
+	
+	X2 = OneHotArrays.onehotbatch([1,2,3,4,5,6], 1:12)
 	@test_throws DimensionMismatch hcat(X1,X2)
 end

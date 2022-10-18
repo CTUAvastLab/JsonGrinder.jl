@@ -55,16 +55,16 @@ Therefore, a `categorical variable` is selected for the *destination port*, whil
 ```
 KeyAsField
   ├── String
-  └── Array of
-        └── Dict
+  ╰── Array of
+        ╰── Dict
               ├─── ip: Dict
               │          ├── dst: Categorical d = 4416
-              │          └── src: Categorical d = 4
+              │          ╰── src: Categorical d = 4
               ├── tcp: Dict
               │          ├────── dstport: Categorical d = 42
               │          ├────── srcport: Float32
-              │          └── window_size: Float32
-              └── udp: Dict
+              │          ╰── window_size: Float32
+              ╰── udp: Dict
                          ├─────── udp.dstport: Float32
                          ├──────── udp.length: Float32
                          ├─────── udp.srcport: Float32

@@ -11,13 +11,13 @@
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master MLDatasets Flux Mill Statistics"
+#nb pkg"add JsonGrinder#master Mill Flux MLDatasets Statistics Random JSON3 OneHotArrays"
 
 # This example is taken from the [CTUAvastLab/JsonGrinderExamples](https://github.com/CTUAvastLab/JsonGrinderExamples/blob/main/mutagenesis/tuned.jl)
 # and heavily commented for more clarity.
 
 # Here we include libraries all necessary libraries
-using JsonGrinder, Mill, Flux, MLDatasets, Statistics, Random
+using JsonGrinder, Mill, Flux, MLDatasets, Statistics, Random, JSON3, OneHotArrays
 
 # we stabilize the seed to obtain same results every run, for pedagogic purposes
 Random.seed!(42)
@@ -64,7 +64,7 @@ ds_train = extractor.(x_train)
 # # Train the model
 # Then, we define few handy functions and a loss function, which is logit binary crossentropy in our case.
 # Here we add +1 to labels, because the labels are {0,1} and idxmax of the model output is in the {1,2} range.
-loss(ds, y) = Flux.Losses.logitbinarycrossentropy(model(ds), Flux.onehotbatch(y .+ 1, 1:2))
+loss(ds, y) = Flux.Losses.logitbinarycrossentropy(model(ds), OneHotArrays.onehotbatch(y .+ 1, 1:2))
 accuracy(ds, y) = mean(Flux.onecold(model(ds)) .== y .+ 1)
 
 # We prepare the optimizer.

@@ -1,4 +1,4 @@
-using Mill, JSON, BSON, Flux, JsonGrinder, Test, HierarchicalUtils
+using Mill, JSON, BSON, Flux, JsonGrinder, Test, HierarchicalUtils, OneHotArrays
 using JsonGrinder: suggestextractor, schema, sample_synthetic, make_representative_sample
 using JsonGrinder: DictEntry, Entry, MultiEntry, ArrayEntry
 using Mill: reflectinmodel
@@ -438,7 +438,7 @@ end
 					Tuple{
 						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
 						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
-						ArrayNode{Flux.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
+						ArrayNode{OneHotArrays.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
 					}},
 				Nothing},
 			AlignedBags{Int64}, Nothing}}}, Nothing}
@@ -486,7 +486,7 @@ end
 						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing}
 					}},
 				Nothing},
-				ArrayNode{Flux.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
+				ArrayNode{OneHotArrays.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
 			}},
 		Nothing}
 	end
@@ -945,27 +945,27 @@ params_empty(m) = m |> Flux.params .|> size |> isempty
 	@test buf_printtree(ext12, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: Categorical d = 3 ["U"]
+	  ╰── a: Categorical d = 3 ["U"]
 	"""
 
 	@test buf_printtree(ext23, trav=true) ==
   	"""
 	Dict [""]
-	  └── a: MultiRepresentation ["U"]
-	           └── e1: Categorical d = 3 ["k"]
+	  ╰── a: MultiRepresentation ["U"]
+	           ╰── e1: Categorical d = 3 ["k"]
 	"""
 
   	@test buf_printtree(ext34, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: Categorical d = 3 ["U"]
+	  ╰── a: Categorical d = 3 ["U"]
 	"""
 
   	@test buf_printtree(ext14, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: MultiRepresentation ["U"]
-	           └── e1: Categorical d = 3 ["k"]
+	  ╰── a: MultiRepresentation ["U"]
+	           ╰── e1: Categorical d = 3 ["k"]
 	"""
 
 	# but that's not problem, there are identity layers, so number of parameters is same
@@ -993,27 +993,27 @@ params_empty(m) = m |> Flux.params .|> size |> isempty
 	@test buf_printtree(ext12, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: Float32 ["U"]
+	  ╰── a: Float32 ["U"]
 	"""
 
 	@test buf_printtree(ext23, trav=true) ==
   	"""
 	Dict [""]
-	  └── a: MultiRepresentation ["U"]
-	           └── e1: Float32 ["k"]
+	  ╰── a: MultiRepresentation ["U"]
+	           ╰── e1: Float32 ["k"]
 	"""
 
   	@test buf_printtree(ext34, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: Float32 ["U"]
+	  ╰── a: Float32 ["U"]
 	"""
 
   	@test buf_printtree(ext14, trav=true) ==
 	"""
 	Dict [""]
-	  └── a: MultiRepresentation ["U"]
-	           └── e1: Float32 ["k"]
+	  ╰── a: MultiRepresentation ["U"]
+	           ╰── e1: Float32 ["k"]
 	"""
 
 	# but that's not problem, there are identity layers, so number of parameters is same
