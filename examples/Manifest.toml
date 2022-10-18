@@ -500,7 +500,7 @@ uuid = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 version = "1.10.0"
 
 [[JsonGrinder]]
-deps = ["BSON", "DataStructures", "FillArrays", "Flux", "HierarchicalUtils", "HttpCommon", "JSON", "LearnBase", "LinearAlgebra", "MLDataPattern", "Mill", "Mustache", "Printf", "SHA", "Setfield", "SparseArrays", "Statistics", "StatsBase", "ThreadTools", "Zygote"]
+deps = ["BSON", "DataStructures", "FillArrays", "Flux", "HierarchicalUtils", "HttpCommon", "JSON", "LearnBase", "LinearAlgebra", "MLDataPattern", "Mill", "Mustache", "OneHotArrays", "Printf", "SHA", "Setfield", "SparseArrays", "Statistics", "StatsBase", "ThreadTools", "Zygote"]
 path = ".."
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
 version = "2.3.1"
