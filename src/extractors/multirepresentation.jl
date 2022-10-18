@@ -25,7 +25,7 @@ julia> s1[:e1]
  "tcp"
 
 julia> s1[:e2]
-4×1 Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000004, 1, 2, Vector{UInt32}}, Nothing}:
+4×1 Mill.ArrayNode{OneHotArrays.OneHotMatrix{UInt32, 0x00000004, Vector{UInt32}}, Nothing}:
  ⋅
  1
  ⋅
@@ -41,7 +41,7 @@ julia> s2[:e1]
  "http"
 
 julia> s2[:e2]
-4×1 Mill.ArrayNode{Flux.OneHotArray{UInt32, 0x00000004, 1, 2, Vector{UInt32}}, Nothing}:
+4×1 Mill.ArrayNode{OneHotArrays.OneHotMatrix{UInt32, 0x00000004, Vector{UInt32}}, Nothing}:
  ⋅
  ⋅
  ⋅

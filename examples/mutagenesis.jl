@@ -64,7 +64,7 @@ ds_train = extractor.(x_train)
 # # Train the model
 # Then, we define few handy functions and a loss function, which is logit binary crossentropy in our case.
 # Here we add +1 to labels, because the labels are {0,1} and idxmax of the model output is in the {1,2} range.
-loss(ds, y) = Flux.Losses.logitbinarycrossentropy(model(ds), Flux.onehotbatch(y .+ 1, 1:2))
+loss(ds, y) = Flux.Losses.logitbinarycrossentropy(model(ds), OneHotArrays.onehotbatch(y .+ 1, 1:2))
 accuracy(ds, y) = mean(Flux.onecold(model(ds)) .== y .+ 1)
 
 # We prepare the optimizer.

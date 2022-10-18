@@ -39,7 +39,7 @@ end
 @testset "onehot hcat" begin
 	X1 = OneHotArrays.onehotbatch([1,2,3,4,5], 1:10)
 	@test @which(hcat(X1,X1)).module == OneHotArrays
-	@test @which(reduce(hcat, [X1,X1])).module == Base
+	@test @which(reduce(hcat, [X1,X1])).module == JsonGrinder
 
 	@test hcat(X1,X1) == OneHotArrays.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
 	@test reduce(hcat, [X1,X1]) == OneHotArrays.onehotbatch([1,2,3,4,5,1,2,3,4,5], 1:10)
