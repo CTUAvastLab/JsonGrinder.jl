@@ -3,7 +3,7 @@ using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict,
 using JsonGrinder: extractempty
 using Mill
 using Mill: catobs, nobs, MaybeHotMatrix
-using Flux: OneHotMatrix
+using OneHotArrays: OneHotMatrix
 using LinearAlgebra
 using Setfield
 

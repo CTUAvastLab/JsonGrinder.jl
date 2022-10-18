@@ -1,8 +1,8 @@
 using Setfield: IdentityLens, PropertyLens, IndexLens, ComposedLens, Lens
 import Mill: pred_lens, code2lens, lens2code, _pred_lens, catobs
-using Flux: OneHotMatrix
+using OneHotArrays: OneHotMatrix
 import Base
-import Flux: OneHotArray
+import OneHotArrays: OneHotArray
 
 function _pred_lens(p::Function, n::T) where T <: Union{AbstractExtractor, JSONEntry}
     res = vcat([map(l -> PropertyLens{k}() ∘ l, _pred_lens(p, getproperty(n, k)))
@@ -24,8 +24,8 @@ _catobs(a::AbstractArray{<:OneHotMatrix}) = reduce(hcat, a)
 
 # optimization of reduction using hcat, using things from https://github.com/FluxML/Flux.jl/pull/1595, but for reductions outside of the PR
 # it's faster than not having it there
-Base.reduce(::typeof(hcat), Xs::Vector{T}) where T <: OneHotMatrix = T(reduce(vcat, Flux._indices.(Xs)))
-Base.reduce(::typeof(hcat), xs::Vector{Flux.OneHotVector{T,L}}) where {T,L} = OneHotArray{T,L,1,Vector{T}}(reduce(vcat, Flux._indices.(xs)))
+Base.reduce(::typeof(hcat), Xs::Vector{T}) where T <: OneHotMatrix = T(reduce(vcat, OneHotArrays._indices.(Xs)))
+Base.reduce(::typeof(hcat), xs::Vector{OneHotArrays.OneHotVector{T,L}}) where {T,L} = OneHotArray{T,L,1,Vector{T}}(reduce(vcat, OneHotArrays._indices.(xs)))
 
 # function schema_lens(model, lens::ComposedLens)
 #     outerlens = schema_lens(model, lens.outer)

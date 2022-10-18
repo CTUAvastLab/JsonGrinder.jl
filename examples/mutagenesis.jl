@@ -17,7 +17,7 @@
 # and heavily commented for more clarity.
 
 # Here we include libraries all necessary libraries
-using JsonGrinder, Mill, Flux, MLDatasets, Statistics, Random
+using JsonGrinder, Mill, Flux, MLDatasets, Statistics, Random, JSON3
 
 # we stabilize the seed to obtain same results every run, for pedagogic purposes
 Random.seed!(42)
