@@ -26,7 +26,9 @@ Random.seed!(42)
 BATCH_SIZE = 10
 
 # Here we load the training samples.
-x_train, y_train = MLDatasets.Mutagenesis.traindata();
+dataset_train = MLDatasets.Mutagenesis(split=:train);
+x_train = dataset_train.features
+y_train = dataset_train.targets
 
 #md # This is the **step 1** of the workflow
 #md #
@@ -44,7 +46,7 @@ extractor = suggestextractor(sch)
 #md #
 # # Create the model
 # We create the model reflecting structure of the data
-encoder = reflectinmodel(sch, extractor)
+encoder = reflectinmodel(sch, extractor, d -> Dense(d, 10, relu))
 # this allows us to create model flexibly, without the need to hardcode individual layers.
 # Individual arguments of `reflectinmodel` are explained in [Mill.jl documentation](https://CTUAvastLab.github.io/Mill.jl/stable/manual/reflectin/#Model-Reflection).
 # But briefly: for every numeric array in the sample, model will create a dense layer with `neurons` neurons (20 in this example).
@@ -75,14 +77,17 @@ ps = Flux.params(model)
 data_loader = Flux.Data.DataLoader((ds_train, y_train), batchsize=BATCH_SIZE, shuffle=true)
 
 # We can see the accuracy rising and obtaining over 80% quite quickly
-Flux.@epochs 3 begin
+for i in 1:10
+    @info "Epoch $i"
     Flux.Optimise.train!(loss, ps, data_loader, opt)
     @show accuracy(ds_train, y_train)
 end
 
 # # Classify test set
 # The Last part is inference and evaluation on test data.
-x_test, y_test = MLDatasets.Mutagenesis.testdata();
+dataset_test = MLDatasets.Mutagenesis(split=:test);
+x_test = dataset_test.features
+y_test = dataset_test.targets
 ds_test = extractor.(x_test)
 
 # we see that the test set accuracy is also over 80%
