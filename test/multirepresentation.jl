@@ -1,6 +1,6 @@
 using JsonGrinder, JSON, Test, SparseArrays, Mill, HierarchicalUtils
 import HierarchicalUtils: printtree
-using Mill: nobs
+using Mill: numobs
 
 @testset "ExtractMultipleRepresentation" begin
 	@testset "with uniontypes" begin
@@ -9,7 +9,7 @@ using Mill: nobs
 			ExtractString(true)))
 		e = ex("Olda")
 
-		@test nobs(e) == 1
+		@test numobs(e) == 1
 		@test length(e.data) == 2
 		@test size(e.data[1].data) == (4, 1)
 		@test e.data[1].data == MaybeHotMatrix([2],4)
@@ -17,10 +17,10 @@ using Mill: nobs
 		@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(206, 1), (272, 1), (624, 1), (738, 1), (1536, 1), (1676, 1)]
 
 		e = ex(extractempty)
-		@test nobs(e) == 0
-		@test nobs(e[:e1]) == 0
+		@test numobs(e) == 0
+		@test numobs(e[:e1]) == 0
 		@test e[:e1].data isa MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
-		@test nobs(e[:e2]) == 0
+		@test numobs(e[:e2]) == 0
 		@test e[:e2].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 
 		ex2 = MultipleRepresentation((
@@ -75,10 +75,10 @@ using Mill: nobs
 		@test findall(x->x > 0, SparseMatrixCSC(e.data[2].data)) .|> Tuple == [(206, 1), (272, 1), (624, 1), (738, 1), (1536, 1), (1676, 1)]
 
 		e = ex(extractempty)
-		@test nobs(e) == 0
-		@test nobs(e[:e1]) == 0
+		@test numobs(e) == 0
+		@test numobs(e[:e1]) == 0
 		@test e[:e1].data isa OneHotMatrix{UInt32, UInt32(4), Vector{UInt32}}
-		@test nobs(e[:e2]) == 0
+		@test numobs(e[:e2]) == 0
 		@test e[:e2].data isa NGramMatrix{String,Array{String,1},Int64}
 
 		ex2 = MultipleRepresentation((

@@ -2,7 +2,7 @@ using JsonGrinder, JSON, Test, SparseArrays, Flux, Random, HierarchicalUtils
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
 using JsonGrinder: extractempty
 using Mill
-using Mill: catobs, nobs, MaybeHotMatrix
+using Mill: catobs, numobs, MaybeHotMatrix
 using OneHotArrays: OneHotMatrix
 using LinearAlgebra
 using Setfield
@@ -39,11 +39,11 @@ end
 	    @test all(sc(5).data .== [9])
 	    @test all(sc(nothing).data .=== [missing])
 	    @test all(sc(missing).data .=== [missing])
-	    @test nobs(sc(missing)) == 1
-	    @test nobs(sc(nothing)) == 1
+	    @test numobs(sc(missing)) == 1
+	    @test numobs(sc(nothing)) == 1
 	    @test sc(extractempty).data isa Matrix{Union{Missing, Float64}}
-	    @test nobs(sc(extractempty)) == 0
-	    @test nobs(sc(5)) == 1
+	    @test numobs(sc(extractempty)) == 0
+	    @test numobs(sc(5)) == 1
 
 	    sc = ExtractScalar(Float32, 0.5, 4.0, true)
 	    @test sc.uniontypes == true
@@ -76,7 +76,7 @@ end
     	@test all(sc1(5).data .== [9])
     	@test_throws ErrorException sc1(nothing)
     	@test_throws ErrorException sc1(missing)
-		@test nobs(sc1(5)) == 1
+		@test numobs(sc1(5)) == 1
 
     	sc2 = ExtractScalar(Float32, 0.5, 4.0, false)
     	@test sc2.uniontypes == false
@@ -89,7 +89,7 @@ end
 
 		@testset "extractempty" begin
     		@test sc1(extractempty).data isa Matrix{Float64}
-    		@test nobs(sc1(extractempty)) == 0
+    		@test numobs(sc1(extractempty)) == 0
 			@test sc2(extractempty).data isa Matrix{Float32}
 	    	@test isnothing(sc2(extractempty, store_input=false).metadata)
 	    	@test sc2(extractempty, store_input=true).metadata isa Matrix{UndefInitializer}
@@ -114,14 +114,13 @@ end
 	sc = ExtractArray(ExtractCategorical(2:4))
 	with_emptyismissing(false) do
 		e234 = sc([2,3,4], store_input=false)
-		e234 = sc([2,3,4], store_input=false)
 		en = sc(nothing, store_input=false)
 		e234s = sc([2,3,4], store_input=true)
 		ens = sc(nothing, store_input=true)
 		@test all(e234.data.data .== Matrix(1.0I, 4, 3))
-		@test nobs(en.data) == 0
+		@test numobs(en.data) == 0
 		@test en.data.data isa MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
-		@test nobs(en.data.data) == 0
+		@test numobs(en.data.data) == 0
 		@test all(en.bags.bags .== [0:-1])
 
 		@testset "store_input" begin
@@ -156,15 +155,15 @@ end
 	end
 
 	@testset "extractempty" begin
-		@test nobs(sc(extractempty).data.data) == 0
-		@test nobs(sc(extractempty).data) == 0
+		@test numobs(sc(extractempty).data.data) == 0
+		@test numobs(sc(extractempty).data) == 0
 		@test isempty(sc(extractempty).bags.bags)
 		@test sc(extractempty).data.data isa MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
 		with_emptyismissing(true) do
-			@test nobs(sc(extractempty)) == 0
+			@test numobs(sc(extractempty)) == 0
 		end
 		with_emptyismissing(false) do
-			@test nobs(sc(extractempty)) == 0
+			@test numobs(sc(extractempty)) == 0
 		end
 	end
 	sc = ExtractArray(ExtractScalar(Float32))
@@ -173,12 +172,12 @@ end
 	e234s = sc([2,3,4], store_input=true)
 	ens = sc(nothing, store_input=true)
 	@test all(e234.data.data .== [2 3 4])
-	@test nobs(en.data) == 0
+	@test numobs(en.data) == 0
 	@test all(en.bags.bags .== [0:-1])
-	@test nobs(sc(Dict(1=>1)).data) == 0
+	@test numobs(sc(Dict(1=>1)).data) == 0
 
-	@test nobs(sc(extractempty).data.data) == 0
-	@test nobs(sc(extractempty).data) == 0
+	@test numobs(sc(extractempty).data.data) == 0
+	@test numobs(sc(extractempty).data) == 0
 	@test isempty(sc(extractempty).bags.bags)
 	@test sc(extractempty).data.data isa Matrix{Union{Missing, Float32}}
 
@@ -250,11 +249,11 @@ end
 
 		@testset "extractempty" begin
 			@test sc1(extractempty).data isa Matrix{Union{Missing, Float32}}
-			@test nobs(sc1(extractempty).data) == 0
-			@test nobs(sc1(extractempty)) == 0
+			@test numobs(sc1(extractempty).data) == 0
+			@test numobs(sc1(extractempty)) == 0
 			@test sc2(extractempty).data isa Matrix{Union{Missing, Int64}}
-			@test nobs(sc2(extractempty).data) == 0
-			@test nobs(sc2(extractempty)) == 0
+			@test numobs(sc2(extractempty).data) == 0
+			@test numobs(sc2(extractempty)) == 0
 		end
 
 		@testset "store_input" begin
@@ -299,11 +298,11 @@ end
 
 		@testset "extractempty" begin
 			@test sc1(extractempty).data isa Matrix{Float32}
-			@test nobs(sc1(extractempty).data) == 0
+			@test numobs(sc1(extractempty).data) == 0
 			@test sc2(extractempty).data isa Matrix{Int64}
-			@test nobs(sc2(extractempty).data) == 0
+			@test numobs(sc2(extractempty).data) == 0
 			@test sc3(extractempty).data isa Matrix{Float32}
-			@test nobs(sc3(extractempty).data) == 0
+			@test numobs(sc3(extractempty).data) == 0
 		end
 
 		@testset "store_input" begin
@@ -378,13 +377,13 @@ end
 	end
 	@testset "extractempty" begin
 		a4 = br(extractempty)
-		@test nobs(a4) == 0
-		@test nobs(a4[:a]) == 0
+		@test numobs(a4) == 0
+		@test numobs(a4[:a]) == 0
 		@test a4[:a].data isa Matrix{Union{Missing, Float64}}
-		@test nobs(a4[:b]) == 0
+		@test numobs(a4[:b]) == 0
 		@test a4[:b].data isa Matrix{Union{Missing, Float64}}
-		@test nobs(a4[:c]) == 0
-		@test nobs(a4[:c].data) == 0
+		@test numobs(a4[:c]) == 0
+		@test numobs(a4[:c].data) == 0
 		@test a4[:c].data.data isa Matrix{Union{Missing, Float64}}
 	end
 	@testset "Nested Missing Arrays" begin
@@ -431,12 +430,12 @@ end
 		@test a4s.data[2].data.metadata == zeros(1,0)
 
 		a4 = br(extractempty)
-		@test nobs(a4) == 0
-		@test nobs(a4[:a]) == 0
-		@test nobs(a4[:a].data) == 0
+		@test numobs(a4) == 0
+		@test numobs(a4[:a]) == 0
+		@test numobs(a4[:a].data) == 0
 		@test a4[:a].data.data isa Matrix{Union{Missing, Float32}}
-		@test nobs(a4[:b]) == 0
-		@test nobs(a4[:b].data) == 0
+		@test numobs(a4[:b]) == 0
+		@test numobs(a4[:b].data) == 0
 		@test a4[:b].data.data isa Matrix{Union{Missing, Float32}}
 	end
 end
@@ -462,7 +461,7 @@ end
 	@test typeof(en.data) == MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
 	@test typeof(em.data) == MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
 	@test e(extractempty).data isa MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
-	@test nobs(e(extractempty)) == 0
+	@test numobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≃ [missing missing missing]'
 	@test mapreduce(e, catobs, ["a", "b"]).data ≈ [1 0; 0 1; 0 0]
@@ -487,16 +486,16 @@ end
 	@test catobs(eas, ebs).metadata == ["a", "b"]
 	@test e(Dict(1=>2), store_input=true).metadata == [Dict(1=>2)]
 
-	@test nobs(ea) == 1
-	@test nobs(eb) == 1
-	@test nobs(ez) == 1
-	@test nobs(en) == 1
-	@test nobs(em) == 1
-	@test nobs(em.data) == 1
-	@test nobs(e([missing, nothing])) == 1
-	@test nobs(mapreduce(e, catobs, [missing, nothing])) == 2
-	@test nobs(e([missing, nothing, "a"])) == 1
-	@test nobs(mapreduce(e, catobs, [missing, nothing, "a"])) == 3
+	@test numobs(ea) == 1
+	@test numobs(eb) == 1
+	@test numobs(ez) == 1
+	@test numobs(en) == 1
+	@test numobs(em) == 1
+	@test numobs(em.data) == 1
+	@test numobs(e([missing, nothing])) == 1
+	@test numobs(mapreduce(e, catobs, [missing, nothing])) == 2
+	@test numobs(e([missing, nothing, "a"])) == 1
+	@test numobs(mapreduce(e, catobs, [missing, nothing, "a"])) == 3
 
 	@test isnothing(ExtractCategorical([], true))
 	e2 = ExtractCategorical(JsonGrinder.Entry(Dict("a"=>1,"c"=>1), 2), true)
@@ -536,7 +535,7 @@ end
 	@test_throws ErrorException e(missing)
 	@test typeof(e("a").data) == OneHotMatrix{UInt32, UInt32(3), Vector{UInt32}}
 	@test e(extractempty).data isa OneHotMatrix{UInt32, UInt32(3), Vector{UInt32}}
-	@test nobs(e(extractempty)) == 0
+	@test numobs(e(extractempty)) == 0
 
 	@test mapreduce(e, catobs, ["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test_throws ErrorException e(["a", "b"]).data
@@ -560,13 +559,13 @@ end
 	@test hcat(e("a").data, e("b").data) ≈ [1 0; 0 1; 0 0]
 	@test_throws ErrorException e(Dict(1=>2))
 
-	@test nobs(e("a")) == 1
-	@test nobs(e("b")) == 1
-	@test nobs(e("z")) == 1
-	@test_throws ErrorException nobs(e(nothing))
-	@test_throws ErrorException nobs(e(missing))
-	@test_throws ErrorException nobs(e([missing, nothing]))
-	@test_throws ErrorException nobs(e([missing, nothing, "a"]))
+	@test numobs(e("a")) == 1
+	@test numobs(e("b")) == 1
+	@test numobs(e("z")) == 1
+	@test_throws ErrorException numobs(e(nothing))
+	@test_throws ErrorException numobs(e(missing))
+	@test_throws ErrorException numobs(e([missing, nothing]))
+	@test_throws ErrorException numobs(e([missing, nothing, "a"]))
 
 	e3 = ExtractCategorical(JsonGrinder.Entry(Dict(1=>1,2=>1), 2), false)
 	@test e3.uniontypes == false
@@ -639,7 +638,7 @@ end
 	@test e(missing).data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 	@test e(nothing).data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 	@test ehellos.metadata == ["Hello"]
-	@test nobs(e(extractempty)) == 0
+	@test numobs(e(extractempty)) == 0
 
 	e = ExtractString(false)
 	@test e("Hello").data.S == ["Hello"]
@@ -667,29 +666,29 @@ end
 
 	with_emptyismissing(true) do
 		b = ext(nothing)
-		@test nobs(b) == 1
+		@test numobs(b) == 1
 		@test ismissing(b.data)
 		b = ext(Dict())
-		@test nobs(b) == 1
+		@test numobs(b) == 1
 		@test ismissing(b.data)
 	end
 	with_emptyismissing(false) do
 		b = ext(nothing)
-		@test nobs(b) == 1
-		@test nobs(b.data) == 0
+		@test numobs(b) == 1
+		@test numobs(b.data) == 0
 		@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 		b = ext(Dict())
-		@test nobs(b) == 1
-		@test nobs(b.data) == 0
+		@test numobs(b) == 1
+		@test numobs(b.data) == 0
 		@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 	end
 
 	b = ext(extractempty)
-	@test nobs(b) == 0
-	@test nobs(b.data) == 0
-	@test nobs(b.data[:item]) == 0
+	@test numobs(b) == 0
+	@test numobs(b.data) == 0
+	@test numobs(b.data[:item]) == 0
 	@test b.data[:item].data isa Matrix{Float32}
-	@test nobs(b.data[:key]) == 0
+	@test numobs(b.data[:key]) == 0
 	@test b.data[:key].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 
 	js = [Dict(randstring(5) => Dict("a" => rand(), "b" => randstring(1))) for _ in 1:1000]
@@ -707,11 +706,11 @@ end
 	@test isnothing(b.data[:item][:b].metadata)
 
 	b = ext(nothing)
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
+	@test numobs(b) == 1
+	@test numobs(b.data) == 0
 	b = ext(Dict())
-	@test nobs(b) == 1
-	@test nobs(b.data) == 0
+	@test numobs(b) == 1
+	@test numobs(b.data) == 0
 
 	b = ext(js[1], store_input=true)
 	k = only(keys(js[1]))
@@ -1025,8 +1024,8 @@ end
 	a = ext(j1)
 	@test a[:a][:e1].data[1] == 0.5
 	@test ismissing(a[:a][:e2].data[:a].data.S[1])
-	@test nobs(a[:a][:e3]) == 1
-	@test nobs(a[:a][:e3].data) == 1
+	@test numobs(a[:a][:e3]) == 1
+	@test numobs(a[:a][:e3].data) == 1
 end
 
 @testset "Mixed scalar extraction" begin

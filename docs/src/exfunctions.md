@@ -407,19 +407,19 @@ in this example we can see that every time one representation is always missing,
 
 As mentioned in earlier, `ExtractEmpty` is a type used to extract observation with 0 samples. 
 There is singleton `extractempty` which can be used to obtain instance of instance of `ExtractEmpty` type.
-`StatsBase.nobs(ex(JsonGrinder.extractempty)) == 0` is required to hold for every extractor in order to work correctly.
+`MLUtils.numobs(ex(JsonGrinder.extractempty)) == 0` is required to hold for every extractor in order to work correctly.
 
 All above-mentioned extractors are able to extract this, as we can see here
 
 ```@repl 1
 ExtractString()(JsonGrinder.extractempty)
-ExtractString()(JsonGrinder.extractempty) |> nobs
+ExtractString()(JsonGrinder.extractempty) |> numobs
 ExtractCategorical(["A","B"])(JsonGrinder.extractempty)
-ExtractCategorical(["A","B"])(JsonGrinder.extractempty) |> nobs
+ExtractCategorical(["A","B"])(JsonGrinder.extractempty) |> numobs
 ExtractScalar()(JsonGrinder.extractempty)
-ExtractScalar()(JsonGrinder.extractempty) |> nobs
+ExtractScalar()(JsonGrinder.extractempty) |> numobs
 ExtractArray(ExtractString())(JsonGrinder.extractempty)
-ExtractArray(ExtractString())(JsonGrinder.extractempty) |> nobs
+ExtractArray(ExtractString())(JsonGrinder.extractempty) |> numobs
 ExtractDict(Dict(:a => ExtractScalar(),
 	:b => ExtractString(),
 	:c => ExtractCategorical(["A","B"]),
@@ -427,5 +427,5 @@ ExtractDict(Dict(:a => ExtractScalar(),
 ExtractDict(Dict(:a => ExtractScalar(),
 	:b => ExtractString(),
 	:c => ExtractCategorical(["A","B"]),
-	:d => ExtractArray(ExtractString())))(JsonGrinder.extractempty) |> nobs
+	:d => ExtractArray(ExtractString())))(JsonGrinder.extractempty) |> numobs
 ```

@@ -149,6 +149,6 @@ end
 
 	@test m[""].m == identity
 
-	@test nobs(dss[5]["s"].data) == 0
-	@test nobs(dss[5]) == 1
+	@test numobs(dss[5]["s"].data) == 0
+	@test numobs(dss[5]) == 1
 end
