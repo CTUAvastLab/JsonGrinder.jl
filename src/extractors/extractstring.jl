@@ -67,8 +67,9 @@ make_missing_string(s::ExtractString, v, store_input) =
 	_make_array_node(NGramMatrix(MaybeString[missing], s.n, s.b, s.m), [v], store_input) :
 	error("This extractor does not support missing values")
 stabilize_types_string(s::ExtractString, x) = s.uniontypes ? Vector{MaybeString}(x) : x
-make_empty_string(s::ExtractString, store_input) where {T} =
+function make_empty_string(s::ExtractString, store_input)
 	ArrayNode(NGramMatrix(s.uniontypes ? Vector{MaybeString}() : Vector{String}(), s.n, s.b, s.m))
+end
 
 (s::ExtractString)(v::String; store_input=false) =
 	_make_array_node(NGramMatrix(stabilize_types_string(s, [v]), s.n, s.b, s.m), [v], store_input)

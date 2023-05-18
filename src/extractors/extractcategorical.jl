@@ -97,7 +97,7 @@ map_val(s, ::MissingOrNothing) = s.uniontypes ? missing : error("This extractor 
 map_val(s, v) = get(s.keyvalemap, shorten_if_str(v), s.n)
 stabilize_types_categorical(s::ExtractCategorical{V,I}, x) where {V,I} = s.uniontypes ? Vector{Union{Missing, I}}(x) : x
 val2idx(s::ExtractCategorical{V,I}, v::V) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
-val2idx(s::ExtractCategorical{<:Number,I}, v::Number) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
+val2idx(s::ExtractCategorical{<:Number,I}, v::Number) where I = stabilize_types_categorical(s, [map_val(s, v)])
 construct(s::ExtractCategorical, x, y) = s.uniontypes ? MaybeHotMatrix(x, y) : OneHotMatrix(x, y)
 
 make_missing_categorical(s::ExtractCategorical, v, store_input) =
