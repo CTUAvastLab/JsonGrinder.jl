@@ -1,6 +1,3 @@
-using Setfield, InteractiveUtils, OneHotArrays
-using Mill: catobs
-
 @testset "code2lens & lens2code" begin
 	j1 = JSON.parse("""{"a": [{"a":1},{"b":2,"c":"oh"}]}""")
 	j2 = JSON.parse("""{"a": [{"a":1,"b":3,"c":"hi"},{"b":2,"a":1,"c":"Mark"}]}""")

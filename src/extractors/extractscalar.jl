@@ -20,15 +20,15 @@ It can be created also using `extractscalar(Float32, 5, 2)`
 # Example
 ```jldoctest
 julia> ExtractScalar(Float32, 2, 3, true)(1)
-1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+1×1 ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
  -3.0f0
 
 julia> ExtractScalar(Float32, 2, 3, true)(missing)
-1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+1×1 ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
  missing
 
 julia> ExtractScalar(Float32, 2, 3, false)(1)
-1×1 Mill.ArrayNode{Matrix{Float32}, Nothing}:
+1×1 ArrayNode{Matrix{Float32}, Nothing}:
  -3.0
 
 ```

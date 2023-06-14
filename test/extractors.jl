@@ -2,8 +2,7 @@ using JsonGrinder, JSON, Test, SparseArrays, Flux, Random, HierarchicalUtils
 using JsonGrinder: ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector
 using JsonGrinder: extractempty
 using Mill
-using Mill: catobs, numobs, MaybeHotMatrix
-using OneHotArrays: OneHotMatrix
+using OneHotArrays
 using LinearAlgebra
 using Setfield
 
@@ -119,7 +118,7 @@ end
 		ens = sc(nothing, store_input=true)
 		@test all(e234.data.data .== Matrix(1.0I, 4, 3))
 		@test numobs(en.data) == 0
-		@test en.data.data isa MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
+		@test en.data.data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
 		@test numobs(en.data.data) == 0
 		@test all(en.bags.bags .== [0:-1])
 
@@ -158,7 +157,7 @@ end
 		@test numobs(sc(extractempty).data.data) == 0
 		@test numobs(sc(extractempty).data) == 0
 		@test isempty(sc(extractempty).bags.bags)
-		@test sc(extractempty).data.data isa MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
+		@test sc(extractempty).data.data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
 		with_emptyismissing(true) do
 			@test numobs(sc(extractempty)) == 0
 		end
@@ -457,10 +456,10 @@ end
 	@test ez.data ≈ [0, 0, 1]
 	@test en.data ≃ [missing missing missing]'
 	@test em.data ≃ [missing missing missing]'
-	@test typeof(ea.data) == MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
-	@test typeof(en.data) == MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
-	@test typeof(em.data) == MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
-	@test e(extractempty).data isa MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
+	@test ea.data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
+	@test en.data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
+	@test em.data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
+	@test e(extractempty).data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
 	@test numobs(e(extractempty)) == 0
 
 	@test e(["a", "b"]).data ≃ [missing missing missing]'
@@ -469,10 +468,10 @@ end
 	@test mapreduce(e, catobs, ["a", missing]).data ≃ [true missing; false missing; false missing]
 	@test e(["a", missing, "x"]).data ≃ [missing missing missing]'
 	@test mapreduce(e, catobs, ["a", missing, "x"]).data ≃ [true missing false; false missing false; false missing true]
-	@test typeof(e(["a", "b"]).data) == MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
-	@test typeof(mapreduce(e, catobs, ["a", "b"]).data) == MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
-	@test typeof(e(["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
-	@test typeof(mapreduce(e, catobs, ["a", "b", nothing]).data) == MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
+	@test e(["a", "b"]).data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
+	@test mapreduce(e, catobs, ["a", "b"]).data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
+	@test e(["a", "b", nothing]).data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
+	@test mapreduce(e, catobs, ["a", "b", nothing]).data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
 
 	@test catobs(ea, eb).data ≈ [1 0; 0 1; 0 0]
 	@test reduce(catobs, [ea.data, eb.data]) ≈ [1 0; 0 1; 0 0]
@@ -533,16 +532,15 @@ end
 	@test e("z").data ≈ [0, 0, 1]
 	@test_throws ErrorException e(nothing)
 	@test_throws ErrorException e(missing)
-	@test typeof(e("a").data) == OneHotMatrix{UInt32, UInt32(3), Vector{UInt32}}
-	@test e(extractempty).data isa OneHotMatrix{UInt32, UInt32(3), Vector{UInt32}}
+	@test e("a").data isa OneHotMatrix{UInt32, Vector{UInt32}}
+	@test e(extractempty).data isa OneHotMatrix{UInt32, Vector{UInt32}}
 	@test numobs(e(extractempty)) == 0
 
 	@test mapreduce(e, catobs, ["a", "b"]).data ≈ [1 0; 0 1; 0 0]
 	@test_throws ErrorException e(["a", "b"]).data
 	@test_throws ErrorException e(["a", missing])
 	@test_throws ErrorException e(["a", missing, "x"])
-	@test_throws ErrorException typeof(e(["a", "b"]).data)
-	@test typeof(mapreduce(e, catobs, ["a", "b"]).data) == OneHotMatrix{UInt32, UInt32(3), Vector{UInt32}}
+	@test mapreduce(e, catobs, ["a", "b"]).data isa OneHotMatrix{UInt32, Vector{UInt32}}
 	@test_throws ErrorException e(["a", "b", nothing])
 
 	@test isnothing(ExtractCategorical([], false))
@@ -1273,12 +1271,6 @@ end
 	e12 = catobs(e1, e2)
 	e23 = catobs(e2, e3)
 	e13 = catobs(e1, e3)
-	typeof(e1)
-	typeof(e2)
-	typeof(e3)
-	typeof(e12)
-	typeof(e23)
-	typeof(e13)
 	@test typeof(e1) == typeof(e2)
 	@test typeof(e1) == typeof(e3)
 	@test typeof(e1) == typeof(e12)

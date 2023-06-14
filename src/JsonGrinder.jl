@@ -1,8 +1,7 @@
 module JsonGrinder
+
 using Mill, JSON, Printf, Flux, OneHotArrays
 using HierarchicalUtils
-
-using Mill: ArrayNode, BagNode, ProductNode, catobs, NGramMatrix
 
 const FloatType = Float32
 

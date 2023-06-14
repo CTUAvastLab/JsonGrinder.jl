@@ -19,7 +19,7 @@ using Mill: numobs
 		e = ex(extractempty)
 		@test numobs(e) == 0
 		@test numobs(e[:e1]) == 0
-		@test e[:e1].data isa MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}
+		@test e[:e1].data isa MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}
 		@test numobs(e[:e2]) == 0
 		@test e[:e2].data isa NGramMatrix{Union{Missing, String},Vector{Union{Missing, String}},Union{Missing, Int64}}
 
@@ -77,7 +77,7 @@ using Mill: numobs
 		e = ex(extractempty)
 		@test numobs(e) == 0
 		@test numobs(e[:e1]) == 0
-		@test e[:e1].data isa OneHotMatrix{UInt32, UInt32(4), Vector{UInt32}}
+		@test e[:e1].data isa OneHotMatrix{UInt32, Vector{UInt32}}
 		@test numobs(e[:e2]) == 0
 		@test e[:e2].data isa NGramMatrix{String,Array{String,1},Int64}
 
@@ -120,11 +120,11 @@ end
 	  ╰── e2: ArrayNode(2053×1 NGramMatrix with Union{Missing, Int64} elements) ["U"]  # 1 obs, 124 bytes
 	"""
 
-	ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"], false),
-  		JsonGrinder.ExtractString(false)))
-  	e = ex("Olda")
+    ex = MultipleRepresentation((ExtractCategorical(["Olda", "Tonda", "Milda"], false),
+        JsonGrinder.ExtractString(false)))
+    e = ex("Olda")
 
-  	@test buf_printtree(ex, trav=true) ==
+    @test buf_printtree(ex, trav=true) ==
 	"""
 	MultiRepresentation [""]
 	  ├── e1: Categorical d = 4 ["E"]
@@ -133,8 +133,8 @@ end
 
 	@test buf_printtree(e, trav=true, limit=false) ==
 	"""
-	ProductNode [""]  # 1 obs, 40 bytes
-	  ├── e1: ArrayNode(4×1 OneHotArray with Bool elements) ["E"]  # 1 obs, 60 bytes
+	ProductNode [""]  # 1 obs, 48 bytes
+	  ├── e1: ArrayNode(4×1 OneHotArray with Bool elements) ["E"]  # 1 obs, 76 bytes
 	  ╰── e2: ArrayNode(2053×1 NGramMatrix with Int64 elements) ["U"]  # 1 obs, 124 bytes
 	"""
 end

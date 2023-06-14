@@ -8,11 +8,12 @@ represents an array of a fixed length, typically a feature vector of numbers of 
 
 ```jloctest
 julia> sc = ExtractVector(4)
-julia> sc([2,3,1,4]).data
-3×1 Array{Float32,2}:
- 2.0
- 3.0
- 1.0
+julia> sc([2, 3, 1, 4])
+4×1 ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+ 2.0f0
+ 3.0f0
+ 1.0f0
+ 4.0f0
 ```
 """
 struct ExtractVector{T} <: AbstractExtractor

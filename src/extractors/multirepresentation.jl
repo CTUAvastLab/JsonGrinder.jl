@@ -13,35 +13,36 @@ This allows model to more easily learn frequent or somehow else significant valu
 for previously unseen inputs.
 
 ```jldoctest
-julia> e = MultipleRepresentation((ExtractString(false), ExtractCategorical(["tcp", "udp", "dhcp"], false)));
+julia> e = MultipleRepresentation((ExtractString(false),
+                        ExtractCategorical(["tcp", "udp", "dhcp"], false)));
 
 julia> s1 = e("tcp")
-ProductNode  # 1 obs, 40 bytes
+ProductNode  # 1 obs, 48 bytes
   ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements)  # 1 obs, 123 bytes
-  ╰── e2: ArrayNode(4×1 OneHotArray with Bool elements)  # 1 obs, 60 bytes
+  ╰── e2: ArrayNode(4×1 OneHotArray with Bool elements)  # 1 obs, 76 bytes
 
 julia> s1[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
+2053×1 ArrayNode{NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "tcp"
 
 julia> s1[:e2]
-4×1 Mill.ArrayNode{OneHotArrays.OneHotMatrix{UInt32, 0x00000004, Vector{UInt32}}, Nothing}:
+4×1 ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}:
  ⋅
  1
  ⋅
  ⋅
 
 julia> s2 = e("http")
-ProductNode  # 1 obs, 40 bytes
+ProductNode  # 1 obs, 48 bytes
   ├── e1: ArrayNode(2053×1 NGramMatrix with Int64 elements)  # 1 obs, 124 bytes
-  ╰── e2: ArrayNode(4×1 OneHotArray with Bool elements)  # 1 obs, 60 bytes
+  ╰── e2: ArrayNode(4×1 OneHotArray with Bool elements)  # 1 obs, 76 bytes
 
 julia> s2[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{String, Vector{String}, Int64}, Nothing}:
+2053×1 ArrayNode{NGramMatrix{String, Vector{String}, Int64}, Nothing}:
  "http"
 
 julia> s2[:e2]
-4×1 Mill.ArrayNode{OneHotArrays.OneHotMatrix{UInt32, 0x00000004, Vector{UInt32}}, Nothing}:
+4×1 ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}:
  ⋅
  ⋅
  ⋅
@@ -63,11 +64,11 @@ ProductNode  # 1 obs, 40 bytes
   ╰── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  # 1 obs, 53 bytes
 
 julia> s1[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+2053×1 ArrayNode{NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  missing
 
 julia> s1[:e2]
-1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+1×1 ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
  9.0f0
 
 julia> s2 = e("hi")
@@ -76,11 +77,11 @@ ProductNode  # 1 obs, 40 bytes
   ╰── e2: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  # 1 obs, 53 bytes
 
 julia> s2[:e1]
-2053×1 Mill.ArrayNode{Mill.NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
+2053×1 ArrayNode{NGramMatrix{Union{Missing, String}, Vector{Union{Missing, String}}, Union{Missing, Int64}}, Nothing}:
  "hi"
 
 julia> s2[:e2]
-1×1 Mill.ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
+1×1 ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
  missing
 
 ```

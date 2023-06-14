@@ -2,7 +2,6 @@ using Mill, JSON, Flux, JsonGrinder, Test
 using HierarchicalUtils
 import HierarchicalUtils: printtree
 using JsonGrinder: DictEntry, suggestextractor, schema
-using Mill: reflectinmodel
 
 j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
 j2 = JSON.parse("""{"a": 4, "c": {"a":{"a":[2,3],"b":[5,6]}}}""")

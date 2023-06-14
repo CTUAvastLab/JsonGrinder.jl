@@ -359,11 +359,11 @@ end
 			Tuple{BagNode{
 				ProductNode{NamedTuple{(:a, :b),
 					Tuple{
-						ArrayNode{OneHotMatrix{UInt32, UInt32(3), Vector{UInt32}},Nothing},
-						ArrayNode{OneHotMatrix{UInt32, UInt32(4), Vector{UInt32}},Nothing}}
+						ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing},
+						ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing}}
 					},Nothing},
 				AlignedBags{Int64},Nothing},
-			ArrayNode{OneHotMatrix{UInt32, UInt32(3), Vector{UInt32}},Nothing}}
+			ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing}}
 		}, Nothing}
 	end
 
@@ -397,10 +397,10 @@ end
 			Tuple{BagNode{
 				ProductNode{NamedTuple{(:a, :b),
 					Tuple{
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}},Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}},Nothing}}
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}},Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}},Nothing}}
 				},Nothing},AlignedBags{Int64},Nothing},
-			ArrayNode{OneHotMatrix{UInt32, UInt32(3), Vector{UInt32}},Nothing}
+			ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing}
 		}},Nothing}
 	end
 
@@ -436,9 +436,9 @@ end
 			Tuple{BagNode{
 				ProductNode{NamedTuple{(:a, :b, :c),
 					Tuple{
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
-						ArrayNode{OneHotArrays.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing},
+						ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}
 					}},
 				Nothing},
 			AlignedBags{Int64}, Nothing}}}, Nothing}
@@ -481,12 +481,12 @@ end
 			Tuple{
 				ProductNode{NamedTuple{(:a, :b, :c),
 					Tuple{
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing},
-						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}}, Nothing}
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing}
 					}},
 				Nothing},
-				ArrayNode{OneHotArrays.OneHotArray{UInt32, 0x00000002, 1, 2, Vector{UInt32}}, Nothing}
+				ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}
 			}},
 		Nothing}
 	end
@@ -527,11 +527,11 @@ end
 		@test s isa ProductNode{NamedTuple{(:a, :b),
 			Tuple{
 				ProductNode{NamedTuple{(:e1,),
-					Tuple{ArrayNode{OneHotMatrix{UInt32, UInt32(5), Vector{UInt32}},Nothing}}},
+					Tuple{ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing}}},
 					Nothing},
 				ProductNode{NamedTuple{(:e1,),
-					Tuple{ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, UInt32, Union{Missing, Bool}},Nothing}}
-					},Nothing}
+					Tuple{ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}},Nothing}}
+					}, Nothing}
 				}
 			},Nothing}
 	end

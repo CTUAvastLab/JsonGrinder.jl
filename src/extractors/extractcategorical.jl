@@ -1,5 +1,3 @@
-import Flux: OneHotMatrix
-import Mill: ArrayNode, MaybeHotMatrix
 """
 	struct ExtractCategorical{V,I} <: AbstractExtractor
 		keyvalemap::Dict{V,I}
@@ -24,29 +22,29 @@ julia> using Mill: catobs
 
 julia> e = ExtractCategorical(2:4, true);
 
-julia> mapreduce(e, catobs, [2,3,1,4]).data
-4×4 MaybeHotMatrix with eltype Union{Missing, Bool}:
+julia> mapreduce(e, catobs, [2,3,1,4])
+4×4 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
   true    ⋅      ⋅      ⋅
    ⋅     true    ⋅      ⋅
    ⋅      ⋅      ⋅     true
    ⋅      ⋅     true    ⋅
 
-julia> mapreduce(e, catobs, [1,missing,5]).data
-4×3 MaybeHotMatrix with eltype Union{Missing, Bool}:
+julia> mapreduce(e, catobs, [1,missing,5])
+4×3 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
    ⋅    missing    ⋅
    ⋅    missing    ⋅
    ⋅    missing    ⋅
   true  missing   true
 
-julia> e(4).data
-4×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
+julia> e(4)
+4×1 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
    ⋅
    ⋅
   true
    ⋅
 
-julia> e(missing).data
-4×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
+julia> e(missing)
+4×1 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
  missing
  missing
  missing
@@ -54,15 +52,15 @@ julia> e(missing).data
 
 julia> e = ExtractCategorical(2:4, false);
 
-julia> mapreduce(e, catobs, [2,3,1,4]).data
-4×4 OneHotMatrix(::Vector{UInt32}) with eltype Bool:
+julia> mapreduce(e, catobs, [2, 3, 1, 4])
+4×4 ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}:
  1  ⋅  ⋅  ⋅
  ⋅  1  ⋅  ⋅
  ⋅  ⋅  ⋅  1
  ⋅  ⋅  1  ⋅
 
-julia> e(4).data
-4×1 OneHotMatrix(::Vector{UInt32}) with eltype Bool:
+julia> e(4)
+4×1 ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}:
  ⋅
  ⋅
  1
@@ -71,7 +69,7 @@ julia> e(4).data
 """
 struct ExtractCategorical{V,I} <: AbstractExtractor
 	keyvalemap::Dict{V,I}
-	n::UInt32
+	n::Int
 	uniontypes::Bool
 end
 
@@ -79,22 +77,17 @@ ExtractCategorical(s::Base.KeySet, uniontypes = true) = ExtractCategorical(colle
 ExtractCategorical(s::Entry, uniontypes = true) = ExtractCategorical(keys(s.counts), uniontypes)
 ExtractCategorical(s::UnitRange, uniontypes = true) = ExtractCategorical(collect(s), uniontypes)
 function ExtractCategorical(ks::Vector, uniontypes = true)
-	if isempty(ks)
-		@warn "Skipping initializing empty categorical variable does not make much sense to me"
-		return nothing
-	end
-	ks = sort(unique(ks))
-	keys_len = length(ks)
-	if keys_len > typemax(UInt32)
-		@error "Dictionary is too big, we support uint32 types"
-	end
-	# keeping int32 indices, because it's faster than int64 and int64 is too big to be usable anyway
-	ExtractCategorical(Dict(zip(ks, UInt32(1):UInt32(keys_len))), UInt32(keys_len + 1), uniontypes)
+    if isempty(ks)
+        @warn "Skipping initializing empty categorical variable does not make much sense to me"
+        return nothing
+    end
+    ks = sort(unique(ks))
+    ExtractCategorical(Dict(zip(ks, UInt32(1):UInt32(length(ks)))), length(ks) + 1, uniontypes)
 end
 
 map_val(s, ::MissingOrNothing) = s.uniontypes ? missing : error("This extractor does not support missing values")
 # bugfix for https://github.com/CTUAvastLab/JsonGrinder.jl/issues/100
-map_val(s, v) = get(s.keyvalemap, shorten_if_str(v), s.n)
+map_val(s, v) = get(s.keyvalemap, shorten_if_str(v), UInt32(s.n))
 stabilize_types_categorical(s::ExtractCategorical{V,I}, x) where {V,I} = s.uniontypes ? Vector{Union{Missing, I}}(x) : x
 val2idx(s::ExtractCategorical{V,I}, v::V) where {V,I} = stabilize_types_categorical(s, [map_val(s, v)])
 val2idx(s::ExtractCategorical{<:Number,I}, v::Number) where I = stabilize_types_categorical(s, [map_val(s, v)])

@@ -9,7 +9,8 @@ If a key is missing in extracted dict, `nothing` is passed to the child extracto
 # Examples
 
 ```jldoctest
-julia> e = ExtractDict(Dict(:a=>ExtractScalar(Float32, 2, 3), :b=>ExtractCategorical(1:5)))
+julia> e = ExtractDict(Dict(:a=>ExtractScalar(Float32, 2, 3),
+                            :b=>ExtractCategorical(1:5)))
 Dict
   ├── a: Float32
   ╰── b: Categorical d = 6
@@ -19,12 +20,12 @@ ProductNode  # 1 obs, 24 bytes
   ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  # 1 obs, 53 bytes
   ╰── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements)  # 1 obs, 77 bytes
 
-julia> res1[:a].data
-1×1 Matrix{Union{Missing, Float32}}:
+julia> res1[:a]
+1×1 ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
  -3.0f0
 
-julia> res1[:b].data
-6×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
+julia> res1[:b]
+6×1 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
   true
    ⋅
    ⋅
@@ -37,12 +38,12 @@ ProductNode  # 1 obs, 24 bytes
   ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  # 1 obs, 53 bytes
   ╰── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements)  # 1 obs, 77 bytes
 
-julia> res2[:a].data
-1×1 Matrix{Union{Missing, Float32}}:
+julia> res2[:a]
+1×1 ArrayNode{Matrix{Union{Missing, Float32}}, Nothing}:
  -6.0f0
 
-julia> res2[:b].data
-6×1 MaybeHotMatrix with eltype Union{Missing, Bool}:
+julia> res2[:b]
+6×1 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
  missing
  missing
  missing

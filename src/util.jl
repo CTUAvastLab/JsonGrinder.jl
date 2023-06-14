@@ -1,8 +1,7 @@
 using Setfield: IdentityLens, PropertyLens, IndexLens, ComposedLens, Lens
+using OneHotArrays
 import Mill: pred_lens, code2lens, lens2code, _pred_lens, catobs
-using OneHotArrays: OneHotMatrix
 import Base
-import OneHotArrays: OneHotArray
 
 function _pred_lens(p::Function, n::T) where T <: Union{AbstractExtractor, JSONEntry}
     res = vcat([map(l -> PropertyLens{k}() ∘ l, _pred_lens(p, getproperty(n, k)))
@@ -22,10 +21,11 @@ Base.reduce(::typeof(catobs), a::Vector{<:OneHotMatrix}) = _catobs(a[:])
 catobs(a::OneHotMatrix...) = _catobs(collect(a))
 _catobs(a::AbstractArray{<:OneHotMatrix}) = reduce(hcat, a)
 
-# optimization of reduction using hcat, using things from https://github.com/FluxML/Flux.jl/pull/1595, but for reductions outside of the PR
-# it's faster than not having it there
-Base.reduce(::typeof(hcat), Xs::Vector{T}) where T <: OneHotMatrix = T(reduce(vcat, OneHotArrays._indices.(Xs)))
-Base.reduce(::typeof(hcat), xs::Vector{OneHotArrays.OneHotVector{T,L}}) where {T,L} = OneHotArray{T,L,1,Vector{T}}(reduce(vcat, OneHotArrays._indices.(xs)))
+# optimization of reduction using hcat, using things from https://github.com/FluxML/Flux.jl/pull/1595,
+# but for reductions outside of the PR it's faster than not having it there
+function Base.reduce(::typeof(hcat), Xs::Vector{T}) where T <: Union{OneHotVector, OneHotMatrix}
+    OneHotMatrix(reduce(vcat, OneHotArrays._indices.(Xs)), OneHotArrays._nlabels(Xs...))
+end
 
 # function schema_lens(model, lens::ComposedLens)
 #     outerlens = schema_lens(model, lens.outer)
