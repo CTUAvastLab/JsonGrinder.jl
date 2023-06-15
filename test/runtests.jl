@@ -3,7 +3,6 @@ using Mill
 using OneHotArrays
 using Test
 using Setfield
-using InteractiveUtils
 using Documenter
 using Random
 
