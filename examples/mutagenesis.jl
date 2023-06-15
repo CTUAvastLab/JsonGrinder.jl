@@ -74,7 +74,7 @@ opt = AdaBelief()
 ps = Flux.params(model)
 
 # Lastly we turn our training data to minibatches, and we can start training
-data_loader = Flux.Data.DataLoader((ds_train, y_train), batchsize=BATCH_SIZE, shuffle=true)
+data_loader = Flux.DataLoader((ds_train, y_train), batchsize=BATCH_SIZE, shuffle=true)
 
 # We can see the accuracy rising and obtaining over 80% quite quickly
 for i in 1:10

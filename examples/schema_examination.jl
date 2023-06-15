@@ -10,9 +10,9 @@
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master Flux Mill MLDataPattern JSON HierarchicalUtils StatsBase OrderedCollections"
+#nb pkg"add JsonGrinder#master Flux Mill JSON HierarchicalUtils StatsBase OrderedCollections"
 
-using JsonGrinder, Flux, Mill, MLDataPattern, JSON, HierarchicalUtils, StatsBase, OrderedCollections
+using JsonGrinder, Flux, Mill, JSON, HierarchicalUtils, StatsBase, OrderedCollections
 using JsonGrinder: DictEntry, Entry
 
 data_dir = "data/documents" #src

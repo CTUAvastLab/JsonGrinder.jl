@@ -30,10 +30,10 @@ n_samples, n_val, minibatchsize, iterations = 5_000, 100, 10, 20
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master Flux Mill MLDataPattern Statistics JSON"
+#nb pkg"add JsonGrinder#master Flux Mill Statistics JSON"
 
 # Let's start by importing all libraries we will need.
-using JsonGrinder, Flux, Mill, MLDataPattern, Statistics, JSON
+using JsonGrinder, Flux, Mill, Statistics, JSON
 
 # ### Preparing data
 # After importing libraries we load all samples. Of course we can afford it only for small datasets, but
@@ -43,7 +43,7 @@ using JsonGrinder, Flux, Mill, MLDataPattern, Statistics, JSON
 # This means that each sample is one JSON document stored in each line. 
 # These samples are loaded and parsed to an array. On the end, one sample is printed to show, how data looks like.
 
-#src magic for resolving paths
+# src magic for resolving paths
 data_file = "data/recipes.json" #src
 data_file = "../../../data/recipes.json" #nb
 data_file = "../../../data/recipes.json" #md
@@ -113,7 +113,7 @@ m = reflectinmodel(sch, extract_data,
 )
 
 # ### Training the model
-# Mill library is compatible with MLDataPattern for manipulating with data (training / testing / minibatchsize preparation) and with Flux. 
+# Mill library is compatible with for manipulating with data (training / testing / minibatchsize preparation) and with Flux. 
 # Please, refer to these two libraries for support.
 # Below, data are first split into training and validation sets. 
 # Then Adam optimizer for training the model is initialized, and loss function is defined.
@@ -122,23 +122,24 @@ valdata, valtarget = data[n_samples-n_val:n_samples], target[:,n_samples-n_val:n
 traindata, traintarget = data[1:n_samples-n_val], target[:,1:n_samples-n_val]
 opt = Flux.Optimise.ADAM()
 loss(x, y) = Flux.logitcrossentropy(m(x), y)
-loss(xy::Tuple) = loss(xy...)
 cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata)) .== Flux.onecold(valtarget)))
 # Here we compute the accuracy.
 mean(Flux.onecold(m(traindata)) .== Flux.onecold(traintarget))
 # Here we obtain the trainable parameters from the model
 ps = Flux.params(m)
 
-# We use `MLDataPattern.RandomBatches` to make mini-batches from the training data
-minibatches = RandomBatches((traindata, traintarget), size = minibatchsize, count = iterations)
+minibatches = Flux.DataLoader((traindata, traintarget), batchsize=minibatchsize, shuffle=true)
 
 # Now we try to compute the loss and perform single step of the gradient descend to see if all works correctly.
-loss(first(minibatches))
-gs = gradient(() -> loss(first(minibatches)), ps)
+x, y = first(minibatches)
+loss(x, y)
+gs = gradient(() -> loss(x, y), ps)
 Flux.Optimise.update!(opt, ps, gs)
 
 # In this step we finally train the classifier using the loss we have defined above.
-Flux.Optimise.train!(loss, ps, minibatches, opt, cb = Flux.throttle(cb, 2))
+for _ in 1:iterations
+    Flux.Optimise.train!(loss, ps, minibatches, opt, cb = Flux.throttle(cb, 2))
+end
 
 # ### Reporting accuracy on validation data
 # As last steps, we calculate accuracy on training and validation data after the model has been trained.
