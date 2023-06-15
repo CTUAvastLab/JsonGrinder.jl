@@ -1,11 +1,14 @@
 using Documenter
 using JsonGrinder
+using Mill
+using OneHotArrays
+
 using Literate
 
 const is_ci = haskey(ENV, "GITHUB_ACTIONS")
 
 DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, quote
-    using JsonGrinder
+    using JsonGrinder, Mill, OneHotArrays
     ENV["LINES"] = ENV["COLUMNS"] = typemax(Int)
 end; recursive=true)
 
@@ -54,7 +57,6 @@ end
 is_ci && doctest(JsonGrinder)
 makedocs(
          sitename = "JsonGrinder.jl",
-         # doctest = false,
          format = Documenter.HTML(sidebar_sitename=false,
                                   assets=["assets/favicon.ico", "assets/custom.css"]),
          modules = [JsonGrinder],
@@ -76,9 +78,8 @@ makedocs(
                   "Developers" => "developers.md",
                   "Citation" => "citation.md",
                   ],
-)
+        )
 
 deploydocs(
     repo = "github.com/CTUAvastLab/JsonGrinder.jl.git",
-    push_preview = true
 )
