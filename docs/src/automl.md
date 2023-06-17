@@ -26,7 +26,7 @@ function evaluatemodel(specimen, nneurons, nlayers, fun, bnfun, η)
     SegmentedMeanMax, 
     fsm = Dict("" => d -> Chain(ffnn(d, nneurons, nlayers, fun, bnfun)..., Dense(nneurons, 2)))
     )
-  opt = ADAM(η)
+  opt = Adam(η)
   evaluatemodel(2000, model, opt)
 end
 

@@ -120,7 +120,7 @@ m = reflectinmodel(sch, extract_data,
 # We also define callback which perpetually reports accuracy on validation data during the training.
 valdata, valtarget = data[n_samples-n_val:n_samples], target[:,n_samples-n_val:n_samples]
 traindata, traintarget = data[1:n_samples-n_val], target[:,1:n_samples-n_val]
-opt = Flux.Optimise.ADAM()
+opt = Flux.Optimise.Adam()
 loss(x, y) = Flux.logitcrossentropy(m(x), y)
 cb = () -> println("accuracy = ",mean(Flux.onecold(m(valdata)) .== Flux.onecold(valtarget)))
 # Here we compute the accuracy.
