@@ -25,6 +25,3 @@ Manifest.toml
 !benchmarks/**/Manifest.toml
 
 examples/generated/
-
-.DS_store
-

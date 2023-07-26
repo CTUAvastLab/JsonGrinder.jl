@@ -341,13 +341,6 @@ ex = ExtractKeyAsField(ExtractString(),ExtractArray(ExtractString()))
 ex(s)
 ```
 
-As you might expect, inputs are stored in leaf metadata if needed
-```@repl 1
-ex(s, store_input=true).metadata
-ex(s, store_input=true).data[:key].metadata
-ex(s, store_input=true).data[:item].data.metadata
-```
-
 Because it returns `BagNode`, missing values are treated in similar manner as in `ExtractArray` and settings of `Mill.emptyismissing` applies here too.
 
 ```@example 1
