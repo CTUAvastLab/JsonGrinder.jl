@@ -660,26 +660,26 @@ entry = JsonGrinder.Entry{String}(ht_hist, sum(values(ht_hist)))</code></pre><pr
    ⋅  
    ⋅  
    ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
-   ⋅  
   true
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
+   ⋅  
    ⋅  
    ⋅  
    ⋅  
@@ -1068,8 +1068,8 @@ entry = JsonGrinder.Entry{String}(ht_hist, sum(values(ht_hist)))</code></pre><pr
    ⋅  
    ⋅  
    ⋅  
-   ⋅  
   true
+   ⋅  
    ⋅  
    ⋅  
    ⋅  
@@ -1152,16 +1152,7 @@ ex(s)</code></pre><pre class="documenter-example-output"><code class="nohighligh
   ╰── ProductNode  # 2 obs, 72 bytes
         ├─── key: ArrayNode(2053×2 NGramMatrix with Union{Missing, Int64} elements)  # 2 obs, 150 bytes
         ╰── item: BagNode  # 2 obs, 120 bytes
-                    ╰── ArrayNode(2053×6 NGramMatrix with Union{Missing, Int64} elements)  # 6 obs, 227 bytes</code></pre><p>As you might expect, inputs are stored in leaf metadata if needed</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; ex(s, store_input=true).metadata</code><code class="nohighlight hljs ansi" style="display:block;">1-element Vector{Dict{String, Any}}:
- Dict(&quot;bar.dll&quot; =&gt; Any[&quot;send&quot;, &quot;recv&quot;], &quot;foo.dll&quot; =&gt; Any[&quot;print&quot;, &quot;write&quot;, &quot;open&quot;, &quot;close&quot;])</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ex(s, store_input=true).data[:key].metadata</code><code class="nohighlight hljs ansi" style="display:block;">2-element Vector{String}:
- &quot;bar.dll&quot;
- &quot;foo.dll&quot;</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ex(s, store_input=true).data[:item].data.metadata</code><code class="nohighlight hljs ansi" style="display:block;">6-element Vector{String}:
- &quot;send&quot;
- &quot;recv&quot;
- &quot;print&quot;
- &quot;write&quot;
- &quot;open&quot;
- &quot;close&quot;</code></pre><p>Because it returns <code>BagNode</code>, missing values are treated in similar manner as in <code>ExtractArray</code> and settings of <code>Mill.emptyismissing</code> applies here too.</p><pre><code class="language-julia hljs">Mill.emptyismissing!(true)
+                    ╰── ArrayNode(2053×6 NGramMatrix with Union{Missing, Int64} elements)  # 6 obs, 227 bytes</code></pre><p>Because it returns <code>BagNode</code>, missing values are treated in similar manner as in <code>ExtractArray</code> and settings of <code>Mill.emptyismissing</code> applies here too.</p><pre><code class="language-julia hljs">Mill.emptyismissing!(true)
 ex(Dict()).data</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">missing</code></pre><pre><code class="language-julia hljs">Mill.emptyismissing!(false)
 ex(Dict()).data</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ProductNode  # 0 obs, 72 bytes
   ├─── key: ArrayNode(2053×0 NGramMatrix with Union{Missing, Int64} elements)  # 0 obs, 104 bytes
@@ -1201,4 +1192,4 @@ reduce(catobs,ex.([&quot;Hello&quot;,&quot;world&quot;,&quot;from&quot;,&quot;Pr
   ╰── c: ArrayNode(3×0 MaybeHotMatrix with Union{Missing, Bool} elements)  # 0 obs, 72 bytes</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ExtractDict(Dict(:a =&gt; ExtractScalar(),
        	:b =&gt; ExtractString(),
        	:c =&gt; ExtractCategorical([&quot;A&quot;,&quot;B&quot;]),
-       	:d =&gt; ExtractArray(ExtractString())))(JsonGrinder.extractempty) |&gt; numobs</code><code class="nohighlight hljs ansi" style="display:block;">0</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../extractors/">« Creating extractors</a><a class="docs-footer-nextpage" href="../examples/examples/">Examples Overview »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Thursday 15 June 2023 15:51">Thursday 15 June 2023</span>. Using Julia version 1.9.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+       	:d =&gt; ExtractArray(ExtractString())))(JsonGrinder.extractempty) |&gt; numobs</code><code class="nohighlight hljs ansi" style="display:block;">0</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../extractors/">« Creating extractors</a><a class="docs-footer-nextpage" href="../examples/examples/">Examples Overview »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Wednesday 26 July 2023 21:41">Wednesday 26 July 2023</span>. Using Julia version 1.9.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
