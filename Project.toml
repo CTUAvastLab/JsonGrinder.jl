@@ -39,3 +39,13 @@ StatsBase = "0.33"
 ThreadTools = "0.2"
 Zygote = "0.5, 0.6"
 julia = "^1.6"
+
+[extras]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = [ "Documenter", "JSON3", "Random", "Test" ]
+
