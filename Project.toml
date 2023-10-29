@@ -1,7 +1,6 @@
 name = "JsonGrinder"
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
-authors = ["pevnak <pevnak@gmail.com>", "Matej Racinsky <racinsky.matej@seznam.cz>",
-    "Simon Mandlik <simon.mandlik@gmail.com>"]
+authors = ["pevnak <pevnak@gmail.com>", "Matej Racinsky <racinsky.matej@seznam.cz>", "Simon Mandlik <simon.mandlik@gmail.com>"]
 version = "2.4.0"
 
 [deps]
@@ -35,6 +34,7 @@ Mill = "2.10"
 Mustache = "1"
 OneHotArrays = "0.2"
 Setfield = "1"
+Statistics = "1"
 StatsBase = "0.33"
 ThreadTools = "0.2"
 Zygote = "0.5, 0.6"
