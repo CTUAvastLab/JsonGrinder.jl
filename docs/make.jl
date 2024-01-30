@@ -59,6 +59,7 @@ makedocs(
          sitename = "JsonGrinder.jl",
          format = Documenter.HTML(sidebar_sitename=false,
                                   assets=["assets/favicon.ico", "assets/custom.css"]),
+         warnonly = Documenter.except(:eval_block, :example_block, :meta_block, :setup_block),
          modules = [JsonGrinder],
          pages = [
                   "Home" => "index.md",
