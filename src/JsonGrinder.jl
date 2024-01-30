@@ -1,12 +1,18 @@
 module JsonGrinder
 
-using Mill, JSON, Printf, Flux, OneHotArrays
 using Accessors
+using Flux
 using HierarchicalUtils
+using JSON
+using Mill
+using OneHotArrays
+using Preferences
+using Printf
 
 const FloatType = Float32
 
 include("switches.jl")
+
 include("schema/schema.jl")
 include("extractors/extractors.jl")
 include("html_show_tools.jl")
