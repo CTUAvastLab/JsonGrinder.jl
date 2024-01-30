@@ -87,5 +87,9 @@ utility function, shortcut for mapreduce(extractor, catobs, samples)
 """
 extractbatch(extractor, samples) = mapreduce(extractor, catobs, samples)
 
+function extractbatch(extractor, samples; store_input=false)
+    mapreduce(s -> extractor(s, store_input=store_input), catobs, samples)
+end
+
 Base.hash(e::ExtractDict, h::UInt) = hash(e.dict, h)
 Base.:(==)(e1::ExtractDict, e2::ExtractDict) = e1.dict == e2.dict
