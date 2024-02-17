@@ -1,6 +1,7 @@
 module JsonGrinder
 
 using Mill, JSON, Printf, Flux, OneHotArrays
+using Accessors
 using HierarchicalUtils
 
 const FloatType = Float32

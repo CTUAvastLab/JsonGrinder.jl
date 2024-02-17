@@ -17,10 +17,10 @@
 
 	l_sch = code2lens(sch, "w") |> only
 	l_ext = code2lens(ext, "w") |> only
-	@test l_sch == (@lens _.childs[:a].items.childs[:c])
-	@test l_ext == (@lens _.dict[:a].item.dict[:c])
-	@test get(sch, l_sch) == sch["w"]
-	@test get(ext, l_ext) == ext["w"]
+	@test l_sch == (@optic _.childs[:a].items.childs[:c])
+	@test l_ext == (@optic _.dict[:a].item.dict[:c])
+    @test Accessors.getall(sch, l_sch) |> only == sch["w"]
+	@test Accessors.getall(ext, l_ext) |> only == ext["w"]
 	@test lens2code(sch, l_sch) |> only == "w"
 	@test lens2code(ext, l_ext) |> only == "w"
 
@@ -30,5 +30,5 @@
 
 	sch = schema([j1, j2, j3])
 	l_sch = code2lens(sch, "S") |> only
-	@test l_sch == (@lens _.childs[:a].childs[3].items)
+	@test l_sch == (@optic _.childs[:a].childs[3].items)
 end

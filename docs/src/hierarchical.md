@@ -64,7 +64,7 @@ lenses = [only(code2lens(sch, e)) for e in list_traversal(sch) if sch[e] isa Jso
 ```
 
 gives us lenses to access them and also information about path from root.
-`@lens` is part of [Setfield.jl](https://github.com/jw3126/Setfield.jl) package which allows creating lenses which let you easily describe and apply accessors for hierarchical structures.
+`@optic` is part of [Accessors.jl](https://github.com/JuliaObjects/Accessors.jl) package which allows creating lenses which let you easily describe and apply accessors for hierarchical structures.
 
 ```@repl hierarchical
 get(sch, lenses[1])

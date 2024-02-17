@@ -12,7 +12,7 @@
 #nb using Pkg
 #nb pkg"add JsonGrinder#master Flux Mill JSON HierarchicalUtils StatsBase OrderedCollections"
 
-using JsonGrinder, Flux, Mill, JSON, HierarchicalUtils, StatsBase, OrderedCollections
+using JsonGrinder, Flux, Mill, JSON, HierarchicalUtils, StatsBase, OrderedCollections, Accessors
 using JsonGrinder: DictEntry, Entry
 
 data_dir = "data/documents" #src
@@ -49,7 +49,14 @@ printtree(extractor, htrunc=20, vtrunc=20)
 # Function [list_lens](https://ctuavastlab.github.io/Mill.jl/stable/api/utilities/#Mill.list_lens) ¨
 # from [Mill.jl](https://github.com/CTUAvastLab/Mill.jl) lets us iterate over all nodes in our tree structure
 # in a way we know their position in the schema.
-StatsBase.countmap([length(get(sch, i).childs) for i in list_lens(sch) if get(sch, i) isa DictEntry]) |> sort
+dict_entries = filter(list_lens(sch)) do i
+    n = Accessors.getall(sch, i) |> only
+    n isa DictEntry
+end
+map(dict_entries) do i
+    n = Accessors.getall(sch, i) |> only
+    length(n.childs)
+end |> countmap |> sort
 
 # We see that 1 dict has 103 unique children, 1 dict has 13 unique children, 
 # 91 dicts have 9 unique children, 59 dicts don't have any children etc.
@@ -59,7 +66,7 @@ StatsBase.countmap([length(get(sch, i).childs) for i in list_lens(sch) if get(sc
 # The following code prints paths to all Dictionaries in the schema and number of their children if they have more than 5 children.
 # In total there is lots of diction
 for i in list_lens(sch)
-    e = get(sch, i)
+    e = Accessors.getall(sch, i) |> only
     if e isa DictEntry && length(e.childs) > 5
         @info i length(e.childs)
     end
@@ -67,9 +74,9 @@ end
 
 # The dictionaries with most unique children are following ones:
 # ```
-# ┌ Info: (@lens _.childs[:ref_entries])
+# ┌ Info: (@optic _.childs[:ref_entries])
 # └   length(e.childs) = 13
-# ┌ Info: (@lens _.childs[:bib_entries])
+# ┌ Info: (@optic _.childs[:bib_entries])
 # └   length(e.childs) = 103
 # ```
 # because this is where keys have semantic meaning.
@@ -92,7 +99,7 @@ printtree(extractor, htrunc=20, vtrunc=20)
 # But still, some values are very sparse,
 # let's print all parts of schema where each value is observed only once
 for i in list_lens(sch)
-    e = get(sch, i)
+    e = Accessors.getall(sch, i) |> only
     if e isa Entry && maximum(values(e.counts)) == 1
         @info i
     end
@@ -101,21 +108,21 @@ end
 #  we can see lots of leaves under `bib_entries`, which is cased by uniqueness of keys here
 # but apart from that, we can see other interesting fields
 # ```
-# [ Info: (@lens _.childs[:metadata].childs[:authors].items.childs[:middle].items)
-# [ Info: (@lens _.childs[:metadata].childs[:authors].items.childs[:last])
-# [ Info: (@lens _.childs[:metadata].childs[:authors].items.childs[:affiliation].childs[:location].childs[:region])
-# [ Info: (@lens _.childs[:paper_id])
-# [ Info: (@lens _.childs[:body_text].items.childs[:text])
-# [ Info: (@lens _.childs[:body_text].items.childs[:ref_spans].items.childs[:start])
-# [ Info: (@lens _.childs[:body_text].items.childs[:ref_spans].items.childs[:end])
-# [ Info: (@lens _.childs[:back_matter].items.childs[:text])
-# [ Info: (@lens _.childs[:back_matter].items.childs[:cite_spans].items.childs[:ref_id])
-# [ Info: (@lens _.childs[:back_matter].items.childs[:cite_spans].items.childs[:start])
-# [ Info: (@lens _.childs[:back_matter].items.childs[:cite_spans].items.childs[:text])
-# [ Info: (@lens _.childs[:back_matter].items.childs[:cite_spans].items.childs[:end])
-# [ Info: (@lens _.childs[:back_matter].items.childs[:ref_spans].items.childs[:start])
-# [ Info: (@lens _.childs[:back_matter].items.childs[:ref_spans].items.childs[:text])
-# [ Info: (@lens _.childs[:back_matter].items.childs[:ref_spans].items.childs[:end])
+# [ Info: (@optic _.childs[:metadata].childs[:authors].items.childs[:middle].items)
+# [ Info: (@optic _.childs[:metadata].childs[:authors].items.childs[:last])
+# [ Info: (@optic _.childs[:metadata].childs[:authors].items.childs[:affiliation].childs[:location].childs[:region])
+# [ Info: (@optic _.childs[:paper_id])
+# [ Info: (@optic _.childs[:body_text].items.childs[:text])
+# [ Info: (@optic _.childs[:body_text].items.childs[:ref_spans].items.childs[:start])
+# [ Info: (@optic _.childs[:body_text].items.childs[:ref_spans].items.childs[:end])
+# [ Info: (@optic _.childs[:back_matter].items.childs[:text])
+# [ Info: (@optic _.childs[:back_matter].items.childs[:cite_spans].items.childs[:ref_id])
+# [ Info: (@optic _.childs[:back_matter].items.childs[:cite_spans].items.childs[:start])
+# [ Info: (@optic _.childs[:back_matter].items.childs[:cite_spans].items.childs[:text])
+# [ Info: (@optic _.childs[:back_matter].items.childs[:cite_spans].items.childs[:end])
+# [ Info: (@optic _.childs[:back_matter].items.childs[:ref_spans].items.childs[:start])
+# [ Info: (@optic _.childs[:back_matter].items.childs[:ref_spans].items.childs[:text])
+# [ Info: (@optic _.childs[:back_matter].items.childs[:ref_spans].items.childs[:end])
 # ```
 # 
 # Let's remove some of them from the extractor so we don't train on them.

@@ -1,4 +1,5 @@
 [deps]
+Accessors = "7d9f7c33-5ae7-4f3b-8dc6-eff91059b697"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 ElectronDisplay = "d872a56f-244b-5cc9-b574-2017b5b909a8"
 Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
