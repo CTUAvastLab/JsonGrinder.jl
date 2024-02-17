@@ -4,7 +4,7 @@ using JsonGrinder: extractempty
 using Mill
 using OneHotArrays
 using LinearAlgebra
-using Setfield
+using Accessors
 
 function less_categorical_scalar_extractor()
     [
@@ -606,14 +606,14 @@ end
         d1 = Dict("key" => String(rand('a':'b', 20000)))
         d2 = Dict("key" => String(rand('a':'b', 20000)))
         sch = JsonGrinder.schema(rand([ d1, d2 ], 10000))
-        
+
         e = suggestextractor(sch)
         @test e(d1) != e(d2)
         @test e(d1)[:key].data ≈ [1,0,0]
         @test e(d2)[:key].data ≈ [0,1,0]
-        
+
         e2 = suggestextractor(sch)
-        @set! e2.dict[:key] = JsonGrinder.extractscalar(String, sch[:key])
+        @reset e2.dict[:key] = JsonGrinder.extractscalar(String, sch[:key])
         @test e2(d1) != e2(d2)
     end
 end
@@ -1204,7 +1204,7 @@ end
 @testset "AuxiliaryExtractor" begin
     e2 = ExtractCategorical(["a","b"])
     e = AuxiliaryExtractor(e2, (ext, sample; store_input=false)->ext(String(sample); store_input))
-    
+
     @test e("b") == e("bbb"[1:1])
     @test e("b").data ≈ [0, 1, 0]
     @test e("bbb"[1:1]).data ≈ [0, 1, 0]
