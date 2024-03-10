@@ -11,13 +11,13 @@
 #nb # Julia Ecosystem follows philosophy of many small single-purpose composable packages
 #nb # which may be different from e.g. python where we usually use fewer larger packages.
 #nb using Pkg
-#nb pkg"add JsonGrinder#master Mill Flux MLDatasets Statistics Random JSON3 OneHotArrays"
+#nb pkg"add JsonGrinder#master Mill Flux MLDatasets Statistics Random OneHotArrays"
 
 # This example is taken from the [CTUAvastLab/JsonGrinderExamples](https://github.com/CTUAvastLab/JsonGrinderExamples/blob/main/mutagenesis/tuned.jl)
 # and heavily commented for more clarity.
 
 # Here we include all necessary libraries:
-using JsonGrinder, Mill, Flux, MLDatasets, Statistics, Random, JSON3, OneHotArrays
+using JsonGrinder, Mill, Flux, MLDatasets, Statistics, Random, OneHotArrays
 
 # We stabilize the seed to obtain same results every run, for pedagogic purposes:
 Random.seed!(42)

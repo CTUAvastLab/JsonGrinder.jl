@@ -30,14 +30,14 @@ Statistics are collected in a hierarchical structure reflecting the structured c
 {"a": "hello"}
 ```
 
-For such cases, we have introduced additional `JSONEntry`, a `MultiEntry,` but we discourage to rely on this feature and recommend to adapt JSONs to have stable schema (if possible).
+For such cases, we have introduced additional `AbstractJSONEntry`, a `MultiEntry,` but we discourage to rely on this feature and recommend to adapt JSONs to have stable schema (if possible).
 This can be achieved by modifying each sample before it's passed into the schema.
 
-Each subtype of `JSONEntry` implements the `update!` function, which recursively updates the schema.
+Each subtype of `AbstractJSONEntry` implements the `update!` function, which recursively updates the schema.
 
 ### Entry
 ```julia
-mutable struct Entry{T} <: JSONEntry
+mutable struct Entry{T} <: AbstractJSONEntry
 	counts::Dict{T,Int}
 	updated::Int
 end
@@ -50,29 +50,29 @@ To keep `counts` dictionary from becoming too large, once its length exceeds `Js
 
 ### ArrayEntry
 ```julia
-mutable struct ArrayEntry <: JSONEntry
+mutable struct ArrayEntry <: AbstractJSONEntry
 	items
 	l::Dict{Int,Int}
 	updated::Int
 end
 ```
-`ArrayEntry` keeps information about arrays (e.g. `"a": [1,2,3,4]`). Statistics about individual items of the array are deferred to `item`, which can be `<:JSONEntry`. `l` keeps histogram of lengths of arrays, and `updated` is number of times an array has been observed in particular place in JSON.
+`ArrayEntry` keeps information about arrays (e.g. `"a": [1,2,3,4]`). Statistics about individual items of the array are deferred to `item`, which can be `<:AbstractJSONEntry`. `l` keeps histogram of lengths of arrays, and `updated` is number of times an array has been observed in particular place in JSON.
 
 ### DictEntry
 ```julia
-mutable struct DictEntry <: JSONEntry
+mutable struct DictEntry <: AbstractJSONEntry
 	childs::Dict{Symbol, Any}
 	updated::Int
 end
 ```
 
 defers all statistics about its children to them, and the only statistic is again a counter `updated` about number of observations.
-Fields `childs` contains all keys which were observed in specific Dictionary and their corresponding `<:JSONEntry` values with statistics about values observed under given key.
+Fields `childs` contains all keys which were observed in specific Dictionary and their corresponding `<:AbstractJSONEntry` values with statistics about values observed under given key.
 
 ### MultiEntry
 ```julia
-mutable struct MultiEntry <: JSONEntry
-	childs::Vector{JSONEntry}
+mutable struct MultiEntry <: AbstractJSONEntry
+	childs::Vector{AbstractJSONEntry}
 	updated::Int
 end
 ```

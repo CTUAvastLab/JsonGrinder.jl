@@ -742,6 +742,63 @@ end
     @test e == e2
 end
 
+# TODO taken from schema
+
+# @testset "Extractor from schema" begin
+# 	j1 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1},"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
+# 	j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
+# 	j3 = JSON.parse("""{"a": 4, "b": {"a":[1,2,3],"b": 1}}""")
+# 	j4 = JSON.parse("""{"a": 4, "b": {}}""")
+# 	j5 = JSON.parse("""{"b": {}}""")
+# 	j6 = JSON.parse("""{}""")
+#
+# 	sch = schema([j1,j2,j3,j4,j5,j6])
+# 	ext = suggestextractor(sch, testing_settings)
+#
+# 	@test ext[:a] isa ExtractCategorical
+# 	@test ext[:b][:a] isa ExtractVector{Float32}
+# 	@test ext[:b][:b] isa ExtractScalar{Float32}
+# 	@test ext[:c][:a][:a] isa ExtractArray{ExtractScalar{Float32}}
+# 	@test ext[:c][:a][:b] isa ExtractArray{ExtractScalar{Float32}}
+#
+# 	e1 = ext(j1)
+# 	@test e1[:a].data ≈ [1, 0]
+# 	@test e1[:b][:a].data ≈ [1, 2, 3]
+# 	@test e1[:b][:b].data ≈ [0]
+# 	@test e1[:c][:a][:a].data.data ≈ [0. 0.5 1.]
+# 	@test e1[:c][:a][:b].data.data ≈ [0. 0.5 1.]
+# end
+# @testset "Empty string vs missing key testing" begin
+# 	j1 = JSON.parse("""{"a": "b", "b": ""}""")
+# 	j2 = JSON.parse("""{"a": "a", "b": "c"}""")
+# 	sch1 = JsonGrinder.schema([j1,j2])
+#
+# 	j1 = JSON.parse("""{"a": "b"}""")
+# 	j2 = JSON.parse("""{"a": "a", "b": "c"}""")
+# 	sch2 = JsonGrinder.schema([j1,j2])
+#
+# 	ext1 = suggestextractor(sch1)
+# 	ext2 = suggestextractor(sch2)
+#
+# 	m1 = reflectinmodel(sch1, ext1)
+# 	m2 = reflectinmodel(sch2, ext2)
+#
+# 	@test m1[:b].m isa Dense
+# 	@test m1[:b].m.weight isa Matrix
+# 	@test m2[:b].m isa PostImputingDense
+# 	@test m2[:b].m.weight isa PostImputingMatrix
+# 	@test buf_printtree(m1) != buf_printtree(m2)
+# end
+
+	# TODO: add tests for array and empty dict, and which extractors it generates
+	# basically test sth. like this
+	# j1 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}],"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
+	# j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
+	# j3 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}]}""")
+	# j4 = JSON.parse("""{"a": 4, "b": [{}]}""")
+	# j5 = JSON.parse("""{"b": {}}""")
+	# j6 = JSON.parse("""{}""")
+
 @testset "equals and hash test" begin
     other1 = Dict(
         "a" => ExtractArray(ExtractScalar(Float64,2,3)),
@@ -883,6 +940,188 @@ end
 
 # todo: add separate tests for reflectinmodel(sch, ext) to test behavior with various missing and non-missing stuff in schema
 # e.g. empty string, missing keys, irregular schema and MultiRepresentation
+
+@testset "is_numeric is_floatable is_intable" begin
+	j1 = JSON.parse("""{"a": "4"}""")
+	j2 = JSON.parse("""{"a": "11.5"}""")
+	j3 = JSON.parse("""{"a": 7}""")
+	j4 = JSON.parse("""{"a": 4.5}""")
+
+	sch1234 = schema([j1,j2,j3,j4])
+	sch12 = schema([j1,j2])
+	sch34 = schema([j3,j4])
+	sch13 = schema([j1,j3])
+	sch3 = schema([j3])
+	sch = schema([j1])
+	e = sch1234[:a]
+
+	expected_multientry = JsonGrinder.InconsistentEntry([
+		JsonGrinder.Entry(Dict("4"=>1,"11.5"=>1),2),
+		JsonGrinder.Entry(Dict(7=>1,4.5=>1),2)
+	], 4)
+	@test e == expected_multientry
+
+	e_hash = hash(e)
+	@test JsonGrinder.merge_entries_with_cast(e, Int32, Real) == expected_multientry
+	# checking that merge_entries_with_cast is not mutating the argument
+	@test e_hash == hash(e)
+
+	expected_merged = JsonGrinder.InconsistentEntry([
+		JsonGrinder.Entry(Dict(7=>1,4.0=>1,11.5=>1,4.5=>1),4)
+	], 4)
+	@test JsonGrinder.merge_entries_with_cast(e, JsonGrinder.FloatType, Real) == expected_merged
+	# checking that merge_entries_with_cast is not mutating the argument
+	@test e_hash == hash(e)
+	@test JsonGrinder.merge_entries_with_cast(e, Int32, Real) != expected_merged
+
+	e1234 = JsonGrinder.merge_entries_with_cast(e, JsonGrinder.FloatType, Real)[1]
+
+	@test sch12[:a] == JsonGrinder.Entry(Dict("4" => 1, "11.5"=> 1),2)
+
+	@test !JsonGrinder.is_intable(e1234)
+	@test !JsonGrinder.is_floatable(e1234)
+	@test JsonGrinder.is_numeric_entry(e1234, Real)
+
+	@test !JsonGrinder.is_intable(sch12[:a])
+	@test JsonGrinder.is_floatable(sch12[:a])
+	@test !JsonGrinder.is_numeric_entry(sch12[:a], Real)
+	# todo: fix it and make some predicates with true for both e1 and sch12[:a]
+	@test !JsonGrinder.is_intable(sch34[:a])
+	@test !JsonGrinder.is_floatable(sch34[:a])
+	@test JsonGrinder.is_numeric_entry(sch34[:a], Real)
+
+	expected_merged = JsonGrinder.InconsistentEntry([
+		JsonGrinder.Entry(Dict(7=>1,4=>1),2)
+	], 2)
+	@test JsonGrinder.merge_entries_with_cast(sch13[:a], Int32, Real) == expected_merged
+
+	e13 = JsonGrinder.merge_entries_with_cast(sch13[:a], Int32, Real)[1]
+
+	@test !JsonGrinder.is_intable(e13)
+	@test !JsonGrinder.is_floatable(e13)
+	@test JsonGrinder.is_numeric_entry(e13, Real)
+
+	@test !JsonGrinder.is_intable(sch3[:a])
+	@test !JsonGrinder.is_floatable(sch3[:a])
+	@test JsonGrinder.is_numeric_entry(sch3[:a], Real)
+
+	@test JsonGrinder.is_intable(sch[:a])
+	@test JsonGrinder.is_floatable(sch[:a])
+	@test !JsonGrinder.is_numeric_entry(sch[:a], Real)
+end
+
+num_params(m) = m |> Flux.params .|> size .|> prod |> sum
+params_empty(m) = m |> Flux.params .|> size |> isempty
+
+@testset "suggestextractor with ints and floats numeric and stringy" begin
+	j1 = JSON.parse("""{"a": "4"}""")
+	j2 = JSON.parse("""{"a": "11.5"}""")
+	j3 = JSON.parse("""{"a": 7}""")
+	j4 = JSON.parse("""{"a": 4.5}""")
+
+	sch1234 = schema([j1,j2,j3,j4])
+	sch123 = schema([j1,j2,j3])
+	sch12 = schema([j1,j2])
+	sch23 = schema([j2,j3])
+	sch14 = schema([j1,j4])
+	sch34 = schema([j3,j4])
+
+	ext1234 = suggestextractor(sch1234)
+	ext123 = suggestextractor(sch123)
+	ext12 = suggestextractor(sch12)
+	ext23 = suggestextractor(sch23)
+	ext34 = suggestextractor(sch34)
+	ext14 = suggestextractor(sch14)
+
+	# as expected, sometimes there is multirepresentation
+	@test buf_printtree(ext12, trav=true) ==
+	"""
+	Dict [""]
+	  ╰── a: Categorical d = 3 ["U"]
+	"""
+
+	@test buf_printtree(ext23, trav=true) ==
+  	"""
+	Dict [""]
+	  ╰── a: MultiRepresentation ["U"]
+	           ╰── e1: Categorical d = 3 ["k"]
+	"""
+
+  	@test buf_printtree(ext34, trav=true) ==
+	"""
+	Dict [""]
+	  ╰── a: Categorical d = 3 ["U"]
+	"""
+
+  	@test buf_printtree(ext14, trav=true) ==
+	"""
+	Dict [""]
+	  ╰── a: MultiRepresentation ["U"]
+	           ╰── e1: Categorical d = 3 ["k"]
+	"""
+
+	# but that's not problem, there are identity layers, so number of parameters is same
+
+	m12 = reflectinmodel(sch12, ext12)
+	m23 = reflectinmodel(sch23, ext23)
+	m34 = reflectinmodel(sch34, ext34)
+	m14 = reflectinmodel(sch14, ext14)
+
+	# testing that I have same numer of params
+	@test num_params(m12) == 40
+	@test num_params(m12) == num_params(m23)
+	@test num_params(m12) == num_params(m34)
+	@test num_params(m12) == num_params(m14)
+
+	# now now with scalars
+	ext1234 = suggestextractor(sch1234, testing_settings)
+	ext123 = suggestextractor(sch123, testing_settings)
+	ext12 = suggestextractor(sch12, testing_settings)
+	ext23 = suggestextractor(sch23, testing_settings)
+	ext34 = suggestextractor(sch34, testing_settings)
+	ext14 = suggestextractor(sch14, testing_settings)
+
+	# as expected, sometimes there is multirepresentation
+	@test buf_printtree(ext12, trav=true) ==
+	"""
+	Dict [""]
+	  ╰── a: Float32 ["U"]
+	"""
+
+	@test buf_printtree(ext23, trav=true) ==
+  	"""
+	Dict [""]
+	  ╰── a: MultiRepresentation ["U"]
+	           ╰── e1: Float32 ["k"]
+	"""
+
+  	@test buf_printtree(ext34, trav=true) ==
+	"""
+	Dict [""]
+	  ╰── a: Float32 ["U"]
+	"""
+
+  	@test buf_printtree(ext14, trav=true) ==
+	"""
+	Dict [""]
+	  ╰── a: MultiRepresentation ["U"]
+	           ╰── e1: Float32 ["k"]
+	"""
+
+	# but that's not problem, there are identity layers, so number of parameters is same
+
+	# by default there is only 1 scalar and indentities, so they have not params
+	m12 = reflectinmodel(sch12, ext12)
+	m23 = reflectinmodel(sch23, ext23)
+	m34 = reflectinmodel(sch34, ext34)
+	m14 = reflectinmodel(sch14, ext14)
+
+	# testing that I have no params in all models
+	@test params_empty(m12)
+	@test params_empty(m23)
+	@test params_empty(m34)
+	@test params_empty(m14)
+end
 
 @testset "Suggest feature vector extraction" begin
     j1 = JSON.parse("""{"a": "1", "b": [1, 2, 3], "c": [1, 2, 3]}""")
@@ -1278,3 +1517,297 @@ end
     @test typeof(e1) == typeof(e23)
     @test typeof(e1) == typeof(e13)
 end
+
+@testset "Empty arrays" begin
+	j1 = JSON.parse("""{"a": []}""")
+	j2 = JSON.parse("""{"a": [{"a":1},{"b":2}]}""")
+	j3 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a" : 1}]}""")
+	j4 = JSON.parse("""{"a": [{"a":2,"b":3}]}""")
+
+	sch1 = JsonGrinder.schema([j1])
+	sch2 = JsonGrinder.schema([j1,j2,j3])
+	sch3 = JsonGrinder.schema([j2,j3,j1])
+
+	@test sch1.updated == 1
+	@test keys(sch1) == Set([:a])
+	ext1 = suggestextractor(sch1)
+	@test isnothing(ext1)
+
+	@test sch2.updated == sch3.updated
+	@test sch2[:a].l == sch3[:a].l
+	@test sch2[:a].updated == sch3[:a].updated
+	@test sch2[:a].items[:a].updated == sch3[:a].items[:a].updated
+	@test sch2[:a].items[:a].counts == sch3[:a].items[:a].counts
+
+	ext2 = suggestextractor(sch2)
+	ext3 = suggestextractor(sch3)
+	@test ext2 == ext3
+
+	sch = JsonGrinder.schema([Dict("key" => []), Dict("key" => [1,2,3])])
+	ext = suggestextractor(sch)
+	@test ext[:key].item isa ExtractCategorical
+end
+
+@testset "More empty arrays" begin
+	j1 = JSON.parse("""{"a": [{"a":1},{"b":2}], "b":[]}""")
+	j2 = JSON.parse("""{"a": [{"a":1,"b":3},{"b":2,"a":1}], "b":[]}""")
+
+	sch1 = JsonGrinder.schema([j1,j2])
+	ext1 = suggestextractor(sch1)
+	m = reflectinmodel(sch1, ext1)
+	# todo: add tests that b is not there
+	@test sch1.updated == 2
+	@test sch1[:a].updated == 2
+	@test :b ∈ keys(sch1)
+	@test :b ∉ keys(ext1)
+	@test :b ∉ keys(m)
+end
+
+@testset "Sample synthetic and make_representative_sample" begin
+	@testset "basic without missing keys" begin
+		sch = DictEntry(Dict(
+			:a=>ArrayEntry(
+				DictEntry(Dict(
+					:a=>Entry(Dict(1=>4,2=>1), 5),
+					:b=>Entry(Dict(1=>1,2=>2,3=>2), 5),
+					),
+				5),
+				Dict(0=>1,1=>1,2=>2),
+			4),
+			:b=>Entry(Dict(1=>2,2=>2), 4),
+			),
+		4)
+		@test sample_synthetic(sch) == Dict(
+			:a=>[
+				Dict(:a=>2,:b=>2),
+				Dict(:a=>2,:b=>2)
+			],
+			:b=>2)
+		ext = suggestextractor(sch)
+		@test !ext[:a].item[:a].uniontypes
+		@test !ext[:a].item[:b].uniontypes
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a, :b),
+			Tuple{BagNode{
+				ProductNode{NamedTuple{(:a, :b),
+					Tuple{
+						ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing},
+						ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing}}
+					},Nothing},
+				AlignedBags{Int64},Nothing},
+			ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing}}
+		}, Nothing}
+	end
+
+	@testset "basic with missing keys" begin
+		sch = DictEntry(Dict(
+			:a=>ArrayEntry(
+				DictEntry(Dict(
+					:a=>Entry(Dict(1=>3,2=>1), 4),
+					:b=>Entry(Dict(2=>2,3=>2), 4),
+					),
+				5),
+				Dict(0=>1,1=>1,2=>2),
+			4),
+			:b=>Entry(Dict(1=>2,2=>2), 4),
+			),
+		4)
+		@test sample_synthetic(sch) == Dict(
+			:a=>[
+				Dict(:a=>2,:b=>2),
+				Dict(:a=>2,:b=>2),
+				],
+			:b=>2
+			)
+		ext = suggestextractor(sch)
+		@test ext[:a].item[:a].uniontypes
+		@test ext[:a].item[:b].uniontypes
+		@test !ext[:b].uniontypes
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a, :b),
+			Tuple{BagNode{
+				ProductNode{NamedTuple{(:a, :b),
+					Tuple{
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}},Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}},Nothing}}
+				},Nothing},AlignedBags{Int64},Nothing},
+			ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing}
+		}},Nothing}
+	end
+
+	@testset "with missing keys in dict" begin
+		sch = DictEntry(Dict(
+			:a=>ArrayEntry(
+				DictEntry(Dict(
+					:a=>Entry(Dict("a"=>1,"b"=>1,"c"=>1,"d"=>1), 4),
+					:b=>Entry(Dict(3=>1,2=>2), 3),
+					:c=>Entry(Dict(1=>5), 5)
+					),
+				5),
+				Dict(0=>1,1=>1,2=>2),
+			4)),
+		4)
+
+		@test JsonGrinder.sample_synthetic(sch) == Dict(
+			:a=>[Dict(:a=>"c",:b=>2,:c=>1), Dict(:a=>"c",:b=>2,:c=>1)]
+		)
+
+		ext = suggestextractor(sch)
+		@test ext[:a].item[:a].uniontypes
+		@test ext[:a].item[:b].uniontypes
+		@test !ext[:a].item[:c].uniontypes
+		# todo: add tests for extraction of synthetic samples and if they have correct types
+		m = reflectinmodel(sch, ext)
+		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}]}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": []}"""))) isa Matrix{Float32}
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a,),
+			Tuple{BagNode{
+				ProductNode{NamedTuple{(:a, :b, :c),
+					Tuple{
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing},
+						ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}
+					}},
+				Nothing},
+			AlignedBags{Int64}, Nothing}}}, Nothing}
+	end
+
+	@testset "with missing nested dicts" begin
+		sch = DictEntry(Dict(
+			:a=>DictEntry(Dict(
+					:a=>Entry(Dict("a"=>1,"b"=>1,"c"=>1), 3),
+					:b=>Entry(Dict(3=>1), 1),
+					:c=>Entry(Dict(1=>3), 3)),
+				3),
+			:b=>Entry(Dict(1=>4), 4)),
+		4)
+		@test sample_synthetic(sch) == Dict(
+			:a=>Dict(:a=>"c",:b=>3,:c=>1), :b=>1
+		)
+
+		ext = suggestextractor(sch)
+
+		@test ext[:a][:a].uniontypes
+		@test ext[:a][:b].uniontypes
+		@test ext[:a][:c].uniontypes
+		@test !ext[:b].uniontypes
+
+		# todo: add test for make_representative_sample
+		m = reflectinmodel(sch, ext)
+		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		@test m(ext(JSON.parse("""{"b":1}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": {"a":"c","c":1},"b":1}"""))) isa Matrix{Float32}
+
+		# now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		@test m(ext(JSON.parse("""{"a": [{"a":"a","c":1},{"b":2,"c":1}], "b": 1}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a": [], "b": 1}"""))) isa Matrix{Float32}
+		# the key b is always present, it should not be missing
+		@test_throws ErrorException m(ext(JSON.parse("""{"a": []}""")))
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a, :b),
+			Tuple{
+				ProductNode{NamedTuple{(:a, :b, :c),
+					Tuple{
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing},
+						ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}}, Nothing}
+					}},
+				Nothing},
+				ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}
+			}},
+		Nothing}
+	end
+
+	@testset "with numbers and numeric strings" begin
+		sch = DictEntry(Dict(
+			:a=>InconsistentEntry([
+				Entry(Dict(2=>1,5=>1), 2),
+				Entry(Dict("4"=>1,"3"=>1), 2)],
+			4),
+			:b=>InconsistentEntry([
+				Entry(Dict(2=>1,5=>1), 2),
+				Entry(Dict("4"=>1), 1)],
+			3)),
+		4)
+
+		@test sample_synthetic(sch) == Dict(:a=>5,:b=>5)
+
+		ext = suggestextractor(sch)
+		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
+		@test !ext[:a][1].uniontypes
+		@test ext[:b][1].uniontypes
+
+		s = ext(sample_synthetic(sch))
+		# this is wrong, check it
+		@test s[:a][:e1].data ≃ [0 0 0 1 0]'
+		@test s[:b][:e1].data ≃ [0 0 1 0]'
+
+		m = reflectinmodel(sch, ext)
+		@test !(m[:a][:e1].m isa PostImputingDense)
+		@test m[:b][:e1].m isa PostImputingDense
+
+		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		@test m(ext(JSON.parse("""{"a":5}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a":"3"}"""))) isa Matrix{Float32}
+
+		s = make_representative_sample(sch, ext)
+		@test s isa ProductNode{NamedTuple{(:a, :b),
+			Tuple{
+				ProductNode{NamedTuple{(:e1,),
+					Tuple{ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}},Nothing}}},
+					Nothing},
+				ProductNode{NamedTuple{(:e1,),
+					Tuple{ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int, Union{Missing, Bool}},Nothing}}
+					}, Nothing}
+				}
+			},Nothing}
+	end
+
+
+	@testset "with irregular schema, dict and scalars mixed" begin
+		sch = DictEntry(Dict(
+			:a=>InconsistentEntry([
+				Entry(Dict(2=>1,5=>1), 2),
+				DictEntry(Dict(
+					:a=>Entry(Dict(3=>2), 1),
+					:b=>Entry(Dict(1=>2), 2)),
+				2),
+				],
+			4)),
+		4)
+
+		# this is not representative, but all information is inside types
+		@test sample_synthetic(sch) == Dict(:a=>5)
+
+		ext = suggestextractor(sch)
+		# this is broken, all samples are full, just once as a string, once as a number, it should not be uniontype
+		@test ext[:a][1].uniontypes
+		@test ext[:a][2][:a].uniontypes
+		@test ext[:a][2][:b].uniontypes
+
+		s = ext(sample_synthetic(sch))
+		# this is wrong, check it
+		@test s[:a][:e1].data ≃ [0 1 0]'
+
+		m = reflectinmodel(sch, ext)
+		# this is wrong, it should not be postimputing
+		@test m[:a][:e1].m isa PostImputingDense
+
+		# # now I test that all outputs are numbers. If some output was missing, it would mean model does not have imputation it should have
+		@test m(ext(JSON.parse("""{"a":5}"""))) isa Matrix{Float32}
+		@test m(ext(JSON.parse("""{"a":"3"}"""))) isa Matrix{Float32}
+	end
+	# todo: test schema with keyasfield
+end
+
+@testset "Fail empty bag extractor" begin
+	ex = JsonGrinder.newentry([])
+	@test isnothing(suggestextractor(ex))
+end
+

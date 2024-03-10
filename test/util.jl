@@ -32,3 +32,25 @@
 	l_sch = code2lens(sch, "S") |> only
 	@test l_sch == (@optic _.childs[:a].childs[3].items)
 end
+
+# TODO test schema deletion with lenses / traversal encoding
+# @testset "Delete in path" begin
+# 	j1 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}],"c": { "a": {"a":[1,2,3],"b":[4,5,6]}}}""",inttype=Float64)
+# 	j2 = JSON.parse("""{"a": 4, "c": {"a": {"a":[2,3],"b":[5,6]}}}""")
+# 	j3 = JSON.parse("""{"a": 4, "b": [{"a":[1,2,3],"b": 1}]}""")
+# 	j4 = JSON.parse("""{"a": 4, "b": [{}]}""")
+# 	j5 = JSON.parse("""{"b": {}}""")
+# 	j6 = JSON.parse("""{}""")
+#
+# 	sch = schema([j1,j2,j3,j4,j5,j6])
+# 	@test children(sch[:c][:a]) == [:a=>sch[:c][:a][:a], :b=>sch[:c][:a][:b]]
+# 	delete!(sch, ".c.a", "a")
+# 	@test children(sch[:c][:a]) == [:b=>sch[:c][:a][:b]]
+# 	@test children(sch[:b][1].items) == [:a=>sch[:b][1].items[:a], :b=>sch[:b][1].items[:b]]
+# 	delete!(sch, ".b.1.[]", "a")
+# 	@test children(sch[:b][1].items) == [:b=>sch[:b][1].items[:b]]
+#
+# 	suggestextractor(sch)
+# 	# todo: add tests for this is identity is used for single-keyed multi-entry
+# 	# todo: test indentity for multiple nested single-keyed dicts
+# end

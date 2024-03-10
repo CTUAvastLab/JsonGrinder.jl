@@ -60,7 +60,7 @@ sch = JsonGrinder.schema(samples[1:n_samples])
 
 # ID is deleted from the schema (keys not in the schema are not 
 # reflected into extractor and hence not propagated into dataset).
-delete!(sch.childs,:id)
+delete!(sch.children, :id)
 
 # From the schema, we can create the extractor.
 extractor = suggestextractor(sch)
