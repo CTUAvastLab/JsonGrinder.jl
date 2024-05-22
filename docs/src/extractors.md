@@ -3,7 +3,7 @@
 Extractor is responsible for converting json to `Mill` structures. 
 The main design idea is that the extractor for a whole json is created by composing (sub-)extractors while reflecting the JSON structure. 
 This composability is achieved by the **commitment** of each extractor returning a subtype of `Mill.AbstractDataNode`. 
-Extractor can be any function, but to ensure a composability, it is should be a subtype of `AbstractExtractor`, 
+Extractor can be any function, but to ensure a composability, it is should be a subtype of `Extractor`, 
 which means all of them are implemented as functors (also because they contain parameters).
 
 # Manual creation of extractors
@@ -21,9 +21,9 @@ A corresponding extractor might look like
 ```@example 1
 using JsonGrinder, Mill, JSON #hide
 ex = ExtractDict(Dict(
-	:name => ExtractString(),
-	:siblings => ExtractArray(ExtractString()),
-	:hobby => ExtractArray(ExtractCategorical(["running", "swimming","yoga"])),
+	:name => NGramExtractor(),
+	:siblings => ExtractArray(NGramExtractor()),
+	:hobby => ExtractArray(CategoricalExtractor(["running", "swimming","yoga"])),
 	:age => ExtractScalar(),
 ))
 ```
@@ -114,16 +114,16 @@ The default heuristic is following and you can adjust according to your liking.
 function default_scalar_extractor()
 	[
 	(e -> length(keys(e)) <= 100 && is_numeric_or_numeric_string(e),
-		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),
+		(e, extract_missing) -> CategoricalExtractor(keys(e), extract_missing)),
 	(e -> is_intable(e),
-		(e, uniontypes) -> extractscalar(Int32, e, uniontypes)),
+		(e, extract_missing) -> extractscalar(Int32, e, extract_missing)),
 	(e -> is_floatable(e),
-	 	(e, uniontypes) -> extractscalar(FloatType, e, uniontypes)),
+	 	(e, extract_missing) -> extractscalar(FloatType, e, extract_missing)),
 	# it's important that condition here would be lower than maxkeys
 	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !is_numeric_or_numeric_string(e)),
-		(e, uniontypes) -> ExtractCategorical(keys(e), uniontypes)),
+		(e, extract_missing) -> CategoricalExtractor(keys(e), extract_missing)),
 	(e -> true,
-		(e, uniontypes) -> extractscalar(unify_types(e), e, uniontypes)),]
+		(e, extract_missing) -> extractscalar(unify_types(e), e, extract_missing)),]
 end
 ```
 
@@ -167,12 +167,12 @@ s1 = JSON.parse("{\"a.dll\": [\"f\", \"g\", \"h\"],
  \"b.dll\": [\"a\", \"b\", \"c\"]}")
 s2 = JSON.parse("{\"c.dll\": [\"x\", \"y\", \"z\"]}")
 ex_dict = ExtractDict(Dict(
-	Symbol("a.dll") => ExtractArray(ExtractString()),
-	Symbol("b.dll") => ExtractArray(ExtractString()),
-	Symbol("c.dll") => ExtractArray(ExtractString()),
+	Symbol("a.dll") => ExtractArray(NGramExtractor()),
+	Symbol("b.dll") => ExtractArray(NGramExtractor()),
+	Symbol("c.dll") => ExtractArray(NGramExtractor()),
 ))
 ex_key_as_field = ExtractKeyAsField(
-	ExtractString(), ExtractArray(ExtractString()
+	NGramExtractor(), ExtractArray(NGramExtractor()
 ))
 ex_dict(s1)
 ex_key_as_field(s1)
@@ -186,7 +186,7 @@ As we can see `ExtractKeyAsField` extracts data to more sensible structures in t
 
 ### Passing different scalar_extractors
 
-Let's demonstrate how can we set extraction of all strings to be `MultiRepresentation` of `String` and `Categorical`, 
+Let's demonstrate how can we set extraction of all strings to be `PolymorphExtractor` of `String` and `Categorical`, 
 where `Categorical` will have 20 most frequent values. In general, there are 2 approaches:
  - prepending your own extractors to `default_scalar_extractor()`
  - providing your own function independent on `default_scalar_extractor()`
@@ -201,7 +201,7 @@ function string_multi_representation_scalar_extractor()
 	vcat([
 	(e -> unify_types(sch[:paper_id]) <: String,
 		e -> MultipleRepresentation((
-			ExtractCategorical(top_n_keys(e, 20)),
+			CategoricalExtractor(top_n_keys(e, 20)),
 			extractscalar(unify_types(e), e)
 		))
 	], JsonGrinder.default_scalar_extractor()))
@@ -220,17 +220,17 @@ top_n_keys(e::Entry, n::Int) = map(x->x[1], sort(e.counts |> collect, by=x->x[2]
 function string_multi_representation_scalar_extractor()
 	[
 	(e -> length(keys(e)) <= 100 && (is_intable(e) || is_floatable(e)),
-		e -> ExtractCategorical(keys(e))),
+		e -> CategoricalExtractor(keys(e))),
 	(e -> is_intable(e),
 		e -> extractscalar(Int32, e)),
 	(e -> is_floatable(e),
 	 	e -> extractscalar(FloatType, e)),
 	# it's important that condition here would be lower than maxkeys
 	(e -> (keys_len = length(keys(e)); keys_len / e.updated < 0.1 && keys_len < 10000 && !(is_intable(e) || is_floatable(e))),
-		e -> ExtractCategorical(keys(e))),
+		e -> CategoricalExtractor(keys(e))),
 	(e -> true,
 		e -> MultipleRepresentation((
-			ExtractCategorical(e, 20),
+			CategoricalExtractor(e, 20),
 			extractscalar(unify_types(e), e)
 			)
 		)),]

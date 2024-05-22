@@ -1,12 +1,12 @@
 """
-    ArrayEntry <: AbstractJSONEntry
+    ArrayEntry <: Schema
 
 Keeps statistics about an "array" entry in JSONs.
 - statistics of all individual values
 - how many times the entry was updated
 """
-mutable struct ArrayEntry <: AbstractJSONEntry
-    items::Union{Nothing, AbstractJSONEntry}
+mutable struct ArrayEntry <: Schema
+    items::Union{Nothing, Schema}
     const lengths::Dict{Int, Int}
     updated::Int
 end
@@ -25,7 +25,6 @@ macro try_catch_array_entry(ex)
         end
     end
 end
-
 
 function update!(e::ArrayEntry, v::AbstractVector)
     n = length(v)
@@ -67,6 +66,8 @@ function Base.reduce(::typeof(merge), es::Vector{ArrayEntry})
     end
     ArrayEntry(items, lengths, sum(e -> e.updated, es))
 end
+
+representative_example(e::ArrayEntry) = isnothing(e.items) ? [] : [representative_example(e.items)]
 
 Base.hash(e::ArrayEntry, h::UInt) = hash((e.items, e.lengths, e.updated), h)
 (e1::ArrayEntry == e2::ArrayEntry) = e1.updated === e2.updated &&

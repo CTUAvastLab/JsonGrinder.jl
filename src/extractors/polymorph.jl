@@ -1,7 +1,7 @@
 """
-	MultipleRepresentation(extractors::Tuple)
+    PolymorphExtractor
 
-Extractor extracts item to a `ProductNode` where each item is different extractor and item is
+Extracts item to a `ProductNode` where each item is different extractor and item is
 extracted by all extractors in multirepresentation.
 
 # Examples
@@ -13,7 +13,7 @@ This allows model to more easily learn frequent or somehow else significant valu
 for previously unseen inputs.
 
 ```jldoctest
-julia> e = MultipleRepresentation((ExtractString(false),
+julia> e = PolymorphExtractor((ExtractString(false),
                         ExtractCategorical(["tcp", "udp", "dhcp"], false)));
 
 julia> s1 = e("tcp")
@@ -56,7 +56,7 @@ extract it properly. Of course there do not have to be only leaf value extractor
 while other are extracting leaves etc.
 
 ```jldoctest
-julia> e = MultipleRepresentation((ExtractString(), ExtractScalar(Float32, 2, 3)));
+julia> e = PolymorphExtractor((ExtractString(), ExtractScalar(Float32, 2, 3)));
 
 julia> s1 = e(5)
 ProductNode  # 1 obs, 40 bytes
@@ -86,15 +86,20 @@ julia> s2[:e2]
 
 ```
 """
-struct MultipleRepresentation{E<:Union{NamedTuple, Tuple}}
-	extractors::E
+struct PolymorphExtractor{T <: Union{NamedTuple, Tuple}} <: Extractor
+    extractors::T
 end
 
-MultipleRepresentation(vs::AbstractVector) = MultipleRepresentation((;[Symbol("e$(i)") => v for (i,v) in enumerate(vs)]...))
-MultipleRepresentation(vs::Tuple) = MultipleRepresentation((;[Symbol("e$(i)") => v for (i,v) in enumerate(vs)]...))
-(m::MultipleRepresentation)(x::HierarchicType; store_input=false) = ProductNode(map(e -> e(x; store_input), m.extractors))
-Base.keys(e::MultipleRepresentation) = keys(e.extractors)
+PolymorphExtractor(extractors::Extractor...) = PolymorphExtractor(extractors)
+PolymorphExtractor(; extractors...) = PolymorphExtractor(NamedTuple(extractors))
 
-Base.hash(e::MultipleRepresentation, h::UInt) = hash(e.extractors, h)
-Base.:(==)(e1::MultipleRepresentation, e2::MultipleRepresentation) = e1.extractors == e2.extractors
-Base.getindex(e::MultipleRepresentation, i::Int) = e.extractors[i]
+MacroTools.@forward PolymorphExtractor.extractors Base.getindex, Base.get, Base.haskey,
+    Base.keys, Base.length, Base.isempty
+
+function (e::PolymorphExtractor)(v::Maybe; store_input=Val(false))
+    ProductNode(map(e -> e(v; store_input), e.extractors), _metadata(v, store_input))
+end
+(e::PolymorphExtractor)(::Nothing) = ProductNode(map(e -> e(nothing), e.extractors))
+
+Base.hash(e::PolymorphExtractor, h::UInt) = hash(e.extractors, h)
+(e1::PolymorphExtractor == e2::PolymorphExtractor) = e1.extractors == e2.extractors

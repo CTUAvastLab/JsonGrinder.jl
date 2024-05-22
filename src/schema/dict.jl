@@ -1,19 +1,21 @@
 """
-    DictEntry <: AbstractJSONEntry
+    DictEntry <: Schema
 
 Keeps statistics about JSON "objects" containing key-value pairs:
 - statistics of all individual values
 - how many times the entry was updated
 """
-mutable struct DictEntry <: AbstractJSONEntry
-    const children::Dict{Symbol, AbstractJSONEntry}
+mutable struct DictEntry <: Schema
+    const children::Dict{Symbol, Schema}
     updated::Int
 end
 
-DictEntry() = DictEntry(Dict{Symbol, AbstractJSONEntry}(), 0)
+DictEntry() = DictEntry(Dict{Symbol, Schema}(), 0)
 
-MacroTools.@forward DictEntry.children Base.getindex, Base.setindex!, Base.get, Base.haskey,
+MacroTools.@forward DictEntry.children Base.setindex!, Base.get, Base.haskey,
     Base.keys, Base.length, Base.isempty
+
+Base.getindex(e::DictEntry, k::Symbol) = e.children[k]
 
 macro try_catch_dict_entry(ex, k)
     quote
@@ -28,7 +30,7 @@ macro try_catch_dict_entry(ex, k)
     end
 end
 
-function update!(e::DictEntry, d::AbstractDict{<:AbstractString})
+function update!(e::DictEntry, d::AbstractDict)
     for (k, v) in d
         k = Symbol(k)
         if haskey(e, k)
@@ -65,6 +67,10 @@ function Base.reduce(::typeof(merge), es::Vector{DictEntry})
         @try_catch_dict_entry reduce(merge, children) k
     end
     DictEntry(Dict(zip(ks, vs)), sum(e -> e.updated, es))
+end
+
+function representative_example(e::DictEntry)
+    Dict(string(k) => representative_example(v) for (k, v) in e.children)
 end
 
 Base.hash(e::DictEntry, h::UInt) = hash((e.children, e.updated), h)

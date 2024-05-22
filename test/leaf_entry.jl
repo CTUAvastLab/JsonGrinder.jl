@@ -1,5 +1,5 @@
 @testset "LeafEntry update!" begin
-    e1 = LeafEntry(Number)
+    e1 = LeafEntry(Real)
     e2 = LeafEntry(String)
 
     @test get(e1.counts, 1, 0) == get(e1.counts, 1.0, 0) == 0
@@ -68,7 +68,7 @@ end
     max_keys = JsonGrinder.max_keys()
     JsonGrinder.max_keys!(3)
 
-    e = LeafEntry(Number)
+    e = LeafEntry(Real)
     for v in 1:3
         update!(e, v)
         @test e.updated == v

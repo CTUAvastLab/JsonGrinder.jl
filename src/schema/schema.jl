@@ -1,4 +1,4 @@
-abstract type AbstractJSONEntry end
+abstract type Schema end
 
 include("leaf.jl")
 include("dict.jl")
@@ -18,23 +18,23 @@ end
 """
     update!(e, v)
 
-updates the [`AbstractJSONEntry`](@ref) `e` with value `v` and returns the resulting entry.
+updates the [`Schema`](@ref) `e` with value `v` and returns the resulting entry.
 """
-function update!(e::AbstractJSONEntry, v)
+function update!(e::Schema, v)
     throw(InconsistentSchema(String[], "Can't store `$(typeof(v))` into `$(typeof(e))`!"))
 end
 
 """
     newentry(v)
 
-    create and return a new [`AbstractJSONEntry`](@ref) according to the type of `v` and insert `v` into it.
+    create and return a new [`Schema`](@ref) according to the type of `v` and insert `v` into it.
 """
 function newentry(v)
     e = _newentry(v)
     update!(e, v)
     e
 end
-_newentry(::T) where T <: ScalarType = LeafEntry(T)
+_newentry(::T) where T <: Union{AbstractString, Real} = LeafEntry(T)
 _newentry(::AbstractDict) = DictEntry()
 _newentry(::AbstractVector) = ArrayEntry()
 
@@ -61,7 +61,7 @@ Merge multiple schemas `others` into `schema` inplace.
 
 See also: [`merge`](@ref), [`schema`](@ref).
 """
-function Base.merge!(::T, others::AbstractJSONEntry...) where T <: AbstractJSONEntry
+function Base.merge!(::T, others::Schema...) where T <: Schema
     types = join('`' .* string.(typeof.(others)) .* '`', ", ", " and ")
     msg = "Can't merge the types $types into `$T`!"
     throw(InconsistentSchema(String[], msg))
@@ -77,9 +77,9 @@ all results.
 
 See also: [`merge!`](@ref), [`schema`](@ref).
 """
-Base.merge(schemas::AbstractJSONEntry...) = reduce(merge, collect(schemas))
+Base.merge(schemas::Schema...) = reduce(merge, collect(schemas))
 
-function Base.reduce(::typeof(merge), schemas::Vector{<:AbstractJSONEntry})
+function Base.reduce(::typeof(merge), schemas::Vector{<:Schema})
     types = join('`' .* string.(typeof.(schemas)) .* '`', ", ", " and ")
     msg = "Can't merge the types $(types)!"
     throw(InconsistentSchema(String[], msg))

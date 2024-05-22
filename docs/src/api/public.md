@@ -18,12 +18,12 @@ JsonGrinder.suggestextractor
 JsonGrinder.generate_html
 JsonGrinder.extractbatch
 JsonGrinder.ExtractScalar
-JsonGrinder.ExtractCategorical
+JsonGrinder.CategoricalExtractor
 JsonGrinder.ExtractArray
 JsonGrinder.ExtractDict
 JsonGrinder.ExtractVector
 JsonGrinder.MultipleRepresentation
-JsonGrinder.ExtractString
+JsonGrinder.NGramExtractor
 JsonGrinder.ExtractKeyAsField
 JsonGrinder.AuxiliaryExtractor
 ```

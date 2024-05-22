@@ -14,9 +14,9 @@ which, if `true`, causes input data to be stored as metadata of respective `Mill
 because it can cause type-instability in case of irregular input data and thus suffer from performance loss. 
 The `store_input` argument is propagated to leaves and is used to store primarily leaf values.
 
-Because `JsonGrinder` supports working with missing values, each leaf extractor has `uniontypes` field which determines 
+Because `JsonGrinder` supports working with missing values, each leaf extractor has `extract_missing` field which determines 
 if it can return missing values or not, and based on this field, extractor returns appropriate data type.
-By default, `uniontypes` is true, so it supports missing values of the shelf, 
+By default, `extract_missing` is true, so it supports missing values of the shelf, 
 but we advise to set it during extractor construction according to your data because it may create unnecessarily many parameters otherwise. 
 [`suggestextractor`](@ref) takes into account where missing values can be observed and where not based on statistics 
 in schema and provides sensible default extractor.
@@ -30,15 +30,15 @@ using JsonGrinder, Mill, JSON, StatsBase
 ## Numbers
 
 ```julia
-struct ExtractScalar{T} <: AbstractExtractor
+struct ExtractScalar{T} <: Extractor
 	c::T
 	s::T
-	uniontypes::Bool
+	extract_missing::Bool
 end
 ```
 Extracts a numerical value, centered by subtracting `c` and scaled by multiplying by `s`.
-Strings are converted to numbers. The extractor returns `ArrayNode{Matrix{T}}` with a single row if `uniontypes` if `false`, 
-and `ArrayNode{Matrix{Union{Missing, T}}}` with a single row if `uniontypes` if `true`.
+Strings are converted to numbers. The extractor returns `ArrayNode{Matrix{T}}` with a single row if `extract_missing` if `false`, 
+and `ArrayNode{Matrix{Union{Missing, T}}}` with a single row if `extract_missing` if `true`.
 ```@example 1
 e = ExtractScalar(Float32, 0.5, 4.0, true)
 e("1").data
@@ -63,7 +63,7 @@ e("1", store_input=true).data
 
 by default, metadata contains `nothing`.
 
-And if `uniontypes` is false, it looks as follows
+And if `extract_missing` is false, it looks as follows
 
 ```@repl 1
 e = ExtractScalar(Float32, 0.5, 4.0, true)
@@ -75,18 +75,18 @@ e(missing)
 
 ## Strings
 ```julia
-struct ExtractString <: AbstractExtractor
+struct NGramExtractor <: Extractor
 	n::Int
 	b::Int
 	m::Int
-	uniontypes::Bool
+	extract_missing::Bool
 end
 ```
 
 Represents `String` as `n-`grams (`NGramMatrix` from `Mill.jl`) with base `b` and modulo `m`.
 
 ```@example 1
-e = ExtractString()
+e = NGramExtractor()
 e("Hello")
 ```
 
@@ -105,9 +105,9 @@ it works the same also with missing values
 e(missing, store_input=true).metadata
 ```
 
-and if we know we won't have missing strings, we can disable `uniontypes`:
+and if we know we won't have missing strings, we can disable `extract_missing`:
 ```@repl 1
-e = ExtractString(false)
+e = NGramExtractor(false)
 e("Hello")
 e(missing)
 e("Hello", store_input=true).metadata
@@ -115,16 +115,16 @@ e("Hello", store_input=true).metadata
 
 ## Categorical
 ```julia
-struct ExtractCategorical{V,I} <: AbstractExtractor
+struct CategoricalExtractor{V,I} <: Extractor
 	keyvalemap::Dict{V,I}
 	n::Int
-	uniontypes::Bool
+	extract_missing::Bool
 end
 ```
 Converts a single item to a one-hot encoded vector. For a safety, there is always an
 extra item reserved for an unknown value.
 ```@example 1
-e = ExtractCategorical(["A","B","C"])
+e = CategoricalExtractor(["A","B","C"])
 e(["A","B","C","D"]).data
 ```
 
@@ -138,7 +138,7 @@ Storing input in this case looks as follows
 e(["A","B","C","D"], store_input=true).metadata
 ```
 
-`uniontypes` settings works the same as with scalars or strings.
+`extract_missing` settings works the same as with scalars or strings.
 
 ### Use-cases for unknown value
 
@@ -161,12 +161,12 @@ Now we can see it has 1000 unique values, and has been created from 1437 observa
 Creating the extractor directly and extracting value from it will produce one-hot encoded vector of dimension 1001 
 (1000 unique values + 1 dimension for the unknown).
 ```@example 1
-ExtractCategorical(entry)("aaaaa")
+CategoricalExtractor(entry)("aaaaa")
 ```
 
 But when making threshold for values we have seen at least 5 times, it produces one-hot vector of dimension 17, which is significantly smaller.
 ```@example 1
-ExtractCategorical(keys(filter(kv->kv[2]>=5, entry.counts)))("aaaaa")
+CategoricalExtractor(keys(filter(kv->kv[2]>=5, entry.counts)))("aaaaa")
 ```
 
 For training, the latter approach may be beneficial, because the number of weights will be significantly lower.
@@ -190,7 +190,7 @@ with items converted by `item`. The entire array is assumed to be a single bag.
 The `BagNode` contains data in field `data` and information about bags in `bags` field.
 
 ```@example 1
-sc = ExtractArray(ExtractCategorical(["A","B","C"]))
+sc = ExtractArray(CategoricalExtractor(["A","B","C"]))
 sc(["A","B","C","D"])
 ```
 
@@ -239,7 +239,7 @@ sc([], store_input=true).metadata
 
 ## [Dict](@id exfuctions_ExtractDict)
 ```julia
-struct ExtractDict{S} <: AbstractExtractor
+struct ExtractDict{S} <: Extractor
 	dict::S
 end
 ```
@@ -247,9 +247,9 @@ end
 Extracts all items in `dict` and return them as a ProductNode. Key in dict corresponds to keys in JSON.
 ```@example 1
 ex = ExtractDict(Dict(:a => ExtractScalar(),
-	:b => ExtractString(),
-	:c => ExtractCategorical(["A","B"]),
-	:d => ExtractArray(ExtractString())))
+	:b => NGramExtractor(),
+	:c => CategoricalExtractor(["A","B"]),
+	:d => ExtractArray(NGramExtractor())))
 ex(Dict(:a => "1",
 	:b => "Hello",
 	:c => "A",
@@ -337,7 +337,7 @@ The extractor itself is simple as well. For the case above, it would look like
 s = JSON.parse("{ \"foo.dll\" : [\"print\",\"write\", \"open\",\"close\"],
   \"bar.dll\" : [\"send\", \"recv\"]
 }")
-ex = ExtractKeyAsField(ExtractString(),ExtractArray(ExtractString()))
+ex = ExtractKeyAsField(NGramExtractor(),ExtractArray(NGramExtractor()))
 ex(s)
 ```
 
@@ -363,7 +363,7 @@ The corresponding `Mill` structure will contain `ProductNode` of both representa
 
 For example `String` with *Categorical* and *NGram* representation will look like
 ```@example 1
-ex = MultipleRepresentation((c = ExtractCategorical(["Hello","world"]), s = ExtractString()))
+ex = MultipleRepresentation((c = CategoricalExtractor(["Hello","world"]), s = NGramExtractor()))
 reduce(catobs,ex.(["Hello","world","from","Prague"]))
 ```
 
@@ -379,7 +379,7 @@ Let's create appropriate `MultipleRepresentation` (although in real-world usage 
 is proposed based on observed data in `suggestextractor`):
 
 ```@repl 1
-ex = MultipleRepresentation((ExtractString(), ExtractArray(ExtractScalar(Float32))));
+ex = MultipleRepresentation((NGramExtractor(), ExtractArray(ExtractScalar(Float32))));
 e_hello = ex("Hello")
 e_hello[:e1].data
 e_hello[:e2].data
@@ -405,20 +405,20 @@ There is singleton `extractempty` which can be used to obtain instance of instan
 All above-mentioned extractors are able to extract this, as we can see here
 
 ```@repl 1
-ExtractString()(JsonGrinder.extractempty)
-ExtractString()(JsonGrinder.extractempty) |> numobs
-ExtractCategorical(["A","B"])(JsonGrinder.extractempty)
-ExtractCategorical(["A","B"])(JsonGrinder.extractempty) |> numobs
+NGramExtractor()(JsonGrinder.extractempty)
+NGramExtractor()(JsonGrinder.extractempty) |> numobs
+CategoricalExtractor(["A","B"])(JsonGrinder.extractempty)
+CategoricalExtractor(["A","B"])(JsonGrinder.extractempty) |> numobs
 ExtractScalar()(JsonGrinder.extractempty)
 ExtractScalar()(JsonGrinder.extractempty) |> numobs
-ExtractArray(ExtractString())(JsonGrinder.extractempty)
-ExtractArray(ExtractString())(JsonGrinder.extractempty) |> numobs
+ExtractArray(NGramExtractor())(JsonGrinder.extractempty)
+ExtractArray(NGramExtractor())(JsonGrinder.extractempty) |> numobs
 ExtractDict(Dict(:a => ExtractScalar(),
-	:b => ExtractString(),
-	:c => ExtractCategorical(["A","B"]),
-	:d => ExtractArray(ExtractString())))(JsonGrinder.extractempty)
+	:b => NGramExtractor(),
+	:c => CategoricalExtractor(["A","B"]),
+	:d => ExtractArray(NGramExtractor())))(JsonGrinder.extractempty)
 ExtractDict(Dict(:a => ExtractScalar(),
-	:b => ExtractString(),
-	:c => ExtractCategorical(["A","B"]),
-	:d => ExtractArray(ExtractString())))(JsonGrinder.extractempty) |> numobs
+	:b => NGramExtractor(),
+	:c => CategoricalExtractor(["A","B"]),
+	:d => ExtractArray(NGramExtractor())))(JsonGrinder.extractempty) |> numobs
 ```

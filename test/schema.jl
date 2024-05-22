@@ -290,3 +290,27 @@ end
 
     JsonGrinder.max_keys!(mk)
 end
+
+@testset "representative_example" begin
+    sch = DictEntry(Dict(
+        :a => ArrayEntry(
+            DictEntry(Dict(
+                :a => LeafEntry(Dict(1 => 4, 2 => 1), 5),
+                :b => LeafEntry(Dict(1 => 1, 2 => 2, 3 => 2), 5),
+            ), 5), Dict(0 => 1, 1 => 1, 2 => 2), 4),
+        :b => LeafEntry(Dict(1 => 2, 2 => 2), 4)), 4)
+
+    @test JsonGrinder.representative_example(sch) == Dict(
+        "a" => [Dict("a" => 2, "b" => 2)], "b" => 2)
+
+    sch = DictEntry(Dict(
+        :a => ArrayEntry(
+            DictEntry(Dict(
+                :a => LeafEntry(Dict(1 => 3, 2 => 1), 4),
+                :b => LeafEntry(Dict(2 => 2, 3 => 2), 4),
+            ), 5), Dict(0 => 1, 1 => 1, 2 => 2), 4),
+        :b => LeafEntry(Dict(1 => 2, 2 => 2), 4)), 4)
+
+    @test JsonGrinder.representative_example(sch) == Dict(
+        "a" => [Dict("a" => 2, "b" => 2)], "b" => 2)
+end
