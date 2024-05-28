@@ -2,35 +2,18 @@ using Test, Random
 
 Random.seed!(0)
 
-using JsonGrinder
-using JsonGrinder: update!, InconsistentSchema
-
 using Accessors
 using Combinatorics
 using Documenter
 using HierarchicalUtils
-using OneHotArrays
 using JSON, JSON3
+using JsonGrinder
 using Mill
-using Mill: Maybe, Flux
+using OneHotArrays
+
+using JsonGrinder: update!, InconsistentSchema
 using LinearAlgebra: I
-
-# function buf_printtree(data; kwargs...)
-#     buf = IOBuffer()
-#     printtree(buf, data; kwargs...)
-#     String(take!(buf))
-# end
-
-# const ≃ = isequal
-
-# @testset "Doctests" begin
-#     DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, quote
-#         using JsonGrinder, Mill, OneHotArrays
-#         # do not shorten prints in doctests
-#         ENV["LINES"] = ENV["COLUMNS"] = typemax(Int)
-#     end; recursive=true)
-#     doctest(JsonGrinder)
-# end
+using Mill: Maybe
 
 function common_extractor_tests(e::Extractor, v; test_stability=true)
     @test numobs(e(v)) == 1
@@ -56,6 +39,15 @@ function common_extractor_tests(e::Extractor, v; test_stability=true)
         @test all(n -> eltype(n.data) <: Union{Missing, T} where T, LeafIterator(e(x)))
         test_stability && @test_nowarn @inferred e(x)
     end
+end
+
+@testset "Doctests" begin
+    DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, quote
+        using JsonGrinder, Mill, OneHotArrays
+        # do not shorten prints in doctests
+        ENV["LINES"] = ENV["COLUMNS"] = typemax(Int)
+    end; recursive=true)
+    doctest(JsonGrinder)
 end
 
 for test_f in readdir(".")

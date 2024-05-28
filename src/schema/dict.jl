@@ -1,9 +1,7 @@
 """
     DictEntry <: Schema
 
-Keeps statistics about JSON "objects" containing key-value pairs:
-- statistics of all individual values
-- how many times the entry was updated
+Keeps statistics about JSON "objects" containing key-value pairs.
 """
 mutable struct DictEntry <: Schema
     const children::Dict{Symbol, Schema}

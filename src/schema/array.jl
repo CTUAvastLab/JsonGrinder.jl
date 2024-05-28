@@ -2,8 +2,6 @@
     ArrayEntry <: Schema
 
 Keeps statistics about an "array" entry in JSONs.
-- statistics of all individual values
-- how many times the entry was updated
 """
 mutable struct ArrayEntry <: Schema
     items::Union{Nothing, Schema}

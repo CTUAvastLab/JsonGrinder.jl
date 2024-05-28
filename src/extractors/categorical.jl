@@ -1,65 +1,29 @@
 """
     CategoricalExtractor{V, I} <: Extractor
 
-Converts a single item to a one-hot encoded vector and an array of items into a one-hot matrix.
+Extracts a single item interpreted as a categorical variable into a one-hot encoded vector.
 
-There is always alocated an extra element for a unknown value.
-
-If passed `missing`, if `extract_missing` is true, returns column of missing values, otherwise raises error.
-
-If `extract_missing` is true, it allows extracting `missing` values and all extracted values will be of type
-`Union{Missing, <other type>}` due to type stability reasons. Otherwise missings extraction is not allowed.
+There is always an extra category for an unknown value (and hence the displayed `n` is one more
+than the number of categories).
 
 # Examples
-
 ```jldoctest
-julia> using Mill: catobs
+julia> e = CategoricalExtractor(1:3)
+CategoricalExtractor(n=4)
 
-julia> e = CategoricalExtractor(2:4, true);
-
-julia> mapreduce(e, catobs, [2,3,1,4])
-4×4 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
-  true    ⋅      ⋅      ⋅
-   ⋅     true    ⋅      ⋅
-   ⋅      ⋅      ⋅     true
-   ⋅      ⋅     true    ⋅
-
-julia> mapreduce(e, catobs, [1,missing,5])
-4×3 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
-   ⋅    missing    ⋅
-   ⋅    missing    ⋅
-   ⋅    missing    ⋅
-  true  missing   true
-
-julia> e(4)
-4×1 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
-   ⋅
-   ⋅
-  true
-   ⋅
-
-julia> e(missing)
-4×1 ArrayNode{MaybeHotMatrix{Union{Missing, UInt32}, Int64, Union{Missing, Bool}}, Nothing}:
- missing
- missing
- missing
- missing
-
-julia> e = CategoricalExtractor(2:4, false);
-
-julia> mapreduce(e, catobs, [2, 3, 1, 4])
-4×4 ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}:
- 1  ⋅  ⋅  ⋅
- ⋅  1  ⋅  ⋅
- ⋅  ⋅  ⋅  1
- ⋅  ⋅  1  ⋅
-
-julia> e(4)
- 4×1 ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}:
- ⋅
+julia> e(2)
+4×1 ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}:
  ⋅
  1
  ⋅
+ ⋅
+
+julia> e(-1)
+4×1 ArrayNode{OneHotMatrix{UInt32, Vector{UInt32}}, Nothing}:
+ ⋅
+ ⋅
+ ⋅
+ 1
 ```
 """
 struct CategoricalExtractor{V} <: LeafExtractor

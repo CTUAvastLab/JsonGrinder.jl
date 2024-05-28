@@ -1,4 +1,4 @@
-@testset "ExtractArray" begin
+@testset "ArrayExtractor" begin
     for (inner_e, js) in zip(
         [ CategoricalExtractor(2:4), ScalarExtractor(), NGramExtractor() ],
         [ [2, 3, 4], [2, 3, 4], ["foo", "bar", "baz"] ])

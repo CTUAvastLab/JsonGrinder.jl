@@ -1,9 +1,7 @@
 """
     LeafEntry{T} <: Schema
 
-Keeps statistics about scalar values of type `T` in leaves:
-- how many times specific values appeared (at most [`JsonGrinder.max_keys()`](@ref) is held)
-- how many times the entry was updated
+Keeps statistics about scalar values of type `T` in leaves.
 """
 mutable struct LeafEntry{T} <: Schema
     const counts::Dict{T, Int}

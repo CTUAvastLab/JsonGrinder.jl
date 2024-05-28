@@ -1,12 +1,3 @@
-abstract type Extractor end
-abstract type LeafExtractor <: Extractor end
-
-struct StableExtractor{T <: Extractor} <: LeafExtractor
-    e::T
-end
-Base.hash(e::StableExtractor, h::UInt) = hash((e.e,), h)
-(e1::StableExtractor == e2::StableExtractor) = e1.e == e2.e
-
 #=
 Why is it not possible to have fully type stable extraction?
 
@@ -26,6 +17,22 @@ d2 = JSON3.read(js)
 The only way out of this is to write our own type-stable parser using (frozen) schema.
 =#
 
+abstract type Extractor end
+abstract type LeafExtractor <: Extractor end
+
+"""
+    struct StableExtractor{T <: LeafExtractor} <: LeafExtractor
+
+Wraps any other `LeafExtractor` and makes it output stable results w.r.t. missing input values.
+
+See also: [`stabilizeextractor`](@ref).
+"""
+struct StableExtractor{T <: LeafExtractor} <: LeafExtractor
+    e::T
+end
+Base.hash(e::StableExtractor, h::UInt) = hash((e.e,), h)
+(e1::StableExtractor == e2::StableExtractor) = e1.e == e2.e
+
 include("scalar.jl")
 include("categorical.jl")
 include("ngram.jl")
@@ -42,53 +49,43 @@ function (e::LeafExtractor)(v::Maybe; store_input=Val(false))
 end
 (e::LeafExtractor)(::Nothing) = ArrayNode(extract_leaf(e, nothing))
 
-# _missing_check(::Extractor) = error("This extractor does not support missing values!")
-# _missing_check(::StableExtractor) = nothing
-#
-# function (e::LeafExtractor)(v; store_input=Val(false))
-#     # TODO can we run into this?
-#     ismissing(v) && _missing_check(e)
-#     ArrayNode(extract_leaf(e, v), _metadata(v, store_input))
-# end
-# extract_nothing(e::LeafExtractor) = ArrayNode(extract_nothing(e))
-# extract_missing(e::LeafExtractor) = ArrayNode(extract_missing(e))
-
-# function (e::LeafExtractor)(v::Maybe; store_input=false)
-#     ismissing(v) && _missing_check(e)
-#     ArrayNode(extract_leaf(e, v), store_input && !isnothing(v) ? [v] : nothing)
-#     # ArrayNode(randn(2, 2), store_input ? [v] : nothing)
-# end
-
-# function (e::LeafExtractor)(v::Maybe)
-#     ismissing(v) && _missing_check(e)
-#     ArrayNode(extract_leaf(e, v))
-# end
-
 _metadata(v, ::Val{true}) = [v]
 _metadata(_, ::Val{false}) = nothing
 
-#
-# function (e::LeafExtractor)(v::Maybe; store_input=Val{false}())
-#     ismissing(v) && _missing_check(e)
-#     ArrayNode(extract_leaf(e, v), _metadata(v, store_input))
-# end
+"""
+    stabilizeextractor(e::Extractor)
 
+Returns a new extractor with similar structure as `e`, containing `StableExtractor` in its leaves.
+
+# Examples
+```jldoctest
+julia> e = (a=ScalarExtractor(), b=CategoricalExtractor(1:5)) |> DictExtractor
+DictExtractor
+  ├── a: ScalarExtractor(c=0.0, s=1.0)
+  ╰── b: CategoricalExtractor(n=6)
+
+julia> e_stable = stabilizeextractor(e)
+DictExtractor
+  ├── a: StableExtractor(ScalarExtractor(c=0.0, s=1.0))
+  ╰── b: StableExtractor(CategoricalExtractor(n=6))
+
+julia> e(Dict("a" => 0))
+ERROR: This extractor does not support missing values!
+[...]
+
+julia> e_stable(Dict("a" => 0))
+ProductNode  1 obs, 24 bytes
+  ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  1 obs, 53 bytes
+  ╰── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements)  1 obs, 77 bytes
+```
+
+See also: [`suggestextractor`](@ref), [`extract`](@ref).
+"""
 stabilizeextractor(e::StableExtractor) = e
 stabilizeextractor(e::LeafExtractor) = StableExtractor(e)
 stabilizeextractor(e::DictExtractor) = DictExtractor(map(stabilizeextractor, e.children))
 stabilizeextractor(e::ArrayExtractor) = ArrayExtractor(stabilizeextractor(e.items))
 stabilizeextractor(e::PolymorphExtractor) = PolymorphExtractor(map(stabilizeextractor, e.extractors))
-
-"""
-    extract_input(e, js)
-
-Extract json `js` using extractor `e` storing original input in metadata.
-"""
-function extract_input(e::LeafExtractor, v::Maybe)
-    ismissing(v) && _missing_check(e)
-    ArrayNode(extract_leaf(e, v), [v])
-end
-
 
 """
     suggestextractor(e::Schema; min_occurences=1, all_stable=false, categorical_limit=100)
@@ -100,6 +97,48 @@ given schema `e`, create a corresponding `Extractor`
 - `categorical_limit` specifies the maximum number of different values in a leaf for it to be
     considered a categorical variable.
 - `ngram_params` makes it possible to override default params for `NGramExtractor`.
+
+# Examples
+```jldoctest
+julia> s = schema([ Dict("a" => 1, "b" => ["foo"], "c" => Dict("d" => 1)),
+                    Dict("a" => 2,                 "c" => Dict())])
+DictEntry 2x updated
+  ├── a: LeafEntry (2 unique `Real` values) 2x updated
+  ├── b: ArrayEntry 1x updated
+  │        ╰── LeafEntry (1 unique `String` values) 1x updated
+  ╰── c: DictEntry 2x updated
+           ╰── d: LeafEntry (1 unique `Real` values) 1x updated
+
+julia> suggestextractor(s)
+DictExtractor
+  ├── a: CategoricalExtractor(n=3)
+  ├── b: ArrayExtractor
+  │        ╰── StableExtractor(CategoricalExtractor(n=2))
+  ╰── c: DictExtractor
+           ╰── d: StableExtractor(CategoricalExtractor(n=2))
+
+julia> suggestextractor(s; all_stable=true)
+DictExtractor
+  ├── a: StableExtractor(CategoricalExtractor(n=3))
+  ├── b: ArrayExtractor
+  │        ╰── StableExtractor(CategoricalExtractor(n=2))
+  ╰── c: DictExtractor
+           ╰── d: StableExtractor(CategoricalExtractor(n=2))
+
+julia> suggestextractor(s; min_occurences=2)
+DictExtractor
+  ╰── a: CategoricalExtractor(n=3)
+
+julia> suggestextractor(s; categorical_limit=0)
+DictExtractor
+  ├── a: ScalarExtractor(c=1.0, s=1.0)
+  ├── b: ArrayExtractor
+  │        ╰── StableExtractor(NGramExtractor(n=3, b=256, m=2053))
+  ╰── c: DictExtractor
+           ╰── d: StableExtractor(ScalarExtractor(c=1.0, s=1.0))
+```
+
+See also: [`extract`](@ref), [`stabilizeextractor`](@ref).
 """
 function suggestextractor(e::Schema; min_occurences::Int=1, all_stable::Bool = false,
     categorical_limit::Int=100, ngram_params=NamedTuple())
@@ -148,10 +187,13 @@ function Mill.reflectinmodel(sch::Schema, ex::Extractor, args...; kwargs...)
 end
 
 # TODO batch extraction
-# """
-# 	extractbatch(extractor, samples)
-#
-# utility function, shortcut for mapreduce(extractor, catobs, samples)
-# """
-# extractbatch(extractor, samples) = mapreduce(extractor, catobs, samples)
+# comment behavior on samples
+"""
+	extract(extractor, samples)
+
+utility function, shortcut for mapreduce(extractor, catobs, samples)
+
+See also: [`suggestextractor`](@ref), [`stabilizeextractor`](@ref).
+"""
+extract(extractor, samples) = mapreduce(extractor, catobs, samples)
 
