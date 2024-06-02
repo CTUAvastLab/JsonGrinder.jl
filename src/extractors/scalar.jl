@@ -34,14 +34,38 @@ function ScalarExtractor(e::LeafEntry{<:Real})
     ScalarExtractor(c, s)
 end
 
-extract_leaf(e::ScalarExtractor, v::Real) = [e.s * (Float32(v) - e.c);;]
-extract_leaf(::ScalarExtractor, ::Nothing) = Matrix{Float32}(undef, 1, 0)
+_extract_leaf(e::ScalarExtractor, v::Real) = [e.s * (Float32(v) - e.c);;]
+_extract_leaf(::ScalarExtractor, ::Nothing) = Matrix{Float32}(undef, 1, 0)
 
-function extract_leaf(e::StableExtractor{ScalarExtractor}, v::Real)
-    convert(Matrix{Maybe{Float32}}, extract_leaf(e.e, v))
+function _extract_leaf(e::StableExtractor{ScalarExtractor}, v::Real)
+    convert(Matrix{Maybe{Float32}}, _extract_leaf(e.e, v))
 end
-extract_leaf(::StableExtractor{ScalarExtractor}, ::Nothing) = Matrix{Maybe{Float32}}(undef, 1, 0)
-extract_leaf(::StableExtractor{ScalarExtractor}, ::Missing) = Maybe{Float32}[missing;;]
+_extract_leaf(::StableExtractor{ScalarExtractor}, ::Nothing) = Matrix{Maybe{Float32}}(undef, 1, 0)
+_extract_leaf(::StableExtractor{ScalarExtractor}, ::Missing) = Maybe{Float32}[missing;;]
+
+_extract(e::ScalarExtractor, v::Real) = e.s * (Float32(v) - e.c)
+function _extract(::ScalarExtractor, ::Missing)
+    throw(IncompatibleExtractor("This extractor does not support missing values!"))
+end
+
+function _extract_batch(e::ScalarExtractor, V::AbstractVector)
+    M = Matrix{Float32}(undef, 1, length(V))
+    @inbounds for (i, v) in enumerate(V)
+        M[1, i] = _extract(e, v)
+    end
+    M
+end
+
+_extract(e::StableExtractor{ScalarExtractor}, v::Real) = _extract(e.e, v)
+_extract(::StableExtractor{ScalarExtractor}, ::Missing) = missing
+
+function _extract_batch(e::StableExtractor{ScalarExtractor}, V::AbstractVector)
+    M = Matrix{Maybe{Float32}}(undef, 1, length(V))
+    @inbounds for (i, v) in enumerate(V)
+        M[1, i] = _extract(e, v)
+    end
+    M
+end
 
 Base.hash(e::ScalarExtractor, h::UInt) = hash((e.c, e.s), h)
 (e1::ScalarExtractor == e2::ScalarExtractor) = e1.c == e2.c && e1.s == e2.s

@@ -40,17 +40,28 @@ include("dict.jl")
 include("array.jl")
 include("polymorph.jl")
 
-_missing_check(::Extractor) = error("This extractor does not support missing values!")
+function _missing_check(::Extractor)
+    throw(IncompatibleExtractor("This extractor does not support missing values!"))
+end
 _missing_check(::StableExtractor) = nothing
 
 function (e::LeafExtractor)(v::Maybe; store_input=Val(false))
     ismissing(v) && _missing_check(e)
-    ArrayNode(extract_leaf(e, v), _metadata(v, store_input))
+    ArrayNode(_extract_leaf(e, v), _metadata(v, store_input))
 end
-(e::LeafExtractor)(::Nothing) = ArrayNode(extract_leaf(e, nothing))
+(e::LeafExtractor)(::Nothing) = ArrayNode(_extract_leaf(e, nothing))
+
+_extract_leaf(_, _) = throw(IncompatibleExtractor())
+_extract(_, _) = throw(IncompatibleExtractor())
 
 _metadata(v, ::Val{true}) = [v]
 _metadata(_, ::Val{false}) = nothing
+
+function extract(e::LeafExtractor, V::AbstractVector; store_input=Val(false))
+    ArrayNode(_extract_batch(e, V), _metadata_batch(V, store_input))
+end
+_metadata_batch(V, ::Val{true}) = isempty(V) ? nothing : V
+_metadata_batch(_, ::Val{false}) = nothing
 
 """
     stabilizeextractor(e::Extractor)
@@ -70,7 +81,7 @@ DictExtractor
   ╰── b: StableExtractor(CategoricalExtractor(n=6))
 
 julia> e(Dict("a" => 0))
-ERROR: This extractor does not support missing values!
+ERROR: IncompatibleExtractor at path [:b]: This extractor does not support missing values!
 [...]
 
 julia> e_stable(Dict("a" => 0))
@@ -186,14 +197,33 @@ function Mill.reflectinmodel(sch::Schema, ex::Extractor, args...; kwargs...)
     Mill.reflectinmodel(ex(representative_example(sch)), args...; kwargs...)
 end
 
-# TODO batch extraction
-# comment behavior on samples
 """
-	extract(extractor, samples)
+    extract(e::Extractor, samples::AbstractVector; store_input=Val(false))
 
-utility function, shortcut for mapreduce(extractor, catobs, samples)
+Efficient extraction of multiple samples at once.
 
-See also: [`suggestextractor`](@ref), [`stabilizeextractor`](@ref).
+Note that whereas `extract` expects `samples` to be a **vector** of samples
+(as `schema` does), calling the extractor directly with `e(sample)` works for a
+**single** sample. In other words, `e(sample)` is equivalent to `extract(e, [sample])`.
+
+See also: [`suggestextractor`](@ref), [`stabilizeextractor`](@ref), [`schema`](@ref).
+
+# Examples
+```jldoctest
+julia> sample = Dict("a" => 0, "b" => "foo");
+
+julia> e = suggestextractor(schema([sample]))
+DictExtractor
+  ├── a: CategoricalExtractor(n=2)
+  ╰── b: CategoricalExtractor(n=2)
+
+julia> e(sample)
+ProductNode  1 obs, 32 bytes
+  ├── a: ArrayNode(2×1 OneHotArray with Bool elements)  1 obs, 76 bytes
+  ╰── b: ArrayNode(2×1 OneHotArray with Bool elements)  1 obs, 76 bytes
+
+julia> e(sample) == extract(e, [sample])
+true
+```
 """
-extract(extractor, samples) = mapreduce(extractor, catobs, samples)
-
+function extract end

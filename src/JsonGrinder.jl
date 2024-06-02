@@ -18,13 +18,15 @@ const FloatType = Float32
 
 include("switches.jl")
 
+include("exceptions.jl")
+
 include("schema/schema.jl")
 export schema, Schema, LeafEntry, DictEntry, ArrayEntry
 
 include("extractors/extractor.jl")
 export Extractor, ArrayExtractor, DictExtractor, PolymorphExtractor
 export LeafExtractor, ScalarExtractor, CategoricalExtractor, NGramExtractor, StableExtractor
-export suggestextractor, stabilizeextractor
+export extract, suggestextractor, stabilizeextractor
 
 include("util.jl")
 

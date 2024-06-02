@@ -11,19 +11,6 @@ end
 
 ArrayEntry() = ArrayEntry(nothing, Dict{Int,Int}(), 0)
 
-macro try_catch_array_entry(ex)
-    quote
-        try
-            $(esc(ex))
-        catch e
-            if e isa InconsistentSchema
-                push!(e.path, "[]")
-            end
-            rethrow(e)
-        end
-    end
-end
-
 function update!(e::ArrayEntry, v::AbstractVector)
     n = length(v)
     e.lengths[n] = get(e.lengths, n, 0) + 1
@@ -31,7 +18,7 @@ function update!(e::ArrayEntry, v::AbstractVector)
         e.items = _newentry(v[1])
     end
     for x in v
-        @try_catch_array_entry update!(e.items, x)
+        @try_catch_array update!(e.items, x)
     end
     e.updated += 1
 end
@@ -42,7 +29,7 @@ function Base.merge!(to::ArrayEntry, es::ArrayEntry...)
             if isnothing(to.items)
                 to.items = deepcopy(e.items)
             else
-                @try_catch_array_entry merge!(to.items, e.items)
+                @try_catch_array merge!(to.items, e.items)
             end
         end
         merge!(+, to.lengths, e.lengths)
@@ -56,7 +43,7 @@ function Base.reduce(::typeof(merge), es::Vector{ArrayEntry})
     items = if isempty(items)
         nothing
     else
-        @try_catch_array_entry reduce(merge, items)
+        @try_catch_array reduce(merge, items)
     end
     lengths = copy(es[1].lengths)
     for i in 2:length(es), (l, c) in es[i].lengths

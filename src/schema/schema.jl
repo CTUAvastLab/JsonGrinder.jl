@@ -4,17 +4,6 @@ include("leaf.jl")
 include("dict.jl")
 include("array.jl")
 
-struct InconsistentSchema{T <: AbstractString, U <: AbstractString} <: Exception
-    path::Vector{T}
-    msg::U
-end
-
-function Base.showerror(io::IO, ex::InconsistentSchema)
-    Base.print(io, "InconsistentSchema at ")
-    Base.print(io, isempty(ex.path) ? "root" : "path " * prod(reverse(ex.path)), ": ")
-    Base.print(io, ex.msg)
-end
-
 """
     update!(e, v)
 

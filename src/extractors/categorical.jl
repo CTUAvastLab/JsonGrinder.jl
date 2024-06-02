@@ -39,25 +39,51 @@ end
 
 CategoricalExtractor(e::LeafEntry) = CategoricalExtractor(collect(keys(e.counts)))
 
-function extract_leaf(e::CategoricalExtractor{V}, v::V) where V
+function _extract(e::CategoricalExtractor{V}, v::V) where V
+    v = v isa AbstractString ? shorten_string(v) : v
+    get(e.category_map, v, UInt32(1 + length(e.category_map)))
+end
+function _extract(::CategoricalExtractor, ::Missing)
+    throw(IncompatibleExtractor("This extractor does not support missing values!"))
+end
+_extract(e::StableExtractor{<:CategoricalExtractor}, v) = _extract(e.e, v)
+_extract(::StableExtractor{<:CategoricalExtractor}, ::Missing) = missing
+
+function _extract_leaf(e::CategoricalExtractor{V}, v::V) where V
     v = v isa AbstractString ? shorten_string(v) : v
     l = 1 + length(e.category_map)
     OneHotMatrix([get(e.category_map, v, UInt32(l))], l)
 end
-function extract_leaf(e::CategoricalExtractor, ::Nothing)
+function _extract_leaf(e::CategoricalExtractor, ::Nothing)
     OneHotMatrix(UInt32[], 1 + length(e.category_map))
 end
 
-function extract_leaf(e::StableExtractor{CategoricalExtractor{V}}, v::V) where V
+function _extract_leaf(e::StableExtractor{CategoricalExtractor{V}}, v::V) where V
     v = v isa AbstractString ? shorten_string(v) : v
     l = 1 + length(e.e.category_map)
     MaybeHotMatrix(Maybe{UInt32}[get(e.e.category_map, v, UInt32(l))], l)
 end
-function extract_leaf(e::StableExtractor{<:CategoricalExtractor}, ::Nothing)
+function _extract_leaf(e::StableExtractor{<:CategoricalExtractor}, ::Nothing)
     MaybeHotMatrix(Maybe{UInt32}[], 1 + length(e.e.category_map))
 end
-function extract_leaf(e::StableExtractor{<:CategoricalExtractor}, ::Missing)
+function _extract_leaf(e::StableExtractor{<:CategoricalExtractor}, ::Missing)
     MaybeHotMatrix(Maybe{UInt32}[missing], 1 + length(e.e.category_map))
+end
+
+function _extract_batch(e::CategoricalExtractor, V::AbstractVector)
+    I = Vector{UInt32}(undef, length(V))
+    @inbounds for (i, v) in enumerate(V)
+        I[i] = _extract(e, v)
+    end
+    OneHotMatrix(I, 1 + length(e.category_map))
+end
+
+function _extract_batch(e::StableExtractor{<:CategoricalExtractor}, V::AbstractVector)
+    I = Vector{Maybe{UInt32}}(undef, length(V))
+    @inbounds for (i, v) in enumerate(V)
+        I[i] = _extract(e, v)
+    end
+    MaybeHotMatrix(I, 1 + length(e.e.category_map))
 end
 
 Base.hash(e::CategoricalExtractor, h::UInt) = hash((e.category_map,), h)

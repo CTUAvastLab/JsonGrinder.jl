@@ -30,7 +30,10 @@ Base.getindex(e::DictExtractor, k::Symbol) = e.children[k]
     chs = if v == Missing || v == Nothing
         [:(e.children.$k(v; store_input)) for k in K]
     else
-        [:(e.children.$k(get(v, $(string(k)), missing); store_input)) for k in K]
+        [:(@try_catch_dict(
+            $(QuoteNode(k)),
+            e.children.$k(get(v, $(string(k)), missing); store_input)
+        )) for k in K]
     end
     quote
         data = NamedTuple{$K}(tuple($(chs...)))
@@ -43,6 +46,29 @@ end
     quote
         data = NamedTuple{$K}(tuple($(chs...)))
         ProductNode(data)
+    end
+end
+
+@generated function extract(e::DictExtractor{<:NamedTuple{K}},
+                    V::AbstractVector; store_input=Val(false)) where K
+    chs = map(K) do k
+        quote
+            ch = Vector{Any}(undef, length(V))
+            for (i, v) in enumerate(V)
+                if v isa Dict
+                    ch[i] = get(v, $(string(k)), missing)
+                elseif ismissing(v)
+                    ch[i] = missing
+                else
+                    throw(IncompatibleExtractor())
+                end
+            end
+            @try_catch_dict $(QuoteNode(k)) extract(e.children.$k, ch; store_input)
+        end
+    end
+    quote
+        data = NamedTuple{$K}(tuple($(chs...)))
+        ProductNode(data, _metadata_batch(V, store_input))
     end
 end
 

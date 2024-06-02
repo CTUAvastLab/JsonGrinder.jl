@@ -36,5 +36,9 @@ function (e::PolymorphExtractor)(v::Maybe; store_input=Val(false))
 end
 (e::PolymorphExtractor)(::Nothing) = ProductNode(map(e -> e(nothing), e.extractors))
 
+function extract(e::PolymorphExtractor, V; store_input=Val(false))
+    ProductNode(map(e -> extract(e, V; store_input), e.extractors), _metadata_batch(V, store_input))
+end
+
 Base.hash(e::PolymorphExtractor, h::UInt) = hash(e.extractors, h)
 (e1::PolymorphExtractor == e2::PolymorphExtractor) = e1.extractors == e2.extractors
