@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@v2
         with:
           version: '1'
       - name: Install dependencies
@@ -22,6 +22,8 @@ jobs:
             using Pkg;
             Pkg.develop(PackageSpec(path=pwd()));
             Pkg.instantiate()'
+      - name: Generate assets
+        run: julia --project=docs/ docs/make_assets.jl
       - name: Build and deploy
         run: julia --project=docs/ docs/make.jl
         env:
