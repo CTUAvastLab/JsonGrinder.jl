@@ -64,9 +64,9 @@ end
     @test e1.counts == Dict(0 => 1, 1 => 2)
 end
 
-@testset "LeafEntry max_keys" begin
-    max_keys = JsonGrinder.max_keys()
-    JsonGrinder.max_keys!(3)
+@testset "LeafEntry max_values" begin
+    max_values = JsonGrinder.max_values()
+    JsonGrinder.max_values!(3)
 
     e = LeafEntry(Real)
     for v in 1:3
@@ -100,7 +100,7 @@ end
     @test length(e.counts) == 3
     @test e.counts["1"] == 2
 
-    JsonGrinder.max_keys!(max_keys)
+    JsonGrinder.max_values!(max_values)
 end
 
 @testset "LeafEntry max_string_len" begin

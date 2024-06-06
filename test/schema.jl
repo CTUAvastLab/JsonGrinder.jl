@@ -261,7 +261,7 @@ end
     test_inconsistent(jss)
 end
 
-@testset "Schema merging respects max_keys" begin
+@testset "Schema merging respects max_values" begin
     jss = map(JSON.parse, [
         """ {"a": [{"a": 1}, {"b": 2}]} """,
         """ {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}]} """,
@@ -279,16 +279,16 @@ end
     # no need to test `merge` and `merge!` results below if this passes
     test_permutations_merging(jss)
 
-    mk = JsonGrinder.max_keys()
+    mk = JsonGrinder.max_values()
     for i in 1:10
-        JsonGrinder.max_keys!(i)
+        JsonGrinder.max_values!(i)
         sch = schema(jss)
         @test length(sch[:a].items[:a].counts) ≤ i
         @test length(sch[:a].items[:b].counts) ≤ i
         @test length(sch[:b].counts) ≤ i
     end
 
-    JsonGrinder.max_keys!(mk)
+    JsonGrinder.max_values!(mk)
 end
 
 @testset "representative_example" begin

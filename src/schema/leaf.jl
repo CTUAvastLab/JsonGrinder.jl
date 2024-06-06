@@ -20,7 +20,7 @@ update!(e::LeafEntry{Real}, v::Real) = _update_leaf!(e, v)
 update!(e::LeafEntry{String}, v::AbstractString) = _update_leaf!(e, shorten_string(v))
 
 function _update_leaf!(e::LeafEntry, v)
-    if length(e.counts) < max_keys()
+    if length(e.counts) < max_values()
         e.counts[v] = get(e.counts, v, 0) + 1
     elseif haskey(e.counts, v)
         e.counts[v] += 1
@@ -31,7 +31,7 @@ end
 function Base.merge!(to::LeafEntry{T}, es::LeafEntry{T}...) where T
     for e in es
         for (v, c) in e.counts
-            if length(to.counts) < max_keys()
+            if length(to.counts) < max_values()
                 to.counts[v] = get(to.counts, v, 0) + c
             end
         end
@@ -46,7 +46,7 @@ function Base.reduce(::typeof(merge), es::Vector{LeafEntry{T}}) where T
         for (k, c) in es[i].counts
             if haskey(counts, k)
                 counts[k] += c
-            elseif length(counts) < max_keys()
+            elseif length(counts) < max_values()
                 counts[k] = c
             end
         end

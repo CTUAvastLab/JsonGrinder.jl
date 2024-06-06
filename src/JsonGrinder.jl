@@ -2,7 +2,6 @@ module JsonGrinder
 
 using Accessors
 using HierarchicalUtils
-using JSON
 using MacroTools
 using Mill
 using OneHotArrays
@@ -21,14 +20,16 @@ include("switches.jl")
 include("exceptions.jl")
 
 include("schema/schema.jl")
-export schema, Schema, LeafEntry, DictEntry, ArrayEntry
+export schema, update!, newentry, Schema, LeafEntry, DictEntry, ArrayEntry
 
 include("extractors/extractor.jl")
-export Extractor, ArrayExtractor, DictExtractor, PolymorphExtractor
+export Extractor, DictExtractor, ArrayExtractor, PolymorphExtractor
 export LeafExtractor, ScalarExtractor, CategoricalExtractor, NGramExtractor, StableExtractor
-export extract, suggestextractor, stabilizeextractor
+export suggestextractor, stabilizeextractor, extract
 
 include("util.jl")
+export pred_lens, list_lens, find_lens, findnonempty_lens
+export replacein, code2lens, lens2code
 
 function Base.getindex(n::Union{Schema, Extractor}, i::AbstractString)
     HierarchicalUtils.walk(n, i)

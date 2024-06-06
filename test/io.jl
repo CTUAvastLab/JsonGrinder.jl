@@ -1,5 +1,3 @@
-# TODO create IO tests like in Mill.jl
-
 @testset "PolymorphExtractor io" begin
     e = PolymorphExtractor((
         CategoricalExtractor(["foo", "bar", "baz"]),

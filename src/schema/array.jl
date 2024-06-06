@@ -15,7 +15,7 @@ function update!(e::ArrayEntry, v::AbstractVector)
     n = length(v)
     e.lengths[n] = get(e.lengths, n, 0) + 1
     if isnothing(e.items) && n > 0
-        e.items = _newentry(v[1])
+        @try_catch_array e.items = _newentry(v[1])
     end
     for x in v
         @try_catch_array update!(e.items, x)

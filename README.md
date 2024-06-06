@@ -11,14 +11,12 @@
 [![Build Status](https://github.com/CTUAvastLab/JsonGrinder.jl/workflows/CI/badge.svg)](https://github.com/CTUAvastLab/JsonGrinder.jl/actions?query=workflow%3ACI)
 [![codecov.io](http://codecov.io/github/CTUAvastLab/JsonGrinder.jl/coverage.svg?branch=master)](http://codecov.io/github/CTUAvastLab/JsonGrinder.jl?branch=master)
 
-**JsonGrinder** is a collection of routines that facilitates conversion of JSON documents into structures used by
-[`Mill.jl`](https://github.com/CTUAvastLab/Mill.jl) project.
+`JsonGrinder.jl` is a library that facilitates processing of JSON documents into
+[`Mill.jl`](https://github.com/CTUAvastLab/Mill.jl) structures for machine learning. It provides
+functionality for JSON schema inference, extraction of JSON documents to a suitable representation
+for machine learning, and constructing a model operating on this data.
 
-It provides schema estimation from data, extraction of various data types to numeric representation with
-reasonable defaults, suggestion of NN model structure based on data and interactive HTML visualization of estimated schema. 
-For more details, see [the documentation](https://CTUAvastLab.github.io/JsonGrinder.jl/stable).
-
-[**Watch our introductory talk from JuliaCon 2021** ](https://www.youtube.com/watch?v=Bf0CvltIDbE)
+Watch our [introductory talk](https://www.youtube.com/watch?v=Bf0CvltIDbE) from JuliaCon 2021.
 
 ## Installation
 
@@ -30,24 +28,23 @@ Run the following in REPL:
 
 ## Getting Started
 
-Four pointers to get you started:
-- [Examples: easy to understand JsonGrinder.jl and Mill.jl code across various domains](https://ctuavastlab.github.io/JsonGrinder.jl/stable/examples/examples/)
-  - [Example allowing to use the package from Python](https://nbviewer.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/v2.3.0/examples/mutagenesis_python.ipynb) using [pyjulia](https://github.com/JuliaPy/pyjulia) 
-- [The documentation](https://CTUAvastLab.github.io/JsonGrinder.jl/stable)
-- [The API Reference](https://ctuavastlab.github.io/JsonGrinder.jl/stable/api/)
-- [Dedicated examples repository](https://github.com/CTUAvastLab/JsonGrinderExamples) containing few real-world usecases train on various datasets. 
+- [Documentation](https://ctuavastlab.github.io/JsonGrinder.jl/stable/)
+- [API Reference](https://ctuavastlab.github.io/JsonGrinder.jl/stable/api/aggregation/)
+- [Examples](https://ctuavastlab.github.io/JsonGrinder.jl/stable/examples/mutagenesis/mutagenesis/)
 
 ## Citation
 
-For citing, please use the following entry for the [original paper](https://arxiv.org/abs/2105.09107):
+For citing, please use the following entry for the [original paper](https://jmlr.org/papers/v23/21-0174.html):
 ```
-@misc{mandlik2021milljl,
-      title={Mill.jl and JsonGrinder.jl: automated differentiable feature extraction for learning from raw JSON data}, 
-      author={Simon Mandlik and Matej Racinsky and Viliam Lisy and Tomas Pevny},
-      year={2021},
-      eprint={2105.09107},
-      archivePrefix={arXiv},
-      primaryClass={stat.ML}
+@article{Mandlik2021,
+  author  = {Šimon Mandlík and Matěj Račinský and Viliam Lisý and Tomáš Pevný},
+  title   = {JsonGrinder.jl: automated differentiable neural architecture for embedding arbitrary JSON data},
+  journal = {Journal of Machine Learning Research},
+  year    = {2022},
+  volume  = {23},
+  number  = {298},
+  pages   = {1--5},
+  url     = {http://jmlr.org/papers/v23/21-0174.html}
 }
 ```
 

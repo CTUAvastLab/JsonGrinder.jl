@@ -43,9 +43,8 @@ function _extract(e::CategoricalExtractor{V}, v::V) where V
     v = v isa AbstractString ? shorten_string(v) : v
     get(e.category_map, v, UInt32(1 + length(e.category_map)))
 end
-function _extract(::CategoricalExtractor, ::Missing)
-    throw(IncompatibleExtractor("This extractor does not support missing values!"))
-end
+_extract(::CategoricalExtractor, ::Missing) = _throw_missing()
+
 _extract(e::StableExtractor{<:CategoricalExtractor}, v) = _extract(e.e, v)
 _extract(::StableExtractor{<:CategoricalExtractor}, ::Missing) = missing
 

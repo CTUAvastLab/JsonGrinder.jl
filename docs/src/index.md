@@ -1,115 +1,33 @@
 ```@raw html
-<img class="display-light-only" src="assets/logo.svg" alt="JsonGrinder.jl logo" style="width: 50%;"/>
-<img class="display-dark-only" src="assets/logo-dark.svg" alt="JsonGrinder.jl logo" /style="width: 50%;">
+<img class="display-light-only" src="assets/logo.svg" alt="JsonGrinder.jl logo" style="width: 70%;"/>
+<img class="display-dark-only" src="assets/logo-dark.svg" alt="JsonGrinder.jl logo" /style="width: 70%;">
 ```
 
-**JsonGrinder** is a collection of routines that facilitates conversion of JSON documents into structures used by the [Mill.jl](https://github.com/CTUAvastLab/Mill.jl) project.
+`JsonGrinder.jl` is a library that facilitates processing of JSON documents into
+[`Mill.jl`](https://github.com/CTUAvastLab/Mill.jl) structures for machine learning. It provides
+functionality for JSON schema inference, extraction of JSON documents to a suitable representation
+for machine learning, and constructing a model operating on this data.
 
-## Motivation
+Watch our [introductory talk](https://www.youtube.com/watch?v=Bf0CvltIDbE) from JuliaCon 2021.
 
-Imagine that you want to train a classifier on data that looks like this:
-```json
-{
-  "ind1": 1,
-  "inda": 0,
-  "logp": 6.01,
-  "lumo": -2.184,
-  "mutagenic": 1,
-  "atoms": [
-	{
-	  "element": "c",
-	  "atom_type": 22,
-	  "charge": -0.118,
-	  "bonds": [
-		{
-		  "bond_type": 7,
-		  "element": "c",
-		  "atom_type": 22,
-		  "charge": -0.118
-		},
-		{
-		  "bond_type": 1,
-		  "element": "h",
-		  "atom_type": 3,
-		  "charge": 0.141
-		},
-		{
-		  "bond_type": 7,
-		  "element": "c",
-		  "atom_type": 22,
-		  "charge": -0.118
-		}
-	  ]
-	},
-	⋮
-	{
-	  "element": "c",
-	  "atom_type": 27,
-	  "charge": 0.012,
-	  "bonds": [
-		{
-		  "bond_type": 7,
-		  "element": "c",
-		  "atom_type": 22,
-		  "charge": -0.118
-		},
-		{
-		  "bond_type": 7,
-		  "element": "c",
-		  "atom_type": 27,
-		  "charge": -0.089
-		},
-		{
-		  "bond_type": 7,
-		  "element": "c",
-		  "atom_type": 22,
-		  "charge": -0.118
-		}
-	  ]
-	}
-  ]
-},
+## Installation
 
-```
-and the task is to predict the value in key `mutagenic` (in this sample it's `1`) from the rest of the JSON.
-With most machine learning libraries assuming your data being stored as tensors of a fixed dimension, or a sequence, you will have a bad time. 
+Run the following in REPL:
 
-In contrast, `JsonGrider.jl` assumes your data to be stored in a flexible JSON format, and tries to automate most labor using reasonable defaults, while still giving you an option to control and tweak almost everything.
-`JsonGrinder.jl` is built on top of [Mill.jl](https://github.com/CTUAvastLab/Mill.jl) which itself is built on top of [Flux.jl](https://fluxml.ai/) (we do not reinvent the wheel). 
-
-!!! note
-
-    Although JsonGrinder was designed for JSON files, you can easily adapt it to XML, [Protocol Buffers](https://developers.google.com/protocol-buffers), [MessagePack](https://msgpack.org/index.html), and other similar structures.
-
-There are 5 steps to create a classifier once you load the data.
-
-1. Create a schema of JSON files (using `sch = JsonGrinder.schema(...)`).
-2. Create an extractor converting JSONs to Mill structures (`extractor = suggestextractor(sch)`). 
-   Schema `sch` from previous step is very helpful, as it helps to identify how to convert nodes (`Dict`, `Array`) to (`Mill.ProductNode` and `Mill.BagNode`) and how to convert values in leaves to (`Float32`, `Vector{Float32}`, `String`, `Categorical`).
-3. Create a model for your JSONs, which can be easily done (by using `model = reflectinmodel(sch, extractor,...)`)
-4. Extract your JSON files into Mill structures using extractor `extractbatch(extractor, samples)` (at once if all data fit to memory, or per-minibatch during training)
-5. Use your favourite methods to train the model, it is 100% compatible with `Flux.jl` tooling.
-
-Steps 1 and 2 are handled by `JsonGrinder.jl`, steps 3 and 4 by combination of `Mill.jl` `JsonGrinder.jl` and the 5th step by a combination of `Mill.jl` and `Flux.jl`.
-
-Authors see the biggest advantage in the `model` being hierarchical and reflecting the JSON structure. Thanks to `Mill.jl`, it can handle missing values at all levels.
-
-Our idealized workflow is demonstrated in following example, which can be also found in [Mutagenesis Example](@ref). Here we'll break it down in order to demonstrate the basic functionality of JsonGrinder.
-
-The basic workflow can be visualized as follows:
-
-```@raw html
-<img class="display-light-only" src="assets/workflow.svg" alt="JsonGrinder workflow" style="width: 30%;"/>
-<img class="display-dark-only" src="assets/workflow-dark.svg" alt="JsonGrinder workflow" style="width: 30%;"/>
+```julia
+] add JsonGrinder
 ```
 
-```@eval
-import Markdown
-file = joinpath(@__DIR__, "..", "src", "examples", "mutagenesis.md")
-str = rstrip(join(readlines(file)[4:end], "\n"))
-Markdown.parse(str)
-```
+Julia v1.9 or later is required.
 
-This concludes a simple classifier for JSON data.
+## Getting started
 
-But keep in mind that the framework is general, and given its ability to embed hierarchical data into fixed-size vectors, it can be used for classification, regression, and various other ML tasks.
+For the quickest start, see the [Mutagenesis](@ref) example.
+
+* [Motivation](@ref): a brief introduction and motivation
+* [Manual](@ref manual_schema): a tutorial about the package
+* [Examples](@ref Mutagenesis): a collection of examples
+* [External tools](@ref HierarchicalUtils.jl): examples of integration with other packages
+* [Public API](@ref schema_api): extensive API reference
+* [Citation](@ref): preferred citation entries
+* [`Mill.jl`](https://github.com/CTUAvastLab/Mill.jl): a core dependence of the package

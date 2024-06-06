@@ -17,7 +17,18 @@ d2 = JSON3.read(js)
 The only way out of this is to write our own type-stable parser using (frozen) schema.
 =#
 
+"""
+    Extractor
+
+Supertype for all extractor node types.
+"""
 abstract type Extractor end
+
+"""
+    LeafExtractor
+
+Supertype for all leaf extractor node types that reside in the leafs of the hierarchy.
+"""
 abstract type LeafExtractor <: Extractor end
 
 """
@@ -40,9 +51,7 @@ include("dict.jl")
 include("array.jl")
 include("polymorph.jl")
 
-function _missing_check(::Extractor)
-    throw(IncompatibleExtractor("This extractor does not support missing values!"))
-end
+_missing_check(::Extractor) = _throw_missing()
 _missing_check(::StableExtractor) = nothing
 
 function (e::LeafExtractor)(v::Maybe; store_input=Val(false))
@@ -81,7 +90,7 @@ DictExtractor
   ╰── b: StableExtractor(CategoricalExtractor(n=6))
 
 julia> e(Dict("a" => 0))
-ERROR: IncompatibleExtractor at path [:b]: This extractor does not support missing values!
+ERROR: IncompatibleExtractor at path [:b]: This extractor does not support missing values! See the `Stable Extractors` section in the docs.
 [...]
 
 julia> e_stable(Dict("a" => 0))
@@ -153,46 +162,53 @@ See also: [`extract`](@ref), [`stabilizeextractor`](@ref).
 """
 function suggestextractor(e::Schema; min_occurences::Int=1, all_stable::Bool = false,
     categorical_limit::Int=100, ngram_params=NamedTuple())
-    if categorical_limit > JsonGrinder.max_keys()
-        @warn "`categorical_limit` is higher than the result of `JsonGrinder.max_keys(). " *
+    if categorical_limit > JsonGrinder.max_values()
+        @warn "`categorical_limit` is higher than the result of `JsonGrinder.max_values(). " *
               "`CategoricalExtractor` will never be used." maxlog=1
     end
-    _suggestextractor(e, all_stable, min_occurences, categorical_limit, ngram_params)
+    _suggestextractor(e; all_stable, min_occurences, categorical_limit, ngram_params)
 end
 
-function _suggestextractor(e::LeafEntry{T}, stable, mo, cl, ngp) where T
-    e.updated ≥ mo || return nothing
-    if length(keys(e.counts)) ≤ cl
+function _suggestextractor(e::LeafEntry{T}; all_stable, min_occurences,
+    categorical_limit, ngram_params) where T
+    e.updated ≥ min_occurences || return nothing
+    if length(keys(e.counts)) ≤ categorical_limit
         res = CategoricalExtractor(e)
     elseif T <: Real
         res = ScalarExtractor(e)
     elseif T <: AbstractString
-        res = NGramExtractor(; ngp...)
+        res = NGramExtractor(; ngram_params...)
     else
         return nothing
     end
-    stable ? StableExtractor(res) : res
+    all_stable ? StableExtractor(res) : res
 end
 
-function _suggestextractor(e::DictEntry, stable::Bool, mo, cl, ngp)
-    e.updated ≥ mo || return nothing
+function _suggestextractor(e::DictEntry; all_stable, min_occurences, kwargs...)
+    e.updated ≥ min_occurences || return nothing
     children = map(collect(e.children)) do (k, ch)
-        k => _suggestextractor(ch, stable || e.updated > ch.updated, mo, cl, ngp)
+        k => _suggestextractor(ch; all_stable=all_stable || e.updated > ch.updated, min_occurences, kwargs...)
     end
     filter!(!isnothing ∘ last, children)
     isempty(children) ? nothing : DictExtractor(NamedTuple(children))
 end
 
-function _suggestextractor(e::ArrayEntry, stable::Bool, mo, cl, ngp)
-    e.updated ≥ mo || return nothing
+function _suggestextractor(e::ArrayEntry; all_stable, min_occurences, kwargs...)
+    e.updated ≥ min_occurences || return nothing
     isnothing(e.items) && return nothing
     # if length(e.lengths) == 1 && e.items isa LeafEntry{<:Real} && false
     #     return VectorizedExtractor(e)
     # end
-    items = _suggestextractor(e.items, stable, mo, cl, ngp)
+    items = _suggestextractor(e.items; all_stable, min_occurences, kwargs...)
     isnothing(items) ? nothing : ArrayExtractor(items)
 end
 
+"""
+    reflectinmodel(sch::Schema, ex::Extractor, args...; kwargs...)
+
+Using schema `sch` and extractor `ex`, first create a representative sample and then call
+`Mill.reflectinmodel`.
+"""
 function Mill.reflectinmodel(sch::Schema, ex::Extractor, args...; kwargs...)
     Mill.reflectinmodel(ex(representative_example(sch)), args...; kwargs...)
 end

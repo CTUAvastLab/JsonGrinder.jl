@@ -1,3 +1,8 @@
+"""
+    Schema
+
+Supertype for all schema node types.
+"""
 abstract type Schema end
 
 include("leaf.jl")
@@ -7,7 +12,7 @@ include("array.jl")
 """
     update!(e, v)
 
-updates the [`Schema`](@ref) `e` with value `v` and returns the resulting entry.
+Update the [`Schema`](@ref) `e` with value `v` and return the resulting entry.
 """
 function update!(e::Schema, v)
     throw(InconsistentSchema(String[], "Can't store `$(typeof(v))` into `$(typeof(e))`!"))
@@ -16,7 +21,7 @@ end
 """
     newentry(v)
 
-    create and return a new [`Schema`](@ref) according to the type of `v` and insert `v` into it.
+Create and return a new [`Schema`](@ref) according to the type of `v` and insert `v` into it.
 """
 function newentry(v)
     e = _newentry(v)
@@ -26,6 +31,7 @@ end
 _newentry(::T) where T <: Union{AbstractString, Real} = LeafEntry(T)
 _newentry(::AbstractDict) = DictEntry()
 _newentry(::AbstractVector) = ArrayEntry()
+_newentry(::Nothing) = throw(InconsistentSchema("Unexpected `nothing` in the document."))
 
 """
     schema([f=identity,] jsons)

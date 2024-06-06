@@ -13,6 +13,11 @@ end
 InconsistentSchema(msg::AbstractString="") = InconsistentSchema(String[], msg)
 IncompatibleExtractor(msg::AbstractString="") = IncompatibleExtractor(String[], msg)
 
+function _throw_missing()
+    throw(IncompatibleExtractor("This extractor does not support missing values! " *
+        "See the `Stable Extractors` section in the docs."))
+end
+
 function Base.showerror(io::IO, ex::T) where T <: JSONGrinderException
     Base.print(io, nameof(T), " at ")
     Base.print(io, isempty(ex.path) ? "root" : "path " * prod(reverse(ex.path)), ": ")

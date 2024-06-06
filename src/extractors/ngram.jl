@@ -39,9 +39,7 @@ function _extract_leaf(e::StableExtractor{NGramExtractor}, ::Missing)
 end
 
 _extract(::NGramExtractor, v::AbstractString) = string(v)
-function _extract(::NGramExtractor, ::Missing)
-    throw(IncompatibleExtractor("This extractor does not support missing values!"))
-end
+_extract(::NGramExtractor, ::Missing) = _throw_missing()
 
 function _extract_batch(e::NGramExtractor, V::AbstractVector)
     S = Vector{String}(undef, length(V))

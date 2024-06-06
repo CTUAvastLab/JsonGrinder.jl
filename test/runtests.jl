@@ -1,6 +1,6 @@
 using Test, Random
 
-Random.seed!(0)
+Random.seed!(42)
 
 using Accessors
 using Combinatorics

@@ -10,13 +10,14 @@ end
 
 DictEntry() = DictEntry(Dict{Symbol, Schema}(), 0)
 
-MacroTools.@forward DictEntry.children Base.setindex!, Base.get, Base.haskey,
+MacroTools.@forward DictEntry.children Base.setindex!, Base.delete!, Base.get, Base.haskey,
     Base.keys, Base.length, Base.isempty
 
 Base.getindex(e::DictEntry, k::Symbol) = e.children[k]
 
 function update!(e::DictEntry, d::AbstractDict)
     for (k, v) in d
+        isnothing(v) && continue
         k = Symbol(k)
         if haskey(e, k)
             @try_catch_dict k update!(e[k], v)

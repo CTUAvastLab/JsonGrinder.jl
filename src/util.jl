@@ -23,9 +23,7 @@ function Mill._pred_lens!(p::Function, n::ArrayEntry, l, result)
     end
 end
 
-function Mill.code2lens(n::Union{Extractor, Schema}, c::AbstractString)
-    find_lens(n, n[c])
-end
+Mill.code2lens(n::Union{Extractor, Schema}, c::AbstractString) = find_lens(n, n[c])
 
 function Mill.lens2code(n::Union{Extractor, Schema}, l)
     mapreduce(vcat, Accessors.getall(n, l)) do x

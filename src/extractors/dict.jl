@@ -55,7 +55,7 @@ end
         quote
             ch = Vector{Any}(undef, length(V))
             for (i, v) in enumerate(V)
-                if v isa Dict
+                if v isa AbstractDict
                     ch[i] = get(v, $(string(k)), missing)
                 elseif ismissing(v)
                     ch[i] = missing

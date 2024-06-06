@@ -44,9 +44,7 @@ _extract_leaf(::StableExtractor{ScalarExtractor}, ::Nothing) = Matrix{Maybe{Floa
 _extract_leaf(::StableExtractor{ScalarExtractor}, ::Missing) = Maybe{Float32}[missing;;]
 
 _extract(e::ScalarExtractor, v::Real) = e.s * (Float32(v) - e.c)
-function _extract(::ScalarExtractor, ::Missing)
-    throw(IncompatibleExtractor("This extractor does not support missing values!"))
-end
+_extract(::ScalarExtractor, ::Missing) = _throw_missing()
 
 function _extract_batch(e::ScalarExtractor, V::AbstractVector)
     M = Matrix{Float32}(undef, 1, length(V))

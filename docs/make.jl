@@ -1,86 +1,77 @@
-using Documenter
-using JsonGrinder
-using Mill
-using OneHotArrays
+using JsonGrinder, Mill
+using Pkg, Documenter, Literate
 
-using Literate
+#=
+Useful resources for writing docs:
+    Julia guidelines: https://docs.julialang.org/en/v1/manual/documentation/
+    Documenter syntax: https://juliadocs.github.io/Documenter.jl/stable/man/syntax/ 
+    Showcase: https://juliadocs.github.io/Documenter.jl/stable/showcase/
+    Doctests: https://juliadocs.github.io/Documenter.jl/stable/man/doctests/
 
-const is_ci = haskey(ENV, "GITHUB_ACTIONS")
+To locally browse the docs, use
 
-DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, quote
-    using JsonGrinder, Mill, OneHotArrays
-    ENV["LINES"] = ENV["COLUMNS"] = typemax(Int)
-end; recursive=true)
+python3 -m http.server --bind localhost
 
-# generate files using literate.jl
-src_dir = joinpath(@__DIR__, "src")
-examples_dir = joinpath(@__DIR__, "..", "examples")
-examples_generated_dir = joinpath(src_dir, "examples")
-!ispath(examples_generated_dir) && mkpath(examples_generated_dir)
-# the order here will be propagated to the order in the html menu
-example_files = [joinpath(examples_dir, f) for f in [
-    "examples.jl",
-    "mutagenesis.jl",
-    "recipes.jl",
-    "schema_examination.jl",
-    "schema_visualization.jl",
-]]
+in the build directory.
 
-function print_html_raw(str)
-    str
-    lines = split(str, "\n")
-    html_line = findfirst(s -> occursin("<!DOCTYPE html>", s) && occursin("</html>\\n\"", s), lines)
-    if isnothing(html_line)
-        return str
+or
+
+julia -e 'using LiveServer; serve(dir="build")'
+=#
+
+examples_path = joinpath(@__DIR__, "src", "examples")
+for e in readdir(examples_path)
+    example_path = joinpath(examples_path, e)
+    Pkg.activate(example_path) do
+        Pkg.update()
+        Pkg.instantiate()
+
+        add_setup(s) = """
+        ```@setup $e
+        using Pkg
+        old_path = Pkg.project().path
+        Pkg.activate(pwd())
+        Pkg.instantiate()
+        ```
+        """ * s * """
+        ```@setup $e
+        Pkg.activate(old_path)
+        ```
+        """
+
+        literate_file = joinpath(example_path, "$(e)_literate.jl")
+        Literate.markdown(literate_file, example_path, name=e, credit=false, postprocess=add_setup)
+        Literate.script(literate_file, example_path, name=e, credit=false)
+        Literate.notebook(literate_file, example_path, name=e)
     end
-    lines[html_line-1] *= "@raw html"
-    lines[html_line] = replace(lines[html_line], "\\\"" => "\"")
-    lines[html_line] = replace(lines[html_line], "\\n" => "\n")
-    lines[html_line] = replace(lines[html_line], "\\t" => "\t")
-    lines[html_line] = replace(lines[html_line], r"\\(\w+)" => s"\1")
-    join(lines, "\n")
 end
 
-example_mds = []
-
-#for purpose of local testing
-config = is_ci ? Dict() : Dict("nbviewer_root_url"=>"https://nbviewer.jupyter.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/previews/PR101")
-f = example_files[3]
-# because there is a bug that @example blocks are not evaluated when they are included using @eval, I run the markdown code in Literate.jl
-for f in example_files
-    md_file = Literate.markdown(f, examples_generated_dir; config, credit = false, execute = true, postprocess = print_html_raw)
-    Literate.notebook(f, examples_generated_dir; config, execute = is_ci) # Don't execute locally, because it takes long
-    push!(example_mds, relpath(md_file, dirname(examples_generated_dir)))
-end
-
-# for running only doctests
-is_ci && doctest(JsonGrinder)
 makedocs(
-         sitename = "JsonGrinder.jl",
+         sitename = "JsonGrinder.jl", modules = [JsonGrinder], doctest = false,
          format = Documenter.HTML(sidebar_sitename=false,
                                   assets=["assets/favicon.ico", "assets/custom.css"]),
          warnonly = Documenter.except(:eval_block, :example_block, :meta_block, :setup_block),
-         modules = [JsonGrinder],
          pages = [
                   "Home" => "index.md",
-                  "Schema" => "schema.md",
-                  "Creating extractors" => "extractors.md",
-                  "Extractors overview" => "exfunctions.md",
-                  "Examples" => example_mds,
-                  "AutoML" => "automl.md",
-                  "External tools" => "hierarchical.md",
-                  "API Documentation" => [
-                      "Public" => "api/public.md",
-                      "Internal" => [
-                          "Schema" => "api/internal/schema.md",
-                          "Extractors" => "api/internal/extractors.md",
-                      ],
+                  "Motivation" => "motivation.md",
+                  "Manual" => [
+                      "Schema inference" => "manual/schema_inference.md",
+                      "Extraction" => "manual/extraction.md",
                   ],
-                  "Developers" => "developers.md",
-                  "Citation" => "citation.md",
+                  "Examples" => [
+                        "Mutagenesis" => "examples/mutagenesis/mutagenesis.md",
+                        "Recipes" => "examples/recipes/recipes.md",
+                  ],
+                  "External tools" => [
+                      "HierarchicalUtils.jl" => "tools/hierarchical.md",
+                      "Hyperopt.jl" => "tools/hyperopt.md"
+                  ],
+                  "Public API" => [
+                      "Schema" => "api/schema.md",
+                      "Extractors" => "api/extractor.md",
+                  ],
+                  "Citation" => "citation.md"
                   ],
         )
 
-deploydocs(
-    repo = "github.com/CTUAvastLab/JsonGrinder.jl.git",
-)
+deploydocs(repo = "github.com/CTUAvastLab/JsonGrinder.jl.git")
