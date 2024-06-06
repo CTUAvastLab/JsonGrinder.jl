@@ -1,24 +1,41 @@
 module JsonGrinder
 
-using Mill, JSON, Printf, Flux, OneHotArrays
 using Accessors
 using HierarchicalUtils
+using MacroTools
+using Mill
+using OneHotArrays
+using Preferences
+using SHA
+
+using Mill: Maybe, Optional
+using Accessors: PropertyLens, IndexLens
+
+import Base: ==
 
 const FloatType = Float32
 
 include("switches.jl")
+
+include("exceptions.jl")
+
 include("schema/schema.jl")
-include("extractors/extractors.jl")
-include("html_show_tools.jl")
-include("hierarchical_utils.jl")
+export schema, update!, newentry, Schema, LeafEntry, DictEntry, ArrayEntry
+
+include("extractors/extractor.jl")
+export Extractor, DictExtractor, ArrayExtractor, PolymorphExtractor
+export LeafExtractor, ScalarExtractor, CategoricalExtractor, NGramExtractor, StableExtractor
+export suggestextractor, stabilizeextractor, extract
+
 include("util.jl")
+export pred_lens, list_lens, find_lens, findnonempty_lens
+export replacein, code2lens, lens2code
 
-export ExtractScalar, ExtractCategorical, ExtractArray, ExtractDict, ExtractVector, MultipleRepresentation, ExtractString, AuxiliaryExtractor, ExtractKeyAsField
-export suggestextractor, schema, extractbatch, generate_html
+function Base.getindex(n::Union{Schema, Extractor}, i::AbstractString)
+    HierarchicalUtils.walk(n, i)
+end
 
-Base.show(io::IO, ::T) where T <: Union{JSONEntry, AbstractExtractor} = print(io, nameof(T))
-Base.show(io::IO, ::MIME"text/plain", @nospecialize(n::Union{JSONEntry, AbstractExtractor})) = 
-    HierarchicalUtils.printtree(io, n; trav=false, htrunc=5, vtrunc=10, breakline=false)
-Base.getindex(n::Union{JSONEntry, AbstractExtractor}, i::AbstractString) = HierarchicalUtils.walk(n, i)
+include("show.jl")
+export printtree
 
-end # module
+end

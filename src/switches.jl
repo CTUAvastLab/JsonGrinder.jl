@@ -1,21 +1,53 @@
-const _max_keys = Ref(10_000)
+const _max_values = Ref{Int}(@load_preference("max_values", 10_000))
 
 """
-	updatemaxkeys!(n::Int)
+    JsonGrinder.max_values!(n::Int)
 
-	limits the maximum number of keys in statistics of nodes in JSON. Default value is 10_000.
+Get the current value of the `max_values` parameter.
+
+See also: [`JsonGrinder.max_values!`](@ref).
 """
-updatemaxkeys!(n::Int) = _max_keys[] = n
-max_keys() = _max_keys[]
-
-const _max_len = Ref(10_000)
+max_values() = _max_values[]
 
 """
-	updatemaxlen!(n::Int)
+    JsonGrinder.max_values!(n::Int; persist=false)
 
-	limits the maximum size of string values in statistics of nodes in JSON. Default value is 10_000.
-	Longer strings will be trimmed and their length and hash will be appended to retain the uniqueness.
-	This is due to some strings being very long and causing the schema to be even order of magnitute larger than needed.
+Set the value of the `max_values` parameter.
+
+Set `persist=true` to persist this setting between sessions.
+
+See also: [`JsonGrinder.max_values`](@ref).
 """
-updatemaxlen!(n::Int) = _max_len[] = n
-max_len() = _max_len[]
+function max_values!(n::Int; persist=false)
+    _max_values[] = n
+    if persist
+        @set_preferences!("max_values" => n)
+    end
+end
+
+const _max_string_length = Ref{Int}(@load_preference("max_string_len", 10_000))
+
+"""
+    JsonGrinder.max_string_length!(n::Int)
+
+Get the current value of the `max_string_length` parameter.
+
+See also: [`JsonGrinder.max_string_length!`](@ref).
+"""
+max_string_length() = _max_string_length[]
+
+"""
+    JsonGrinder.max_string_length!(n::Int; persist=false)
+
+Set the value of the `max_string_length` parameter.
+
+Set `persist=true` to persist this setting between sessions.
+
+See also: [`JsonGrinder.max_string_length`](@ref).
+"""
+function max_string_length!(n::Int; persist=false)
+    _max_string_length[] = n
+    if persist
+        @set_preferences!("max_string_length" => n)
+    end
+end

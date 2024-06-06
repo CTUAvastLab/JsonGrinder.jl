@@ -1,65 +1,59 @@
 """
-	mutable struct ArrayEntry <: JSONEntry
-		items
-		l::Dict{Int,Int}
-		updated::Int
-	end
+    ArrayEntry <: Schema
 
-keeps statistics about an array entry in JSON.
-- `items` is typeof `Entry` or nothing and keeps statistics about the elements of the array
-- `l` keeps histogram of message length
-- `updated` counts how many times the struct was updated.
+Keeps statistics about an "array" entry in JSONs.
 """
-mutable struct ArrayEntry <: JSONEntry
-	items
-	l::Dict{Int,Int}
-	updated::Int
+mutable struct ArrayEntry <: Schema
+    items::Union{Nothing, Schema}
+    const lengths::Dict{Int, Int}
+    updated::Int
 end
 
-ArrayEntry(items) = ArrayEntry(items,Dict{Int,Int}(),0)
-Base.isempty(e::ArrayEntry) = e.items isa ArrayEntry ? isempty(e.items) : isnothing(e.items)
+ArrayEntry() = ArrayEntry(nothing, Dict{Int,Int}(), 0)
 
-function update!(a::ArrayEntry, b::AbstractVector; path = "")
-	n = length(b)
-	a.updated += 1
-	a.l[n] = get(a.l,n,0) + 1
-	if isnothing(a.items)
-		 a.items = newentry(b).items
-	end
-
-	for (i, v) in enumerate(b)
-		a.items = safe_update!(a.items,v,path="$path[$i]")
-	end
-	return true
+function update!(e::ArrayEntry, v::AbstractVector)
+    n = length(v)
+    e.lengths[n] = get(e.lengths, n, 0) + 1
+    if isnothing(e.items) && n > 0
+        @try_catch_array e.items = _newentry(v[1])
+    end
+    for x in v
+        @try_catch_array update!(e.items, x)
+    end
+    e.updated += 1
 end
 
-# todo:
-#   logiku jestli to je missing nebo ne přesunout z sample_synthetic do suggestextractor
-#   pokud vrátím správné typy u full samplu, ověřit, jestli potřebuju empty sample nebo se to odvodí z plného
-function suggestextractor(node::ArrayEntry, settings = NamedTuple(); path = "", child_less_than_parent = false)
-	if isempty(node)
-		@warn "$(path) is an empty array, therefore I can not suggest extractor."
-		return nothing
-	end
-
-	if length(node.l) == 1 && typeof(node.items) <: Entry && promote_type(unique(typeof.(keys(node.items.counts)))...) <: Number
-		@info "$(path) is an array of numbers with of same length, therefore it will be treated as a vector."
-		return ExtractVector(only(collect(keys(node.l))))
-	end
-	e = suggestextractor(node.items, settings, path = path, child_less_than_parent = child_less_than_parent)
-	isnothing(e) ? e : ExtractArray(e)
+function Base.merge!(to::ArrayEntry, es::ArrayEntry...)
+    for e in es
+        if !isnothing(e.items)
+            if isnothing(to.items)
+                to.items = deepcopy(e.items)
+            else
+                @try_catch_array merge!(to.items, e.items)
+            end
+        end
+        merge!(+, to.lengths, e.lengths)
+        to.updated += e.updated
+    end
+    to
 end
 
-function merge(es::ArrayEntry...)
-	updates_merged = sum(updated.(es))
-	l_merged = merge(+, l.(es)...)
-	nonempty_items = items.(filter(!isempty, collect(es)))
-	items_merged = isempty(nonempty_items) ? nothing : merge(merge, nonempty_items...)
-	ArrayEntry(items_merged, l_merged, updates_merged)
+function Base.reduce(::typeof(merge), es::Vector{ArrayEntry})
+    items = [e.items for e in es if !isnothing(e.items)]
+    items = if isempty(items)
+        nothing
+    else
+        @try_catch_array reduce(merge, items)
+    end
+    lengths = copy(es[1].lengths)
+    for i in 2:length(es), (l, c) in es[i].lengths
+        lengths[l] = get(lengths, l, 0) + c
+    end
+    ArrayEntry(items, lengths, sum(e -> e.updated, es))
 end
 
-l(s::T) where {T<:ArrayEntry} = s.l
-items(s::T) where {T<:ArrayEntry} = s.items
-Base.hash(e::ArrayEntry, h::UInt) = hash((e.items, e.l, e.updated), h)
-Base.:(==)(e1::ArrayEntry, e2::ArrayEntry) = e1.updated === e2.updated && e1.l == e2.l && e1.items == e2.items
-sample_synthetic(e::ArrayEntry) = isnothing(e.items) ? [] : repeat([sample_synthetic(e.items)], 2)
+representative_example(e::ArrayEntry) = isnothing(e.items) ? [] : [representative_example(e.items)]
+
+Base.hash(e::ArrayEntry, h::UInt) = hash((e.items, e.lengths, e.updated), h)
+(e1::ArrayEntry == e2::ArrayEntry) = e1.updated === e2.updated &&
+    e1.lengths == e2.lengths && e1.items == e2.items

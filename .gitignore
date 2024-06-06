@@ -24,4 +24,9 @@ docs/site/
 Manifest.toml
 !benchmarks/**/Manifest.toml
 
+# Preferences.jl
+LocalPreferences.toml
+
 examples/generated/
+
+.DS_store

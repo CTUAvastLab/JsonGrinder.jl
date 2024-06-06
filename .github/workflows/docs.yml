@@ -5,23 +5,31 @@ on:
     branches:
       - master
       - dev
+    tags: '*'
   pull_request:
     branches:
       - master
+
+permissions: # needed to allow julia-actions/cache to proactively delete old caches that it has created
+  actions: write
+  contents: read
 
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@v2
         with:
           version: '1'
+      - uses: julia-actions/cache@v2
       - name: Install dependencies
         run: julia --project=docs/ -e '
             using Pkg;
             Pkg.develop(PackageSpec(path=pwd()));
             Pkg.instantiate()'
+      - name: Generate assets
+        run: julia --project=docs/ docs/make_assets.jl
       - name: Build and deploy
         run: julia --project=docs/ docs/make.jl
         env:

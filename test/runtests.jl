@@ -1,22 +1,21 @@
+using Test, Random
+
+Random.seed!(42)
+
+using Accessors
+using Combinatorics
+using Documenter
+using HierarchicalUtils
+using JSON, JSON3
 using JsonGrinder
 using JSON
 using HierarchicalUtils
 using Mill
 using OneHotArrays
-using Test
-using Accessors
-using Documenter
-using Random
 
-Random.seed!(0)
-
-function buf_printtree(data; kwargs...)
-    buf = IOBuffer()
-    printtree(buf, data; kwargs...)
-    String(take!(buf))
-end
-
-const ≃ = isequal
+using JsonGrinder: update!, InconsistentSchema, IncompatibleExtractor
+using LinearAlgebra: I
+using Mill: Maybe
 
 @testset "Doctests" begin
     DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, quote
