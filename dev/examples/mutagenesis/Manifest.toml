@@ -390,9 +390,9 @@ version = "0.21.4"
 
 [[deps.JsonGrinder]]
 deps = ["Accessors", "HierarchicalUtils", "MacroTools", "Mill", "OneHotArrays", "Preferences", "SHA"]
-git-tree-sha1 = "9d3e48a3aa80eeceff91e46dd922660638883820"
+git-tree-sha1 = "5cf18e2690352216172fc18c6ca7a871c06e17f6"
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
-version = "2.5.0"
+version = "2.5.1"
 
 [[deps.JuliaVariables]]
 deps = ["MLStyle", "NameResolution"]
