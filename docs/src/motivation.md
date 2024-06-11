@@ -70,8 +70,8 @@ of five steps:
 The basic workflow can be visualized as follows:
 
 ```@raw html
-<img class="display-light-only" src="../../assets/workflow.svg" alt="JsonGrinder workflow" style="width: 30%;"/>
-<img class="display-dark-only" src="../../assets/workflow-dark.svg" alt="JsonGrinder workflow" style="width: 30%;"/>
+<img class="display-light-only" src="../assets/workflow.svg" alt="JsonGrinder workflow" style="width: 30%;"/>
+<img class="display-dark-only" src="../assets/workflow-dark.svg" alt="JsonGrinder workflow" style="width: 30%;"/>
 ```
 
 The framework is able to process hierarchical JSON documents of any schema, embedding the documents
