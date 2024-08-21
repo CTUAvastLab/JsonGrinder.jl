@@ -170,7 +170,7 @@ e_stable(jss[2])
 ```
 
 - Call [`suggestextractor`](@ref) with `all_stable=true`. Now all document values are treated as
-  possibly missing. Results of `stabilizeextractor(schema(...))` and `schema(...; all_stable=true)`
+  possibly missing. Results of `stabilizeextractor(schema(...))` and `suggestextractor(...; all_stable=true)`
   are roughly equivalent:
 
 ```@repl extractor
