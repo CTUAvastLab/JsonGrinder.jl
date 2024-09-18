@@ -30,7 +30,7 @@ function (e::ArrayExtractor)(::Nothing)
     BagNode(e.items(nothing), UnitRange{Int}[])
 end
 
-function extract(e::ArrayExtractor, V::AbstractVector; store_input=Val(false))
+function extract(e::ArrayExtractor, V; store_input=Val(false))
     s = 0
     ls = Vector{Int}(undef, length(V))
     for (i, v) in enumerate(V)

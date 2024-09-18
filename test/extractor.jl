@@ -9,6 +9,13 @@ function common_extractor_tests(e::Extractor, v; test_stability=true)
     for store_input in [true, false] .|> Val
         @test isequal(e(v; store_input), extract(e, [v]; store_input))
         @test isequal(catobs(e(v; store_input), e(v; store_input)), extract(e, [v, v]; store_input))
+        if store_input ≡ Val(false)
+            @test areequal(
+                extract(e, [v]; store_input),
+                extract(e, Iterators.map(identity, [v]); store_input),
+                extract(e, tuple(v); store_input)
+            )
+        end
     end
 
     # this is not needed for batch version, we test only single version

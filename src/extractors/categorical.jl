@@ -69,7 +69,7 @@ function _extract_leaf(e::StableExtractor{<:CategoricalExtractor}, ::Missing)
     MaybeHotMatrix(Maybe{UInt32}[missing], 1 + length(e.e.category_map))
 end
 
-function _extract_batch(e::CategoricalExtractor, V::AbstractVector)
+function _extract_batch(e::CategoricalExtractor, V)
     I = Vector{UInt32}(undef, length(V))
     @inbounds for (i, v) in enumerate(V)
         I[i] = _extract(e, v)
@@ -77,7 +77,7 @@ function _extract_batch(e::CategoricalExtractor, V::AbstractVector)
     OneHotMatrix(I, 1 + length(e.category_map))
 end
 
-function _extract_batch(e::StableExtractor{<:CategoricalExtractor}, V::AbstractVector)
+function _extract_batch(e::StableExtractor{<:CategoricalExtractor}, V)
     I = Vector{Maybe{UInt32}}(undef, length(V))
     @inbounds for (i, v) in enumerate(V)
         I[i] = _extract(e, v)

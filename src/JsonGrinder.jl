@@ -12,6 +12,7 @@ using Mill: Maybe, Optional
 using Accessors: PropertyLens, IndexLens
 
 import Base: ==
+import Base.Iterators: peel, map as imap
 
 const FloatType = Float32
 

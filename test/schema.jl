@@ -252,10 +252,10 @@ end
 
 @testset "Inconsistent 5" begin
     jss = map(JSON.parse, [
-    """ {"a": "4", "b": "2"} """,
-    """ {"a": 7, "b": "3"} """,
-    """ {"a": 4, "b": 3} """,
-    """ {"a": "11", "b": 3} """,
+        """ {"a": "4", "b": "2"} """,
+        """ {"a": 7, "b": "3"} """,
+        """ {"a": 4, "b": 3} """,
+        """ {"a": "11", "b": 3} """,
     ])
 
     test_inconsistent(jss)
@@ -289,6 +289,23 @@ end
     end
 
     JsonGrinder.max_values!(mk)
+end
+
+@testset "schema from iterable" begin
+    jss = map(JSON.parse, [
+        """ {"a": [{"a": 1}, {"b": 2}]} """,
+        """ {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}]} """,
+        """ {"a": [{"a": 2, "b": 3}]} """,
+        """ {"a": []} """,
+        """ {} """,
+        """ {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}], "b": 1} """,
+        """ {"a": [{"a": 4, "b": 5}, {"b": 6, "a": 7}], "b": 2} """,
+        """ {"a": [{"a": 9, "b": 10}, {"b": 11, "a": 12}], "b": 2} """,
+    ])
+
+    sch = schema(jss)
+    @test sch == schema(identity, tuple(jss...))
+    @test sch == schema(Iterators.reverse(jss))
 end
 
 @testset "representative_example" begin

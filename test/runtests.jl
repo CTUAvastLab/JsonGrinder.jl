@@ -17,6 +17,8 @@ using JsonGrinder: update!, InconsistentSchema, IncompatibleExtractor
 using LinearAlgebra: I
 using Mill: Maybe
 
+areequal(xs...) = length(xs) ≤ 1 || (isequal(xs[1], xs[2]) && areequal(xs[2:end]...))
+
 @testset "Doctests" begin
     DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, quote
         using JsonGrinder, Mill, OneHotArrays

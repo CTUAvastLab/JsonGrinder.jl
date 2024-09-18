@@ -49,8 +49,8 @@ end
     end
 end
 
-@generated function extract(e::DictExtractor{<:NamedTuple{K}},
-                    V::AbstractVector; store_input=Val(false)) where K
+@generated function extract(e::DictExtractor{<:NamedTuple{K}}, V;
+                            store_input=Val(false)) where K
     chs = map(K) do k
         quote
             ch = Vector{Any}(undef, length(V))

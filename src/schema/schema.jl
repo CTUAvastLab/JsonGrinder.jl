@@ -36,15 +36,16 @@ _newentry(::Nothing) = throw(InconsistentSchema("Unexpected `nothing` in the doc
 """
     schema([f=identity,] jsons)
 
-Create schema from an array of `jsons` optionally mapped by function `f`.
+Create schema from an iterable of `jsons` optionally mapped by function `f`.
 
 See also: [`merge`](@ref), [`merge!`](@ref).
 """
-schema(samples::AbstractArray) = schema(identity, samples)
-function schema(f::Function, samples::AbstractArray)
-    schema = newentry(f(samples[1]))
-    for i in 2:length(samples)
-        update!(schema, f(samples[i]))
+schema(samples) = schema(identity, samples)
+function schema(f::Function, samples)
+    first, rest = peel(imap(f, samples))
+    schema = newentry(first)
+    for s in rest
+        update!(schema, s)
     end
     schema
 end

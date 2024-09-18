@@ -66,7 +66,7 @@ _extract(_, _) = throw(IncompatibleExtractor())
 _metadata(v, ::Val{true}) = [v]
 _metadata(_, ::Val{false}) = nothing
 
-function extract(e::LeafExtractor, V::AbstractVector; store_input=Val(false))
+function extract(e::LeafExtractor, V; store_input=Val(false))
     ArrayNode(_extract_batch(e, V), _metadata_batch(V, store_input))
 end
 _metadata_batch(V, ::Val{true}) = isempty(V) ? nothing : V
@@ -214,13 +214,13 @@ function Mill.reflectinmodel(sch::Schema, ex::Extractor, args...; kwargs...)
 end
 
 """
-    extract(e::Extractor, samples::AbstractVector; store_input=Val(false))
+    extract(e::Extractor, samples; store_input=Val(false))
 
 Efficient extraction of multiple samples at once.
 
-Note that whereas `extract` expects `samples` to be a **vector** of samples
-(as `schema` does), calling the extractor directly with `e(sample)` works for a
-**single** sample. In other words, `e(sample)` is equivalent to `extract(e, [sample])`.
+Note that whereas `extract` expects `samples` to be an **iterable** of samples (of known length),
+calling the extractor directly with `e(sample)` works for a **single** sample. In other words,
+`e(sample)` is equivalent to `extract(e, [sample])`.
 
 See also: [`suggestextractor`](@ref), [`stabilizeextractor`](@ref), [`schema`](@ref).
 

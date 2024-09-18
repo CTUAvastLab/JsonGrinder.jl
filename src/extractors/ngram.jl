@@ -41,7 +41,7 @@ end
 _extract(::NGramExtractor, v::AbstractString) = string(v)
 _extract(::NGramExtractor, ::Missing) = _throw_missing()
 
-function _extract_batch(e::NGramExtractor, V::AbstractVector)
+function _extract_batch(e::NGramExtractor, V)
     S = Vector{String}(undef, length(V))
     @inbounds for (i, v) in enumerate(V)
         S[i] = _extract(e, v)
@@ -52,7 +52,7 @@ end
 _extract(e::StableExtractor{NGramExtractor}, v::AbstractString) = _extract(e.e, v)
 _extract(::StableExtractor{NGramExtractor}, ::Missing) = missing
 
-function _extract_batch(e::StableExtractor{NGramExtractor}, V::AbstractVector)
+function _extract_batch(e::StableExtractor{NGramExtractor}, V)
     S = Vector{Maybe{String}}(undef, length(V))
     @inbounds for (i, v) in enumerate(V)
         S[i] = _extract(e, v)

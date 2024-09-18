@@ -46,7 +46,7 @@ _extract_leaf(::StableExtractor{ScalarExtractor}, ::Missing) = Maybe{Float32}[mi
 _extract(e::ScalarExtractor, v::Real) = e.s * (Float32(v) - e.c)
 _extract(::ScalarExtractor, ::Missing) = _throw_missing()
 
-function _extract_batch(e::ScalarExtractor, V::AbstractVector)
+function _extract_batch(e::ScalarExtractor, V)
     M = Matrix{Float32}(undef, 1, length(V))
     @inbounds for (i, v) in enumerate(V)
         M[1, i] = _extract(e, v)
@@ -57,7 +57,7 @@ end
 _extract(e::StableExtractor{ScalarExtractor}, v::Real) = _extract(e.e, v)
 _extract(::StableExtractor{ScalarExtractor}, ::Missing) = missing
 
-function _extract_batch(e::StableExtractor{ScalarExtractor}, V::AbstractVector)
+function _extract_batch(e::StableExtractor{ScalarExtractor}, V)
     M = Matrix{Maybe{Float32}}(undef, 1, length(V))
     @inbounds for (i, v) in enumerate(V)
         M[1, i] = _extract(e, v)
