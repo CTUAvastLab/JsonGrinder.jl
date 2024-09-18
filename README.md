@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/LICENSE.md)
 [![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://CTUAvastLab.github.io/JsonGrinder.jl/stable)
 [![Build Status](https://github.com/CTUAvastLab/JsonGrinder.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/CTUAvastLab/JsonGrinder.jl/actions/workflows/ci.yml)
-[![codecov.io](http://codecov.io/github/CTUAvastLab/JsonGrinder.jl/coverage.svg?branch=master)](http://codecov.io/github/CTUAvastLab/JsonGrinder.jl?branch=master)
+[![codecov](https://codecov.io/gh/CTUAvastLab/JsonGrinder.jl/graph/badge.svg?token=krZzRJAm2c)](https://codecov.io/gh/CTUAvastLab/JsonGrinder.jl)
 
 `JsonGrinder.jl` is a library that facilitates processing of JSON documents into
 [`Mill.jl`](https://github.com/CTUAvastLab/Mill.jl) structures for machine learning. It provides
