@@ -17,15 +17,16 @@ Base.getindex(e::DictEntry, k::Symbol) = e.children[k]
 
 function update!(e::DictEntry, d::AbstractDict)
     for (k, v) in d
-        isnothing(v) && continue
         k = Symbol(k)
-        if haskey(e, k)
-            @try_catch_dict k update!(e[k], v)
-        else
-            e[k] = newentry(v)
+        @try_catch_dict k begin
+            if !haskey(e, k)
+                e[k] = newentry(v)
+            end
+            update!(e[k], v)
         end
     end
     e.updated += 1
+    e
 end
 
 function Base.merge!(to::DictEntry, es::DictEntry...)

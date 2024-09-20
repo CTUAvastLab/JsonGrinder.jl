@@ -24,10 +24,10 @@
     @test !haskey(e1.counts, "")
     @test_throws InconsistentSchema update!(e2, 1)
     @test !haskey(e2.counts, 1)
-    @test_throws InconsistentSchema update!(e1, nothing)
-    @test !haskey(e1.counts, nothing)
     @test_throws InconsistentSchema update!(e2, missing)
     @test !haskey(e2.counts, missing)
+    @test_throws NullValues update!(e1, nothing)
+    @test !haskey(e1.counts, nothing)
 end
 
 @testset "LeafEntry various types" begin

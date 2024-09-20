@@ -26,6 +26,7 @@ function _update_leaf!(e::LeafEntry, v)
         e.counts[v] += 1
     end
     e.updated += 1
+    e
 end
 
 function Base.merge!(to::LeafEntry{T}, es::LeafEntry{T}...) where T

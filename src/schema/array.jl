@@ -11,16 +11,17 @@ end
 
 ArrayEntry() = ArrayEntry(nothing, Dict{Int,Int}(), 0)
 
-function update!(e::ArrayEntry, v::AbstractVector)
-    n = length(v)
-    e.lengths[n] = get(e.lengths, n, 0) + 1
-    if isnothing(e.items) && n > 0
-        @try_catch_array e.items = _newentry(v[1])
+function update!(e::ArrayEntry, V::AbstractVector)
+    l = length(V)
+    if isnothing(e.items) && !isempty(V)
+        @try_catch_array e.items = newentry(first(V))
     end
-    for x in v
-        @try_catch_array update!(e.items, x)
+    for v in V
+        @try_catch_array update!(e.items, v)
     end
+    e.lengths[l] = get(e.lengths, l, 0) + 1
     e.updated += 1
+    e
 end
 
 function Base.merge!(to::ArrayEntry, es::ArrayEntry...)

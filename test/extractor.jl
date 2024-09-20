@@ -19,10 +19,10 @@ function common_extractor_tests(e::Extractor, v; test_stability=true)
     end
 
     # this is not needed for batch version, we test only single version
-    @test numobs(e(nothing)) == 0
-    @test e(nothing).metadata |> isnothing
-    @test dropmeta(e(nothing)) == e(nothing)
-    test_stability && @test_nowarn @inferred e(nothing)
+    @test numobs(e(extractempty)) == 0
+    @test e(extractempty).metadata |> isnothing
+    @test dropmeta(e(extractempty)) == e(extractempty)
+    test_stability && @test_nowarn @inferred e(extractempty)
 
     if e isa LeafExtractor && !(e isa StableExtractor)
         @test_throws IncompatibleExtractor e(missing)
@@ -84,10 +84,10 @@ end
         @test ext("z").data isa OneHotMatrix
     end
 
-    en = e(nothing)
+    en = e(extractempty)
     @test en.data isa OneHotMatrix
     @test size(en.data) == (3, 0)
-    en = StableExtractor(e)(nothing)
+    en = StableExtractor(e)(extractempty)
     @test en.data isa MaybeHotMatrix
     @test size(en.data) == (3, 0)
 
@@ -142,7 +142,7 @@ end
     e = ScalarExtractor(0, 1)
     common_extractor_tests(e, 1)
 
-    @test size(e(nothing)) == (1, 0)
+    @test size(e(extractempty)) == (1, 0)
     for ext in both_extractions(e)
         @test ext(5).data == [5.0;;]
         @test ext(5).data isa Matrix{Float32}
@@ -150,7 +150,7 @@ end
 
     e = StableExtractor(e)
 
-    @test size(e(nothing)) == (1, 0)
+    @test size(e(extractempty)) == (1, 0)
     for ext in both_extractions(e)
         @test ext(5).data == [5.0;;]
         @test ext(5).data isa Matrix{Union{Missing, Float32}}
@@ -166,7 +166,7 @@ end
         common_extractor_tests(e, js)
         common_extractor_tests(e, empty(js))
 
-        x = e(nothing)
+        x = e(extractempty)
         @test x.bags == AlignedBags(Int[])
         @test isempty(x.data.data)
         @test numobs(x.data) == 0
@@ -216,8 +216,8 @@ end
     e = stabilizeextractor(e)
     common_extractor_tests(e, jss[2]; test_stability=false)
 
-    x = e(nothing)
-    @test isequal(x, ProductNode(; (k => e.children[k](nothing) for k in [:a, :b, :c])...))
+    x = e(extractempty)
+    @test isequal(x, ProductNode(; (k => e.children[k](extractempty) for k in [:a, :b, :c])...))
 
     for ext in both_extractions(e)
         x1 = ext(jss[1])
@@ -273,7 +273,7 @@ end
         common_extractor_tests(e, "foo")
         common_extractor_tests(e, "")
 
-        x = e(nothing)
+        x = e(extractempty)
         @test numobs(x) == numobs(x.data[1]) == numobs(x.data[2]) == 0
         @test x.data[1].data isa OneHotMatrix
         @test x.data[2].data isa NGramMatrix{String,Array{String,1},Int64}
@@ -307,7 +307,7 @@ end
         common_extractor_tests(e, "foo")
         common_extractor_tests(e, "")
 
-        x = e(nothing)
+        x = e(extractempty)
         @test numobs(x) == numobs(x.data[1]) == numobs(x.data[2]) == 0
         @test x.data[1].data isa MaybeHotMatrix
         @test x.data[2].data isa NGramMatrix{Maybe{String}}
@@ -332,4 +332,90 @@ end
             @test_throws IncompatibleExtractor ext(["foo", "bar"])
         end
     end
+end
+
+
+@testset "`nothing` values" begin
+    js = """ {"a": 1, "b": null} """ |> parsef()
+    sch = schema(remove_nulls, [js])
+    e = suggestextractor(sch)
+    x = e(js)
+    @test haskey(x, :a) && !haskey(x, :b)
+    for ext in both_extractions(e)
+        @test_throws NullValues parsef()(""" {"a": null} """) |> ext
+        @test_throws NullValues parsef()(""" null """) |> ext
+    end
+
+    js = """ {"a": {"b": {"c": null }}} """
+    sch = schema(remove_nulls ∘ parsef(), [js])
+    @test isnothing(suggestextractor(sch))
+
+    js = """ {"a": {"b": 1, "c": null}} """ |> parsef()
+    sch = schema(remove_nulls, [js])
+    @test haskey(sch, :a) && haskey(sch[:a], :b) && !haskey(sch[:a], :c)
+    e = suggestextractor(sch; categorical_limit=0)
+    @test haskey(e, :a) && haskey(e[:a], :b) && !haskey(e[:a], :c)
+    x = e(js)
+    @test haskey(x, :a) && haskey(x[:a], :b) && !haskey(x[:a], :c)
+    for ext in both_extractions(e)
+        @test_throws NullValues parsef()(""" {"a": {"b": null}} """) |> ext
+        @test_throws NullValues parsef()(""" {"a": null} """) |> ext
+        @test_throws NullValues parsef()(""" null """) |> ext
+    end
+
+    js = """ [1, null, 2] """ |> parsef()
+    sch = schema(remove_nulls, [js])
+    e = suggestextractor(sch; categorical_limit=0, all_stable=true)
+    for ext in both_extractions(e)
+        @test_throws NullValues js |> ext
+        @test_throws NullValues parsef()(""" [null] """) |> ext
+        @test_throws NullValues parsef()(""" null """) |> ext
+    end
+
+    js = """ {"a": {"b": {"c": null, "d": "foo" }}} """ |> parsef()
+    sch = schema(remove_nulls, [js])
+    e = suggestextractor(sch; all_stable=true)
+    @test haskey(e, :a) && haskey(e[:a], :b) && haskey(e[:a][:b], :d) && !haskey(e[:a][:b], :c)
+    x = e(js)
+    @test haskey(x, :a) && haskey(x[:a], :b) && haskey(x[:a][:b], :d) && !haskey(x[:a][:b], :c)
+    for ext in both_extractions(e)
+        @test_throws NullValues parsef()(""" {"a": null} """) |> ext
+        @test_throws NullValues parsef()(""" {"a": {"b": null}} """) |> ext
+        @test_throws NullValues parsef()(""" {"a": {"b": {"d": null}}} """) |> ext
+        @test_throws NullValues parsef()(""" null """) |> ext
+    end
+
+    js = """ {"a": {"b": {"c": [null]}}} """ |> parsef()
+    sch = schema(remove_nulls, [js])
+    @test isnothing(suggestextractor(sch))
+
+    js = """ {"a": {"b": 1, "c": [null, null]}} """ |> parsef()
+    sch = schema(remove_nulls, [js])
+    @test haskey(sch, :a) && haskey(sch[:a], :b) && haskey(sch[:a], :c)
+    e = suggestextractor(sch; categorical_limit=0, all_stable=true)
+    @test haskey(e, :a) && haskey(e[:a], :b) && !haskey(e[:a], :c)
+    x = e(js)
+    @test haskey(x, :a) && haskey(x[:a], :b) && !haskey(x[:a], :c)
+    for ext in both_extractions(e)
+        @test_throws NullValues parsef()(""" {"a": null} """) |> ext
+        @test_throws NullValues parsef()(""" {"a": {"b": null}} """) |> ext
+        @test_throws NullValues parsef()(""" null """) |> ext
+    end
+
+    js = """ {"a": [{"b": {"c": null }}, null, {"b": {"c": "foo"}}]} """ |> parsef()
+    sch = schema(remove_nulls, [js])
+    e = suggestextractor(sch)
+    @test haskey(e, :a) && haskey(e[:a].items, :b) && haskey(e[:a].items[:b], :c)
+    for ext in both_extractions(e)
+        @test_throws NullValues parsef()(""" {"a": null} """) |> ext
+        @test_throws NullValues parsef()(""" {"a": [null]} """) |> ext
+        @test_throws NullValues parsef()(""" {"a": [{"b": null}]} """) |> ext
+        @test_throws NullValues parsef()(""" {"a": [{"b": {"c": "foo"}}, null]} """) |> ext
+        @test_throws NullValues parsef()(""" {"a": [{"b": {"c": null}}]} """) |> ext
+        @test_throws NullValues parsef()(""" null """) |> ext
+    end
+
+    js = """ {"a": [{"b": {"c": null }}, null]} """ |> parsef()
+    sch = schema(remove_nulls, [js])
+    @test isnothing(suggestextractor(sch))
 end

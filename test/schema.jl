@@ -86,15 +86,15 @@ end
         """ {"a": 3} """
     ]
 
-    sch = schema(JSON.parse, jss)
+    sch = schema(parsef(), jss)
     @test sch[:a].updated == 3
 end
 
 @testset "Equals and hash test" begin
-    j1 = JSON.parse(""" {"a": []} """)
-    j2 = JSON.parse(""" {"a": [{"a": 1}, {"b": 2}]} """)
-    j3 = JSON.parse(""" {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}]} """)
-    j4 = JSON.parse(""" {"a": [{"a": 2, "b": 3}]} """)
+    j1 = parsef()(""" {"a": []} """)
+    j2 = parsef()(""" {"a": [{"a": 1}, {"b": 2}]} """)
+    j3 = parsef()(""" {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}]} """)
+    j4 = parsef()(""" {"a": [{"a": 2, "b": 3}]} """)
 
     sch1 = JsonGrinder.DictEntry()
     sch2a = schema([j1, j2, j3, j4])
@@ -113,12 +113,12 @@ end
 end
 
 @testset "Empty arrays" begin
-    j1 = JSON.parse(""" {"a": []} """)
-    j2 = JSON.parse(""" {"a": [{"a": 1}, {"b": 2}]} """)
-    j3 = JSON.parse(""" {"a": [{"a": 1,"b": 3}, {"b": 2,"a" : 1}]} """)
-    j4 = JSON.parse(""" {"a": [{"a": 2,"b": 3}]} """)
-    j5 = JSON.parse(""" {"a": [{"a": 1}, {"b": 2}], "b": []}""")
-    j6 = JSON.parse(""" {"a": [{"a": 1,"b": 3}, {"b": 2,"a": 1}], "b": []}""")
+    j1 = parsef()(""" {"a": []} """)
+    j2 = parsef()(""" {"a": [{"a": 1}, {"b": 2}]} """)
+    j3 = parsef()(""" {"a": [{"a": 1,"b": 3}, {"b": 2,"a" : 1}]} """)
+    j4 = parsef()(""" {"a": [{"a": 2,"b": 3}]} """)
+    j5 = parsef()(""" {"a": [{"a": 1}, {"b": 2}], "b": []}""")
+    j6 = parsef()(""" {"a": [{"a": 1,"b": 3}, {"b": 2,"a": 1}], "b": []}""")
 
     sch = schema([j1])
     @test sch.updated == 1
@@ -133,7 +133,7 @@ end
 end
 
 @testset "Consistency 1" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {"a": [{"a": 1}, {"b": 2}]} """,
         """ {"a": [{"a": 1, "b": 3},{"b": 2, "a": 1}]} """,
         """ {"a": [{"a": 2, "b": 3}]} """,
@@ -146,7 +146,7 @@ end
 end
 
 @testset "Consistency 2" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {} """,
         """ { "a": [] } """,
         """ { "a": [1, 2] } """,
@@ -158,7 +158,7 @@ end
 end
 
 @testset "Consistency 3" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """{"a": [{"a": 1}, {"b": 2}], "b": []}""",
         """{"a": [{"a": 3}, {"b": 4}], "b": []}""",
         """{"a": [{"a": 1}, {"b": 3}], "b": []}""",
@@ -169,7 +169,7 @@ end
 end
 
 @testset "Consistency 4" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {"a": [{"a": 1}, {"b": 2}]} """,
         """ {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}]} """,
         """ {"a": [{"a": 2, "b": 3}]} """,
@@ -184,7 +184,7 @@ end
 end
 
 @testset "Consistency (number types)" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {"a": 1} """,
         """ {"a": 2} """,
         """ {"a": 3.3} """,
@@ -211,7 +211,7 @@ function test_inconsistent(jss)
 end
 
 @testset "Inconsistent 1" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {"a": 4} """,
         """ {"a": "foo"} """
     ])
@@ -219,7 +219,7 @@ end
 end
 
 @testset "Inconsistent 2" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ [1] """,
         """ ["foo"] """,
         """ "foo" """
@@ -228,7 +228,7 @@ end
 end
 
 @testset "Inconsistent 3" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {"a": 4} """,
         """ {"a": { "a": "foo", "b":[5, 6]}} """,
         """ {"a": [1, 2, 3, 4]} """
@@ -240,7 +240,7 @@ end
 end
 
 @testset "Inconsistent 4" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {"a": [{"a": 1}, {"b": 2}], "b": []} """,
         """ {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}], "b": {}} """,
         """ {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}], "b": 1} """,
@@ -251,7 +251,7 @@ end
 end
 
 @testset "Inconsistent 5" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {"a": "4", "b": "2"} """,
         """ {"a": 7, "b": "3"} """,
         """ {"a": 4, "b": 3} """,
@@ -262,7 +262,7 @@ end
 end
 
 @testset "Schema merging respects max_values" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {"a": [{"a": 1}, {"b": 2}]} """,
         """ {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}]} """,
         """ {"a": [{"a": 2, "b": 3}]} """,
@@ -292,7 +292,7 @@ end
 end
 
 @testset "schema from iterable" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ {"a": [{"a": 1}, {"b": 2}]} """,
         """ {"a": [{"a": 1, "b": 3}, {"b": 2, "a": 1}]} """,
         """ {"a": [{"a": 2, "b": 3}]} """,
@@ -306,6 +306,47 @@ end
     sch = schema(jss)
     @test sch == schema(identity, tuple(jss...))
     @test sch == schema(Iterators.reverse(jss))
+end
+
+@testset "`nothing` values" begin
+    jss1 = [ """ {"a": "test" } """, """ {} """ ]
+    jss2 = [ """ {"a": "test" } """, """ {"a": null } """ ]
+    @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2)
+    @test_throws NullValues schema(parsef(), jss2)
+
+    jss1 = [ """ [1, 2] """ ]
+    jss2 = [ """ [1, null, 2] """ ]
+    jss3 = [ """ [null, 1, null, 2] """ ]
+    @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2) ==
+        schema(remove_nulls ∘ parsef(), jss3)
+    @test_throws NullValues schema(parsef(), jss2)
+    @test_throws NullValues schema(parsef(), jss3)
+
+    jss1 = [ """ {} """, """ {"a": {"b": 1 }} """, """{"a": {}}""" ]
+    jss2 = [ """ {"a": {"b": 1 }} """, """ {"a": null } """, """ {"a": {"b": null }} """ ]
+    jss3 = [ """ {"a": null } """, """ {"a": {"b": 1 }} """, """ {"a": {"b": null }} """ ]
+    @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2) ==
+        schema(remove_nulls ∘ parsef(), jss3)
+    @test_throws NullValues schema(parsef(), jss2)
+    @test_throws NullValues schema(parsef(), jss3)
+
+    jss1 = [ """ {"a": {"b": [1, 2, 3]}} """ ]
+    jss2 = [ """ {"a": {"b": [null, 1, 2, null, 3]}} """ ]
+    jss3 = [ """ {"a": {"b": [2, null, 3, 1, null, null]}} """ ]
+    @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2) ==
+        schema(remove_nulls ∘ parsef(), jss3)
+    @test_throws NullValues schema(parsef(), jss2)
+    @test_throws NullValues schema(parsef(), jss3)
+
+    jss1 = [ """ {"a": [ {"b": 1 }, {}]} """ ]
+    jss2 = [ """ {"a": [ {"b": 1 }, {"b": null }]} """ ]
+    @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2)
+    @test_throws NullValues schema(parsef(), jss2)
+
+    jss1 = [ """ {"a": [ {}, {"b": {"c": 1 }}, {"b": {}}]} """ ]
+    jss2 = [ """ {"a": [ {"b": null }, {"b": {"c": null }}, {"b": {"c": 1 }}]} """ ]
+    @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2)
+    @test_throws NullValues schema(parsef(), jss2)
 end
 
 @testset "representative_example" begin

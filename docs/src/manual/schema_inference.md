@@ -147,3 +147,42 @@ schema(jss)
 ```
 
 Should this happen, we recommend to deal with such cases by suitable preprocessing.
+
+## Null values
+
+In the current version, [`JsonGrinder.jl`](https://github.com/CTUAvastLab/JsonGrinder.jl) does not
+support `null` values in JSON documents (represented as `nothing` in Julia):
+
+```@repl schema
+schema(JSON.parse, [
+    """ {"a": null } """
+])
+```
+```@repl schema
+schema(JSON.parse, [
+    """ {"a": [1, null, 3] } """
+])
+```
+```@repl schema
+schema(JSON.parse, [
+    """ {"a": {"b": null} } """
+])
+```
+
+These values usually do not carry any relevant information, therefore, as the error suggests, the most straighforward and easiest solution is to filter them out using [`remove_nulls`](@ref) function:
+
+```@repl schema
+schema(remove_nulls ∘ JSON.parse, [
+    """ {"a": null } """
+])
+```
+```@repl schema
+schema(remove_nulls ∘ JSON.parse, [
+    """ {"a": [1, null, 3] } """
+])
+```
+```@repl schema
+schema(remove_nulls ∘ JSON.parse, [
+    """ {"a": {"b": null} } """
+])
+```

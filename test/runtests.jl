@@ -13,11 +13,12 @@ using HierarchicalUtils
 using Mill
 using OneHotArrays
 
-using JsonGrinder: update!, InconsistentSchema, IncompatibleExtractor
+using JsonGrinder: update!, InconsistentSchema, IncompatibleExtractor, NullValues, extractempty
 using LinearAlgebra: I
 using Mill: Maybe
 
 areequal(xs...) = length(xs) ≤ 1 || (isequal(xs[1], xs[2]) && areequal(xs[2:end]...))
+parsef() = rand((JSON.parse, JSON3.read))
 
 @testset "Doctests" begin
     DocMeta.setdocmeta!(JsonGrinder, :DocTestSetup, quote

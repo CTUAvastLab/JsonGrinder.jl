@@ -15,6 +15,7 @@ d2 = JSON3.read(js)
 @inferred e(d2)
 
 The only way out of this is to write our own type-stable parser using (frozen) schema.
+Perhaps this would be possible with static hierarchic types from JSON3
 =#
 
 """
@@ -44,6 +45,9 @@ end
 Base.hash(e::StableExtractor, h::UInt) = hash((e.e,), h)
 (e1::StableExtractor == e2::StableExtractor) = e1.e == e2.e
 
+struct ExtractEmpty end
+const extractempty = ExtractEmpty()
+
 include("scalar.jl")
 include("categorical.jl")
 include("ngram.jl")
@@ -51,26 +55,21 @@ include("dict.jl")
 include("array.jl")
 include("polymorph.jl")
 
-_missing_check(::Extractor) = _throw_missing()
+_missing_check(::Extractor) = _error_missing()
 _missing_check(::StableExtractor) = nothing
 
 function (e::LeafExtractor)(v::Maybe; store_input=Val(false))
     ismissing(v) && _missing_check(e)
     ArrayNode(_extract_leaf(e, v), _metadata(v, store_input))
 end
-(e::LeafExtractor)(::Nothing) = ArrayNode(_extract_leaf(e, nothing))
+(e::LeafExtractor)(::ExtractEmpty) = ArrayNode(_extract_leaf(e, extractempty))
+(e::LeafExtractor)(::Nothing; store_input=Val(false)) = _error_null_values()
 
 _extract_leaf(_, _) = throw(IncompatibleExtractor())
-_extract(_, _) = throw(IncompatibleExtractor())
+_extract_value(_, _) = throw(IncompatibleExtractor())
 
 _metadata(v, ::Val{true}) = [v]
 _metadata(_, ::Val{false}) = nothing
-
-function extract(e::LeafExtractor, V; store_input=Val(false))
-    ArrayNode(_extract_batch(e, V), _metadata_batch(V, store_input))
-end
-_metadata_batch(V, ::Val{true}) = isempty(V) ? nothing : V
-_metadata_batch(_, ::Val{false}) = nothing
 
 """
     stabilizeextractor(e::Extractor)
@@ -242,4 +241,8 @@ julia> e(sample) == extract(e, [sample])
 true
 ```
 """
-function extract end
+function extract(e::LeafExtractor, V; store_input=Val(false))
+    ArrayNode(_extract_batch(e, V), _metadata_batch(V, store_input))
+end
+_metadata_batch(V, ::Val{true}) = isempty(V) ? nothing : V
+_metadata_batch(_, ::Val{false}) = nothing

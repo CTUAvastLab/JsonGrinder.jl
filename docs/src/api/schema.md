@@ -11,6 +11,8 @@ schema
 update!
 newentry
 
+remove_nulls
+
 Base.merge
 Base.merge!
 

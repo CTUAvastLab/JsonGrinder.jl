@@ -27,8 +27,8 @@ Base.getindex(e::DictExtractor, k::Symbol) = e.children[k]
 
 @generated function (e::DictExtractor{<:NamedTuple{K}})(
         v::Maybe{AbstractDict}; store_input=Val(false)) where K
-    chs = if v == Missing || v == Nothing
-        [:(e.children.$k(v; store_input)) for k in K]
+    chs = if v == Missing
+        [:(e.children.$k(missing; store_input)) for k in K]
     else
         [:(@try_catch_dict(
             $(QuoteNode(k)),
@@ -41,8 +41,10 @@ Base.getindex(e::DictExtractor, k::Symbol) = e.children[k]
     end
 end
 
-@generated function (e::DictExtractor{<:NamedTuple{K}})(::Nothing) where K
-    chs = [:(e.children.$k(nothing)) for k in K]
+(e::DictExtractor)(::Nothing; store_input=Val(false)) = _error_null_values()
+
+@generated function (e::DictExtractor{<:NamedTuple{K}})(::ExtractEmpty) where K
+    chs = [:(e.children.$k(extractempty)) for k in K]
     quote
         data = NamedTuple{$K}(tuple($(chs...)))
         ProductNode(data)
@@ -59,6 +61,8 @@ end
                     ch[i] = get(v, $(string(k)), missing)
                 elseif ismissing(v)
                     ch[i] = missing
+                elseif isnothing(v)
+                    _error_null_values()
                 else
                     throw(IncompatibleExtractor())
                 end

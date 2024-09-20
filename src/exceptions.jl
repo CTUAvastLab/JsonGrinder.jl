@@ -10,12 +10,24 @@ struct IncompatibleExtractor{T <: AbstractString, U <: AbstractString} <: JSONGr
     msg::U
 end
 
+struct NullValues{T <: AbstractString, U <: AbstractString} <: JSONGrinderException
+    path::Vector{T}
+    msg::U
+end
+
 InconsistentSchema(msg::AbstractString="") = InconsistentSchema(String[], msg)
 IncompatibleExtractor(msg::AbstractString="") = IncompatibleExtractor(String[], msg)
+NullValues(msg::AbstractString="") = NullValues(String[], msg)
 
-function _throw_missing()
+function _error_missing()
     throw(IncompatibleExtractor("This extractor does not support missing values! " *
-        "See the `Stable Extractors` section in the docs."))
+                                "See the `Stable Extractors` section in the docs."))
+end
+
+function _error_null_values()
+    throw(NullValues("JsonGrinder.jl doesn't support `null` values (`nothing` in julia). " *
+                     "Preprocess documents appropriately, e.g. with `remove_nulls`."
+    ))
 end
 
 function Base.showerror(io::IO, ex::T) where T <: JSONGrinderException

@@ -19,26 +19,27 @@ struct ArrayExtractor{T} <: Extractor
 end
 
 function (e::ArrayExtractor)(v::AbstractVector; store_input=Val(false))
-    isempty(v) && return BagNode(e.items(nothing), [0:-1], _metadata(v, store_input))
+    isempty(v) && return BagNode(e.items(extractempty), [0:-1], _metadata(v, store_input))
     data = reduce(catobs, [@try_catch_array e.items(x; store_input) for x in v])
     BagNode(data, [1:length(v)], _metadata(v, store_input))
 end
 function (e::ArrayExtractor)(v::Missing; store_input=Val(false))
-    BagNode(e.items(nothing), [0:-1], _metadata(v, store_input))
+    BagNode(e.items(extractempty), [0:-1], _metadata(v, store_input))
 end
-function (e::ArrayExtractor)(::Nothing)
-    BagNode(e.items(nothing), UnitRange{Int}[])
-end
+(e::ArrayExtractor)(::Nothing; store_input=Val(false)) = _error_null_values()
+(e::ArrayExtractor)(::ExtractEmpty) = BagNode(e.items(extractempty), UnitRange{Int}[])
 
 function extract(e::ArrayExtractor, V; store_input=Val(false))
     s = 0
     ls = Vector{Int}(undef, length(V))
     for (i, v) in enumerate(V)
-        if ismissing(v)
-            ls[i] = 0
-        elseif v isa AbstractVector
+        if v isa AbstractVector
             s += length(v)
             ls[i] = length(v)
+        elseif ismissing(v)
+            ls[i] = 0
+        elseif isnothing(v)
+            _error_null_values()
         else
             throw(IncompatibleExtractor())
         end

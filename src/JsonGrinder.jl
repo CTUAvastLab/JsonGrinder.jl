@@ -12,7 +12,6 @@ using Mill: Maybe, Optional
 using Accessors: PropertyLens, IndexLens
 
 import Base: ==
-import Base.Iterators: peel, map as imap
 
 const FloatType = Float32
 
@@ -27,6 +26,9 @@ include("extractors/extractor.jl")
 export Extractor, DictExtractor, ArrayExtractor, PolymorphExtractor
 export LeafExtractor, ScalarExtractor, CategoricalExtractor, NGramExtractor, StableExtractor
 export suggestextractor, stabilizeextractor, extract
+
+include("preprocessing.jl")
+export remove_nulls
 
 include("util.jl")
 export pred_lens, list_lens, find_lens, findnonempty_lens

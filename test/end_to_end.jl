@@ -14,41 +14,41 @@ function test_with_model(jss, sch, e)
 end
 
 @testset "Stability heuristic" begin
-    e = map(JSON.parse, [
+    e = map(parsef(), [
         """ { "a": { "b" : [1, 2, 3], "c": "foo" } } """
         """ { "a": { "b" : [], "c": "bar" } } """
     ]) |> schema |> suggestextractor
     @test !(e[:a][:b].items isa StableExtractor)
     @test !(e[:a][:c] isa StableExtractor)
 
-    e = map(JSON.parse, [
+    e = map(parsef(), [
         """ { "a": { "b" : [1, 2, 3], "c": "foo" } } """
         """ { "a": { "b" : [] } } """
     ]) |> schema |> suggestextractor
     @test !(e[:a][:b].items isa StableExtractor)
     @test e[:a][:c] isa StableExtractor
 
-    e = map(JSON.parse, [
+    e = map(parsef(), [
         """ { "a": { "b" : [1, 2, 3], "c": "foo" } } """
         """ { "a": { "c" : "bar" } } """
     ]) |> schema |> suggestextractor
     @test e[:a][:b].items isa StableExtractor
     @test !(e[:a][:c] isa StableExtractor)
 
-    e = map(JSON.parse, [
+    e = map(parsef(), [
         """ { "a": { "b" : [1, 2, 3], "c": "foo" } } """
         """ { } """
     ]) |> schema |> suggestextractor
     @test e[:a][:b].items isa StableExtractor
     @test e[:a][:c] isa StableExtractor
 
-    e = map(JSON.parse, [
+    e = map(parsef(), [
         """ [ { "a": 1 } ] """,
         """ [ {} ] """,
     ]) |> schema |> suggestextractor
     @test e.items[:a] isa StableExtractor
 
-    e = map(JSON.parse, [
+    e = map(parsef(), [
         """ [ { "a": 1 } ] """,
         """ [ ] """,
     ]) |> schema |> suggestextractor
@@ -56,26 +56,26 @@ end
 end
 
 @testset "Leaving out empty structures" begin
-    @test suggestextractor(schema([JSON.parse("{}")])) |> isnothing
-    @test suggestextractor(schema([JSON.parse("[]")])) |> isnothing
-    @test suggestextractor(schema([JSON.parse("[[]]")])) |> isnothing
-    @test suggestextractor(schema([JSON.parse("[{}, {}]")])) |> isnothing
+    @test suggestextractor(schema([parsef()("{}")])) |> isnothing
+    @test suggestextractor(schema([parsef()("[]")])) |> isnothing
+    @test suggestextractor(schema([parsef()("[[]]")])) |> isnothing
+    @test suggestextractor(schema([parsef()("[{}, {}]")])) |> isnothing
 
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ { "a": {}, "c": {} } """
         """ { "a": {} } """
         """ { "c": {} } """
     ])
     @test suggestextractor(schema(jss)) |> isnothing
 
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ { "a": [], "c": {} } """
         """ { "a": [] } """
         """ { "c": { "d": [[], []] } } """
     ])
     @test suggestextractor(schema(jss)) |> isnothing
 
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ { "a": { "b": [1] }, "c": {} } """
         """ { "a": {} } """
         """ { "c": {} } """
@@ -87,7 +87,7 @@ end
 
 @testset "suggestextractor kwargs" begin
     @testset "min_occurences" begin
-        sch = map(JSON.parse, [
+        sch = map(parsef(), [
             """ { "a": 1, "b": [], "d": {} } """,
             """ { "b": [], "d": {} } """,
             """ { "a": 1, "b": [ { "c": 1 } ], "d": { "e": [] } } """,
@@ -108,7 +108,7 @@ end
     end
 
     @testset "all_stable" begin
-        sch = map(JSON.parse, [
+        sch = map(parsef(), [
             """ { "a": 1, "b": []} """,
             """ { "a": 1, "b": []} """,
             """ { "a": 1, "b": [ { "c": 1 } ]} """,
@@ -121,7 +121,7 @@ end
     end
 
     @testset "categorical_limit" begin
-        sch = map(JSON.parse, [
+        sch = map(parsef(), [
             """ { "a": [1, 2], "b": [1, 2] } """,
             """ { "a": [3], "b": [2] } """,
         ]) |> schema
@@ -136,7 +136,7 @@ end
     end
 
     @testset "ngram_params" begin
-        sch = [JSON.parse(""" ["foo", "bar", "baz"] """)] |> schema
+        sch = [parsef()(""" ["foo", "bar", "baz"] """)] |> schema
 
         e = suggestextractor(sch; categorical_limit=0, ngram_params=(n=1, b=2, m=3))
         @test e.items.n == 1
@@ -151,7 +151,7 @@ end
 end
 
 @testset "E2E 1: Nested Dicts" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ { "a": { "b": 1 }, "c": { "d": "foo" } } """,
         """ { "a": { "b": 2 } } """,
         """ { "a": { "b": 3 }, "c": {} } """
@@ -172,13 +172,13 @@ end
     end
 
     @test isequal(
-        e(JSON.parse("""{ "a": { "b": 1 } }""")),
-        e(JSON.parse("""{ "a": { "b": 1 }, "c": {} }"""))
+        e(parsef()("""{ "a": { "b": 1 } }""")),
+        e(parsef()("""{ "a": { "b": 1 }, "c": {} }"""))
     )
 end
 
 @testset "E2E 2: Dict x Array" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ { "a": [1, 2, 3], "b": [4, 5, 6] } """,
         """ { "a": [1, 2, 3] } """,
         """ { "b": [] } """
@@ -203,14 +203,14 @@ end
         @test a[k].data.data isa MaybeHotMatrix
     end
 
-    @test e(JSON.parse("{}")) ==
-          e(JSON.parse(""" { "a": [] } """)) ==
-          e(JSON.parse(""" { "b": [] } """)) ==
-          e(JSON.parse(""" { "a": [], "b": [] } """))
+    @test e(parsef()("{}")) ==
+          e(parsef()(""" { "a": [] } """)) ==
+          e(parsef()(""" { "b": [] } """)) ==
+          e(parsef()(""" { "a": [], "b": [] } """))
 end
 
 @testset "E2E 3: Nested Arrays" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ [[1, 2], [3, 4, 5]] """,
         """ [[], [3, 4, 5]] """,
         """ [[9]] """,
@@ -240,7 +240,7 @@ end
 end
 
 @testset "E2E 4: Array x Dict" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ [ { "a": "foo" }, { "a": "bar" } ] """,
         """ [ { "a": "baz" } ] """,
         """ [ { } ] """,
@@ -267,7 +267,7 @@ end
 end
 
 @testset "E2E 5: Dict x Array x Dict" begin
-    jss = map(JSON.parse, [
+    jss = map(parsef(), [
         """ { "a": [ { "b": "foo"}, { "b": "bar" } ] } """,
         """ { "a": [ {}, { "b": "baz" } ] } """,
         """ { "a": [] } """
@@ -289,8 +289,8 @@ end
         @test a[:a].data.data[:b].data isa MaybeHotMatrix
     end
 
-    @test e(JSON.parse("""{ }""")) == e(JSON.parse(""" { "a": [] } """))
-    @test e(JSON.parse(""" { "a": [] } """)) != e(JSON.parse(""" { "a": [ {} ] } """)) 
+    @test e(parsef()("""{ }""")) == e(parsef()(""" { "a": [] } """))
+    @test e(parsef()(""" { "a": [] } """)) != e(parsef()(""" { "a": [ {} ] } """)) 
 end
 
 generate(::Type{String}; stable=false) = randstring(3)

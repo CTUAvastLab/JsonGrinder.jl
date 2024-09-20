@@ -17,21 +17,18 @@ Update the [`Schema`](@ref) `e` with value `v` and return the resulting entry.
 function update!(e::Schema, v)
     throw(InconsistentSchema(String[], "Can't store `$(typeof(v))` into `$(typeof(e))`!"))
 end
+update!(::Schema, ::Nothing) = _error_null_values()
 
 """
     newentry(v)
 
-Create and return a new [`Schema`](@ref) according to the type of `v` and insert `v` into it.
+Create and return a new [`Schema`](@ref) according to the type of `v`.
 """
-function newentry(v)
-    e = _newentry(v)
-    update!(e, v)
-    e
-end
-_newentry(::T) where T <: Union{AbstractString, Real} = LeafEntry(T)
-_newentry(::AbstractDict) = DictEntry()
-_newentry(::AbstractVector) = ArrayEntry()
-_newentry(::Nothing) = throw(InconsistentSchema("Unexpected `nothing` in the document."))
+newentry(::T) where T <: Union{AbstractString, Real} = LeafEntry(T)
+newentry(::AbstractDict) = DictEntry()
+newentry(::AbstractVector) = ArrayEntry()
+newentry(::Nothing) = _error_null_values()
+newentry(::T) where T = throw(InconsistentSchema("Unexpected `$T` in the document."))
 
 """
     schema([f=identity,] jsons)
@@ -42,9 +39,9 @@ See also: [`merge`](@ref), [`merge!`](@ref).
 """
 schema(samples) = schema(identity, samples)
 function schema(f::Function, samples)
-    first, rest = peel(imap(f, samples))
-    schema = newentry(first)
-    for s in rest
+    mapped = Iterators.map(f, samples)
+    schema = newentry(first(mapped))
+    for s in mapped
         update!(schema, s)
     end
     schema

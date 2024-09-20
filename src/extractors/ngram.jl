@@ -25,37 +25,39 @@ NGramExtractor(; n::Int=3, b::Int=256, m::Int=2053) = NGramExtractor(n, b, m)
 function _extract_leaf(e::NGramExtractor, v::AbstractString)
     NGramMatrix(String[string(v)], e.n, e.b, e.m)
 end
-function _extract_leaf(e::NGramExtractor, ::Nothing)
+function _extract_leaf(e::NGramExtractor, ::ExtractEmpty)
     NGramMatrix(String[], e.n, e.b, e.m)
 end
 function _extract_leaf(e::StableExtractor{NGramExtractor}, v::AbstractString)
     NGramMatrix(Maybe{String}[string(v)], e.e.n, e.e.b, e.e.m)
 end
-function _extract_leaf(e::StableExtractor{NGramExtractor}, ::Nothing)
+function _extract_leaf(e::StableExtractor{NGramExtractor}, ::ExtractEmpty)
     NGramMatrix(Maybe{String}[], e.e.n, e.e.b, e.e.m)
 end
 function _extract_leaf(e::StableExtractor{NGramExtractor}, ::Missing)
     NGramMatrix(Maybe{String}[missing], e.e.n, e.e.b, e.e.m)
 end
 
-_extract(::NGramExtractor, v::AbstractString) = string(v)
-_extract(::NGramExtractor, ::Missing) = _throw_missing()
+_extract_value(::NGramExtractor, v::AbstractString) = string(v)
+_extract_value(::NGramExtractor, ::Missing) = _error_missing()
+_extract_value(::NGramExtractor, ::Nothing) = _error_null_values()
 
 function _extract_batch(e::NGramExtractor, V)
     S = Vector{String}(undef, length(V))
     @inbounds for (i, v) in enumerate(V)
-        S[i] = _extract(e, v)
+        S[i] = _extract_value(e, v)
     end
     NGramMatrix(S, e.n, e.b, e.m)
 end
 
-_extract(e::StableExtractor{NGramExtractor}, v::AbstractString) = _extract(e.e, v)
-_extract(::StableExtractor{NGramExtractor}, ::Missing) = missing
+_extract_value(e::StableExtractor{NGramExtractor}, v::AbstractString) = _extract_value(e.e, v)
+_extract_value(::StableExtractor{NGramExtractor}, ::Missing) = missing
+_extract_value(::StableExtractor{NGramExtractor}, ::Nothing) = _error_null_values()
 
 function _extract_batch(e::StableExtractor{NGramExtractor}, V)
     S = Vector{Maybe{String}}(undef, length(V))
     @inbounds for (i, v) in enumerate(V)
-        S[i] = _extract(e, v)
+        S[i] = _extract_value(e, v)
     end
     NGramMatrix(S, e.e.n, e.e.b, e.e.m)
 end
