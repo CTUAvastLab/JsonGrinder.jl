@@ -11,14 +11,14 @@ PolymorphExtractor
   ╰── CategoricalExtractor(n=4)
 
 julia> e("tcp")
-ProductNode  1 obs, 48 bytes
-  ├── ArrayNode(2053×1 NGramMatrix with Int64 elements)  1 obs, 123 bytes
-  ╰── ArrayNode(4×1 OneHotArray with Bool elements)  1 obs, 76 bytes
+ProductNode  1 obs, 0 bytes
+  ├── ArrayNode(2053×1 NGramMatrix with Int64 elements)  1 obs, 91 bytes
+  ╰── ArrayNode(4×1 OneHotArray with Bool elements)  1 obs, 60 bytes
 
 julia> e("http")
-ProductNode  1 obs, 48 bytes
-  ├── ArrayNode(2053×1 NGramMatrix with Int64 elements)  1 obs, 124 bytes
-  ╰── ArrayNode(4×1 OneHotArray with Bool elements)  1 obs, 76 bytes
+ProductNode  1 obs, 0 bytes
+  ├── ArrayNode(2053×1 NGramMatrix with Int64 elements)  1 obs, 92 bytes
+  ╰── ArrayNode(4×1 OneHotArray with Bool elements)  1 obs, 60 bytes
 ```
 """
 struct PolymorphExtractor{T <: Union{NamedTuple, Tuple}} <: Extractor

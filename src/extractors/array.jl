@@ -10,8 +10,8 @@ ArrayExtractor
   ╰── CategoricalExtractor(n=4)
 
 julia> e([2, 3, 1, 4])
-BagNode  1 obs, 88 bytes
-  ╰── ArrayNode(4×4 OneHotArray with Bool elements)  4 obs, 88 bytes
+BagNode  1 obs, 64 bytes
+  ╰── ArrayNode(4×4 OneHotArray with Bool elements)  4 obs, 72 bytes
 ```
 """
 struct ArrayExtractor{T} <: Extractor
