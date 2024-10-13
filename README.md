@@ -28,7 +28,7 @@ Run the following in REPL:
 ## Getting Started
 
 - [Documentation](https://ctuavastlab.github.io/JsonGrinder.jl/stable/)
-- [API Reference](https://ctuavastlab.github.io/JsonGrinder.jl/stable/api/aggregation/)
+- [API Reference](https://ctuavastlab.github.io/JsonGrinder.jl/stable/api/schema/)
 - [Examples](https://ctuavastlab.github.io/JsonGrinder.jl/stable/examples/mutagenesis/mutagenesis/)
 
 ## Citation

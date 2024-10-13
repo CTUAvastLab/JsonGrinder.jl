@@ -1,6 +1,7 @@
 module JsonGrinder
 
 using Accessors
+using Compat
 using HierarchicalUtils
 using MacroTools
 using Mill
@@ -16,6 +17,8 @@ import Base: ==
 const FloatType = Float32
 
 include("switches.jl")
+@compat public max_values, max_values!
+@compat public max_string_length, max_string_length!
 
 include("exceptions.jl")
 
