@@ -1,7 +1,7 @@
 """
     remove_nulls(js)
 
-Returns a new document in which all `null` values (represented as `nothing` in julia) are removed.
+Return a new document in which all `null` values (represented as `nothing` in julia) are removed.
 
 # Examples
 ```jldoctest

@@ -60,6 +60,11 @@ Applying `e` on the first JSON document yields the following hierarchy of
 x = e(jss[1])
 ```
 
+!!! ukn "Consistent preprocessing"
+    If any preprocessing was performed for input documents as for example discussed in
+    [Preprocessing](@ref) make sure to apply the same preprocessing before passing
+    documents to any [`Extractor`](@ref) as well!
+
 !!! ukn "Missing key"
     Note that we didn't include any extractor for the `"siblings"` key. In such case, the
     key in the JSON document is simply ignored and never extracted.

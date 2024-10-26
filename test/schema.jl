@@ -148,10 +148,10 @@ end
 @testset "Consistency 2" begin
     jss = map(parsef(), [
         """ {} """,
-        """ { "a": [] } """,
-        """ { "a": [1, 2] } """,
-        """ { "b": {} } """,
-        """ { "b": { "c": "foo" } } """,
+        """ { "a": []} """,
+        """ { "a": [1, 2]} """,
+        """ { "b": {}} """,
+        """ { "b": { "c": "foo"}} """,
     ])
 
     test_permutations_merging(jss)
@@ -309,8 +309,8 @@ end
 end
 
 @testset "`nothing` values" begin
-    jss1 = [ """ {"a": "test" } """, """ {} """ ]
-    jss2 = [ """ {"a": "test" } """, """ {"a": null } """ ]
+    jss1 = [ """ {"a": "test"} """, """ {} """ ]
+    jss2 = [ """ {"a": "test"} """, """ {"a": null} """ ]
     @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2)
     @test_throws NullValues schema(parsef(), jss2)
 
@@ -322,9 +322,9 @@ end
     @test_throws NullValues schema(parsef(), jss2)
     @test_throws NullValues schema(parsef(), jss3)
 
-    jss1 = [ """ {} """, """ {"a": {"b": 1 }} """, """{"a": {}}""" ]
-    jss2 = [ """ {"a": {"b": 1 }} """, """ {"a": null } """, """ {"a": {"b": null }} """ ]
-    jss3 = [ """ {"a": null } """, """ {"a": {"b": 1 }} """, """ {"a": {"b": null }} """ ]
+    jss1 = [ """ {} """, """ {"a": {"b": 1}} """, """{"a": {}}""" ]
+    jss2 = [ """ {"a": {"b": 1}} """, """ {"a": null} """, """ {"a": {"b": null}} """ ]
+    jss3 = [ """ {"a": null} """, """ {"a": {"b": 1}} """, """ {"a": {"b": null}} """ ]
     @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2) ==
         schema(remove_nulls ∘ parsef(), jss3)
     @test_throws NullValues schema(parsef(), jss2)
@@ -338,16 +338,93 @@ end
     @test_throws NullValues schema(parsef(), jss2)
     @test_throws NullValues schema(parsef(), jss3)
 
-    jss1 = [ """ {"a": [ {"b": 1 }, {}]} """ ]
-    jss2 = [ """ {"a": [ {"b": 1 }, {"b": null }]} """ ]
+    jss1 = [ """ {"a": [ {"b": 1}, {}]} """ ]
+    jss2 = [ """ {"a": [ {"b": 1}, {"b": null}]} """ ]
     @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2)
     @test_throws NullValues schema(parsef(), jss2)
 
-    jss1 = [ """ {"a": [ {}, {"b": {"c": 1 }}, {"b": {}}]} """ ]
-    jss2 = [ """ {"a": [ {"b": null }, {"b": {"c": null }}, {"b": {"c": 1 }}]} """ ]
+    jss1 = [ """ {"a": [ {}, {"b": {"c": 1}}, {"b": {}}]} """ ]
+    jss2 = [ """ {"a": [ {"b": null}, {"b": {"c": null}}, {"b": {"c": 1}}]} """ ]
     @test schema(parsef(), jss1) == schema(remove_nulls ∘ parsef(), jss2)
     @test_throws NullValues schema(parsef(), jss2)
 end
+
+@testset "modifying paths" begin
+    for jss in (
+        [
+            """ {"a": "80"} """,
+            """ {"a": 80} """,
+        ],
+        [
+            """ {"a": "80", "b": "foo"} """,
+            """ {"a": 80, "b": "bar"} """,
+        ]
+    )
+        @test_throws InconsistentSchema schema(parsef(), jss)
+
+        pf = JSON.parse
+        f = js -> Accessors.modify(string, js, @optic _["a"])
+        sch = schema(f ∘ pf, jss)
+        @test sch[:a] isa LeafEntry{String}
+        f = js -> Accessors.modify(x -> x isa Integer ? x : parse(Int, x), js, @optic _["a"])
+        sch = schema(f ∘ pf, jss)
+        @test sch[:a] isa LeafEntry{Real}
+        f = js -> Accessors.delete(js, @optic _["a"])
+        sch = schema(f ∘ pf, jss)
+        @test !haskey(sch, :a)
+
+        pf = JSON3.read
+        f = js -> Accessors.modify(string, js, @optic _[:a])
+        sch = schema(f ∘ pf, jss)
+        @test sch[:a] isa LeafEntry{String}
+        f = js -> Accessors.modify(x -> x isa Integer ? x : parse(Int, x), js, @optic _[:a])
+        sch = schema(f ∘ pf, jss)
+        @test sch[:a] isa LeafEntry{Real}
+        f = js -> Accessors.delete(js, @optic _[:a])
+        sch = schema(f ∘ pf, jss)
+        @test !haskey(sch, :a)
+    end
+
+    for jss in (
+        [
+            """ {"a": [1, 2, "3"]} """,
+            """ {"a": ["1", "2", "3"]} """,
+        ],
+        [
+            """ {"a": [], "b": "foo"} """,
+            """ {"a": ["1", 1], "b": "bar"} """,
+        ]
+    )
+        @test_throws InconsistentSchema schema(parsef(), jss)
+
+        pf = JSON.parse
+        f = js -> Accessors.modify(string, js, @optic _["a"][∗])
+        sch = schema(f ∘ pf, jss)
+        @test sch[:a] isa ArrayEntry
+        @test sch[:a].items isa LeafEntry{String}
+        f = js -> Accessors.modify(x -> x isa Integer ? x : parse(Int, x), js, @optic _["a"][∗])
+        sch = schema(f ∘ pf, jss)
+        @test sch[:a] isa ArrayEntry
+        @test sch[:a].items isa LeafEntry{Real}
+        f = js -> Accessors.delete(js, @optic _["a"])
+        sch = schema(f ∘ pf, jss)
+        @test !haskey(sch, :a)
+
+        pf = JSON3.read
+        f = js -> Accessors.modify(string, js, @optic _[:a][∗])
+        sch = schema(f ∘ pf, jss)
+        @test sch[:a] isa ArrayEntry
+        @test sch[:a].items isa LeafEntry{String}
+        f = js -> Accessors.modify(x -> x isa Integer ? x : parse(Int, x), js, @optic _[:a][∗])
+        sch = schema(f ∘ pf, jss)
+        @test sch[:a] isa ArrayEntry
+        @test sch[:a].items isa LeafEntry{Real}
+        f = js -> Accessors.delete(js, @optic _[:a])
+        sch = schema(f ∘ pf, jss)
+        @test !haskey(sch, :a)
+    end
+end
+
 
 @testset "representative_example" begin
     sch = DictEntry(Dict(

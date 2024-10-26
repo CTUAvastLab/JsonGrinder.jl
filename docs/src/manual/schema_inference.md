@@ -127,7 +127,7 @@ Similarly, [`JsonGrinder.jl`](https://github.com/CTUAvastLab/JsonGrinder.jl) als
 that are too long before saving them to schema. This can be governed with the
 [`JsonGrinder.max_string_length`](@ref) parameter.
 
-## Unstable schema
+## Preprocessing
 
 Sometimes, input JSON documents do not adhere to a stable schema, which for example happens if one
 key has children of multiple different types in different documents. An example would be:
@@ -148,7 +148,67 @@ schema(jss)
 
 Should this happen, we recommend to deal with such cases by suitable preprocessing.
 
-## Null values
+### Mapping paths
+
+Assume that input documents contain information about port numbers, some of which are encoded as
+integers and some of which as strings:
+
+```@repl schema
+jss = [
+    """ {"ports": [70, 80, 443], "protocol": "TCP" } """,
+    """ {"ports": ["22", "80", "500"], "protocol": "UDP" } """,
+]
+```
+```@repl schema
+schema(JSON.parse, jss)
+```
+
+We recommend to deal with these cases using optic approach from
+[`Accessors.jl`](https://juliaobjects.github.io/Accessors.jl/stable/), available also as
+`JsonGrinder: Accessors`. We can use `Accessors.modify` to modify the problematic paths,
+turning all into `String`s:
+
+```@example schema
+using Accessors
+```
+```@repl schema
+f = js -> Accessors.modify(string, js, @optic _["ports"][∗])
+f.(JSON.parse.(jss))
+schema(f ∘ JSON.parse, jss)
+```
+
+or parsing them as `Integer`s:
+
+```@repl schema
+schema(jss) do doc
+    js = JSON.parse(doc)
+    Accessors.modify(x -> x isa Integer ? x : parse(Int, x), js, @optic _["ports"][∗])
+end
+```
+
+!!! ukn "Writing `∗`"
+    Asterisk for selecting all elements of the array (`∗`) is not the standard star (`*`), but is
+    written as `\ast<TAB>` in Julia REPL, see also [`Accessors.jl`
+    docstrings](https://juliaobjects.github.io/Accessors.jl/stable/docstrings/).
+
+We can also get rid of this path completely with `Accessors.delete`:
+
+```@repl schema
+schema(jss) do doc
+    Accessors.delete(JSON.parse(doc), @optic _["ports"])
+end
+```
+
+If [`JSON3`](https://github.com/quinnj/JSON3.jl) is used for parsing, it uses `Symbol`s for keys
+in objects instead of `String`s so make sure to use `Symbol`s:
+
+```@repl schema
+using JSON3
+Accessors.delete(JSON3.read(""" {"port": 1} """), @optic _["port"])
+Accessors.delete(JSON3.read(""" {"port": 1} """), @optic _[:port])
+```
+
+### Null values
 
 In the current version, [`JsonGrinder.jl`](https://github.com/CTUAvastLab/JsonGrinder.jl) does not
 support `null` values in JSON documents (represented as `nothing` in Julia):
