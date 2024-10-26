@@ -1,6 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.11.0"
+julia_version = "1.11.1"
 manifest_format = "2.0"
 project_hash = "9ec668d2ebcbec2a20306484e5f73ce3067a1262"
 
@@ -42,9 +42,9 @@ version = "0.1.38"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra", "Requires"]
-git-tree-sha1 = "6a55b747d1812e699320963ffde36f1ebdda4099"
+git-tree-sha1 = "d80af0733c99ea80575f612813fa6aa71022d33a"
 uuid = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
-version = "4.0.4"
+version = "4.1.0"
 weakdeps = ["StaticArrays"]
 
     [deps.Adapt.extensions]
@@ -416,10 +416,10 @@ uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 version = "0.21.4"
 
 [[deps.JsonGrinder]]
-deps = ["Accessors", "HierarchicalUtils", "MacroTools", "Mill", "OneHotArrays", "Preferences", "SHA"]
-git-tree-sha1 = "0b6c8fa8fdfd82419d952ebb49e8ce64c3437ca1"
+deps = ["Accessors", "Compat", "HierarchicalUtils", "MacroTools", "Mill", "OneHotArrays", "Preferences", "SHA"]
+git-tree-sha1 = "05efc3c162468437ec1b763ce86c9894d1915082"
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
-version = "2.5.2"
+version = "2.5.3"
 
 [[deps.JuliaVariables]]
 deps = ["MLStyle", "NameResolution"]
@@ -429,9 +429,9 @@ version = "0.2.4"
 
 [[deps.KernelAbstractions]]
 deps = ["Adapt", "Atomix", "InteractiveUtils", "MacroTools", "PrecompileTools", "Requires", "StaticArrays", "UUIDs", "UnsafeAtomics", "UnsafeAtomicsLLVM"]
-git-tree-sha1 = "04e52f596d0871fa3890170fa79cb15e481e4cd8"
+git-tree-sha1 = "e73a077abc7fe798fe940deabe30ef6c66bdde52"
 uuid = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
-version = "0.9.28"
+version = "0.9.29"
 
     [deps.KernelAbstractions.extensions]
     EnzymeExt = "EnzymeCore"
@@ -444,10 +444,10 @@ version = "0.9.28"
     SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [[deps.LLVM]]
-deps = ["CEnum", "LLVMExtra_jll", "Libdl", "Preferences", "Printf", "Requires", "Unicode"]
-git-tree-sha1 = "4ad43cb0a4bb5e5b1506e1d1f48646d7e0c80363"
+deps = ["CEnum", "LLVMExtra_jll", "Libdl", "Preferences", "Printf", "Unicode"]
+git-tree-sha1 = "d422dfd9707bec6617335dc2ea3c5172a87d5908"
 uuid = "929cbde3-209d-540e-8aea-75f648917ca0"
-version = "9.1.2"
+version = "9.1.3"
 
     [deps.LLVM.extensions]
     BFloat16sExt = "BFloat16s"
@@ -462,9 +462,9 @@ uuid = "dad2f222-ce93-54a1-a47d-0025e8a3acab"
 version = "0.0.34+0"
 
 [[deps.LaTeXStrings]]
-git-tree-sha1 = "50901ebc375ed41dbf8058da26f9de442febbbec"
+git-tree-sha1 = "dda21b8cbd6a6c40d9d02a73230f9d70fed6918c"
 uuid = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
-version = "1.3.1"
+version = "1.4.0"
 
 [[deps.LazyArtifacts]]
 deps = ["Artifacts", "Pkg"]
@@ -526,10 +526,10 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 version = "1.11.0"
 
 [[deps.MLDataDevices]]
-deps = ["Adapt", "Functors", "Preferences", "Random"]
-git-tree-sha1 = "e16288e37e76d68c3f1c418e0a2bec88d98d55fc"
+deps = ["Adapt", "Compat", "Functors", "Preferences", "Random"]
+git-tree-sha1 = "5cffc52b59227864b665459e1f7bcc4d3c4fb47b"
 uuid = "7e8f7934-dd98-4c1a-8fe8-92b47a384d40"
-version = "1.2.0"
+version = "1.4.2"
 
     [deps.MLDataDevices.extensions]
     MLDataDevicesAMDGPUExt = "AMDGPU"
@@ -599,10 +599,10 @@ uuid = "128add7d-3638-4c79-886c-908ea0c25c34"
 version = "0.2.0"
 
 [[deps.Mill]]
-deps = ["Accessors", "ChainRulesCore", "Combinatorics", "DataFrames", "DataStructures", "FiniteDifferences", "Flux", "HierarchicalUtils", "LinearAlgebra", "MLUtils", "MacroTools", "OneHotArrays", "PooledArrays", "Preferences", "SparseArrays", "Statistics", "Test"]
-git-tree-sha1 = "8c45e9d7b4cae1d619574df6fc5453d6efd00ed5"
+deps = ["Accessors", "ChainRulesCore", "Combinatorics", "Compat", "DataFrames", "DataStructures", "FiniteDifferences", "Flux", "HierarchicalUtils", "LinearAlgebra", "MLUtils", "MacroTools", "OneHotArrays", "PooledArrays", "Preferences", "SparseArrays", "Statistics", "Test"]
+git-tree-sha1 = "924d500a23b70bbd647f55dec15c55e3674e80cc"
 uuid = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
-version = "2.10.5"
+version = "2.10.6"
 
 [[deps.Missings]]
 deps = ["DataAPI"]
@@ -780,9 +780,9 @@ version = "0.7.0"
 
 [[deps.SentinelArrays]]
 deps = ["Dates", "Random"]
-git-tree-sha1 = "ff11acffdb082493657550959d4feb4b6149e73a"
+git-tree-sha1 = "305becf8af67eae1dbc912ee9097f00aeeabb8d5"
 uuid = "91c51154-3ec4-41a3-a24f-3f23e20d615c"
-version = "1.4.5"
+version = "1.4.6"
 
 [[deps.Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
@@ -844,9 +844,9 @@ version = "0.1.15"
 
 [[deps.StaticArrays]]
 deps = ["LinearAlgebra", "PrecompileTools", "Random", "StaticArraysCore"]
-git-tree-sha1 = "eeafab08ae20c62c44c8399ccb9354a04b80db50"
+git-tree-sha1 = "777657803913ffc7e8cc20f0fd04b634f871af8f"
 uuid = "90137ffa-7385-5640-81b9-e52037218182"
-version = "1.9.7"
+version = "1.9.8"
 weakdeps = ["ChainRulesCore", "Statistics"]
 
     [deps.StaticArrays.extensions]
