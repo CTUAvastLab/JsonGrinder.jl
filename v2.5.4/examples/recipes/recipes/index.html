@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Recipes · JsonGrinder.jl</title><meta name="title" content="Recipes · JsonGrinder.jl"/><meta property="og:title" content="Recipes · JsonGrinder.jl"/><meta property="twitter:title" content="Recipes · JsonGrinder.jl"/><meta name="description" content="Documentation for JsonGrinder.jl."/><meta property="og:description" content="Documentation for JsonGrinder.jl."/><meta property="twitter:description" content="Documentation for JsonGrinder.jl."/><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img class="docs-light-only" src="../../../assets/logo.svg" alt="JsonGrinder.jl logo"/><img class="docs-dark-only" src="../../../assets/logo-dark.svg" alt="JsonGrinder.jl logo"/></a><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><a class="tocitem" href="../../../motivation/">Motivation</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../../../manual/schema_inference/">Schema inference</a></li><li><a class="tocitem" href="../../../manual/extraction/">Extraction</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../../mutagenesis/mutagenesis/">Mutagenesis</a></li><li class="is-active"><a class="tocitem" href>Recipes</a></li></ul></li><li><span class="tocitem">External tools</span><ul><li><a class="tocitem" href="../../../tools/hierarchical/">HierarchicalUtils.jl</a></li><li><a class="tocitem" href="../../../tools/hyperopt/">Hyperopt.jl</a></li></ul></li><li><span class="tocitem">Public API</span><ul><li><a class="tocitem" href="../../../api/schema/">Schema</a></li><li><a class="tocitem" href="../../../api/extractor/">Extractors</a></li></ul></li><li><a class="tocitem" href="../../../citation/">Citation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Recipes</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Recipes</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/CTUAvastLab/JsonGrinder.jl/blob/master/docs/src/examples/recipes/recipes_literate.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Recipe-Ingredients"><a class="docs-heading-anchor" href="#Recipe-Ingredients">Recipe Ingredients</a><a id="Recipe-Ingredients-1"></a><a class="docs-heading-anchor-permalink" href="#Recipe-Ingredients" title="Permalink"></a></h1><p>The following simple example shows how to train a hierarchical model for predicting the type of cuisine from a set of used ingredients.</p><div class="admonition is-category-ukn"><header class="admonition-header">Jupyter notebook</header><div class="admonition-body"><p>This example is also available as a <a href="https://nbviewer.jupyter.org/github/CTUAvastLab/JsonGrinder.jl/blob/gh-pages/v2.5.4/examples/recipes/recipes.ipynb">Jupyter notebook</a> and the environment and the data are accessible <a href="https://github.com/CTUAvastLab/JsonGrinder.jl/tree/master/docs/src/examples/recipes">here</a>.</p></div></div><div class="admonition is-category-ukn"><header class="admonition-header">Recommended reading</header><div class="admonition-body"><p>We recommend to first read the <a href="../../mutagenesis/mutagenesis/#Mutagenesis">Mutagenesis</a> example, which introduces core concepts. This example shows application on another dataset and integration with <a href="https://github.com/quinnj/JSON3.jl"><code>JSON3.jl</code></a>.</p></div></div><p>We load all dependencies and fix the seed:</p><pre><code class="language-julia hljs">using JsonGrinder, Mill, Flux, OneHotArrays, JSON3, MLUtils, Statistics
+
+using Random; Random.seed!(42);</code></pre><p>The full dataset and the problem description can be also found on <a href="https://www.kaggle.com/kaggle/recipe-ingredients-dataset/home">Kaggle</a>, but for demonstration purposes we load only its small subset:</p><pre><code class="language-julia hljs">dataset = JSON3.read.(readlines(&quot;recipes.jsonl&quot;));
+shuffle!(dataset);
+jss_train, jss_test = dataset[1:2000], dataset[2001:end];
+jss_train[1]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">JSON3.Object{Base.CodeUnits{UInt8, String}, Vector{UInt64}} with 3 entries:
+  :id          =&gt; 11801
+  :ingredients =&gt; [&quot;red chili peppers&quot;, &quot;green onions&quot;, &quot;salt&quot;, &quot;onions&quot;, &quot;pork…
+  :cuisine     =&gt; &quot;korean&quot;</code></pre><p>Labels are stored in the <code>&quot;cuisine&quot;</code> field:</p><pre><code class="language-julia hljs">y_train = getindex.(jss_train, &quot;cuisine&quot;);
+y_test = getindex.(jss_test, &quot;cuisine&quot;);
+y_train</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2000-element Vector{String}:
+ &quot;korean&quot;
+ &quot;japanese&quot;
+ &quot;italian&quot;
+ &quot;irish&quot;
+ &quot;italian&quot;
+ &quot;mexican&quot;
+ &quot;italian&quot;
+ &quot;italian&quot;
+ &quot;french&quot;
+ &quot;italian&quot;
+ ⋮
+ &quot;italian&quot;
+ &quot;italian&quot;
+ &quot;italian&quot;
+ &quot;italian&quot;
+ &quot;brazilian&quot;
+ &quot;british&quot;
+ &quot;italian&quot;
+ &quot;indian&quot;
+ &quot;korean&quot;</code></pre><p>In this example we have more classes than two, so we also encode all training labels into one-hot vectors:</p><pre><code class="language-julia hljs">classes = unique(y_train)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">20-element Vector{String}:
+ &quot;korean&quot;
+ &quot;japanese&quot;
+ &quot;italian&quot;
+ &quot;irish&quot;
+ &quot;mexican&quot;
+ &quot;french&quot;
+ &quot;vietnamese&quot;
+ &quot;chinese&quot;
+ &quot;southern_us&quot;
+ &quot;indian&quot;
+ &quot;thai&quot;
+ &quot;greek&quot;
+ &quot;british&quot;
+ &quot;spanish&quot;
+ &quot;jamaican&quot;
+ &quot;cajun_creole&quot;
+ &quot;moroccan&quot;
+ &quot;filipino&quot;
+ &quot;russian&quot;
+ &quot;brazilian&quot;</code></pre><pre><code class="language-julia hljs">y_train_oh = onehotbatch(y_train, classes)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">20×2000 OneHotMatrix(::Vector{UInt32}) with eltype Bool:
+ 1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  …  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1
+ ⋅  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  1  ⋅  1  ⋅  1  1  ⋅  1  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  1  1  1  1  ⋅  ⋅  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅  1  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅  …  ⋅  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅     1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1     ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  …  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  …  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅     ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅</code></pre><p>Now we create a schema:</p><pre><code class="language-julia hljs">sch = schema(jss_train)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr34">DictEntry</span><span class="sgr90"><span class="sgr3"> 2000x updated</span></span>
+<span class="sgr34">  ├────── cuisine: </span>LeafEntry (20 unique `String` values)<span class="sgr90"><span class="sgr3"> 2000x updated</span></span>
+<span class="sgr34">  ├─────────── id: </span>LeafEntry (2000 unique `Real` values)<span class="sgr90"><span class="sgr3"> 2000x updated</span></span>
+<span class="sgr34">  ╰── ingredients: </span><span class="sgr31">ArrayEntry</span><span class="sgr90"><span class="sgr3"> 2000x updated</span></span>
+<span class="sgr34">                   </span><span class="sgr31">  ╰── </span>LeafEntry (2470 unique `String` values)<span class="sgr90"><span class="sgr3"> 21383x update </span>⋯</span></code></pre><div class="admonition is-category-ukn"><header class="admonition-header">Function as first argument</header><div class="admonition-body"><p>Function <a href="../../../api/schema/#JsonGrinder.schema"><code>schema</code></a> accepts an optional argument, a function first mapping all elements of an input array. We could thus reduce the schema creation into a single command <code>schema(JSON3.read, readlines(&quot;recipes.jsonl&quot;))</code>.</p></div></div><p>From the schema, we will delete the <code>&quot;cuisine&quot;</code> key storing the label, and also the <code>&quot;id&quot;</code> key, which is just the id of the sample, which is not useful in training:</p><pre><code class="language-julia hljs">delete!(sch.children, :cuisine);
+delete!(sch.children, :id);
+sch</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr34">DictEntry</span><span class="sgr90"><span class="sgr3"> 2000x updated</span></span>
+<span class="sgr34">  ╰── ingredients: </span><span class="sgr31">ArrayEntry</span><span class="sgr90"><span class="sgr3"> 2000x updated</span></span>
+<span class="sgr34">                   </span><span class="sgr31">  ╰── </span>LeafEntry (2470 unique `String` values)<span class="sgr90"><span class="sgr3"> 21383x update </span>⋯</span></code></pre><p>We can see that only a single key <code>&quot;ingredients&quot;</code> is left. We can thus just take its content:</p><pre><code class="language-julia hljs">jss_train = getindex.(jss_train, &quot;ingredients&quot;);
+jss_test = getindex.(jss_test, &quot;ingredients&quot;);
+jss_train[1]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">15-element JSON3.Array{String, Base.CodeUnits{UInt8, String}, SubArray{UInt64, 1, Vector{UInt64}, Tuple{UnitRange{Int64}}, true}}:
+ &quot;red chili peppers&quot;
+ &quot;green onions&quot;
+ &quot;salt&quot;
+ &quot;onions&quot;
+ &quot;pork belly&quot;
+ &quot;sesame oil&quot;
+ &quot;garlic cloves&quot;
+ &quot;soy sauce&quot;
+ &quot;rice wine&quot;
+ &quot;Gochujang base&quot;
+ &quot;toasted sesame seeds&quot;
+ &quot;brown sugar&quot;
+ &quot;gochugaru&quot;
+ &quot;apples&quot;
+ &quot;carrots&quot;</code></pre><p>We can infer the schema again, or just take a subtree of the original schema</p><p>We can just take the only subtree of the original schema <code>sch</code>:</p><pre><code class="language-julia hljs">sch[:ingredients]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr34">ArrayEntry</span><span class="sgr90"><span class="sgr3"> 2000x updated</span></span>
+<span class="sgr34">  ╰── </span>LeafEntry (2470 unique `String` values)<span class="sgr90"><span class="sgr3"> 21383x updated</span></span></code></pre><p>Or infer it once again, this time <code>jss_train</code> is not a <code>Vector</code> of <code>Dict</code>s, but a <code>Vector</code> of <code>Vector</code>s:</p><pre><code class="language-julia hljs">sch = schema(jss_train)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr34">ArrayEntry</span><span class="sgr90"><span class="sgr3"> 2000x updated</span></span>
+<span class="sgr34">  ╰── </span>LeafEntry (2470 unique `String` values)<span class="sgr90"><span class="sgr3"> 21383x updated</span></span></code></pre><p>Next step is to create an extractor:</p><pre><code class="language-julia hljs">e = suggestextractor(sch)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr34">ArrayExtractor</span>
+<span class="sgr34">  ╰── </span>NGramExtractor(n=3, b=256, m=2053)</code></pre><p>If we have sufficient memory, we can extract all documents before training like in the <a href="../../mutagenesis/mutagenesis/#Mutagenesis">Mutagenesis</a> example:</p><pre><code class="language-julia hljs">extract(e, jss_train)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr34">BagNode</span><span class="sgr90"><span class="sgr3">  2000 obs, 31.297 KiB</span></span>
+<span class="sgr34">  ╰── </span>ArrayNode(2053×21383 NGramMatrix with Int64 elements)<span class="sgr90"><span class="sgr3">  21383 obs, 580.09 </span>⋯</span></code></pre><p>However, in this example we want to show how to extract online in the training loop.</p><p>We continue with the model definition, making use of some of the <a href="../../../api/utilities/#Mill.reflectinmodel"><code>Mill.reflectinmodel</code></a> features. We continue with the model definition, making use of some of the</p><pre><code class="language-julia hljs">encoder = reflectinmodel(sch, e, d -&gt; Dense(d, 40, relu), d -&gt; SegmentedMeanMaxLSE(d) |&gt; BagCount)
+model = Dense(40, length(classes)) ∘ encoder</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Dense(40 =&gt; 20) ∘ BagModel ↦ BagCount([SegmentedMean(40); SegmentedMax(40); SegmentedLSE(40)]) ↦ Dense(121 =&gt; 40, relu)</code></pre><p>We define important components for the training:</p><pre><code class="language-julia hljs">pred(m, x) = softmax(m(x))
+opt_state = Flux.setup(Flux.Optimise.Adam(), model);
+minibatch_iterator = Flux.DataLoader((jss_train, y_train_oh), batchsize=32, shuffle=true);
+accuracy(p, y) = mean(onecold(p, classes) .== y)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">accuracy (generic function with 1 method)</code></pre><p>And run the training:</p><pre><code class="language-julia hljs">for i in 1:20
+    Flux.train!(model, minibatch_iterator, opt_state) do m, jss, y
+        x = Flux.@ignore_derivatives extract(e, jss)
+        Flux.Losses.logitcrossentropy(m(x), y)
+    end
+    @info &quot;Epoch $i&quot; accuracy=accuracy(pred(model, extract(e, jss_train)), y_train)
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">┌ Info: Epoch 1
+└   accuracy = 0.418
+┌ Info: Epoch 2
+└   accuracy = 0.51
+┌ Info: Epoch 3
+└   accuracy = 0.577
+┌ Info: Epoch 4
+└   accuracy = 0.6555
+┌ Info: Epoch 5
+└   accuracy = 0.704
+┌ Info: Epoch 6
+└   accuracy = 0.7505
+┌ Info: Epoch 7
+└   accuracy = 0.803
+┌ Info: Epoch 8
+└   accuracy = 0.8395
+┌ Info: Epoch 9
+└   accuracy = 0.8775
+┌ Info: Epoch 10
+└   accuracy = 0.889
+┌ Info: Epoch 11
+└   accuracy = 0.9115
+┌ Info: Epoch 12
+└   accuracy = 0.9285
+┌ Info: Epoch 13
+└   accuracy = 0.954
+┌ Info: Epoch 14
+└   accuracy = 0.9535
+┌ Info: Epoch 15
+└   accuracy = 0.972
+┌ Info: Epoch 16
+└   accuracy = 0.982
+┌ Info: Epoch 17
+└   accuracy = 0.984
+┌ Info: Epoch 18
+└   accuracy = 0.9905
+┌ Info: Epoch 19
+└   accuracy = 0.995
+┌ Info: Epoch 20
+└   accuracy = 0.9965</code></pre><p>Finally, let&#39;s measure the testing accuracy. In this case, the classifier is overfitted:</p><pre><code class="language-julia hljs">accuracy(model(extract(e, jss_test)), y_test)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.66</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../mutagenesis/mutagenesis/">« Mutagenesis</a><a class="docs-footer-nextpage" href="../../../tools/hierarchical/">HierarchicalUtils.jl »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Saturday 26 October 2024 20:10">Saturday 26 October 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
