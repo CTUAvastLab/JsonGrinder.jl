@@ -202,8 +202,10 @@ end
 If [`JSON3`](https://github.com/quinnj/JSON3.jl) is used for parsing, it uses `Symbol`s for keys
 in objects instead of `String`s so make sure to use `Symbol`s:
 
-```@repl schema
+```@example schema
 using JSON3
+```
+```@repl schema
 Accessors.delete(JSON3.read(""" {"port": 1} """), @optic _["port"])
 Accessors.delete(JSON3.read(""" {"port": 1} """), @optic _[:port])
 ```
