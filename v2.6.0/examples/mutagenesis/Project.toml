@@ -1,0 +1,6 @@
+[deps]
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+JsonGrinder = "d201646e-a9c0-11e8-1063-23b139159713"
+MLUtils = "f1d291b0-491e-4a28-83b9-f70985020b54"
+Mill = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
