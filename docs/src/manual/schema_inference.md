@@ -164,9 +164,9 @@ schema(JSON.parse, jss)
 ```
 
 We recommend to deal with these cases using optic approach from
-[`Accessors.jl`](https://juliaobjects.github.io/Accessors.jl/stable/), available also as
-`JsonGrinder: Accessors`. We can use `Accessors.modify` to modify the problematic paths,
-turning all into `String`s:
+[`Accessors.jl`](https://juliaobjects.github.io/Accessors.jl/stable/) (and possibly also from
+[`AccessorsExtra.jl`](https://github.com/JuliaAPlavin/AccessorsExtra.jl)). We can use
+`Accessors.modify` to modify the problematic paths, turning all into `String`s:
 
 ```@example schema
 using Accessors
