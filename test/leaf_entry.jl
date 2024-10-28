@@ -104,8 +104,8 @@ end
 end
 
 @testset "LeafEntry max_string_len" begin
-    max_string_len = JsonGrinder.max_string_length()
-    JsonGrinder.max_string_length!(3)
+    max_string_len = JsonGrinder.max_string_codeunits()
+    JsonGrinder.max_string_codeunits!(3)
 
     @test JsonGrinder.shorten_string("a") == "a"
     @test JsonGrinder.shorten_string("foo") == "foo"
@@ -124,7 +124,11 @@ end
     @test !haskey(e.counts, "foo bar")
     @test !haskey(e.counts, "barbaz")
 
-    JsonGrinder.max_string_length!(max_string_len)
+    JsonGrinder.max_string_codeunits!(4)
+    @test JsonGrinder.shorten_string("αβ") == "αβ"
+    @test JsonGrinder.shorten_string("αβγ") == "αβ_6_a33e01a96d92c1643ebb4774c1b10d7d9d4b6b6f"
+
+    JsonGrinder.max_string_codeunits!(max_string_len)
 end
 
 @testset "DictEntry update!" begin

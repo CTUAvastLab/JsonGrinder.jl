@@ -123,8 +123,8 @@ end
     end
 
     @testset "long strings trimming" begin
-        max_string_length = JsonGrinder.max_string_length()
-        JsonGrinder.max_string_length!(2)
+        max_string_codeunits = JsonGrinder.max_string_codeunits()
+        JsonGrinder.max_string_codeunits!(2)
         s1 = "foo"
         s2 = "foa"
 
@@ -134,7 +134,7 @@ end
             @test ext(s2).data ≈ [0, 1, 0]
             @test ext("bar").data ≈ [0, 0, 1]
         end
-        JsonGrinder.max_string_length!(max_string_length)
+        JsonGrinder.max_string_codeunits!(max_string_codeunits)
     end
 end
 

@@ -12,8 +12,9 @@ LeafEntry(::Type{<:Real}) = LeafEntry(Dict{Real, Int}(), 0)
 LeafEntry(::Type{<:AbstractString}) = LeafEntry(Dict{String, Int}(), 0)
 
 function shorten_string(v::AbstractString)
-    length(v) ≤ max_string_length() && return v
-    join((v[1:max_string_length()], length(v), bytes2hex(sha1(v))), "_")
+    l = ncodeunits(v)
+    l ≤ max_string_codeunits() && return v
+    join((v[1:thisind(v, max_string_codeunits())], l, bytes2hex(sha1(v))), "_")
 end
 
 update!(e::LeafEntry{Real}, v::Real) = _update_leaf!(e, v)

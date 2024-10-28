@@ -125,7 +125,7 @@ the `categorical_limit` argument.
 
 Similarly, [`JsonGrinder.jl`](https://github.com/CTUAvastLab/JsonGrinder.jl) also shortens strings
 that are too long before saving them to schema. This can be governed with the
-[`JsonGrinder.max_string_length`](@ref) parameter.
+[`JsonGrinder.max_string_codeunits`](@ref) parameter.
 
 ## Preprocessing
 

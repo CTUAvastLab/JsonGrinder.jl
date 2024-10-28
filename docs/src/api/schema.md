@@ -22,6 +22,6 @@ ArrayEntry
 JsonGrinder.max_values
 JsonGrinder.max_values!
 
-JsonGrinder.max_string_length
-JsonGrinder.max_string_length!
+JsonGrinder.max_string_codeunits
+JsonGrinder.max_string_codeunits!
 ```

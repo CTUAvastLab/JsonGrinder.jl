@@ -18,7 +18,7 @@ const FloatType = Float32
 
 include("switches.jl")
 @compat public max_values, max_values!
-@compat public max_string_length, max_string_length!
+@compat public max_string_codeunits, max_string_codeunits!
 
 include("exceptions.jl")
 

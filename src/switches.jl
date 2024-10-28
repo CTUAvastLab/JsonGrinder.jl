@@ -25,29 +25,29 @@ function max_values!(n::Int; persist=false)
     end
 end
 
-const _max_string_length = Ref{Int}(@load_preference("max_string_len", 10_000))
+const _max_string_codeunits = Ref{Int}(@load_preference("max_string_len", 10_000))
 
 """
-    JsonGrinder.max_string_length!(n::Int)
+    JsonGrinder.max_string_codeunits!(n::Int)
 
-Get the current value of the `max_string_length` parameter.
+Get the current value of the `max_string_codeunits` parameter.
 
-See also: [`JsonGrinder.max_string_length!`](@ref).
+See also: [`JsonGrinder.max_string_codeunits!`](@ref).
 """
-max_string_length() = _max_string_length[]
+max_string_codeunits() = _max_string_codeunits[]
 
 """
-    JsonGrinder.max_string_length!(n::Int; persist=false)
+    JsonGrinder.max_string_codeunits!(n::Int; persist=false)
 
-Set the value of the `max_string_length` parameter.
+Set the value of the `max_string_codeunits` parameter.
 
 Set `persist=true` to persist this setting between sessions.
 
-See also: [`JsonGrinder.max_string_length`](@ref).
+See also: [`JsonGrinder.max_string_codeunits`](@ref).
 """
-function max_string_length!(n::Int; persist=false)
-    _max_string_length[] = n
+function max_string_codeunits!(n::Int; persist=false)
+    _max_string_codeunits[] = n
     if persist
-        @set_preferences!("max_string_length" => n)
+        @set_preferences!("max_string_codeunits" => n)
     end
 end
