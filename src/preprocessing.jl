@@ -16,16 +16,13 @@ julia> [nothing, Dict("a" => 1), nothing, Dict("a" => nothing)] |> remove_nulls
 ```
 """
 remove_nulls(x) = x
-# In the future we might extend this so that JSON3 objects return also JSON3 objects,
-# but given that the result will almost always be directly passed to `schema` or `extract`,
-# there seems to be little added value.
 remove_nulls(V::AbstractVector) = [v for v in Iterators.map(remove_nulls, V) if !isnothing(v)]
 function remove_nulls(d::T) where T <: AbstractDict
-    res = empty(d)
+    res = Dict{String, valtype(d)}()
     for (k, v) in d
         v_res = remove_nulls(v)
         if !isnothing(v_res)
-            res[k] = v_res
+            res[string(k)] = v_res
         end
     end
     return res
