@@ -42,9 +42,9 @@ version = "0.1.38"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra", "Requires"]
-git-tree-sha1 = "d80af0733c99ea80575f612813fa6aa71022d33a"
+git-tree-sha1 = "50c3c56a52972d78e8be9fd135bfb91c9574c140"
 uuid = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
-version = "4.1.0"
+version = "4.1.1"
 weakdeps = ["StaticArrays"]
 
     [deps.Adapt.extensions]
@@ -288,9 +288,9 @@ version = "0.12.32"
 
 [[deps.Flux]]
 deps = ["Adapt", "ChainRulesCore", "Compat", "Functors", "LinearAlgebra", "MLDataDevices", "MLUtils", "MacroTools", "NNlib", "OneHotArrays", "Optimisers", "Preferences", "ProgressLogging", "Random", "Reexport", "Setfield", "SparseArrays", "SpecialFunctions", "Statistics", "Zygote"]
-git-tree-sha1 = "37fa32a50c69c10c6ea1465d3054d98c75bd7777"
+git-tree-sha1 = "df520a0727f843576801a0294f5be1a94be28e23"
 uuid = "587475ba-b771-5e3f-ad9e-33799f191a9c"
-version = "0.14.22"
+version = "0.14.25"
 
     [deps.Flux.extensions]
     FluxAMDGPUExt = "AMDGPU"
@@ -299,22 +299,20 @@ version = "0.14.22"
     FluxEnzymeExt = "Enzyme"
     FluxMPIExt = "MPI"
     FluxMPINCCLExt = ["CUDA", "MPI", "NCCL"]
-    FluxMetalExt = "Metal"
 
     [deps.Flux.weakdeps]
     AMDGPU = "21141c5a-9bdb-4563-92ae-f87d6854732e"
     CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
     Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
     MPI = "da04e1cc-30fd-572f-bb4f-1f8673147195"
-    Metal = "dde4c033-4e86-420c-a63e-0dd931031962"
     NCCL = "3fe64909-d7a1-4096-9b7d-7a0f12cf0f6b"
     cuDNN = "02a925ec-e4fe-4b08-9a7e-0d78e3d38ccd"
 
 [[deps.ForwardDiff]]
 deps = ["CommonSubexpressions", "DiffResults", "DiffRules", "LinearAlgebra", "LogExpFunctions", "NaNMath", "Preferences", "Printf", "Random", "SpecialFunctions"]
-git-tree-sha1 = "cf0fe81336da9fb90944683b8c41984b08793dad"
+git-tree-sha1 = "a9ce73d3c827adab2d70bf168aaece8cce196898"
 uuid = "f6369f11-7733-5829-9624-2563aa707210"
-version = "0.10.36"
+version = "0.10.37"
 weakdeps = ["StaticArrays"]
 
     [deps.ForwardDiff.extensions]
@@ -417,9 +415,9 @@ version = "0.21.4"
 
 [[deps.JsonGrinder]]
 deps = ["Accessors", "Compat", "HierarchicalUtils", "MacroTools", "Mill", "OneHotArrays", "Preferences", "SHA"]
-git-tree-sha1 = "3d8ec35eefee7e027637b88816f7f32f52b81770"
+git-tree-sha1 = "d03aa1b2b8cacbd8333017d8c2d26dd8bc7a2793"
 uuid = "d201646e-a9c0-11e8-1063-23b139159713"
-version = "2.5.5"
+version = "2.6.0"
 
 [[deps.JuliaVariables]]
 deps = ["MLStyle", "NameResolution"]
@@ -600,9 +598,9 @@ version = "0.2.0"
 
 [[deps.Mill]]
 deps = ["Accessors", "ChainRulesCore", "Combinatorics", "Compat", "DataFrames", "DataStructures", "FiniteDifferences", "Flux", "HierarchicalUtils", "LinearAlgebra", "MLUtils", "MacroTools", "OneHotArrays", "PooledArrays", "Preferences", "SparseArrays", "Statistics", "Test"]
-git-tree-sha1 = "924d500a23b70bbd647f55dec15c55e3674e80cc"
+git-tree-sha1 = "89c6327c121b1141d8da12aa67882cf9bf2a3da5"
 uuid = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
-version = "2.10.6"
+version = "2.11.0"
 
 [[deps.Missings]]
 deps = ["DataAPI"]
@@ -780,9 +778,9 @@ version = "0.7.0"
 
 [[deps.SentinelArrays]]
 deps = ["Dates", "Random"]
-git-tree-sha1 = "305becf8af67eae1dbc912ee9097f00aeeabb8d5"
+git-tree-sha1 = "d0553ce4031a081cc42387a9b9c8441b7d99f32d"
 uuid = "91c51154-3ec4-41a3-a24f-3f23e20d615c"
-version = "1.4.6"
+version = "1.4.7"
 
 [[deps.Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
