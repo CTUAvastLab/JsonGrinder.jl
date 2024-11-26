@@ -602,9 +602,9 @@ version = "0.2.0"
 
 [[deps.Mill]]
 deps = ["Accessors", "ChainRulesCore", "Combinatorics", "Compat", "DataFrames", "DataStructures", "FiniteDifferences", "Flux", "HierarchicalUtils", "LinearAlgebra", "MLUtils", "MacroTools", "OneHotArrays", "PooledArrays", "Preferences", "SparseArrays", "Statistics", "Test"]
-git-tree-sha1 = "9fe8ae9d5e7b1e015732402bdd0a158b51929a75"
+git-tree-sha1 = "791371ba04afcbe54e40c537f79a8b519335a197"
 uuid = "1d0525e4-8992-11e8-313c-e310e1f6ddea"
-version = "2.11.1"
+version = "2.11.2"
 
 [[deps.Missings]]
 deps = ["DataAPI"]
