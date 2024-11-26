@@ -11,9 +11,9 @@ DictExtractor
   ╰── b: CategoricalExtractor(n=6)
 
 julia> e(Dict("a" => 1, "b" => 1))
-ProductNode  1 obs, 0 bytes
-  ├── a: ArrayNode(1×1 Array with Float32 elements)  1 obs, 60 bytes
-  ╰── b: ArrayNode(6×1 OneHotArray with Bool elements)  1 obs, 60 bytes
+ProductNode  1 obs
+  ├── a: ArrayNode(1×1 Array with Float32 elements)  1 obs
+  ╰── b: ArrayNode(6×1 OneHotArray with Bool elements)  1 obs
 ```
 """
 struct DictExtractor{T <: NamedTuple} <: Extractor

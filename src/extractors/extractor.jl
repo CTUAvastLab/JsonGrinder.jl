@@ -93,9 +93,9 @@ ERROR: IncompatibleExtractor at path [:b]: This extractor does not support missi
 [...]
 
 julia> e_stable(Dict("a" => 0))
-ProductNode  1 obs, 0 bytes
-  ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  1 obs, 62 bytes
-  ╰── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements)  1 obs, 62 bytes
+ProductNode  1 obs
+  ├── a: ArrayNode(1×1 Array with Union{Missing, Float32} elements)  1 obs
+  ╰── b: ArrayNode(6×1 MaybeHotMatrix with Union{Missing, Bool} elements)  1 obs
 ```
 
 See also: [`suggestextractor`](@ref), [`extract`](@ref).
@@ -233,9 +233,9 @@ DictExtractor
   ╰── b: CategoricalExtractor(n=2)
 
 julia> e(sample)
-ProductNode  1 obs, 0 bytes
-  ├── a: ArrayNode(2×1 OneHotArray with Bool elements)  1 obs, 60 bytes
-  ╰── b: ArrayNode(2×1 OneHotArray with Bool elements)  1 obs, 60 bytes
+ProductNode  1 obs
+  ├── a: ArrayNode(2×1 OneHotArray with Bool elements)  1 obs
+  ╰── b: ArrayNode(2×1 OneHotArray with Bool elements)  1 obs
 
 julia> e(sample) == extract(e, [sample])
 true
