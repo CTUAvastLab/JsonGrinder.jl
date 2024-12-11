@@ -31,7 +31,7 @@ export LeafExtractor, ScalarExtractor, CategoricalExtractor, NGramExtractor, Sta
 export suggestextractor, stabilizeextractor, extract
 
 include("preprocessing.jl")
-export remove_nulls
+export remove_nulls, map_keys
 
 include("util.jl")
 export pred_lens, list_lens, find_lens, findnonempty_lens

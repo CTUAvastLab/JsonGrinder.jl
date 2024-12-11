@@ -20,7 +20,7 @@ IncompatibleExtractor(msg::AbstractString="") = IncompatibleExtractor(String[], 
 NullValues(msg::AbstractString="") = NullValues(String[], msg)
 
 function _error_missing()
-    throw(IncompatibleExtractor("This extractor does not support missing values! " *
+    throw(IncompatibleExtractor("this path contains missing data not supported by this extractor! " *
                                 "See the `Stable Extractors` section in the docs."))
 end
 

@@ -57,7 +57,7 @@ function Base.reduce(::typeof(merge), es::Vector{DictEntry})
 end
 
 function representative_example(e::DictEntry)
-    Dict(string(k) => representative_example(v) for (k, v) in e.children)
+    Dict{String, Any}(string(k) => representative_example(v) for (k, v) in e.children)
 end
 
 Base.hash(e::DictEntry, h::UInt) = hash((e.children, e.updated), h)

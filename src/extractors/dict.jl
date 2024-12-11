@@ -26,14 +26,18 @@ MacroTools.@forward DictExtractor.children Base.get, Base.haskey,
 Base.getindex(e::DictExtractor, k::Symbol) = e.children[k]
 
 @generated function (e::DictExtractor{<:NamedTuple{K}})(
-        v::Maybe{AbstractDict}; store_input=Val(false)) where K
+        v::Maybe{AbstractDict{T}}; store_input=Val(false)) where {K, T <: Union{Symbol, String}}
     chs = if v == Missing
         [:(e.children.$k(missing; store_input)) for k in K]
     else
-        [:(@try_catch_dict(
-            $(QuoteNode(k)),
-            e.children.$k(get(v, $(string(k)), missing); store_input)
-        )) for k in K]
+        map(K) do k
+            quote
+                @try_catch_dict(
+                    $(QuoteNode(k)),
+                    e.children.$k(get(v, $(QuoteNode(T(k))), missing); store_input)
+                )
+            end
+        end
     end
     quote
         data = NamedTuple{$K}(tuple($(chs...)))
@@ -58,7 +62,7 @@ end
             ch = Vector{Any}(undef, length(V))
             for (i, v) in enumerate(V)
                 if v isa AbstractDict
-                    ch[i] = get(v, $(string(k)), missing)
+                    ch[i] = get(v, keytype(v)($(QuoteNode(k))), missing)
                 elseif ismissing(v)
                     ch[i] = missing
                 elseif isnothing(v)

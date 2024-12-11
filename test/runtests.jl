@@ -18,7 +18,11 @@ using LinearAlgebra: I
 using Mill: Maybe
 
 areequal(xs...) = length(xs) ≤ 1 || (isequal(xs[1], xs[2]) && areequal(xs[2:end]...))
-parsef() = rand((JSON.parse, JSON3.read))
+parsef() = rand((
+    JSON.parse,
+    JSON3.read,
+    (x -> map_keys(Symbol, x)) ∘ JSON.parse,
+))
 
 @static if VERSION ≥ v"1.11.0"
     @testset "Doctests" begin

@@ -89,7 +89,7 @@ DictExtractor
   ╰── b: StableExtractor(CategoricalExtractor(n=6))
 
 julia> e(Dict("a" => 0))
-ERROR: IncompatibleExtractor at path [:b]: This extractor does not support missing values! See the `Stable Extractors` section in the docs.
+ERROR: IncompatibleExtractor at path [:b]: this path contains missing data not supported by this extractor! See the `Stable Extractors` section in the docs.
 [...]
 
 julia> e_stable(Dict("a" => 0))

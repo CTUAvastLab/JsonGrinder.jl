@@ -319,7 +319,7 @@ end
 @testset "Random $(stable ? "stable" : "unstable") schema, depth $d" for d in 1:3, stable in [true, false]
     for _ in 1:10
         _s = random_schema(d)
-        xs1 = [generate(_s; stable) for _ in 1:10]
+        xs1 = [parsef()(JSON.json(generate(_s; stable))) for _ in 1:10]
         xs2 = @test_nowarn [JsonGrinder.representative_example(schema(xs1))]
         foreach(test_with_model, (xs1, xs2))
     end
