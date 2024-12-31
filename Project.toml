@@ -18,10 +18,10 @@ Accessors = "0.1.36"
 Compat = "4.16.0"
 HierarchicalUtils = "2.2.2"
 MacroTools = "0.5.13"
-Mill = "2.11.2"
+Mill = "2.12"
 OneHotArrays = "0.2.5"
 Preferences = "1.4.1"
-julia = "1.9"
+julia = "1.10"
 
 [extras]
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"

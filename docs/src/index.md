@@ -18,7 +18,7 @@ Run the following in REPL:
 ] add JsonGrinder
 ```
 
-Julia v1.9 or later is required.
+Julia v1.10 or later is required.
 
 ## Getting started
 
