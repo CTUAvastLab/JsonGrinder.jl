@@ -40,7 +40,7 @@ Kindly cite our work with the following entries if you find it interesting, plea
 
   ```
   @article{Mandlik2022,
-    author = {{\v{S}}imon Mandl{\'{i}}k and Mat{\v{e}}j Račinsk{\'{y}} and Viliam Lis{\'{y}} and Tom{\'{a}}{\v{s}} Pevn{\'{y}}},
+    author = {{\v{S}}imon Mandl{\'{i}}k and Mat{\v{e}}j Ra{\v{c}}insk{\'{y}} and Viliam Lis{\'{y}} and Tom{\'{a}}{\v{s}} Pevn{\'{y}}},
     issn = {1533-7928},
     issue = {298},
     journal = {Journal of Machine Learning Research},
@@ -72,7 +72,7 @@ Kindly cite our work with the following entries if you find it interesting, plea
 
   ```
   @software{JsonGrinder,
-    author  = {{\v{S}}imon Mandl{\'{i}}k and Tom{\'{a}}{\v{s}} Pevn{\'{y}} and Mat{\v{e}}j Račinsk{\'{y}}},
+    author  = {{\v{S}}imon Mandl{\'{i}}k and Tom{\'{a}}{\v{s}} Pevn{\'{y}} and Mat{\v{e}}j Ra{\v{c}}insk{\'{y}}},
     title   = {JsonGrinder.jl: a flexible library for automated feature engineering and conversion of JSONs to Mill.jl structures},
     url     = {https://github.com/CTUAvastLab/JsonGrinder.jl},
     version = {...},
