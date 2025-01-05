@@ -40,15 +40,15 @@ Kindly cite our work with the following entries if you find it interesting, plea
 
   ```
   @article{Mandlik2022,
-   author = {Šimon Mandlík and Matěj Račinský and Viliam Lisý and Tomáš Pevný},
-   issn = {1533-7928},
-   issue = {298},
-   journal = {Journal of Machine Learning Research},
-   pages = {1-5},
-   title = {JsonGrinder.jl: automated differentiable neural architecture for embedding arbitrary JSON data},
-   volume = {23},
-   url = {http://jmlr.org/papers/v23/21-0174.html},
-   year = {2022},
+    author = {{\v{S}}imon Mandl{\'{i}}k and Mat{\v{e}}j Račinsk{\'{y}} and Viliam Lis{\'{y}} and Tom{\'{a}}{\v{s}} Pevn{\'{y}}},
+    issn = {1533-7928},
+    issue = {298},
+    journal = {Journal of Machine Learning Research},
+    pages = {1-5},
+    title = {JsonGrinder.jl: automated differentiable neural architecture for embedding arbitrary JSON data},
+    volume = {23},
+    url = {http://jmlr.org/papers/v23/21-0174.html},
+    year = {2022},
   }
   ```
 
@@ -58,7 +58,7 @@ Kindly cite our work with the following entries if you find it interesting, plea
 
   ```
   @article{Mandlik2024,
-    author  = {Mandlík, Šimon and Pevný, Tomáš and Šmídl, Václav and Bajer, Lukáš},
+    author = {{\v{S}}imon Mandl{\'{i}}k and Tom{\'{a}}{\v{s}} Pevn{\'{y}} and V{\'{a}}clav {\v{S}}m{\'{i}}dl and Luk{\'{a}}{\v{s}} Bajer},
     journal = {IEEE Transactions on Information Forensics and Security},
     title   = {Malicious Internet Entity Detection Using Local Graph Inference},
     year    = {2024},
@@ -72,7 +72,7 @@ Kindly cite our work with the following entries if you find it interesting, plea
 
   ```
   @software{JsonGrinder,
-    author  = {Tomas Pevny and Matej Racinsky and Simon Mandlik},
+    author  = {{\v{S}}imon Mandl{\'{i}}k and Tom{\'{a}}{\v{s}} Pevn{\'{y}} and Mat{\v{e}}j Račinsk{\'{y}}},
     title   = {JsonGrinder.jl: a flexible library for automated feature engineering and conversion of JSONs to Mill.jl structures},
     url     = {https://github.com/CTUAvastLab/JsonGrinder.jl},
     version = {...},
